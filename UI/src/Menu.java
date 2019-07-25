@@ -2,6 +2,7 @@ public class Menu
 {
     public void Show()
     {
+        System.out.println("Please choose a number from the list below:");
         System.out.println("1. Update user name");
         System.out.println("2. Initialize repository");
         System.out.println("3. Read repository details from XML file");

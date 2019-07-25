@@ -18,11 +18,11 @@ import java.nio.file.Paths;
 
 public class EngineManager
 {
-
-
     public void CreateRepository(Path i_RepPath) throws IOException // TODO catch this expection
     {
-        Files.createDirectory(i_RepPath);
+        Files.createDirectory(i_RepPath.resolve(".magit"));
+        Files.createDirectory(i_RepPath.resolve(".magit").resolve("branches"));
+        Files.createDirectory(i_RepPath.resolve(".magit").resolve("objects"));
     }
 
     public boolean isPathExists(Path i_Path)
@@ -33,5 +33,10 @@ public class EngineManager
     public boolean IsRepository(Path i_Path)
     {
         return Files.exists(i_Path.resolve(".magit"));
+    }
+
+    public void CreateDirectory(Path i_RepPath, String i_DirectoryName) throws IOException
+    {
+        Files.createDirectory(i_RepPath.resolve(i_DirectoryName));
     }
 }
