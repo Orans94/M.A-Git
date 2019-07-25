@@ -1,4 +1,13 @@
-package PACKAGE_NAME;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class Program {
+public class Program
+{
+    public static void main(String[] args)
+    {
+        UIManager ui = new UIManager();
+        ui.Run();
+    }
 }
