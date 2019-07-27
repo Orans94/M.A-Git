@@ -46,4 +46,9 @@ public class EngineManager
     {
         Files.createDirectory(i_RepPath.resolve(i_DirectoryName));
     }
+
+    public boolean isDirectoryNameValid(String repositoryName)
+    {//TODO implement this method
+        return true;
+    }
 }

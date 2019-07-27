@@ -12,8 +12,8 @@ public class Repository
 
     public Repository(Path i_RepPath)
     {
-        m_Branches.add(new Branch("master"));
-        m_WorkingCopy = new WC(i_RepPath);
         m_MagitDir = i_RepPath.resolve(".magit");
+        m_Branches.add(new Branch(m_MagitDir,"master",""));
+        m_WorkingCopy = new WC(i_RepPath);
     }
 }

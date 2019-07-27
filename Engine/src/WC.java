@@ -8,7 +8,7 @@ public class WC
 
     public WC(Path i_Path)
     {
-        m_Head = null;
         m_WorkingCopyDir = i_Path;
+        m_Head = new Branch(m_WorkingCopyDir.resolve(".magit"),"HEAD","master");
     }
 }
