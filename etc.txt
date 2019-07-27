@@ -1,0 +1,7 @@
+
+// getting current date and time in SimpleDateFormat
+   DateFormat parseFormat = new SimpleDateFormat(
+                "dd.mm.yyyy-hh:mm:ss:sss");
+
+        Date date = new Date();
+        System.out.println(parseFormat.format(date));

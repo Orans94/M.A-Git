@@ -18,11 +18,18 @@ import java.nio.file.Paths;
 
 public class EngineManager
 {
+    private Repository m_Repository;
+
     public void CreateRepository(Path i_RepPath) throws IOException // TODO catch this expection
     {
         Files.createDirectory(i_RepPath.resolve(".magit"));
         Files.createDirectory(i_RepPath.resolve(".magit").resolve("branches"));
         Files.createDirectory(i_RepPath.resolve(".magit").resolve("objects"));
+
+        //1. initialize m_Repository
+        m_Repository = new Repository(i_RepPath);
+
+        //2.
     }
 
     public boolean isPathExists(Path i_Path)

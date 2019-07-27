@@ -7,33 +7,6 @@ public class UIManager
 {
     private EngineManager m_Engine = new EngineManager();
 
-    public enum userChoice
-    {
-        UPDATE_USER_NAME,
-        INITIALIZE_REPOSITORY,
-        READ_REPOSITORY_FROM_XML_FILE,
-        CHANGE_REPOSITORY,
-        SHOW_CURRENT_COMMIT_DETAILS,
-        SHOW_STATUS,
-        COMMIT,
-        SHOW_ALL_BRANCHES,
-        CREATE_NEW_BRANCH,
-        DELETE_BRANCH,
-        CHECKOUT,
-        SHOW_CURRENT_BRANCH_COMMIT_HISTORY,
-        EXIT;
-
-        public int GetOrdinal()
-        {
-            return this.ordinal() + 1;
-        }
-
-        public userChoice getUserChoice(int x)
-        {
-            return userChoice.SHOW_ALL_BRANCHES
-        }
-    }
-
     public void Run()
     {
         initializeRepository();
@@ -64,7 +37,6 @@ public class UIManager
                 System.out.printf("The number you entered is not valid, please enter an Integer");
             }
         }
-        userChoice uc = userChoice.
 
         switch (userChoiceInt)
         {
@@ -90,10 +62,12 @@ public class UIManager
                     // create a new repository
                     m_Engine.CreateRepository(repPath.resolve(repositoryName));
                 }
-            } else
+            }
+            else //TODO ask: if the path doesn't exists create it? or leave a message?
             {
-                m_Engine.CreateDirectory(repPath, repositoryName);
-                m_Engine.CreateRepository(repPath.resolve(repositoryName));
+                System.out.println("Path does not exists");
+                //m_Engine.CreateDirectory(repPath, repositoryName);
+                //m_Engine.CreateRepository(repPath.resolve(repositoryName));
             }
         } catch (IOException e) //TODO handle create dir fail
         {
