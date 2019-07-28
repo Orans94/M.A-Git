@@ -27,16 +27,10 @@ public class EngineManager
         m_Repository = new Repository(i_RepPath);
     }
 
-    public void Commit()
+    public void Commit() throws IOException
     {
         //1. SHA1 the WC
-        m_Repository.getWorkingCopy().SHA1();
-        //2. computeWCDelta
-        List<Node> openChanges = computeWCDelta();
-        //3. if WC is clean - let user know that status is clean.
-        if(openChanges.isEmpty())
-            System.out.println("The WC status is CLEAN, no open changes to commit");
-        //4. if WC is dirty - ask user if he wants to commit or continue and loose changes.
+        String wcSHA1 = m_Repository.getWorkingCopy().SHA1();
     }
 
     public boolean isPathExists(Path i_Path)

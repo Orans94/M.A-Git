@@ -8,7 +8,7 @@ public class Repository
 {
     private WC m_WorkingCopy;
     private Path m_MagitDir;
-    Set<Branch> m_Branches = new HashSet<>();
+    private Set<Branch> m_Branches = new HashSet<>();
 
     public Repository(Path i_RepPath) throws IOException // TODO catch
     {

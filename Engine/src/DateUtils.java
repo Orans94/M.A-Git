@@ -8,8 +8,7 @@ public class DateUtils
 
     public static String Format(Date i_Date)
     {
-        DateFormat parseFormat = new SimpleDateFormat(
-                "dd.mm.yyyy-hh:mm:ss:sss");
+        DateFormat parseFormat = new SimpleDateFormat("dd.mm.yyyy-hh:mm:ss:sss");
 
         return parseFormat.format(i_Date);
     }

@@ -1,14 +1,7 @@
-public class Blob implements Node
+public class Blob extends Node
 {
-    private String m_Content;
-
-    public String getContent()
+    public Blob(String i_Content)
     {
-        return m_Content;
-    }
-
-    public void setContent(String m_Content)
-    {
-        this.m_Content = m_Content;
+        super(i_Content);
     }
 }
