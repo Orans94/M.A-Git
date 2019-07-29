@@ -7,6 +7,6 @@ public class Head
     public Head(Path i_Path)
     {
         m_Content = "master";
-        FileUtils.CreateAndWriteTxtFile(i_Path.resolve("HEAD".concat(".txt")), m_Content, false);
+        FileUtils.CreateAndWriteTxtFile(i_Path.resolve("HEAD".concat(".txt")), m_Content);
     }
 }

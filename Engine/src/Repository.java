@@ -7,15 +7,15 @@ import java.util.Set;
 public class Repository
 {
     private WC m_WorkingCopy;
-    private Path m_MagitDir;
     private Set<Branch> m_Branches = new HashSet<>();
+    private Magit m_Magit;
 
     public Repository(Path i_RepPath) throws IOException // TODO catch
     {
         createRepositoryDirectories(i_RepPath);
-        m_MagitDir = i_RepPath.resolve(".magit");
-        m_Branches.add(new Branch(m_MagitDir,"master",""));
+        m_Branches.add(new Branch(i_RepPath.resolve(".magit"),"master",""));
         m_WorkingCopy = new WC(i_RepPath);
+        m_Magit = new Magit(i_RepPath.resolve(".magit"));
     }
 
     private void createRepositoryDirectories(Path i_RepPath) throws IOException //TODO catch exception
@@ -31,5 +31,15 @@ public class Repository
 
     public void setWorkingCopy(WC i_WorkingCopy) {
         this.m_WorkingCopy = i_WorkingCopy;
+    }
+
+    public Magit getMagit()
+    {
+        return m_Magit;
+    }
+
+    public void setMagit(Magit i_Magit)
+    {
+        this.m_Magit = i_Magit;
     }
 }

@@ -10,6 +10,9 @@ public class UIManager
     public void Run()
     {
         initializeRepository();
+        try{m_Engine.Commit("stu?");}
+        catch (Exception e){}
+
         Menu menu = new Menu();
 
         while (true)// actually while user didnt choose to exit

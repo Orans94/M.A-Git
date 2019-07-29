@@ -22,8 +22,9 @@ public class Item
     @Override
     public String toString()
     {
-        return m_Name + ',' + m_SHA1 + ',' + m_Type + ',' + m_Author + ',' + DateUtils.Format(m_ModificationDate);
+        return m_Name + ',' + m_SHA1 + ',' + m_Type + ',' + m_Author + ',' + DateUtils.FormatToString(m_ModificationDate);
     }
+
 
 
 }

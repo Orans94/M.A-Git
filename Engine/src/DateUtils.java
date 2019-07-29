@@ -1,16 +1,28 @@
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateUtils
 {
-    private String m_FormatedDate;
+    private static DateFormat m_Format = new SimpleDateFormat("dd.mm.yyyy-hh:mm:ss:sss");
 
-    public static String Format(Date i_Date)
+    public static String FormatToString(Date i_Date)
     {
-        DateFormat parseFormat = new SimpleDateFormat("dd.mm.yyyy-hh:mm:ss:sss");
+        return m_Format.format(i_Date);
+    }
 
-        return parseFormat.format(i_Date);
+    public static Date FormatToDate(String i_String)
+    {
+        try
+        {
+            return m_Format.parse(i_String);
+
+        } catch (ParseException e)
+        {//TODO handle exception
+            return null;
+        }
+
     }
 }
 

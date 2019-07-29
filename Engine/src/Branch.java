@@ -11,7 +11,7 @@ public class Branch
     {
         m_Content = i_Content;
         m_Name = i_Name;
-        FileUtils.CreateAndWriteTxtFile(i_RepoPath.resolve("branches").resolve(i_Name.concat(".txt")), i_Content, false);
+        FileUtils.CreateAndWriteTxtFile(i_RepoPath.resolve("branches").resolve(i_Name.concat(".txt")), i_Content);
     }
 
     public String getName()

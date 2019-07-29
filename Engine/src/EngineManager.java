@@ -35,10 +35,14 @@ public class EngineManager
         m_Repository = new Repository(i_RepPath);
     }
 
-    public void Commit() throws IOException
+    public void Commit(String i_CommitMessage) throws IOException
     {
-        //1. SHA1 the WC
-        String wcSHA1 = m_Repository.getWorkingCopy().SHA1();
+        //TODO head points to the last commit
+        //1. Commit the WC
+        String rootFolderSHA1 = m_Repository.getWorkingCopy().Commit();
+        Commit commit = new Commit(rootFolderSHA1,null,"Hello mother fucker"); //TODO send relevant params to commit ctor
+        String commitSHA1 = commit.SHA1();
+        m_Repository.getMagit().getCommits().put(commitSHA1, commit);
     }
 
     public boolean isPathExists(Path i_Path)
