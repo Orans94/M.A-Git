@@ -1,5 +1,9 @@
 import java.nio.file.Path;
-public class Node
+import java.util.Date;
+
+import org.apache.commons.codec.digest.DigestUtils;
+
+abstract public class Node
 {
     protected String m_Content = "";
 
@@ -21,6 +25,7 @@ public class Node
         return Sha1String;
     }
 
+
     protected String SHA1()
     {
         return DigestUtils.sha1Hex(m_Content);
@@ -30,5 +35,14 @@ public class Node
     {
         //1. zip the file - content it m_Content, name is i_FileName
         //2. save it in i_Path
+    }
+
+
+    public String generateStringInformation(String i_Sha1, String i_FileName)
+    {
+        return "" + i_FileName + "," + i_Sha1 + "," +
+                this.getClass().getSimpleName().toString() + "," +
+                EngineManager.getUserName() + "," +
+                DateUtils.Format(new Date())+System.lineSeparator();
     }
 }

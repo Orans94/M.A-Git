@@ -20,7 +20,15 @@ import java.util.List;
 public class EngineManager
 {
     private Repository m_Repository;
-    private String m_UserName;
+    private static String m_UserName = "";
+
+    public static String getUserName() {
+        return m_UserName;
+    }
+
+    public static void setUserName(String i_UserName) {
+        EngineManager.m_UserName = i_UserName;
+    }
 
     public void CreateRepository(Path i_RepPath) throws IOException // TODO catch this expection
     {
