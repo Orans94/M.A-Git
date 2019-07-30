@@ -3,24 +3,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import static java.lang.System.exit;
+
 public class UIManager
 {
     private EngineManager m_Engine = new EngineManager();
 
     public void Run()
     {
-        initializeRepository();
-        try{m_Engine.Commit("stu?");}
-        catch (Exception e){}
-
         Menu menu = new Menu();
-
         while (true)// actually while user didnt choose to exit
         {
             menu.Show();
             handleUserChoice();
         }
-
     }
 
     private void handleUserChoice()
@@ -43,7 +39,15 @@ public class UIManager
 
         switch (userChoiceInt)
         {
-
+            case 2: // GIT INIT
+                initializeRepository();
+                break;
+            case 7: // COMMIT
+                try{m_Engine.Commit("stu?");}
+                catch (Exception e){}
+                break;
+            default:
+                exit(0);
         }
     }
 

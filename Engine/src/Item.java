@@ -1,5 +1,3 @@
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Item
@@ -22,9 +20,14 @@ public class Item
     @Override
     public String toString()
     {
-        return m_Name + ',' + m_SHA1 + ',' + m_Type + ',' + m_Author + ',' + DateUtils.FormatToString(m_ModificationDate);
+        return m_Name + ',' + m_SHA1 + ',' + m_Type + ','
+                + m_Author + ',' + DateUtils.FormatToString(m_ModificationDate);
     }
 
-
+    public static String getSha1FromItemString(String i_ItemString)
+    {
+        String[] members = i_ItemString.split(",");
+        return members[1];
+    }
 
 }

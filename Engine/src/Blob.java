@@ -12,5 +12,4 @@ public class Blob extends Node
     {
         super(i_Content);
     }
-
 }

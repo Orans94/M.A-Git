@@ -22,7 +22,6 @@ public class DateUtils
         {//TODO handle exception
             return null;
         }
-
     }
 }
 

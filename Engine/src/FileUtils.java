@@ -1,12 +1,33 @@
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class FileUtils
 {
+    public static void modifyTxtFile(Path i_Path, String i_Content)
+    {
+
+        FileOutputStream writer = null;
+        try
+        {
+            writer = new FileOutputStream(String.valueOf(i_Path.toString()));
+            writer.write(("").getBytes());
+            writer.write(i_Content.getBytes());
+            writer.close();
+
+
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void CreateAndWriteTxtFile(Path i_Path, String i_Content)
     {
         try (Writer out1 = new BufferedWriter(
@@ -24,11 +45,6 @@ public class FileUtils
         {//TODO
 
         }
-    }
-
-    public static void ModifyTxtFile(Path i_Path, String i_Content)
-    { //TODO txt has been modifed
-
     }
 
     public static void Zip(String i_ZipName, Path i_FilePath)
@@ -57,6 +73,11 @@ public class FileUtils
 
         }
 
+    }
+
+    public static int getNumberOfSubNodes(Path i_Path) throws IOException
+    {
+        return (int) Files.walk(i_Path, 1).count() - 1;
     }
 
     public static void deleteFile(Path i_FileToDelete)

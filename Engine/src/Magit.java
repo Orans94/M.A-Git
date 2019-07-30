@@ -5,8 +5,6 @@ import java.util.Map;
 
 public class Magit
 {
-    
-    private Map<String, Node> m_Nodes;
     private Map<String, Commit> m_Commits;
     private Map<String, Branch> m_Branches;
     private static Path m_MagitDir;
@@ -14,11 +12,12 @@ public class Magit
     
     public Magit(Path i_MagitPath)
     {
-        m_Nodes = new HashMap<>();
+        Branch master = new Branch(i_MagitPath, "master", "");
         m_Commits = new HashMap<>();
         m_Branches = new HashMap<>();
         m_MagitDir = i_MagitPath;
-        m_Head = new Head(i_MagitPath);
+        m_Head = new Head(master, i_MagitPath);
+        m_Branches.put(master.getName(), master);
     }
 
     public static Path getMagitDir()
@@ -30,17 +29,7 @@ public class Magit
         Magit.m_MagitDir = i_MagitDir;
     }
 
-    public Map<String, Node> getNodes() 
-    {
-        return m_Nodes;
-    }
-
-    public void setNodes(Map<String, Node> i_Nodes) 
-    {
-        this.m_Nodes = i_Nodes;
-    }
-
-    public Map<String, Commit> getCommits() 
+    public Map<String, Commit> getCommits()
     {
         return m_Commits;
     }
@@ -70,4 +59,26 @@ public class Magit
         this.m_Head = i_Head;
     }
 
+    public void handleNewCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
+    {
+        String commitSHA1 = createCommit(i_RootFolderSha1, i_ParentSHA1, i_CommitMessage);
+        setActiveBranchToNewCommit(commitSHA1);
+    }
+
+    private void setActiveBranchToNewCommit(String i_CommitSHA1)
+    {
+        //set active branch content to new commit sha1
+        m_Head.getActiveBranch().setCommitSHA1(i_CommitSHA1);
+        //change file content in file system
+        FileUtils.modifyTxtFile(m_MagitDir.resolve("branches").resolve(m_Head.getActiveBranch().getName() + ".txt"), i_CommitSHA1);
+    }
+
+    private String createCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
+    {
+        Commit commit = new Commit(i_RootFolderSha1,i_ParentSHA1,i_CommitMessage);
+        String commitSHA1 = commit.SHA1();
+        m_Commits.put(commitSHA1, commit);
+
+        return commitSHA1;
+    }
 }

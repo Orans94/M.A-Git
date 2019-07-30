@@ -2,11 +2,15 @@ import java.nio.file.Path;
 
 public class Head
 {
-    private String m_Content;
-
-    public Head(Path i_Path)
+    private Branch m_ActiveBranch;
+    
+    public Head(Branch i_ActiveBranch, Path i_Path)
     {
-        m_Content = "master";
-        FileUtils.CreateAndWriteTxtFile(i_Path.resolve("HEAD".concat(".txt")), m_Content);
+        m_ActiveBranch = i_ActiveBranch;
+        FileUtils.CreateAndWriteTxtFile(i_Path.resolve("branches\\HEAD".concat(".txt")), i_ActiveBranch.getName());
     }
+
+    public Branch getActiveBranch() { return m_ActiveBranch; }
+
+    public void setActiveBranch(Branch i_ActiveBranch) { this.m_ActiveBranch = i_ActiveBranch; }
 }

@@ -22,13 +22,9 @@ public class EngineManager
     private Repository m_Repository;
     private static String m_UserName = "";
 
-    public static String getUserName() {
-        return m_UserName;
-    }
+    public static String getUserName() { return m_UserName; }
 
-    public static void setUserName(String i_UserName) {
-        EngineManager.m_UserName = i_UserName;
-    }
+    public static void setUserName(String i_UserName) { EngineManager.m_UserName = i_UserName; }
 
     public void CreateRepository(Path i_RepPath) throws IOException // TODO catch this expection
     {
@@ -38,11 +34,7 @@ public class EngineManager
     public void Commit(String i_CommitMessage) throws IOException
     {
         //TODO head points to the last commit
-        //1. Commit the WC
-        String rootFolderSHA1 = m_Repository.getWorkingCopy().Commit();
-        Commit commit = new Commit(rootFolderSHA1,null,"Hello mother fucker"); //TODO send relevant params to commit ctor
-        String commitSHA1 = commit.SHA1();
-        m_Repository.getMagit().getCommits().put(commitSHA1, commit);
+        m_Repository.Commit(i_CommitMessage);
     }
 
     public boolean isPathExists(Path i_Path)
