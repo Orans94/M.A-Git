@@ -1,5 +1,10 @@
 public class Menu
 {
+    public static void requestUserName()
+    {
+        System.out.println("Please enter user name");
+    }
+
     public void Show()
     {
         System.out.println("Please choose a number from the list below:");

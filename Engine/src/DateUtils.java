@@ -5,12 +5,9 @@ import java.util.Date;
 
 public class DateUtils
 {
-    private static DateFormat m_Format = new SimpleDateFormat("dd.mm.yyyy-hh:mm:ss:sss");
+    private static DateFormat m_Format = new SimpleDateFormat("dd.MM.yyyy-hh:mm:ss:sss");
 
-    public static String FormatToString(Date i_Date)
-    {
-        return m_Format.format(i_Date);
-    }
+    public static String FormatToString(Date i_Date) { return m_Format.format(i_Date); }
 
     public static Date FormatToDate(String i_String)
     {

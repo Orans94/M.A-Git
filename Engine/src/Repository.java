@@ -63,7 +63,7 @@ public class Repository
                 Blob blob = new Blob(blobContent);
                 String blobSha1 = blob.SHA1();
 
-                //2. Zip & save the zip in objects directory//TODO
+                //2. Zip & save the zip in objects directory
                 blob.Zip(blobSha1, file);
 
                 //3. push blob to m_Nodes

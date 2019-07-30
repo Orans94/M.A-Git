@@ -63,6 +63,8 @@ public class Magit
     {
         String commitSHA1 = createCommit(i_RootFolderSha1, i_ParentSHA1, i_CommitMessage);
         setActiveBranchToNewCommit(commitSHA1);
+        Commit commit = m_Commits.get(commitSHA1);
+        commit.Zip(commitSHA1);
     }
 
     private void setActiveBranchToNewCommit(String i_CommitSHA1)

@@ -17,6 +17,6 @@ abstract public class Node
         return "" + i_FileName + "," + i_Sha1 + "," +
                 this.getClass().getSimpleName() + "," +
                 EngineManager.getUserName() + "," +
-                DateUtils.FormatToString(new Date()) + System.lineSeparator();
+                DateUtils.FormatToString(new Date());
     }
 }

@@ -12,6 +12,7 @@ public class UIManager
     public void Run()
     {
         Menu menu = new Menu();
+        updateUserName();
         while (true)// actually while user didnt choose to exit
         {
             menu.Show();
@@ -43,8 +44,13 @@ public class UIManager
                 initializeRepository();
                 break;
             case 7: // COMMIT
-                try{m_Engine.Commit("stu?");}
-                catch (Exception e){}
+                try
+                {
+                    m_Engine.Commit("stu?");
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 exit(0);
@@ -69,8 +75,7 @@ public class UIManager
                     // create a new repository
                     m_Engine.CreateRepository(repPath.resolve(repositoryName));
                 }
-            }
-            else //TODO ask: if the path doesn't exists create it? or leave a message?
+            } else //TODO ask: if the path doesn't exists create it? or leave a message?
             {
                 System.out.println("Path does not exists");
                 //m_Engine.CreateDirectory(repPath, repositoryName);
@@ -111,6 +116,14 @@ public class UIManager
         }
 
         return repositoryName;
+    }
+
+    private void updateUserName()
+    {
+        Menu.requestUserName();
+        Scanner scanner = new Scanner(System.in);
+        String userName = scanner.nextLine();
+        m_Engine.setUserName(userName);
     }
 
 }

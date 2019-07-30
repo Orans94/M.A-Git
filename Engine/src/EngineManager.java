@@ -37,15 +37,9 @@ public class EngineManager
         m_Repository.Commit(i_CommitMessage);
     }
 
-    public boolean isPathExists(Path i_Path)
-    {
-        return Files.exists(i_Path);
-    }
+    public boolean isPathExists(Path i_Path) { return Files.exists(i_Path); }
 
-    public boolean IsRepository(Path i_Path)
-    {
-        return Files.exists(i_Path.resolve(".magit"));
-    }
+    public boolean IsRepository(Path i_Path) { return Files.exists(i_Path.resolve(".magit")); }
 
     public void CreateDirectory(Path i_RepPath, String i_DirectoryName) throws IOException
     {
