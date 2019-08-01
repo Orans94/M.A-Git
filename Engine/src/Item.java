@@ -17,6 +17,16 @@ public class Item
         m_ModificationDate = i_ModificationDate;
     }
 
+    public Item(String i_ItemString)
+    {
+        String[] members = i_ItemString.split(",");
+        m_Name = members[0];
+        m_SHA1 = members[1];
+        m_Type = members[2];
+        m_Author = members[3];
+        m_ModificationDate = DateUtils.FormatToDate(members[4]);
+    }
+
     @Override
     public String toString()
     {
@@ -29,5 +39,15 @@ public class Item
         String[] members = i_ItemString.split(",");
         return members[1];
     }
+
+    public String getSHA1() {return m_SHA1; }
+
+    public String getName() { return m_Name; }
+
+    public String getType() { return m_Type; }
+
+    public String getAuthor() { return m_Author; }
+
+    public Date getModificationDate() { return m_ModificationDate; }
 
 }

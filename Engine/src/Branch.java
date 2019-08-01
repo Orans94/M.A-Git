@@ -19,11 +19,6 @@ public class Branch
         return m_Name;
     }
 
-    public void setName(String m_Name)
-    {
-        this.m_Name = m_Name;
-    }
-
     public String getCommitSHA1() { return m_CommitSHA1; }
 
     public void setCommitSHA1(String i_CommitSHA1) { this.m_CommitSHA1 = i_CommitSHA1; }

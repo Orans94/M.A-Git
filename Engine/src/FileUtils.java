@@ -2,6 +2,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class FileUtils
@@ -47,7 +48,7 @@ public class FileUtils
         }
     }
 
-    public static void Zip(String i_ZipName, Path i_FilePath)
+    public static void zip(String i_ZipName, Path i_FilePath)
     { //TODO handle exepction
         Path zippingPath = Magit.getMagitDir().resolve("objects").resolve(i_ZipName + ".zip");
         try
@@ -74,6 +75,26 @@ public class FileUtils
         }
 
     }
+    public static void unzip(String i_ZipName, Path i_DestToUnZip) throws IOException
+    {
+        String fileZip = Magit.getMagitDir().resolve("objects").resolve(i_ZipName).toString();
+        File destDir = new File(i_DestToUnZip.toString());
+        byte[] buffer = new byte[1024];
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
+        ZipEntry zipEntry = zis.getNextEntry();
+        while (zipEntry != null) {
+            File newFile = newFile(destDir, zipEntry);
+            FileOutputStream fos = new FileOutputStream(newFile);
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+            fos.close();
+            zipEntry = zis.getNextEntry();
+        }
+        zis.closeEntry();
+        zis.close();
+    }
 
     public static int getNumberOfSubNodes(Path i_Path) throws IOException
     {
@@ -93,6 +114,18 @@ public class FileUtils
         {
 
         }
+    }
+    public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+        File destFile = new File(destinationDir, zipEntry.getName());
+
+        String destDirPath = destinationDir.getCanonicalPath();
+        String destFilePath = destFile.getCanonicalPath();
+
+        if (!destFilePath.startsWith(destDirPath + File.separator)) {
+            throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+        }
+
+        return destFile;
     }
 
 }

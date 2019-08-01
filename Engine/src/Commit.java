@@ -37,7 +37,7 @@ public class Commit
         FileUtils.CreateAndWriteTxtFile(createTempTxtPath, this.toString());
 
         // 2. zipping the temp txt file
-        FileUtils.Zip(i_CommitSHA1FileName, createTempTxtPath);
+        FileUtils.zip(i_CommitSHA1FileName, createTempTxtPath);
 
         // 3. remove the tmp txt file
         FileUtils.deleteFile(createTempTxtPath);

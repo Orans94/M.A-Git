@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 //ENGINE ASSUMPTIONS:
 //1.  m_Engine.ReadRepositoryFromXMLFile(XMLFilePath);
 //    maybe returning a value if something is wrong and if so what is wrong(Exception or string?)
@@ -26,45 +24,42 @@ public class EngineManager
 
     public static void setUserName(String i_UserName) { EngineManager.m_UserName = i_UserName; }
 
-    public void CreateRepository(Path i_RepPath) throws IOException // TODO catch this expection
+    public void createRepository(Path i_RepPath) throws IOException // TODO catch this expection
     {
         m_Repository = new Repository(i_RepPath);
     }
 
-    public void Commit(String i_CommitMessage) throws IOException
+    public boolean commit(String i_CommitMessage) throws IOException
     {
-        //TODO head points to the last commit
-        m_Repository.Commit(i_CommitMessage);
+        return m_Repository.commit(i_CommitMessage);
     }
 
     public boolean isPathExists(Path i_Path) { return Files.exists(i_Path); }
 
-    public boolean IsRepository(Path i_Path) { return Files.exists(i_Path.resolve(".magit")); }
+    public boolean isRepository(Path i_Path) { return Files.exists(i_Path.resolve(".magit")); }
 
     public void CreateDirectory(Path i_RepPath, String i_DirectoryName) throws IOException
     {
         Files.createDirectory(i_RepPath.resolve(i_DirectoryName));
     }
 
-    public boolean isDirectoryNameValid(String repositoryName)
+    public boolean isDirectoryNameValid(String i_RepositoryName)
     {//TODO implement this method
         return true;
+    } //TODO
+
+    public boolean isBranchExists(String i_BranchName)
+    {
+        return m_Repository.getMagit().getBranches().containsKey(i_BranchName);
     }
 
-    public boolean IsBranchExists(String branchName)
-    {
-        return m_Repository.getMagit().getBranches().containsKey(branchName);
-    }
+    public void createNewBranch(String i_BranchName) { m_Repository.createNewBranch(i_BranchName); }
 
-    public void CreateNewBranch(String branchName)
-    {
-        Branch activeBranch = m_Repository.getMagit().getHead().getActiveBranch();
-        Branch newBranch = new Branch(Magit.getMagitDir(),branchName, activeBranch.getCommitSHA1());
-        m_Repository.getMagit().getBranches().put(branchName, newBranch);
-    }
+    public boolean isBranchNameEqualsHead(String i_BranchName) { return i_BranchName.toUpperCase().equals("HEAD"); }
 
-    public boolean isBranchNameEqualsHead(String branchName)
-    {
-        return branchName.toUpperCase().equals("HEAD");
-    }
+    public OpenChanges getOpenChanges() throws IOException { return m_Repository.getOpenChanges(); }
+
+    public boolean isFileSystemDirty(OpenChanges i_OpenChanges) { return !i_OpenChanges.isFileSystemClean(); }
+
+    public void checkout(String branchName) throws IOException { m_Repository.checkout(branchName); }
 }

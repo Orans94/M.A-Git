@@ -27,5 +27,5 @@ public class OpenChanges
 
     public void setModifiedNodes(List<Path> i_ModifiedNodes) { this.m_ModifiedNodes = i_ModifiedNodes; }
 
-    public boolean isEmpty() { return m_DeletedNodes.isEmpty() && m_ModifiedNodes.isEmpty() && m_NewNodes.isEmpty(); }
+    public boolean isFileSystemClean() { return m_DeletedNodes.isEmpty() && m_ModifiedNodes.isEmpty() && m_NewNodes.isEmpty(); }
 }

@@ -5,6 +5,10 @@ import java.util.List;
 
 public class Folder extends Node
 {
+    public List<Item> getItems() { return m_Items; }
+
+    public void setItems(List<Item> i_Items) { m_Items = i_Items; }
+
     private List<Item> m_Items;
 
     public Folder(String i_Content)

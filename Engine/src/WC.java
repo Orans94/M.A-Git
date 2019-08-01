@@ -25,4 +25,6 @@ public class WC
     public Path getWorkingCopyDir() { return m_WorkingCopyDir; }
 
     public void setWorkingCopyDir(Path i_WorkingCopyDir) { this.m_WorkingCopyDir = i_WorkingCopyDir; }
+
+    public void clear() { m_NodeMaps.clear(); }
 }

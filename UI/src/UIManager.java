@@ -9,7 +9,7 @@ public class UIManager
 {
     private EngineManager m_Engine = new EngineManager();
 
-    public void Run()
+    public void Run() throws IOException
     {
         Menu menu = new Menu();
         updateUserName();
@@ -20,7 +20,7 @@ public class UIManager
         }
     }
 
-    private void handleUserChoice()
+    private void handleUserChoice() throws IOException
     {
         int userChoiceInt = 0;
         Scanner scanner = new Scanner(System.in);
@@ -46,7 +46,7 @@ public class UIManager
             case 7: // COMMIT
                 try
                 {
-                    m_Engine.Commit("stu?");
+                    m_Engine.commit("stu?");
                 } catch (Exception e)
                 {
                     e.printStackTrace();
@@ -54,6 +54,9 @@ public class UIManager
                 break;
             case 9:
                 createNewBranch();
+                break;
+            case 11:
+                checkout();
                 break;
             default:
                 exit(0);
@@ -69,7 +72,7 @@ public class UIManager
             // check if the path is exists
             if (m_Engine.isPathExists(repPath.resolve(repositoryName)))
             {
-                if (m_Engine.IsRepository(repPath.resolve(repositoryName))) // check if there is repo in path\\repositoryName
+                if (m_Engine.isRepository(repPath.resolve(repositoryName))) // check if there is repo in path\\repositoryName
                 {
                     // the dir is repository
                     System.out.println("The directory is already a repository");
@@ -77,7 +80,7 @@ public class UIManager
                 else
                 {
                     // create a new repository
-                    m_Engine.CreateRepository(repPath.resolve(repositoryName));
+                    m_Engine.createRepository(repPath.resolve(repositoryName));
                 }
             }
             else //TODO ask: if the path doesn't exists create it? or leave a message?
@@ -130,11 +133,36 @@ public class UIManager
         String userName = scanner.nextLine();
         m_Engine.setUserName(userName);
     }
+
+    private void commit() throws IOException //TODO handle exception
+    {
+        // func #7
+        boolean isWCDirty;
+
+        String commitMessage = requestCommitMessage();
+        isWCDirty = m_Engine.commit(commitMessage);
+        if(isWCDirty)
+        {
+            System.out.println("Committed successfully");
+        }
+        else
+        {
+            System.out.println("There is nothing to commit, WC status is clean");
+        }
+    }
+
+    private String requestCommitMessage()
+    {
+        System.out.println("Please enter commit message");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+
     private void createNewBranch()
     {
         // func #9
         String branchName = requestBranchName();
-        boolean isBranchExists = m_Engine.IsBranchExists(branchName);
+        boolean isBranchExists = m_Engine.isBranchExists(branchName);
         if (isBranchExists)
         {
             System.out.println("Branch " + branchName + " already exists");
@@ -147,7 +175,7 @@ public class UIManager
             }
             else
             {
-                m_Engine.CreateNewBranch(branchName);
+                m_Engine.createNewBranch(branchName);
                 System.out.println("Branch " + branchName + " created successfully");
             }
         }
@@ -160,6 +188,75 @@ public class UIManager
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
+
+    private void checkout() throws IOException {
+        // func #11
+        String branchName = requestBranchName();
+        if(m_Engine.isBranchExists(branchName))
+        {
+            OpenChanges openChanges = m_Engine.getOpenChanges();
+            if (m_Engine.isFileSystemDirty(openChanges)) {
+                notifyUserDirtyStatusBeforeCheckout();
+                boolean toCommit = doesUserWantToCommitBeforeCheckout();
+                if (toCommit)
+                {//TODO implement UI commit that gets a commit message, check if its clean already etc..
+                    commit(); // (UI commit)
+                }
+            }
+
+            m_Engine.checkout(branchName);
+            System.out.println("Checkout made successfully");
+        }
+        else
+        {
+            System.out.println("Branch "+branchName+" does not exists");
+        }
+    }
+
+    private void notifyUserDirtyStatusBeforeCheckout()
+    {
+        System.out.println("Please notice:");
+        System.out.println("You chose to checkout but the WC status is not clean.");
+        System.out.println("If you will not commit before checkout all open changes will lost");
+    }
+
+    private boolean doesUserWantToCommitBeforeCheckout()
+    {
+        showUserCommitChoice();
+        Scanner scanner = new Scanner(System.in);
+        String userChoice = scanner.nextLine();
+        //TODO handle parsing and exceptions(if not an integer).
+        int userChoiceInt = Integer.parseInt(userChoice);
+        boolean isInRange = isUserChoiceInRange(1, 2, userChoiceInt);
+        while (!isInRange)
+        {
+            userChoiceNotInRange();
+            showUserCommitChoice();
+            userChoice = scanner.nextLine();
+            userChoiceInt = Integer.parseInt(userChoice);
+            isInRange = isUserChoiceInRange(1, 2, userChoiceInt);
+        }
+
+        return userChoice.equals("1");
+    }
+
+    private void showUserCommitChoice()
+    {
+        System.out.println("Do you want to commit before checkout?");
+        System.out.println("1. Yes");
+        System.out.println("2. No");
+    }
+
+    private boolean isUserChoiceInRange(int i_Start, int i_End, int i_UserChoice)
+    {
+        return i_UserChoice >= i_Start && i_UserChoice <= i_End;
+    }
+
+    private void userChoiceNotInRange()
+    {
+        System.out.println("The number you entered is not valid, please enter a valid number from the list below:");
+    }
+
 }
 
 

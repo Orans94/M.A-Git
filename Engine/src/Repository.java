@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -98,12 +99,12 @@ public class Repository
         }
     }
 
-    public boolean Commit(String i_CommitMessage) throws IOException
+    public boolean commit(String i_CommitMessage) throws IOException
     {// TODO handle exception
         NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
         WalkFileSystemResult result = new WalkFileSystemResult();
 
-        FileVisitor<Path> fileVisitor = getPostOrderFileVisitor(tempNodeMaps, result);
+        FileVisitor<Path> fileVisitor = getOpenChangesFileVisitor(tempNodeMaps, result);
         Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
         zipNewAndModifiedNodes(result);
         updateDeletedNodeList(tempNodeMaps, result);
@@ -133,7 +134,7 @@ public class Repository
         m_WorkingCopy.setCommitSHA1(commitSHA1);
     }
 
-    private FileVisitor<Path> getPostOrderFileVisitor(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult) {
+    private FileVisitor<Path> getOpenChangesFileVisitor(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult) {
         return new FileVisitor<Path>()
             {
                 @Override
@@ -215,6 +216,7 @@ public class Repository
                 !i_RootFolderSha1.equals(m_Magit.getCommits().get(m_WorkingCopy.getCommitSHA1()).getRootFolderSHA1());
     }
 
+
     private String getRootFolderSHA1()
     {
         String rootFolderItemString = m_ChildrenInformation.get(0);
@@ -242,5 +244,163 @@ public class Repository
         {
             i_Result.getNewLoadedNodes().getNodeBySHA1().get(entry.getValue()).Zip(entry.getValue(), entry.getKey());
         }
+    }
+
+    public OpenChanges getOpenChanges() throws IOException
+    {
+        NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
+        WalkFileSystemResult result = new WalkFileSystemResult();
+
+        FileVisitor<Path> fileVisitor = getOpenChangesFileVisitor(tempNodeMaps, result);
+        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
+
+        return result.getOpenChanges();
+    }
+
+    public void createNewBranch(String i_BranchName)
+    {
+        Branch activeBranch = m_Magit.getHead().getActiveBranch();
+        Branch newBranch = new Branch(Magit.getMagitDir(), i_BranchName, activeBranch.getCommitSHA1());
+        m_Magit.getBranches().put(i_BranchName, newBranch);
+    }
+
+    public void checkout(String i_BranchName) throws IOException
+    {
+        String commitSHA1 = m_Magit.getBranches().get(i_BranchName).getCommitSHA1();
+        String rootFolderSHA1 = m_Magit.getCommits().get(commitSHA1).getRootFolderSHA1();
+        Path tempDestToUnzip = Magit.getMagitDir().resolve("temp");
+
+        // clear repository- clear file system and clear nodes map
+        clear();
+
+        // change head to point on new checkedout branch
+        m_Magit.getHead().setActiveBranch(m_Magit.getBranches().get(i_BranchName));
+
+        //create temp directory in .magit
+        Files.createDirectory(tempDestToUnzip);
+
+        m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
+
+        FileVisitor<Path> checkoutFileVisitor = getCheckoutFileVisitor(tempDestToUnzip);
+        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(),checkoutFileVisitor);
+        FileVisitor<Path> removeFileVisitor = getRemoveFileVisitor();
+        Files.walkFileTree(tempDestToUnzip, removeFileVisitor);
+        Files.delete(tempDestToUnzip);
+    }
+
+    private FileVisitor<Path> getCheckoutFileVisitor(Path i_TempDestToUnzip) {
+        FileVisitor<Path> checkoutFileVisitor = new FileVisitor<Path>()
+        {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+            {
+                if (dir.getFileName().toString().equals(".magit"))
+                {
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
+                String myBlobContent;
+
+                // unzip myself to temp folder in .magit
+                String zipName = m_WorkingCopy.getNodeMaps().getSHA1ByPath().get(dir);
+                FileUtils.unzip(zipName, i_TempDestToUnzip);
+
+                // creating folder
+                String myDirContent = new String(Files.readAllBytes(i_TempDestToUnzip.resolve(zipName+".txt")));
+                Folder folder = new Folder(myDirContent);
+
+                // add to map
+                m_WorkingCopy.getNodeMaps().getNodeBySHA1().put(zipName, folder);
+
+                folder.createItemListFromContent();
+                // to all my childs
+                for (Item item: folder.getItems())
+                {
+                    m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(dir.resolve(item.getName()),item.getSHA1());
+                    if (item.getType().equals("Folder"))
+                    {
+                        Files.createDirectory(dir.resolve(item.getName()));
+                    }
+                    else
+                    {
+                        zipName = m_WorkingCopy.getNodeMaps().getSHA1ByPath().get(dir.resolve(item.getName()));
+                        FileUtils.unzip(zipName, i_TempDestToUnzip);
+                        myBlobContent = new String(Files.readAllBytes(i_TempDestToUnzip.resolve(zipName+".txt")));
+                        FileUtils.CreateAndWriteTxtFile(dir.resolve(item.getName()),myBlobContent);
+                        Blob blob = new Blob(myBlobContent);
+                        m_WorkingCopy.getNodeMaps().getNodeBySHA1().put(zipName, blob);
+                    }
+                }
+
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+            {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
+            {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+            {
+                return FileVisitResult.CONTINUE;
+            }
+        };
+        return checkoutFileVisitor;
+    }
+
+    private void clear() throws IOException
+    {
+        Path workingCopyDir = m_WorkingCopy.getWorkingCopyDir();
+        FileVisitor<Path> removeFileVisitor = getRemoveFileVisitor();
+        Files.walkFileTree(workingCopyDir, removeFileVisitor);
+        m_WorkingCopy.clear();
+    }
+
+    private FileVisitor<Path> getRemoveFileVisitor() {
+        return new FileVisitor<Path>()
+            {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+                {
+                    if (dir.getFileName().toString().equals(".magit"))
+                    {
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    else
+                    {
+                        return FileVisitResult.CONTINUE;
+                    }
+                }
+    
+                @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+                {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
+                {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+                {
+                    if (!dir.equals(m_WorkingCopy.getWorkingCopyDir()))
+                    {
+                        Files.delete(dir);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            };
     }
 }
