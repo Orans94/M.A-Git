@@ -7,10 +7,22 @@ public class NodeMaps
     private Map<String, Node> m_NodeBySHA1;
     private Map<Path, String> m_SHA1ByPath;
 
-    public NodeMaps(Map<String, Node> i_m1, Map<Path, String> i_m2)
+    public NodeMaps()
     {
-        m_NodeBySHA1 = i_m1;
-        m_SHA1ByPath = i_m2;
+        m_NodeBySHA1 = new HashMap<>();
+        m_SHA1ByPath = new HashMap<>();
+    }
+
+    public NodeMaps(NodeMaps i_newNodeMaps)
+    {
+        m_NodeBySHA1 = MapUtilities.deepClone(i_newNodeMaps.getNodeBySHA1());
+        m_SHA1ByPath = MapUtilities.deepClone(i_newNodeMaps.getSHA1ByPath());
+    }
+
+    public void clear()
+    {
+        m_NodeBySHA1.clear();
+        m_SHA1ByPath.clear();
     }
 
     public Map<String, Node> getNodeBySHA1()

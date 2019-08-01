@@ -10,6 +10,15 @@ public class Commit
     private String m_Message;
     private Date m_CommitDate;
     private String m_CommitAuthor;
+    private OpenChanges m_OpenChanges;
+
+    public OpenChanges getOpenChanges() { return m_OpenChanges; }
+
+    public void setOpenChanges(OpenChanges i_OpenChanges) { m_OpenChanges = i_OpenChanges; }
+
+    public String getParentSHA1() {return m_ParentSHA1;}
+
+    public void setParentSHA1(String i_ParentSHA1) { m_ParentSHA1 = i_ParentSHA1; }
 
     public Commit(String i_RootFolderSHA1, String i_ParentSHA1, String i_Message)
     {
@@ -18,6 +27,7 @@ public class Commit
         m_Message = i_Message;
         m_CommitDate = new Date();
         m_CommitAuthor = EngineManager.getUserName();
+        m_OpenChanges = new OpenChanges();
     }
 
     public void Zip(String i_CommitSHA1FileName)

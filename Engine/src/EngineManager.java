@@ -50,4 +50,21 @@ public class EngineManager
     {//TODO implement this method
         return true;
     }
+
+    public boolean IsBranchExists(String branchName)
+    {
+        return m_Repository.getMagit().getBranches().containsKey(branchName);
+    }
+
+    public void CreateNewBranch(String branchName)
+    {
+        Branch activeBranch = m_Repository.getMagit().getHead().getActiveBranch();
+        Branch newBranch = new Branch(Magit.getMagitDir(),branchName, activeBranch.getCommitSHA1());
+        m_Repository.getMagit().getBranches().put(branchName, newBranch);
+    }
+
+    public boolean isBranchNameEqualsHead(String branchName)
+    {
+        return branchName.toUpperCase().equals("HEAD");
+    }
 }

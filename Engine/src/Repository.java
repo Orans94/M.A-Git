@@ -37,98 +37,9 @@ public class Repository
         this.m_WorkingCopy = i_WorkingCopy;
     }
 
-    public Magit getMagit()
-    {
-        return m_Magit;
-    }
+    public Magit getMagit() { return m_Magit; }
 
-    public void setMagit(Magit i_Magit)
-    {
-        this.m_Magit = i_Magit;
-    }
-
-    public void Commit(String i_CommitMessage) throws IOException
-    {// TODO handle exception
-        FileVisitor<Path> fileVisitor = new FileVisitor<Path>()
-        {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
-            {
-                if (dir.getFileName().toString().equals(".magit"))
-                {
-                    return FileVisitResult.SKIP_SUBTREE;
-                } else
-                {
-                    return FileVisitResult.CONTINUE;
-                }
-            }
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
-            {
-                //1. Sha-1
-                String blobContent = new String(Files.readAllBytes(file));
-                Blob blob = new Blob(blobContent);
-                String blobSha1 = blob.SHA1();
-
-                //2. Zip & save the zip in objects directory
-                blob.Zip(blobSha1, file);
-
-                //3. push blob to m_Nodes
-                m_WorkingCopy.getNodeMaps().get.put(blobSha1, blob);
-
-                //4. append my info to m_ChildrenInformation
-                m_ChildrenInformation.add(blob.generateStringInformation(blobSha1, file.toFile().getName()));
-
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
-            {
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
-            { //TODO handle exception
-                System.out.println(dir);
-
-                //1. L <- Check how many kids I have.
-                int numOfChildren = FileUtils.getNumberOfSubNodes(dir);
-                numOfChildren += m_WorkingCopy.getWorkingCopyDir() == dir ? -1 : 0;
-
-                //2. add the item information of my children to my content
-                String folderContent = generateFolderContent(numOfChildren);
-
-                //3.create a folder object from the details and put it in m_Nodes
-                Folder folder = new Folder(folderContent);
-
-                //4.add content details to item list of folder
-                folder.createItemListFromContent();
-
-                //add folder to map of nodes
-                String folderSHA1 = m_WorkingCopy.addFolderToMap(folder);
-
-                //5. update children information
-                updateChildrenInformation(dir, numOfChildren, folder, folderSHA1);
-
-                //6. zip the folder and save me in objects dir
-                folder.Zip(folderSHA1, dir);
-
-                return FileVisitResult.CONTINUE;
-            }
-        };
-
-        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
-        String rootFolderItemString = m_ChildrenInformation.get(0);
-        String rootFolderSha1 = Item.getSha1FromItemString(rootFolderItemString);
-        m_ChildrenInformation.clear();
-
-        m_Magit.handleNewCommit(rootFolderSha1
-                , m_Magit.getHead().getActiveBranch().getCommitSHA1()
-                , i_CommitMessage);
-    }
+    public void setMagit(Magit i_Magit) { this.m_Magit = i_Magit; }
 
     private void updateChildrenInformation(Path i_Dir, int i_NumOfChildren, Folder i_Folder, String i_FolderSHA1)
     {
@@ -160,131 +71,176 @@ public class Repository
     }
 
     private void handleNodeByStatus(WalkFileSystemResult i_Result, String i_SHA1,
-                                    Node i_Node, Path i_Path, NodeMaps i_NodeMaps)
+                                    Node i_Node, Path i_Path, NodeMaps i_TempNodeMaps)
     {
-        if (!i_NodeMaps.getSHA1ByPath().containsKey(i_Path))
+        if (!i_TempNodeMaps.getSHA1ByPath().containsKey(i_Path))
         {// New File!
             i_Result.getOpenChanges().getNewNodes().add(i_Path);
-            i_Result.getSHA1ByPath().put(i_Path, i_SHA1);
-            i_Result.getNodeBySHA1().put(i_SHA1, i_Node);
+            i_Result.getNewLoadedNodes().getSHA1ByPath().put(i_Path, i_SHA1);
+            i_Result.getNewLoadedNodes().getNodeBySHA1().put(i_SHA1, i_Node);
         }
         else
         { // the path exists in the WC
-            if(i_SHA1.equals(i_NodeMaps.getSHA1ByPath().get(i_Path)))
+            if(i_SHA1.equals(i_TempNodeMaps.getSHA1ByPath().get(i_Path)))
             { // the file has not been modified
-                i_Result.getUnchangedNodes().put(i_Path, i_SHA1);
+                i_Result.getUnchangedNodes().getSHA1ByPath().put(i_Path, i_SHA1);
+                i_Result.getUnchangedNodes().getNodeBySHA1().put(i_SHA1, i_TempNodeMaps.getNodeBySHA1().get(i_SHA1));
             }
             else
             {// the file has been modified - delete from temp and add to new maps
                 i_Result.getOpenChanges().getModifiedNodes().add(i_Path);
-                i_Result.getSHA1ByPath().put(i_Path, i_SHA1);
-                i_Result.getNodeBySHA1().put(i_SHA1, i_Node);
+                i_Result.getNewLoadedNodes().getSHA1ByPath().put(i_Path, i_SHA1);
+                i_Result.getNewLoadedNodes().getNodeBySHA1().put(i_SHA1, i_Node);
             }
 
-            i_NodeMaps.getNodeBySHA1().remove(i_SHA1);
-            i_NodeMaps.getSHA1ByPath().remove(i_Path);
+            i_TempNodeMaps.getNodeBySHA1().remove(i_SHA1);
+            i_TempNodeMaps.getSHA1ByPath().remove(i_Path);
         }
     }
 
-    public void Commit1(String i_CommitMessage) throws IOException
+    public boolean Commit(String i_CommitMessage) throws IOException
     {// TODO handle exception
-        NodeMaps tempNodeMaps = new NodeMaps(MapUtilities.deepClone(m_WorkingCopy.getNodeMaps().getNodeBySHA1()),MapUtilities.deepClone(m_WorkingCopy.getNodeMaps().getSHA1ByPath()));
-
+        NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
         WalkFileSystemResult result = new WalkFileSystemResult();
-        FileVisitor<Path> fileVisitor = new FileVisitor<Path>()
+
+        FileVisitor<Path> fileVisitor = getPostOrderFileVisitor(tempNodeMaps, result);
+        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
+        zipNewAndModifiedNodes(result);
+        updateDeletedNodeList(tempNodeMaps, result);
+        m_WorkingCopy.setNodeMaps(result.getNewLoadedNodes());
+        String rootFolderSha1 = getRootFolderSHA1();
+        m_ChildrenInformation.clear();
+        boolean isWCDirty = isWCDirty(rootFolderSha1);
+        if(isWCDirty)
         {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+            manageDirtyWC(i_CommitMessage, result, rootFolderSha1);
+        }
+
+        return isWCDirty;
+    }
+
+    private void updateDeletedNodeList(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult) {
+        addUnchangedNodesToNewNodeMaps(i_TempNodeMaps, i_WalkFileSystemResult);
+        i_WalkFileSystemResult.getUnchangedNodes().clear();
+        addDeletedNodesToDeletedList(i_TempNodeMaps, i_WalkFileSystemResult);
+    }
+
+    private void manageDirtyWC(String i_CommitMessage, WalkFileSystemResult i_WalkFileSystemResult, String i_RootFolderSha1) {
+        String commitSHA1 = m_Magit.handleNewCommit(i_RootFolderSha1
+                , m_Magit.getHead().getActiveBranch().getCommitSHA1()
+                , i_CommitMessage);
+        configureNewCommit(i_WalkFileSystemResult, commitSHA1);
+        m_WorkingCopy.setCommitSHA1(commitSHA1);
+    }
+
+    private FileVisitor<Path> getPostOrderFileVisitor(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult) {
+        return new FileVisitor<Path>()
             {
-                if (dir.getFileName().toString().equals(".magit"))
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
                 {
-                    return FileVisitResult.SKIP_SUBTREE;
+                    if (dir.getFileName().toString().equals(".magit"))
+                    {
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    else
+                    {
+                        return FileVisitResult.CONTINUE;
+                    }
                 }
-                else
+
+
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+                {
+                    // read txt file content , make a blob from it and SHA1 it
+                    String blobContent = new String(Files.readAllBytes(file));
+                    Blob blob = new Blob(blobContent);
+                    String blobSha1 = blob.SHA1();
+
+                    // filter the blob by his status - new modified or deleted
+                    handleNodeByStatus(i_WalkFileSystemResult, blobSha1, blob, file, i_TempNodeMaps);
+
+                    // append my info to m_ChildrenInformation
+                    m_ChildrenInformation.add(blob.generateStringInformation(blobSha1, file.toFile().getName()));
+
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
                 {
                     return FileVisitResult.CONTINUE;
                 }
-            }
 
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+                { //TODO handle exception
 
+                    //1. L <- Check how many kids I have.
+                    int numOfChildren = FileUtils.getNumberOfSubNodes(dir);
+                    numOfChildren += m_WorkingCopy.getWorkingCopyDir() == dir ? -1 : 0;
 
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
-            {
-                //1. Sha-1
-                String blobContent = new String(Files.readAllBytes(file));
-                Blob blob = new Blob(blobContent);
-                String blobSha1 = blob.SHA1();
+                    //2. add the item information of my children to my content
+                    String folderContent = generateFolderContent(numOfChildren);
 
-                if (!tempSHA1ByPath.containsKey(file))
-                {// New File!
-                    result.getOpenChanges().getNewNodes().add(file);
-                    result.getSHA1ByPath().put(file, blobSha1);
-                    result.getNodeBySHA1().put(blobSha1, blob);
+                    //3.create a folder object from the details and put it in m_Nodes
+                    Folder folder = new Folder(folderContent);
+
+                    //4.add content details to item list of folder
+                    folder.createItemListFromContent();
+
+                    //5. SHA1 the folder
+                    String folderSHA1 = folder.SHA1();
+
+                    //6. filter the node by status - new modified or deleted.
+                    handleNodeByStatus(i_WalkFileSystemResult, folderSHA1, folder, dir, i_TempNodeMaps);
+
+                    //7. update children information
+                    updateChildrenInformation(dir, numOfChildren, folder, folderSHA1);
+
+                    return FileVisitResult.CONTINUE;
                 }
-                else
-                { // the path exists in the WC
-                    if(blobSha1.equals(tempSHA1ByPath.get(file)))
-                    { // the file has not been modified
-                        result.getUnchangedNodes().put(file, blobSha1);
-                    }
-                    else
-                    {// the file has been modified - delete from temp and add to new maps
-                        result.getOpenChanges().getModifiedNodes().add(file);
-                        result.getSHA1ByPath().put(file, blobSha1);
-                        result.getNodeBySHA1().put(blobSha1, blob);
-                    }
+            };
+    }
 
-                    tempNodeBySHA1.remove(blobSha1);
-                    tempSHA1ByPath.remove(file);
-                }
+    private void configureNewCommit(WalkFileSystemResult i_Result, String i_CommitSHA1) {
+        m_Magit.getCommits().get(i_CommitSHA1).setParentSHA1(m_WorkingCopy.getCommitSHA1());
+        m_Magit.getCommits().get(i_CommitSHA1).setOpenChanges(i_Result.getOpenChanges());
+    }
 
-                //4. append my info to m_ChildrenInformation
-                m_ChildrenInformation.add(blob.generateStringInformation(blobSha1, file.toFile().getName()));
+    private boolean isWCDirty(String i_RootFolderSha1) {
+        return m_WorkingCopy.getCommitSHA1().equals("") ||
+                !i_RootFolderSha1.equals(m_Magit.getCommits().get(m_WorkingCopy.getCommitSHA1()).getRootFolderSHA1());
+    }
 
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
-            {
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
-            { //TODO handle exception
-
-                //1. L <- Check how many kids I have.
-                int numOfChildren = FileUtils.getNumberOfSubNodes(dir);
-                numOfChildren += m_WorkingCopy.getWorkingCopyDir() == dir ? -1 : 0;
-
-                //2. add the item information of my children to my content
-                String folderContent = generateFolderContent(numOfChildren);
-
-                //3.create a folder object from the details and put it in m_Nodes
-                Folder folder = new Folder(folderContent);
-
-                //4.add content details to item list of folder
-                folder.createItemListFromContent();
-
-                String folderSHA1 = folder.SHA1();
-
-                //5. update children information
-                updateChildrenInformation(dir, numOfChildren, folder, folderSHA1);
-
-                return FileVisitResult.CONTINUE;
-            }
-        };
-
-        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
-        //TODO zip all needed files and merge unchanged to newmaps.
+    private String getRootFolderSHA1()
+    {
         String rootFolderItemString = m_ChildrenInformation.get(0);
-        String rootFolderSha1 = Item.getSha1FromItemString(rootFolderItemString);
-        m_ChildrenInformation.clear();
+        return Item.getSha1FromItemString(rootFolderItemString);
+    }
 
-        m_Magit.handleNewCommit(rootFolderSha1
-                , m_Magit.getHead().getActiveBranch().getCommitSHA1()
-                , i_CommitMessage);
+    private void addDeletedNodesToDeletedList(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_Result)
+    {
+        for(Map.Entry<Path,String> entry : i_TempNodeMaps.getSHA1ByPath().entrySet())
+        {
+            i_Result.getOpenChanges().getDeletedNodes().add(entry.getKey());
+        }
+    }
+
+    private void addUnchangedNodesToNewNodeMaps(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_Result) {
+        for(Map.Entry<Path,String> entry : i_Result.getUnchangedNodes().getSHA1ByPath().entrySet())
+        {
+            i_Result.getNewLoadedNodes().getSHA1ByPath().put(entry.getKey(),entry.getValue());
+            i_Result.getNewLoadedNodes().getNodeBySHA1().put(entry.getValue(), i_TempNodeMaps.getNodeBySHA1().get(entry.getValue()));
+        }
+    }
+
+    private void zipNewAndModifiedNodes(WalkFileSystemResult i_Result) {
+        for(Map.Entry<Path,String> entry: i_Result.getNewLoadedNodes().getSHA1ByPath().entrySet())
+        {
+            i_Result.getNewLoadedNodes().getNodeBySHA1().get(entry.getValue()).Zip(entry.getValue(), entry.getKey());
+        }
     }
 }

@@ -52,6 +52,9 @@ public class UIManager
                     e.printStackTrace();
                 }
                 break;
+            case 9:
+                createNewBranch();
+                break;
             default:
                 exit(0);
         }
@@ -70,12 +73,14 @@ public class UIManager
                 {
                     // the dir is repository
                     System.out.println("The directory is already a repository");
-                } else
+                }
+                else
                 {
                     // create a new repository
                     m_Engine.CreateRepository(repPath.resolve(repositoryName));
                 }
-            } else //TODO ask: if the path doesn't exists create it? or leave a message?
+            }
+            else //TODO ask: if the path doesn't exists create it? or leave a message?
             {
                 System.out.println("Path does not exists");
                 //m_Engine.CreateDirectory(repPath, repositoryName);
@@ -125,7 +130,36 @@ public class UIManager
         String userName = scanner.nextLine();
         m_Engine.setUserName(userName);
     }
+    private void createNewBranch()
+    {
+        // func #9
+        String branchName = requestBranchName();
+        boolean isBranchExists = m_Engine.IsBranchExists(branchName);
+        if (isBranchExists)
+        {
+            System.out.println("Branch " + branchName + " already exists");
+        }
+        else
+        {
+            if(m_Engine.isBranchNameEqualsHead(branchName))
+            {
+                System.out.println("You can not set branch name to HEAD");
+            }
+            else
+            {
+                m_Engine.CreateNewBranch(branchName);
+                System.out.println("Branch " + branchName + " created successfully");
+            }
+        }
+    }
 
+    private String requestBranchName()
+    {
+        // requesting branch name from the user and returning a string represents it.
+        System.out.println("Please enter the branch name");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
 }
 
 

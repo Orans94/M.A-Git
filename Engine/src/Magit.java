@@ -7,7 +7,7 @@ public class Magit
 {
     private Map<String, Commit> m_Commits;
     private Map<String, Branch> m_Branches;
-    private static Path m_MagitDir;
+    private static Path m_MagitDir = Paths.get("");
     private Head m_Head;
     
     public Magit(Path i_MagitPath)
@@ -20,51 +20,29 @@ public class Magit
         m_Branches.put(master.getName(), master);
     }
 
-    public static Path getMagitDir()
-    {
-        return m_MagitDir;
-    }
+    public static Path getMagitDir() { return m_MagitDir; }
 
-    public static void setMagitDir(Path i_MagitDir) {
-        Magit.m_MagitDir = i_MagitDir;
-    }
+    public void setMagitDir(Path i_MagitDir) { m_MagitDir = i_MagitDir; }
+    public Map<String, Commit> getCommits() { return m_Commits; }
 
-    public Map<String, Commit> getCommits()
-    {
-        return m_Commits;
-    }
+    public void setCommits(Map<String, Commit> i_Commits) { m_Commits = i_Commits; }
 
-    public void setCommits(Map<String, Commit> i_Commits)
-    {
-        this.m_Commits = i_Commits;
-    }
+    public Map<String, Branch> getBranches() { return m_Branches; }
 
-    public Map<String, Branch> getBranches() 
-    {
-        return m_Branches;
-    }
+    public void setBranches(Map<String, Branch> i_Branches) { this.m_Branches = i_Branches; }
 
-    public void setBranches(Map<String, Branch> i_Branches) 
-    {
-        this.m_Branches = i_Branches;
-    }
+    public Head getHead() { return m_Head; }
 
-    public Head getHead() 
-    {
-        return m_Head;
-    }
+    public void setHead(Head i_Head) { this.m_Head = i_Head; }
 
-    public void setHead(Head i_Head) 
-    {
-        this.m_Head = i_Head;
-    }
-
-    public void handleNewCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
+    public String handleNewCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
     {
         String commitSHA1 = createCommit(i_RootFolderSha1, i_ParentSHA1, i_CommitMessage);
         setActiveBranchToNewCommit(commitSHA1);
         Commit commit = m_Commits.get(commitSHA1);
         commit.Zip(commitSHA1);
+
+        return commitSHA1;
     }
 
     private void setActiveBranchToNewCommit(String i_CommitSHA1)
