@@ -34,13 +34,13 @@ public class Commit
     {
         // 1. creating temp txt file in objects dir
         Path createTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_CommitSHA1FileName + ".txt");
-        FileUtils.CreateAndWriteTxtFile(createTempTxtPath, this.toString());
+        FileUtilities.CreateAndWriteTxtFile(createTempTxtPath, this.toString());
 
         // 2. zipping the temp txt file
-        FileUtils.zip(i_CommitSHA1FileName, createTempTxtPath);
+        FileUtilities.zip(i_CommitSHA1FileName, createTempTxtPath);
 
         // 3. remove the tmp txt file
-        FileUtils.deleteFile(createTempTxtPath);
+        FileUtilities.deleteFile(createTempTxtPath);
     }
     @Override
     public String toString()

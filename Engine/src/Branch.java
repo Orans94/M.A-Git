@@ -1,5 +1,3 @@
-import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Branch
@@ -11,7 +9,7 @@ public class Branch
     {
         m_CommitSHA1 = i_CommitSHA1;
         m_Name = i_Name;
-        FileUtils.CreateAndWriteTxtFile(i_RepoPath.resolve("branches").resolve(i_Name.concat(".txt")), i_CommitSHA1);
+        FileUtilities.CreateAndWriteTxtFile(i_RepoPath.resolve("branches").resolve(i_Name.concat(".txt")), i_CommitSHA1);
     }
 
     public String getName()

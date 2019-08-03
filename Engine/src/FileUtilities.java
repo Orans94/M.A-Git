@@ -2,10 +2,11 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-public class FileUtils
+public class FileUtilities
 {
     public static void modifyTxtFile(Path i_Path, String i_Content)
     {
@@ -107,7 +108,6 @@ public class FileUtils
         // TODO handle exception
         try
         {
-
             Files.delete(i_FileToDelete);
         }
         catch (IOException e)
@@ -126,6 +126,24 @@ public class FileUtils
         }
 
         return destFile;
+    }
+
+    public static String getTxtFromZip(String i_ZipFileName, String i_TxtFileNameInZip ) throws IOException
+    {
+        //read File From Zip Without extract here
+        ZipFile zipFile = new ZipFile(Magit.getMagitDir().resolve("objects").resolve(i_ZipFileName).toString());
+        ZipEntry zipEntry = zipFile.getEntry(i_TxtFileNameInZip);
+
+        InputStream inputStream = zipFile.getInputStream(zipEntry);
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
+        }
+
+        return result.toString("UTF-8");
     }
 
 }

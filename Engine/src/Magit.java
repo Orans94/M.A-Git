@@ -50,7 +50,7 @@ public class Magit
         //set active branch content to new commit sha1
         m_Head.getActiveBranch().setCommitSHA1(i_CommitSHA1);
         //change file content in file system
-        FileUtils.modifyTxtFile(m_MagitDir.resolve("branches").resolve(m_Head.getActiveBranch().getName() + ".txt"), i_CommitSHA1);
+        FileUtilities.modifyTxtFile(m_MagitDir.resolve("branches").resolve(m_Head.getActiveBranch().getName() + ".txt"), i_CommitSHA1);
     }
 
     private String createCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
