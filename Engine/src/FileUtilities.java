@@ -177,4 +177,8 @@ public class FileUtilities
         return result.toString("UTF-8");
     }
 
+    public static boolean isDirectory(Path i_dirToCheck)
+    {
+        return Files.isDirectory(i_dirToCheck);
+    }
 }

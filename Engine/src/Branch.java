@@ -12,6 +12,7 @@ public class Branch
         FileUtilities.CreateAndWriteTxtFile(i_RepoPath.resolve("branches").resolve(i_Name.concat(".txt")), i_CommitSHA1);
     }
 
+
     public String getName()
     {
         return m_Name;

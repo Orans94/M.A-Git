@@ -57,5 +57,11 @@ public class Commit
 
     public String getRootFolderSHA1() { return m_RootFolderSHA1; }
 
+    public Date getCommitDate() { return m_CommitDate; }
+
     public void setRootFolderSHA1(String i_RootFolderSHA1) { this.m_RootFolderSHA1 = i_RootFolderSHA1; }
+
+    public String getCommitAuthor() { return m_CommitAuthor; }
+
+    public String getMessage() { return m_Message; }
 }

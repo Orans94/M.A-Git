@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -32,7 +34,8 @@ public class UIManager
                 String userChoice = scanner.nextLine();
                 userChoiceInt = Integer.parseInt(userChoice);
                 isParseFailed = false;
-            } catch (NumberFormatException e)
+            }
+            catch (NumberFormatException e)
             {
                 System.out.printf("The number you entered is not valid, please enter an Integer");
             }
@@ -40,59 +43,132 @@ public class UIManager
 
         switch (userChoiceInt)
         {
+            case 1:
+                updateUserName();
+                break;
             case 2: // GIT INIT
                 initializeRepository();
                 break;
+            case 5:
+                showDetailsOfCurrentCommit();
+                break;
+            case 6:
+                showStatus();
+                break;
             case 7: // COMMIT
-                try
-                {
-                    m_Engine.commit("stu?");
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                commit();
+                break;
+            case 8:
+                showAllBranches();
                 break;
             case 9:
                 createNewBranch();
                 break;
+            case 10:
+                deleteBranch();
+                break;
             case 11:
                 checkout();
+                break;
+            case 12:
+                showActiveBranchHistory();
                 break;
             default:
                 exit(0);
         }
     }
 
+    private void showStatus() throws IOException
+    {
+        OpenChanges openChanges = m_Engine.getOpenChanges();
+        printOpenChanges(openChanges);
+    }
+
+    private void printOpenChanges(OpenChanges openChanges)
+    {
+        if(openChanges.isFileSystemClean())
+        {
+            System.out.println("WC is clean");
+        }
+        else
+        {
+            printList("Deleted", openChanges.getDeletedNodes());
+            printList("Modified", openChanges.getModifiedNodes());
+            printList("New", openChanges.getNewNodes());
+        }
+    }
+
+    private void printList(String i_Status, List<Path> i_OpenChangesList)
+    {
+        //printing an openchanges list with its status
+        for (Path path : i_OpenChangesList)
+        {
+            System.out.println(i_Status + ": " + path);
+        }
+    }
+
     private void initializeRepository()
     {
         Path repPath = requestPath();
-        String repositoryName = requestRepositoryName();
         try
         {
-            // check if the path is exists
-            if (m_Engine.isPathExists(repPath.resolve(repositoryName)))
-            {
-                if (m_Engine.isRepository(repPath.resolve(repositoryName))) // check if there is repo in path\\repositoryName
+            if (m_Engine.isPathExists(repPath))
+            { //  the path is exists
+                if (m_Engine.isRepository(repPath)) // check if there is repo in path\\repositoryName
                 {
                     // the dir is repository
-                    System.out.println("The directory is already a repository");
+                    boolean toStash = doesUserWantToStashExistingRepository();
+                    if(toStash)
+                    {
+                        m_Engine.stashRepository(repPath);
+                        createNewRepository(repPath);
+                    }
                 }
                 else
                 {
-                    // create a new repository
-                    m_Engine.createRepository(repPath.resolve(repositoryName));
+                    createNewRepository(repPath);
                 }
             }
-            else //TODO ask: if the path doesn't exists create it? or leave a message?
+            else
             {
                 System.out.println("Path does not exists");
-                //m_Engine.CreateDirectory(repPath, repositoryName);
-                //m_Engine.CreateRepository(repPath.resolve(repositoryName));
             }
-        } catch (IOException e) //TODO handle create dir fail
+        }
+        catch (IOException e) //TODO handle create dir fail
         {
 
         }
+    }
+
+    private void createNewRepository(Path i_RepPath) throws IOException
+    {
+        String repositoryName = requestRepositoryName();
+        m_Engine.createRepository(i_RepPath,repositoryName);
+        System.out.println("A new repository has been created successfully");
+    }
+
+    private boolean doesUserWantToStashExistingRepository()
+    {
+        System.out.println("The directory is already a repository");
+        boolean isValid = true;
+        int choiceInt;
+
+        do
+        {
+            System.out.println("Would you like to stash the existing repository?");
+            System.out.println("1. Yes");
+            System.out.println("2. No");
+            Scanner scanner = new Scanner(System.in);
+            String choice = scanner.nextLine();
+            choiceInt = Integer.parseInt(choice);
+            isValid = isUserChoiceInRange(1,2, choiceInt);
+            if(!isValid)
+            {
+                userChoiceNotInRange();
+            }
+        }while(!isValid);
+
+        return choiceInt == 1;
     }
 
     private Path requestPath()
@@ -100,15 +176,8 @@ public class UIManager
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
         System.out.println("Please enter a legal path");
         String pathString = myObj.nextLine();  // Read path input
-        Path path = Paths.get(pathString);
-        while (!m_Engine.isPathExists(path))
-        {
-            System.out.println("The path doesn't exists, Please enter a legal path");
-            pathString = myObj.nextLine();
-            path = Paths.get(pathString);
-        }
 
-        return path;
+        return Paths.get(pathString);
     }
 
     private String requestRepositoryName()
@@ -127,11 +196,11 @@ public class UIManager
     }
 
     private void updateUserName()
-    {
+    {//TODO menu.requestusrname??
         Menu.requestUserName();
         Scanner scanner = new Scanner(System.in);
         String userName = scanner.nextLine();
-        m_Engine.setUserName(userName);
+        EngineManager.setUserName(userName);
     }
 
     private void commit() throws IOException //TODO handle exception
@@ -141,7 +210,7 @@ public class UIManager
 
         String commitMessage = requestCommitMessage();
         isWCDirty = m_Engine.commit(commitMessage);
-        if(isWCDirty)
+        if (isWCDirty)
         {
             System.out.println("Committed successfully");
         }
@@ -169,7 +238,7 @@ public class UIManager
         }
         else
         {
-            if(m_Engine.isBranchNameEqualsHead(branchName))
+            if (m_Engine.isBranchNameEqualsHead(branchName))
             {
                 System.out.println("You can not set branch name to HEAD");
             }
@@ -189,13 +258,15 @@ public class UIManager
         return scanner.nextLine();
     }
 
-    private void checkout() throws IOException {
+    private void checkout() throws IOException
+    {
         // func #11
         String branchName = requestBranchName();
-        if(m_Engine.isBranchExists(branchName))
+        if (m_Engine.isBranchExists(branchName))
         {
             OpenChanges openChanges = m_Engine.getOpenChanges();
-            if (m_Engine.isFileSystemDirty(openChanges)) {
+            if (m_Engine.isFileSystemDirty(openChanges))
+            {
                 notifyUserDirtyStatusBeforeCheckout();
                 boolean toCommit = doesUserWantToCommitBeforeCheckout();
                 if (toCommit)
@@ -209,7 +280,7 @@ public class UIManager
         }
         else
         {
-            System.out.println("Branch "+branchName+" does not exists");
+            System.out.println("Branch " + branchName + " does not exists");
         }
     }
 
@@ -252,11 +323,134 @@ public class UIManager
         return i_UserChoice >= i_Start && i_UserChoice <= i_End;
     }
 
+    private void printBranch(Branch i_Branch, Head i_Head)
+    {
+        // printing all branches - helper of func #8
+        boolean isGitHaveCommits = m_Engine.getRepository().getMagit().getCommits().containsKey(i_Branch.getCommitSHA1());
+        String commitMessage = isGitHaveCommits ?
+                m_Engine.getRepository().getMagit().getCommits().get(i_Branch.getCommitSHA1()).getMessage() : "";
+        if(i_Branch == i_Head.getActiveBranch())
+        {
+            System.out.println("1. Branch name: " + i_Branch.getName() + " (HEAD)");
+        }
+        else
+        {
+            System.out.println("1. Branch name: " + i_Branch.getName());
+        }
+        if (isGitHaveCommits)
+        {
+            System.out.println("2. SHA1 of the pointed commit: " + i_Branch.getCommitSHA1());
+            System.out.println("3. Message of the pointed commit: " + commitMessage);
+        }
+    }
+
     private void userChoiceNotInRange()
     {
         System.out.println("The number you entered is not valid, please enter a valid number from the list below:");
     }
 
+    private void changeRepository()
+    {
+        // func #3
+        Path repoPath = requestPath();
+        boolean isMagitRepo = m_Engine.isRepository(repoPath);
+        if (!isMagitRepo)
+        {
+            System.out.println("The given path does not represents a M.A Git repository");
+        }
+        else
+        {
+            m_Engine.changeRepository(repoPath);
+            System.out.println("Current ");
+        }
+    }
+
+    private void showAllBranches()
+    {
+        // func #8
+        Map<String, Branch> branches = m_Engine.getRepository().getMagit().getBranches();
+        Head head = m_Engine.getRepository().getMagit().getHead();
+        for (Map.Entry<String, Branch> entry : branches.entrySet())
+        {
+            printBranch(entry.getValue(), head);
+        }
+    }
+
+    private void showDetailsOfCurrentCommit()
+    {
+        // func #5
+        NodeMaps nodeMaps = m_Engine.getRepository().getNodeMaps();
+        if(nodeMaps.isEmpty())
+        {
+            System.out.println("Commit has not been done yet");
+        }
+        else
+        {
+            for (Map.Entry<Path, String> entry : nodeMaps.getSHA1ByPath().entrySet())
+            {
+                if (m_Engine.isDirectory(entry.getKey()))
+                {
+                    Folder folder = (Folder) nodeMaps.getNodeBySHA1().get(entry.getValue());
+                    List<Item> items = folder.getItems();
+                    Path folderPath = entry.getKey();
+                    for (Item item : items)
+                    {
+                        printCurrentItemDetails(folderPath, item);
+                    }
+                }
+            }
+        }
+    }
+
+    private void printCurrentItemDetails(Path i_FolderPath, Item i_Item)
+    {
+        System.out.println("Full name: " + i_FolderPath.resolve(i_Item.getName()));
+        System.out.println("Type: " + i_Item.getType());
+        System.out.println("SHA-1: " + i_Item.getSHA1());
+        System.out.println("Last modifier name: " + i_Item.getAuthor());
+        System.out.println("Date modified: " + DateUtils.FormatToString(i_Item.getModificationDate()));
+        System.out.println(System.lineSeparator());
+    }
+
+    private void showActiveBranchHistory()
+    {
+        // func #12
+        Branch activeBranch = m_Engine.getRepository().getMagit().getHead().getActiveBranch();
+        String commitSHA1 = activeBranch.getCommitSHA1();
+        while (!commitSHA1.equals(""))
+        {
+            printCommit(m_Engine.getRepository().getMagit().getCommits().get(commitSHA1), commitSHA1);
+            commitSHA1 = m_Engine.getRepository().getMagit().getCommits().get(commitSHA1).getParentSHA1();
+        }
+    }
+
+    private void printCommit(Commit i_Commit, String i_CommitSHA1)
+    {
+        System.out.println("1. SHA1: " + i_CommitSHA1);
+        System.out.println("2. Commit message: " + i_Commit.getMessage());
+        System.out.println("3. Commit date: " + DateUtils.FormatToString(i_Commit.getCommitDate()));
+        System.out.println("4. Commit author: " + i_Commit.getCommitAuthor());
+        System.out.println(System.lineSeparator());
+    }
+
+    private void deleteBranch()
+    {
+        // func #10
+        String branchName = requestBranchName();
+        boolean isHeadBranch = m_Engine.isBranchNameRepresentsHead(branchName);
+        boolean isBranchExists = m_Engine.isBranchExists(branchName);
+        if (isHeadBranch)
+        {
+            System.out.println("Cannot delete active branch");
+        } else if (!isBranchExists)
+        {
+            System.out.println("Branch " + branchName + " does not exists");
+        } else
+        {
+            m_Engine.deleteBranch(branchName);
+            System.out.println("Branch " + branchName + " deleted successfully");
+        }
+    }
 }
 
 

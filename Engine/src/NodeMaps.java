@@ -30,4 +30,5 @@ public class NodeMaps
         return m_NodeBySHA1;
     }
     public Map<Path, String> getSHA1ByPath() { return m_SHA1ByPath; }
+    public boolean isEmpty(){return m_NodeBySHA1.isEmpty() && m_SHA1ByPath.isEmpty();}
 }

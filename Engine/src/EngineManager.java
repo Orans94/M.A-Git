@@ -1,6 +1,9 @@
+import org.apache.commons.io.FileUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 //ENGINE ASSUMPTIONS:
 //1.  m_Engine.ReadRepositoryFromXMLFile(XMLFilePath);
 //    maybe returning a value if something is wrong and if so what is wrong(Exception or string?)
@@ -24,9 +27,9 @@ public class EngineManager
 
     public static void setUserName(String i_UserName) { EngineManager.m_UserName = i_UserName; }
 
-    public void createRepository(Path i_RepPath) throws IOException // TODO catch this expection
+    public void createRepository(Path i_RepPath, String i_Name) throws IOException // TODO catch this expection
     {
-        m_Repository = new Repository(i_RepPath);
+        m_Repository = new Repository(i_RepPath, i_Name);
     }
 
     public boolean commit(String i_CommitMessage) throws IOException
@@ -62,4 +65,35 @@ public class EngineManager
     public boolean isFileSystemDirty(OpenChanges i_OpenChanges) { return !i_OpenChanges.isFileSystemClean(); }
 
     public void checkout(String branchName) throws IOException { m_Repository.checkout(branchName); }
+
+    public Repository getRepository() { return m_Repository; }
+
+    public void changeRepository(Path repoPath)
+    {
+
+    }
+
+    public boolean isDirectory(Path i_dirToCheck)
+    {
+        return FileUtilities.isDirectory(i_dirToCheck);
+    }
+
+    public boolean isBranchNameRepresentsHead(String i_BranchName)
+    {
+        Head head = m_Repository.getMagit().getHead();
+
+        return head.getActiveBranch().getName().equals(i_BranchName);
+    }
+
+    public void deleteBranch(String i_BranchName)
+    {
+        m_Repository.deleteBranch(i_BranchName);
+    }
+
+    public void stashRepository(Path i_repositoryToStash) throws IOException
+    {
+        Path pathToDelete = i_repositoryToStash.resolve(".magit");
+        FileUtils.cleanDirectory(pathToDelete.toFile());
+        Files.delete(pathToDelete);
+    }
 }

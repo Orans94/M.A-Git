@@ -11,9 +11,11 @@ public class Repository
     private WC m_WorkingCopy;
     private Magit m_Magit;
     private static List<String> m_ChildrenInformation;
+    private String m_Name;
 
-    public Repository(Path i_RepPath) throws IOException // TODO catch
+    public Repository(Path i_RepPath, String i_Name) throws IOException // TODO catch
     {
+        m_Name = i_Name;
         m_ChildrenInformation = new LinkedList<>();
         createRepositoryDirectories(i_RepPath);
         m_WorkingCopy = new WC(i_RepPath);
@@ -32,10 +34,11 @@ public class Repository
         return m_WorkingCopy;
     }
 
-    public void setWorkingCopy(WC i_WorkingCopy)
-    {
-        this.m_WorkingCopy = i_WorkingCopy;
-    }
+    public void setWorkingCopy(WC i_WorkingCopy) { this.m_WorkingCopy = i_WorkingCopy; }
+
+    public String getName() { return m_Name; }
+
+    public void setName(String i_Name) { m_Name = i_Name; }
 
     public Magit getMagit() { return m_Magit; }
 
@@ -345,7 +348,6 @@ public class Repository
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
                 {
                     Files.delete(file);
-                    System.out.println(file+" has been deleted");
 
                     return FileVisitResult.CONTINUE;
                 }
@@ -365,10 +367,20 @@ public class Repository
                             }
                         }
                         Files.delete(dir);
-                        System.out.println(dir+" has been deleted");
                     }
                     return FileVisitResult.CONTINUE;
                 }
             };
+    }
+
+    public NodeMaps getNodeMaps()
+    {
+        return m_WorkingCopy.getNodeMaps();
+    }
+
+    public void deleteBranch(String i_branchName)
+    {
+        m_Magit.getBranches().remove(i_branchName);
+        FileUtilities.deleteFile(Magit.getMagitDir().resolve("branches").resolve(i_branchName+".txt"));
     }
 }
