@@ -22,6 +22,15 @@ public class Repository
         m_Magit = new Magit(i_RepPath.resolve(".magit"));
     }
 
+    public void clear() throws IOException
+    {
+        WCClear();
+        m_Magit.clear();
+        m_ChildrenInformation.clear();
+        m_Name = null;
+    }
+
+
     private void createRepositoryDirectories(Path i_RepPath) throws IOException //TODO catch exception
     {
         Files.createDirectory(i_RepPath.resolve(".magit"));
@@ -267,7 +276,8 @@ public class Repository
     public void createNewBranch(String i_BranchName)
     {
         Branch activeBranch = m_Magit.getHead().getActiveBranch();
-        Branch newBranch = new Branch(Magit.getMagitDir(), i_BranchName, activeBranch.getCommitSHA1());
+        Branch newBranch = new Branch(i_BranchName, activeBranch.getCommitSHA1());
+        FileUtilities.CreateAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_BranchName + ".txt"), activeBranch.getCommitSHA1());
         m_Magit.getBranches().put(i_BranchName, newBranch);
     }
 
@@ -276,16 +286,17 @@ public class Repository
         String commitSHA1 = m_Magit.getBranches().get(i_BranchName).getCommitSHA1();
         String rootFolderSHA1 = m_Magit.getCommits().get(commitSHA1).getRootFolderSHA1();
         // clear repository- clear file system and clear nodes map
-        clear();
+        WCClear();
 
         // change head to point on new checkedout branch
         m_Magit.getHead().setActiveBranch(m_Magit.getBranches().get(i_BranchName));
+        FileUtilities.modifyTxtFile(Magit.getMagitDir().resolve("branches").resolve("HEAD.txt"),i_BranchName);
 
         m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
-        checkoutFileVisit(m_WorkingCopy.getWorkingCopyDir());
+        checkoutFileVisit(m_WorkingCopy.getWorkingCopyDir(), true);
     }
 
-    private void checkoutFileVisit(Path startPath) throws IOException {
+    private void checkoutFileVisit(Path startPath, boolean i_LoadToFileSystem) throws IOException {
         String myBlobContent;
 
         // getting the SHA1 of the folder by it path
@@ -305,22 +316,28 @@ public class Repository
             m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(startPath.resolve(item.getName()),item.getSHA1());
             if (item.getType().equals("Folder"))
             {
-                Files.createDirectory(startPath.resolve(item.getName()));
-                checkoutFileVisit(startPath.resolve(item.getName()));
+                if (i_LoadToFileSystem)
+                {
+                    Files.createDirectory(startPath.resolve(item.getName()));
+                }
+                checkoutFileVisit(startPath.resolve(item.getName()), i_LoadToFileSystem);
             }
             else
             {
                 // getting the blob SHA1 by it path
                 zipName = m_WorkingCopy.getNodeMaps().getSHA1ByPath().get(startPath.resolve(item.getName()));
                 myBlobContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"),item.getName());
-                FileUtilities.CreateAndWriteTxtFile(startPath.resolve(item.getName()),myBlobContent);
+                if (i_LoadToFileSystem)
+                {
+                    FileUtilities.CreateAndWriteTxtFile(startPath.resolve(item.getName()),myBlobContent);
+                }
                 Blob blob = new Blob(myBlobContent);
                 m_WorkingCopy.getNodeMaps().getNodeBySHA1().put(zipName, blob);
             }
         }
     }
 
-    private void clear() throws IOException
+    private void WCClear() throws IOException
     {
 
         Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), getRemoveFileVisitor());
@@ -382,5 +399,15 @@ public class Repository
     {
         m_Magit.getBranches().remove(i_branchName);
         FileUtilities.deleteFile(Magit.getMagitDir().resolve("branches").resolve(i_branchName+".txt"));
+    }
+
+    public void loadRepository(Path i_RepPath) throws IOException
+    {
+        clear();
+        m_WorkingCopy.setWorkingCopyDir(i_RepPath);
+        m_Magit.load(i_RepPath);
+        String rootFolderSHA1 = m_Magit.getCommits().get(m_Magit.getHead().getActiveBranch().getCommitSHA1()).getRootFolderSHA1();
+        m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
+        checkoutFileVisit(i_RepPath, false);
     }
 }

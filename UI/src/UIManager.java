@@ -49,6 +49,8 @@ public class UIManager
             case 2: // GIT INIT
                 initializeRepository();
                 break;
+            case 4:
+                changeRepository();
             case 5:
                 showDetailsOfCurrentCommit();
                 break;
@@ -342,6 +344,7 @@ public class UIManager
             System.out.println("2. SHA1 of the pointed commit: " + i_Branch.getCommitSHA1());
             System.out.println("3. Message of the pointed commit: " + commitMessage);
         }
+        System.out.println(System.lineSeparator());
     }
 
     private void userChoiceNotInRange()
@@ -349,19 +352,26 @@ public class UIManager
         System.out.println("The number you entered is not valid, please enter a valid number from the list below:");
     }
 
-    private void changeRepository()
+    private void changeRepository() throws IOException
     {
-        // func #3
+        // func #4
         Path repoPath = requestPath();
-        boolean isMagitRepo = m_Engine.isRepository(repoPath);
-        if (!isMagitRepo)
+        if(m_Engine.isPathExists(repoPath))
         {
-            System.out.println("The given path does not represents a M.A Git repository");
+            if(m_Engine.isRepository(repoPath))
+            {
+                boolean isMagitRepo = m_Engine.isRepository(repoPath);
+                m_Engine.changeRepository(repoPath);
+                System.out.println("Repository " + m_Engine.getRepository().getName() + " has been loaded");
+            }
+            else
+            {
+                System.out.println("The given path does not represents a M.A Git repository");
+            }
         }
         else
         {
-            m_Engine.changeRepository(repoPath);
-            System.out.println("Current ");
+            System.out.println("The path does not exists");
         }
     }
 
@@ -451,6 +461,8 @@ public class UIManager
             System.out.println("Branch " + branchName + " deleted successfully");
         }
     }
+
+
 }
 
 

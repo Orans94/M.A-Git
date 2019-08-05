@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class EngineManager
 {
-    private Repository m_Repository;
+    private Repository m_Repository = new Repository();
     private static String m_UserName = "";
 
     public static String getUserName() { return m_UserName; }
@@ -68,9 +68,9 @@ public class EngineManager
 
     public Repository getRepository() { return m_Repository; }
 
-    public void changeRepository(Path repoPath)
+    public void changeRepository(Path i_RepoPath) throws IOException
     {
-
+        m_Repository.loadRepository(i_RepoPath);
     }
 
     public boolean isDirectory(Path i_dirToCheck)

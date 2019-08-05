@@ -1,7 +1,14 @@
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Magit
 {
@@ -12,7 +19,7 @@ public class Magit
     
     public Magit(Path i_MagitPath)
     {
-        Branch master = new Branch(i_MagitPath, "master", "");
+        Branch master = new Branch("master", "");
         m_Commits = new HashMap<>();
         m_Branches = new HashMap<>();
         m_MagitDir = i_MagitPath;
@@ -23,6 +30,7 @@ public class Magit
     public static Path getMagitDir() { return m_MagitDir; }
 
     public void setMagitDir(Path i_MagitDir) { m_MagitDir = i_MagitDir; }
+
     public Map<String, Commit> getCommits() { return m_Commits; }
 
     public void setCommits(Map<String, Commit> i_Commits) { m_Commits = i_Commits; }
@@ -60,5 +68,75 @@ public class Magit
         m_Commits.put(commitSHA1, commit);
 
         return commitSHA1;
+    }
+
+    public void clear()
+    {
+        m_Commits.clear();
+        m_Branches.clear();
+        m_MagitDir = Paths.get("");
+        m_Head = null;
+    }
+
+    public void load(Path i_repPath) throws IOException
+    {
+        m_MagitDir = i_repPath.resolve(".magit");
+        loadBranches();
+        loadHead();
+        loadCommits();
+    }
+
+    private void loadHead() throws IOException
+    {
+        Path headPath = m_MagitDir.resolve("branches").resolve("HEAD.txt");
+        String headContent = new String(Files.readAllBytes(headPath));
+        m_Head.setActiveBranch(m_Branches.get(headContent));
+    }
+
+    private void loadCommits() throws IOException
+    { // assuming branches is already loaded to m.a git system
+        Commit newCommit;
+        Branch currentBranch;
+        String commitSHA1, parentCommitSHA1, commitContent, rootFolderSHA1, commitMessage, commitAuthor;
+        Date commitCreateDate;
+
+        for (Map.Entry<String, Branch> entry: m_Branches.entrySet())
+        { // to all branches in objects\\branches
+            currentBranch = entry.getValue();
+            commitSHA1 = currentBranch.getCommitSHA1();
+
+            while (!commitSHA1.equals(""))
+            {
+                if (!m_Commits.containsKey(commitSHA1))
+                { // the current commit not found in commits map
+                    commitContent = FileUtilities.getTxtFromZip(commitSHA1, commitSHA1);
+                    rootFolderSHA1 = StringUtilities.getCommitInformation(commitContent, 0);
+                    parentCommitSHA1 = StringUtilities.getCommitInformation(commitContent, 1);
+                    commitMessage = StringUtilities.getCommitInformation(commitContent, 2);
+                    commitCreateDate = DateUtils.FormatToDate(StringUtilities.getCommitInformation(commitContent, 3));
+                    commitAuthor = StringUtilities.getCommitInformation(commitContent, 4);
+
+                    newCommit = new Commit(rootFolderSHA1, parentCommitSHA1, commitMessage, commitCreateDate, commitAuthor);
+                    m_Commits.put(commitSHA1, newCommit);
+                }
+                commitSHA1 = m_Commits.get(commitSHA1).getParentSHA1();
+            }
+
+
+        }
+    }
+
+    private void loadBranches() throws IOException
+    {
+        String branchName;
+        List<Path> branches = Files.walk(m_MagitDir.resolve("branches"), 1)
+                .filter(d->!d.toFile().isDirectory())
+                .collect(Collectors.toList());
+        for(Path path : branches)
+        {
+            branchName = FilenameUtils.removeExtension(path.toFile().getName());
+            String branchContent = new String(Files.readAllBytes(path));
+            m_Branches.put(branchName, new Branch(branchName, branchContent));
+        }
     }
 }

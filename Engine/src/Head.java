@@ -14,8 +14,6 @@ public class Head
 
     public void setActiveBranch(Branch i_ActiveBranch)
     {
-        this.m_ActiveBranch = i_ActiveBranch;
-        FileUtilities.modifyTxtFile(Magit.getMagitDir().resolve("branches")
-                .resolve("HEAD.txt"), i_ActiveBranch.getName());
+        m_ActiveBranch = i_ActiveBranch;
     }
 }
