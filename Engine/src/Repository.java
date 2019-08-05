@@ -3,12 +3,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Repository
 {
@@ -187,24 +183,26 @@ public class Repository
                     //1. L <- Check how many kids I have.
                     int numOfChildren = FileUtilities.getNumberOfSubNodes(dir);
                     numOfChildren += m_WorkingCopy.getWorkingCopyDir() == dir ? -1 : 0;
+                    if(numOfChildren != 0)
+                    {
+                        //2. add the item information of my children to my content
+                        String folderContent = generateFolderContent(numOfChildren);
 
-                    //2. add the item information of my children to my content
-                    String folderContent = generateFolderContent(numOfChildren);
+                        //3.create a folder object from the details and put it in m_Nodes
+                        Folder folder = new Folder(folderContent);
 
-                    //3.create a folder object from the details and put it in m_Nodes
-                    Folder folder = new Folder(folderContent);
+                        //4.add content details to item list of folder
+                        folder.createItemListFromContent();
 
-                    //4.add content details to item list of folder
-                    folder.createItemListFromContent();
+                        //5. SHA1 the folder
+                        String folderSHA1 = folder.SHA1();
 
-                    //5. SHA1 the folder
-                    String folderSHA1 = folder.SHA1();
+                        //6. filter the node by status - new modified or deleted.
+                        handleNodeByStatus(i_WalkFileSystemResult, folderSHA1, folder, dir, i_TempNodeMaps);
 
-                    //6. filter the node by status - new modified or deleted.
-                    handleNodeByStatus(i_WalkFileSystemResult, folderSHA1, folder, dir, i_TempNodeMaps);
-
-                    //7. update children information
-                    updateChildrenInformation(dir, numOfChildren, folder, folderSHA1);
+                        //7. update children information
+                        updateChildrenInformation(dir, numOfChildren, folder, folderSHA1);
+                    }
 
                     return FileVisitResult.CONTINUE;
                 }
@@ -259,6 +257,7 @@ public class Repository
         FileVisitor<Path> fileVisitor = getOpenChangesFileVisitor(tempNodeMaps, result);
         Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
 
+        m_ChildrenInformation.clear();
         return result.getOpenChanges();
     }
 
@@ -280,103 +279,48 @@ public class Repository
         m_Magit.getHead().setActiveBranch(m_Magit.getBranches().get(i_BranchName));
 
         m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
-
-        FileVisitor<Path> checkoutFileVisitor = getCheckoutFileVisitor();
-        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(),checkoutFileVisitor);
+        checkoutFileVisit(m_WorkingCopy.getWorkingCopyDir());
     }
 
-    private FileVisitor<Path> getCheckoutFileVisitor() {
-        return new FileVisitor<Path>()
+    private void checkoutFileVisit(Path startPath) throws IOException {
+        String myBlobContent;
+
+        // getting the SHA1 of the folder by it path
+        String zipName = m_WorkingCopy.getNodeMaps().getSHA1ByPath().get(startPath);
+
+        // creating folder
+        String myDirContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"), zipName.concat(".txt"));
+        Folder folder = new Folder(myDirContent);
+
+        // add to map
+        m_WorkingCopy.getNodeMaps().getNodeBySHA1().put(zipName, folder);
+
+        folder.createItemListFromContent();
+
+        for (Item item: folder.getItems())
         {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+            m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(startPath.resolve(item.getName()),item.getSHA1());
+            if (item.getType().equals("Folder"))
             {
-                if (dir.getFileName().toString().equals(".magit"))
-                {
-                    return FileVisitResult.SKIP_SUBTREE;
-                }
-                String myBlobContent;
-
-                // getting the SHA1 of the folder by it path
-                String zipName = m_WorkingCopy.getNodeMaps().getSHA1ByPath().get(dir);
-
-                // creating folder
-                String myDirContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"), zipName.concat(".txt"));
-                Folder folder = new Folder(myDirContent);
-
-                // add to map
-                m_WorkingCopy.getNodeMaps().getNodeBySHA1().put(zipName, folder);
-
-                folder.createItemListFromContent();
-                // to all my childs
-                for (Item item: folder.getItems())
-                {
-                    m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(dir.resolve(item.getName()),item.getSHA1());
-                    if (item.getType().equals("Folder"))
-                    {
-                        Files.createDirectory(dir.resolve(item.getName()));
-                    }
-                    else
-                    {
-                        // getting the blob SHA1 by it path
-                        zipName = m_WorkingCopy.getNodeMaps().getSHA1ByPath().get(dir.resolve(item.getName()));
-                        myBlobContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"),item.getName());
-                        FileUtilities.CreateAndWriteTxtFile(dir.resolve(item.getName()),myBlobContent);
-                        Blob blob = new Blob(myBlobContent);
-                        m_WorkingCopy.getNodeMaps().getNodeBySHA1().put(zipName, blob);
-                    }
-                }
-
-                return FileVisitResult.CONTINUE;
+                Files.createDirectory(startPath.resolve(item.getName()));
+                checkoutFileVisit(startPath.resolve(item.getName()));
             }
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+            else
             {
-                return FileVisitResult.CONTINUE;
+                // getting the blob SHA1 by it path
+                zipName = m_WorkingCopy.getNodeMaps().getSHA1ByPath().get(startPath.resolve(item.getName()));
+                myBlobContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"),item.getName());
+                FileUtilities.CreateAndWriteTxtFile(startPath.resolve(item.getName()),myBlobContent);
+                Blob blob = new Blob(myBlobContent);
+                m_WorkingCopy.getNodeMaps().getNodeBySHA1().put(zipName, blob);
             }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
-            {
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
-            {
-                return FileVisitResult.CONTINUE;
-            }
-        };
+        }
     }
 
     private void clear() throws IOException
     {
 
-        try
-        {
-            Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), getRemoveFileVisitor());
-        }
-        catch (DirectoryNotEmptyException e)
-        {
-            System.out.println(e.getReason());
-            System.out.println(e.getCause());
-            throw e;
-        }
-
-        /*List<Path> collect = Files.walk(m_WorkingCopy.getWorkingCopyDir(), 1)
-                .filter(d->(!d.getFileName().toString().equals(".magit") && !d.getFileName().toString().equals(m_WorkingCopy.getWorkingCopyDir().getFileName().toString())))
-                .collect(Collectors.toList());
-        for (Path path: collect)
-        {
-            if (Files.isDirectory(path))
-            {
-                FileUtils.cleanDirectory(path.toFile());
-
-            }
-            Files.delete(path);
-        }
-        */
+        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), getRemoveFileVisitor());
         m_WorkingCopy.clear();
 
     }
@@ -396,7 +340,7 @@ public class Repository
                         return FileVisitResult.CONTINUE;
                     }
                 }
-    
+
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
                 {
