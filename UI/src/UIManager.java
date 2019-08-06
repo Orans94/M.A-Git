@@ -81,11 +81,7 @@ public class UIManager
         }
     }
 
-    private void showStatus() throws IOException
-    {
-        OpenChanges openChanges = m_Engine.getOpenChanges();
-        printOpenChanges(openChanges);
-    }
+    private void showStatus() throws IOException { printOpenChanges(m_Engine.getFileSystemStatus()); }
 
     private void printOpenChanges(OpenChanges openChanges)
     {
@@ -267,7 +263,7 @@ public class UIManager
         String branchName = requestBranchName();
         if (m_Engine.isBranchExists(branchName))
         {
-            OpenChanges openChanges = m_Engine.getOpenChanges();
+            OpenChanges openChanges = m_Engine.getFileSystemStatus();
             if (m_Engine.isFileSystemDirty(openChanges))
             {
                 notifyUserDirtyStatusBeforeCheckout();

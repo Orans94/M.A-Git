@@ -35,7 +35,7 @@ public class FileUtilities
 
     }
 
-    public static void CreateAndWriteTxtFile(Path i_Path, String i_Content)
+    public static void createAndWriteTxtFile(Path i_Path, String i_Content)
     {
         try (Writer out1 = new BufferedWriter(
                 new OutputStreamWriter(

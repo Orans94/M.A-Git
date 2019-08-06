@@ -10,11 +10,6 @@ public class Commit
     private String m_Message;
     private Date m_CommitDate;
     private String m_CommitAuthor;
-    private OpenChanges m_OpenChanges;
-
-    public OpenChanges getOpenChanges() { return m_OpenChanges; }
-
-    public void setOpenChanges(OpenChanges i_OpenChanges) { m_OpenChanges = i_OpenChanges; }
 
     public String getParentSHA1() {return m_ParentSHA1;}
 
@@ -28,7 +23,6 @@ public class Commit
         m_Message = i_Message;
         m_CommitDate = new Date();
         m_CommitAuthor = EngineManager.getUserName();
-        m_OpenChanges = new OpenChanges();
     }
 
     public Commit (String i_RootFolderSHA1, String i_ParentSHA1, String i_Message, Date i_CommitDate, String i_Author)
@@ -39,14 +33,13 @@ public class Commit
         m_Message = i_Message;
         m_CommitDate = i_CommitDate;
         m_CommitAuthor = i_Author;
-        m_OpenChanges = new OpenChanges();
     }
 
     public void Zip(String i_CommitSHA1FileName)
     {
         // 1. creating temp txt file in objects dir
         Path createTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_CommitSHA1FileName + ".txt");
-        FileUtilities.CreateAndWriteTxtFile(createTempTxtPath, this.toString());
+        FileUtilities.createAndWriteTxtFile(createTempTxtPath, this.toString());
 
         // 2. zipping the temp txt file
         FileUtilities.zip(i_CommitSHA1FileName, createTempTxtPath);

@@ -21,6 +21,7 @@ public class Magit
     {
         //ctor for new magit
         Branch master = new Branch("master", "");
+        FileUtilities.createAndWriteTxtFile(i_MagitPath.resolve("branches").resolve("master.txt"),"");
         m_MagitDir = i_MagitPath;
         m_Head = new Head(master, i_MagitPath);
         m_Branches.put(master.getName(), master);
@@ -50,9 +51,10 @@ public class Magit
 
     public String handleNewCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
     {
-        String commitSHA1 = createCommit(i_RootFolderSha1, i_ParentSHA1, i_CommitMessage);
+        Commit commit = createCommit(i_RootFolderSha1, i_ParentSHA1, i_CommitMessage);
+        String commitSHA1 = commit.SHA1();
+        m_Commits.put(commitSHA1, commit);
         setActiveBranchToNewCommit(commitSHA1);
-        Commit commit = m_Commits.get(commitSHA1);
         commit.Zip(commitSHA1);
 
         return commitSHA1;
@@ -66,13 +68,9 @@ public class Magit
         FileUtilities.modifyTxtFile(m_MagitDir.resolve("branches").resolve(m_Head.getActiveBranch().getName() + ".txt"), i_CommitSHA1);
     }
 
-    private String createCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
+    public Commit createCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
     {
-        Commit commit = new Commit(i_RootFolderSha1,i_ParentSHA1,i_CommitMessage);
-        String commitSHA1 = commit.SHA1();
-        m_Commits.put(commitSHA1, commit);
-
-        return commitSHA1;
+        return new Commit(i_RootFolderSha1,i_ParentSHA1,i_CommitMessage);
     }
 
     public void clear()

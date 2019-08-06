@@ -28,7 +28,7 @@ public class Folder extends Node
     {
         // 1. creating temp txt file in objects dir
         Path createTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_SHA1FileName + ".txt");
-        FileUtilities.CreateAndWriteTxtFile(createTempTxtPath, m_Content);
+        FileUtilities.createAndWriteTxtFile(createTempTxtPath, m_Content);
 
         // 2. zipping the temp txt file
         super.Zip(i_SHA1FileName, createTempTxtPath);
