@@ -12,24 +12,29 @@ import java.util.stream.Collectors;
 
 public class Magit
 {
-    private Map<String, Commit> m_Commits;
-    private Map<String, Branch> m_Branches;
+    private Map<String, Commit> m_Commits = new HashMap<>();
+    private Map<String, Branch> m_Branches = new HashMap<>();
     private static Path m_MagitDir = Paths.get("");
     private Head m_Head;
-    
+
     public Magit(Path i_MagitPath)
     {
+        //ctor for new magit
         Branch master = new Branch("master", "");
-        m_Commits = new HashMap<>();
-        m_Branches = new HashMap<>();
         m_MagitDir = i_MagitPath;
         m_Head = new Head(master, i_MagitPath);
         m_Branches.put(master.getName(), master);
     }
 
+    public Magit()
+    {
+        //ctor for loaded magit
+        m_Head = new Head();
+    }
+
     public static Path getMagitDir() { return m_MagitDir; }
 
-    public void setMagitDir(Path i_MagitDir) { m_MagitDir = i_MagitDir; }
+    public static void setMagitDir(Path i_MagitDir) { m_MagitDir = i_MagitDir; }
 
     public Map<String, Commit> getCommits() { return m_Commits; }
 
@@ -74,8 +79,6 @@ public class Magit
     {
         m_Commits.clear();
         m_Branches.clear();
-        m_MagitDir = Paths.get("");
-        m_Head = null;
     }
 
     public void load(Path i_repPath) throws IOException
@@ -109,7 +112,7 @@ public class Magit
             {
                 if (!m_Commits.containsKey(commitSHA1))
                 { // the current commit not found in commits map
-                    commitContent = FileUtilities.getTxtFromZip(commitSHA1, commitSHA1);
+                    commitContent = FileUtilities.getTxtFromZip(commitSHA1 + ".zip", commitSHA1+".txt");
                     rootFolderSHA1 = StringUtilities.getCommitInformation(commitContent, 0);
                     parentCommitSHA1 = StringUtilities.getCommitInformation(commitContent, 1);
                     commitMessage = StringUtilities.getCommitInformation(commitContent, 2);
@@ -131,6 +134,7 @@ public class Magit
         String branchName;
         List<Path> branches = Files.walk(m_MagitDir.resolve("branches"), 1)
                 .filter(d->!d.toFile().isDirectory())
+                .filter(d-> !d.toFile().getName().equals("HEAD.txt"))
                 .collect(Collectors.toList());
         for(Path path : branches)
         {

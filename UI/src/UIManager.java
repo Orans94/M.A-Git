@@ -37,7 +37,7 @@ public class UIManager
             }
             catch (NumberFormatException e)
             {
-                System.out.printf("The number you entered is not valid, please enter an Integer");
+                System.out.println("The number you entered is not valid, please enter an Integer");
             }
         }
 
@@ -51,6 +51,7 @@ public class UIManager
                 break;
             case 4:
                 changeRepository();
+                break;
             case 5:
                 showDetailsOfCurrentCommit();
                 break;
@@ -362,6 +363,7 @@ public class UIManager
             {
                 boolean isMagitRepo = m_Engine.isRepository(repoPath);
                 m_Engine.changeRepository(repoPath);
+                System.out.println(System.lineSeparator());
                 System.out.println("Repository " + m_Engine.getRepository().getName() + " has been loaded");
             }
             else

@@ -21,7 +21,6 @@ public class WC
         m_NodeMaps = new NodeMaps();
     }
 
-
     public Path getWorkingCopyDir() { return m_WorkingCopyDir; }
 
     public void setWorkingCopyDir(Path i_WorkingCopyDir) { this.m_WorkingCopyDir = i_WorkingCopyDir; }

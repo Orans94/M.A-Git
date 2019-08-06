@@ -20,41 +20,29 @@ import java.util.Map;
 
 public class EngineManager
 {
-    private Repository m_Repository = new Repository();
+    private Repository m_Repository;
     private static String m_UserName = "";
 
     public static String getUserName() { return m_UserName; }
 
     public static void setUserName(String i_UserName) { EngineManager.m_UserName = i_UserName; }
 
-    public void createRepository(Path i_RepPath, String i_Name) throws IOException // TODO catch this expection
-    {
-        m_Repository = new Repository(i_RepPath, i_Name);
-    }
+    public void createRepository(Path i_RepPath, String i_Name) throws IOException { m_Repository = new Repository(i_RepPath, i_Name); }
 
-    public boolean commit(String i_CommitMessage) throws IOException
-    {
-        return m_Repository.commit(i_CommitMessage);
-    }
+    public boolean commit(String i_CommitMessage) throws IOException { return m_Repository.commit(i_CommitMessage); }
 
     public boolean isPathExists(Path i_Path) { return Files.exists(i_Path); }
 
     public boolean isRepository(Path i_Path) { return Files.exists(i_Path.resolve(".magit")); }
 
-    public void CreateDirectory(Path i_RepPath, String i_DirectoryName) throws IOException
-    {
-        Files.createDirectory(i_RepPath.resolve(i_DirectoryName));
-    }
+    public void CreateDirectory(Path i_RepPath, String i_DirectoryName) throws IOException { Files.createDirectory(i_RepPath.resolve(i_DirectoryName)); }
 
     public boolean isDirectoryNameValid(String i_RepositoryName)
     {//TODO implement this method
         return true;
     } //TODO
 
-    public boolean isBranchExists(String i_BranchName)
-    {
-        return m_Repository.getMagit().getBranches().containsKey(i_BranchName);
-    }
+    public boolean isBranchExists(String i_BranchName) { return m_Repository.getMagit().getBranches().containsKey(i_BranchName); }
 
     public void createNewBranch(String i_BranchName) { m_Repository.createNewBranch(i_BranchName); }
 
@@ -70,13 +58,11 @@ public class EngineManager
 
     public void changeRepository(Path i_RepoPath) throws IOException
     {
+        m_Repository = new Repository(i_RepoPath);
         m_Repository.loadRepository(i_RepoPath);
     }
 
-    public boolean isDirectory(Path i_dirToCheck)
-    {
-        return FileUtilities.isDirectory(i_dirToCheck);
-    }
+    public boolean isDirectory(Path i_dirToCheck) { return FileUtilities.isDirectory(i_dirToCheck); }
 
     public boolean isBranchNameRepresentsHead(String i_BranchName)
     {

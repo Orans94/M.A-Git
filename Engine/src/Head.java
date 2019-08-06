@@ -7,13 +7,12 @@ public class Head
     public Head(Branch i_ActiveBranch, Path i_Path)
     {
         m_ActiveBranch = i_ActiveBranch;
-        FileUtilities.CreateAndWriteTxtFile(i_Path.resolve("branches\\HEAD".concat(".txt")), i_ActiveBranch.getName());
+        FileUtilities.CreateAndWriteTxtFile(i_Path.resolve("branches").resolve("HEAD.txt"), i_ActiveBranch.getName());
     }
+
+    public Head() { }
 
     public Branch getActiveBranch() { return m_ActiveBranch; }
 
-    public void setActiveBranch(Branch i_ActiveBranch)
-    {
-        m_ActiveBranch = i_ActiveBranch;
-    }
+    public void setActiveBranch(Branch i_ActiveBranch) { m_ActiveBranch = i_ActiveBranch; }
 }

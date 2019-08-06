@@ -10,38 +10,57 @@ public class Repository
 {
     private WC m_WorkingCopy;
     private Magit m_Magit;
-    private static List<String> m_ChildrenInformation;
+    private static List<String> m_ChildrenInformation = new LinkedList<>();
     private String m_Name;
 
     public Repository(Path i_RepPath, String i_Name) throws IOException // TODO catch
     {
         m_Name = i_Name;
-        m_ChildrenInformation = new LinkedList<>();
-        createRepositoryDirectories(i_RepPath);
         m_WorkingCopy = new WC(i_RepPath);
         m_Magit = new Magit(i_RepPath.resolve(".magit"));
+        createRepositoryDirectories(i_RepPath);
+        createRepositoryNameFile();
+    }
+
+    private void createRepositoryNameFile() { FileUtilities.CreateAndWriteTxtFile(Magit.getMagitDir().resolve("RepositoryName.txt"), m_Name); }
+
+    public Repository(Path i_RepPath) throws IOException
+    {
+        m_WorkingCopy = new WC(i_RepPath);
+        m_Magit = new Magit();
+        Magit.setMagitDir(i_RepPath.resolve(".magit"));
+    }
+
+    private void loadNameFromFile() throws IOException
+    {
+        // this method is reading the repository name file and updating m_Name
+        String repositoryName = "";
+        Path fileNamePath = m_WorkingCopy.getWorkingCopyDir().resolve(".magit").resolve("RepositoryName.txt");
+        if(Files.exists(fileNamePath))
+        {
+           repositoryName = new String(Files.readAllBytes(fileNamePath));
+        }
+
+        m_Name = repositoryName;
     }
 
     public void clear() throws IOException
     {
-        WCClear();
+        m_WorkingCopy.clear();
         m_Magit.clear();
         m_ChildrenInformation.clear();
         m_Name = null;
     }
 
 
-    private void createRepositoryDirectories(Path i_RepPath) throws IOException //TODO catch exception
+    private void createRepositoryDirectories(Path i_RepPath) throws IOException
     {
         Files.createDirectory(i_RepPath.resolve(".magit"));
         Files.createDirectory(i_RepPath.resolve(".magit").resolve("branches"));
         Files.createDirectory(i_RepPath.resolve(".magit").resolve("objects"));
     }
 
-    public WC getWorkingCopy()
-    {
-        return m_WorkingCopy;
-    }
+    public WC getWorkingCopy() { return m_WorkingCopy; }
 
     public void setWorkingCopy(WC i_WorkingCopy) { this.m_WorkingCopy = i_WorkingCopy; }
 
@@ -112,7 +131,7 @@ public class Repository
     }
 
     public boolean commit(String i_CommitMessage) throws IOException
-    {// TODO handle exception
+    {
         //TODO if a folder is empty, dont make a folder obj from it and lo lehityahes
         NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
         WalkFileSystemResult result = new WalkFileSystemResult();
@@ -286,7 +305,8 @@ public class Repository
         String commitSHA1 = m_Magit.getBranches().get(i_BranchName).getCommitSHA1();
         String rootFolderSHA1 = m_Magit.getCommits().get(commitSHA1).getRootFolderSHA1();
         // clear repository- clear file system and clear nodes map
-        WCClear();
+        workingCopyFileSystemClear();
+        m_WorkingCopy.clear();
 
         // change head to point on new checkedout branch
         m_Magit.getHead().setActiveBranch(m_Magit.getBranches().get(i_BranchName));
@@ -337,12 +357,9 @@ public class Repository
         }
     }
 
-    private void WCClear() throws IOException
+    private void workingCopyFileSystemClear() throws IOException
     {
-
         Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), getRemoveFileVisitor());
-        m_WorkingCopy.clear();
-
     }
 
     private SimpleFileVisitor<Path> getRemoveFileVisitor() {
@@ -404,10 +421,17 @@ public class Repository
     public void loadRepository(Path i_RepPath) throws IOException
     {
         clear();
+        loadNameFromFile();
         m_WorkingCopy.setWorkingCopyDir(i_RepPath);
         m_Magit.load(i_RepPath);
         String rootFolderSHA1 = m_Magit.getCommits().get(m_Magit.getHead().getActiveBranch().getCommitSHA1()).getRootFolderSHA1();
         m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
         checkoutFileVisit(i_RepPath, false);
     }
+
+/*    public OpenChanges delta(Commit i_FirstCommit, Commit i_SecondCommit)
+    {
+
+    }*/
+
 }
