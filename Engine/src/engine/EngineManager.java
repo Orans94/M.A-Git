@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 //ENGINE ASSUMPTIONS:
 //1.  m_Engine.ReadRepositoryFromXMLFile(XMLFilePath);
 //    maybe returning a value if something is wrong and if so what is wrong(Exception or string?)
@@ -84,9 +85,9 @@ public class EngineManager
     public void readRepositoryFromXMLFile(Path i_XMLFilePath) throws JAXBException, IOException
     {
         SchemaBasedJAXB jaxb = new SchemaBasedJAXB();
-        MagitRepository xmlRepository = jaxb.createRepositoryFromXML(i_XMLFilePath);
+        MagitRepository xmlRepository = jaxb.createRepositoryFromXML(Paths.get("xml/ex1-small.xml"));
         // validation here
-        m_Repository = new Repository(i_XMLFilePath);
+        m_Repository = new Repository(Paths.get(xmlRepository.getLocation()));
         m_Repository.loadXMLRepoToSystem(xmlRepository);//TODO before loading the xml repository - we have to check if its valid
     }
 

@@ -1,5 +1,6 @@
 import engine.*;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,8 +14,7 @@ public class UIManager
 {
     private EngineManager m_Engine = new EngineManager();
 
-    public void Run() throws IOException
-    {
+    public void Run() throws IOException, JAXBException {
         Menu menu = new Menu();
         updateUserName();
         while (true)// actually while user didnt choose to exit
@@ -24,8 +24,7 @@ public class UIManager
         }
     }
 
-    private void handleUserChoice() throws IOException
-    {
+    private void handleUserChoice() throws IOException, JAXBException {
         int userChoiceInt = 0;
         Scanner scanner = new Scanner(System.in);
         boolean isParseFailed = true;
@@ -50,6 +49,9 @@ public class UIManager
                 break;
             case 2: // GIT INIT
                 initializeRepository();
+                break;
+            case 3:
+                readRepositoryFromXMLFile();
                 break;
             case 4:
                 changeRepository();
@@ -80,6 +82,15 @@ public class UIManager
                 break;
             default:
                 exit(0);
+        }
+    }
+
+    private void readRepositoryFromXMLFile() throws JAXBException, IOException {
+        Path XMLFilePath = requestPath();
+        if(m_Engine.isPathExists(XMLFilePath))
+        {
+            // validate process
+            m_Engine.readRepositoryFromXMLFile(XMLFilePath);
         }
     }
 

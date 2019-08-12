@@ -58,7 +58,7 @@ public class FileUtilities
         }
     }
 
-    public static void createZipFromContent(String i_ZipName, String i_Content)
+    public static void createZipFileFromContent(String i_ZipName, String i_Content)
     {
         Path createdTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_ZipName + ".txt");
         createAndWriteTxtFile(createdTempTxtPath, i_Content);

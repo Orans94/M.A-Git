@@ -17,7 +17,7 @@ abstract public class Node
     public String generateStringInformation(String i_Sha1, String i_FileName)
     {
         return "" + i_FileName + "," + i_Sha1 + "," +
-                this.getClass().getSimpleName() + "," +
+                this.getClass().getSimpleName().toLowerCase() + "," +
                 EngineManager.getUserName() + "," +
                 DateUtils.FormatToString(new Date());
     }

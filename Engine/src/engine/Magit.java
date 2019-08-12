@@ -190,11 +190,9 @@ public class Magit
     public void writeCommitsToFileSystem()
     {
         // this method writes all the commits in m_Magit to file system in objects dir.
-        Path destination = m_MagitDir.resolve("objects");
-
         for(Map.Entry<String, Commit> entry : m_Commits.entrySet())
         {
-            FileUtilities.createZipFileFromContent(entry.getKey(), destination.resolve(entry.getKey()), entry.getValue().getRootFolderSHA1());
+            FileUtilities.createZipFileFromContent(entry.getKey(), entry.getValue().getRootFolderSHA1());
         }
     }
 }
