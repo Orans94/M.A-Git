@@ -1,3 +1,5 @@
+import engine.*;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -87,7 +89,7 @@ public class UIManager
     {
         if(openChanges.isFileSystemClean())
         {
-            System.out.println("WC is clean");
+            System.out.println("engine.WC is clean");
         }
         else
         {
@@ -215,7 +217,7 @@ public class UIManager
         }
         else
         {
-            System.out.println("There is nothing to commit, WC status is clean");
+            System.out.println("There is nothing to commit, engine.WC status is clean");
         }
     }
 
@@ -233,7 +235,7 @@ public class UIManager
         boolean isBranchExists = m_Engine.isBranchExists(branchName);
         if (isBranchExists)
         {
-            System.out.println("Branch " + branchName + " already exists");
+            System.out.println("engine.Branch " + branchName + " already exists");
         }
         else
         {
@@ -244,7 +246,7 @@ public class UIManager
             else
             {
                 m_Engine.createNewBranch(branchName);
-                System.out.println("Branch " + branchName + " created successfully");
+                System.out.println("engine.Branch " + branchName + " created successfully");
             }
         }
     }
@@ -279,14 +281,14 @@ public class UIManager
         }
         else
         {
-            System.out.println("Branch " + branchName + " does not exists");
+            System.out.println("engine.Branch " + branchName + " does not exists");
         }
     }
 
     private void notifyUserDirtyStatusBeforeCheckout()
     {
         System.out.println("Please notice:");
-        System.out.println("You chose to checkout but the WC status is not clean.");
+        System.out.println("You chose to checkout but the engine.WC status is not clean.");
         System.out.println("If you will not commit before checkout all open changes will lost");
     }
 
@@ -330,11 +332,11 @@ public class UIManager
                 m_Engine.getRepository().getMagit().getCommits().get(i_Branch.getCommitSHA1()).getMessage() : "";
         if(i_Branch == i_Head.getActiveBranch())
         {
-            System.out.println("1. Branch name: " + i_Branch.getName() + " (HEAD)");
+            System.out.println("1. engine.Branch name: " + i_Branch.getName() + " (HEAD)");
         }
         else
         {
-            System.out.println("1. Branch name: " + i_Branch.getName());
+            System.out.println("1. engine.Branch name: " + i_Branch.getName());
         }
         if (isGitHaveCommits)
         {
@@ -360,7 +362,7 @@ public class UIManager
                 boolean isMagitRepo = m_Engine.isRepository(repoPath);
                 m_Engine.changeRepository(repoPath);
                 System.out.println(System.lineSeparator());
-                System.out.println("Repository " + m_Engine.getRepository().getName() + " has been loaded");
+                System.out.println("engine.Repository " + m_Engine.getRepository().getName() + " has been loaded");
             }
             else
             {
@@ -390,7 +392,7 @@ public class UIManager
         NodeMaps nodeMaps = m_Engine.getRepository().getNodeMaps();
         if(nodeMaps.isEmpty())
         {
-            System.out.println("Commit has not been done yet");
+            System.out.println("engine.Commit has not been done yet");
         }
         else
         {
@@ -435,9 +437,9 @@ public class UIManager
     private void printCommit(Commit i_Commit, String i_CommitSHA1)
     {
         System.out.println("1. SHA1: " + i_CommitSHA1);
-        System.out.println("2. Commit message: " + i_Commit.getMessage());
-        System.out.println("3. Commit date: " + DateUtils.FormatToString(i_Commit.getCommitDate()));
-        System.out.println("4. Commit author: " + i_Commit.getCommitAuthor());
+        System.out.println("2. engine.Commit message: " + i_Commit.getMessage());
+        System.out.println("3. engine.Commit date: " + DateUtils.FormatToString(i_Commit.getCommitDate()));
+        System.out.println("4. engine.Commit author: " + i_Commit.getCommitAuthor());
         System.out.println(System.lineSeparator());
     }
 
@@ -452,11 +454,11 @@ public class UIManager
             System.out.println("Cannot delete active branch");
         } else if (!isBranchExists)
         {
-            System.out.println("Branch " + branchName + " does not exists");
+            System.out.println("engine.Branch " + branchName + " does not exists");
         } else
         {
             m_Engine.deleteBranch(branchName);
-            System.out.println("Branch " + branchName + " deleted successfully");
+            System.out.println("engine.Branch " + branchName + " deleted successfully");
         }
     }
 
