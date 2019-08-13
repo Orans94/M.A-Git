@@ -604,7 +604,7 @@ public class Repository {
             engine.Item realItem = new engine.Item(magitBlobObj.getName(), blobSHA1, "blob",
                     magitBlobObj.getLastUpdater(), DateUtils.FormatToDate(magitBlobObj.getLastUpdateDate()));
             m_ChildrenInformation.add(realItem.toString());
-            FileUtilities.createZipFileFromContent(blobSHA1, magitBlobObj.getContent(), FilenameUtils.removeExtension(realItem.getName()));
+            FileUtilities.createZipFileFromContent(blobSHA1, magitBlobObj.getContent(), realItem.getName());
         } else // type.equals("folder")
         {
             MagitSingleFolder magitFolderObj = i_XmlRepository.getMagitFolders().getMagitSingleFolder().get(i_ID-1);

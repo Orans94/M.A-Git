@@ -1,5 +1,7 @@
 package engine;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,7 +62,11 @@ public class FileUtilities
 
     public static void createZipFileFromContent(String i_ZipName, String i_Content , String i_NameOfTxtFileInsideZip)
     {
-        Path createdTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_NameOfTxtFileInsideZip + ".txt");
+        if(FilenameUtils.getExtension(i_NameOfTxtFileInsideZip).equals(""))
+        {
+            i_NameOfTxtFileInsideZip = i_NameOfTxtFileInsideZip.concat(".txt");
+        }
+        Path createdTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_NameOfTxtFileInsideZip);
         createAndWriteTxtFile(createdTempTxtPath, i_Content);
         zip(i_ZipName, createdTempTxtPath);
         deleteFile(createdTempTxtPath);
