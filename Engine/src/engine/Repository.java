@@ -243,8 +243,9 @@ public class Repository {
         };
     }
 
-    private void configureNewCommit(WalkFileSystemResult i_Result, String i_CommitSHA1) {
-        m_Magit.getCommits().get(i_CommitSHA1).setParentSHA1(m_WorkingCopy.getCommitSHA1());
+    private void configureNewCommit(WalkFileSystemResult i_Result, String i_CommitSHA1)
+    {
+        m_Magit.getCommits().get(i_CommitSHA1).addParent(m_WorkingCopy.getCommitSHA1());
     }
 
     private boolean isWCDirty(String i_RootFolderSha1) {
@@ -498,33 +499,90 @@ public class Repository {
         createRepositoryDirectories(XMLRepositoryPath);
         m_Name = i_XmlRepository.getName();
         createRepositoryNameFile();
-        m_Magit.loadBranchesFromXML(i_XmlRepository.getMagitBranches());
-        m_Magit.writeBranchesToFileSystem();
-        m_Magit.writeHeadToFileSystem();
-        m_Magit.loadCommitsFromXML(i_XmlRepository.getMagitCommits());
-        m_Magit.writeCommitsToFileSystem();
         writeXMLObjectsToFileSystemAtObjectsDir(i_XmlRepository);
+        loadHead(i_XmlRepository);
+        writeBranchesToFileSystem();
+        writeCommitsToFileSystem();
+        //load branches commits head and write them to file system
     }
 
-    private void writeXMLObjectsToFileSystemAtObjectsDir(MagitRepository i_XmlRepository) {
+    private void writeCommitsToFileSystem()
+    {
+        for(Map.Entry<String, Commit> entry : m_Magit.getCommits().entrySet())
+        {
+            FileUtilities.createZipFileFromContent(entry.getKey(), entry.getValue().toString());
+        }
+    }
+
+    private void writeBranchesToFileSystem()
+    {
+        Path destination = Magit.getMagitDir().resolve("branches");
+        for(Map.Entry<String, Branch> entry : m_Magit.getBranches().entrySet())
+        {
+            FileUtilities.createAndWriteTxtFile(destination.resolve(entry.getKey()+ ".txt"), entry.getValue().getCommitSHA1());
+        }
+    }
+
+    private void loadHead(MagitRepository i_XmlRepository)
+    {
+        m_Magit.getHead().setActiveBranch(m_Magit.getBranches().get(i_XmlRepository.getMagitBranches().getHead()));
+    }
+
+    private void writeXMLObjectsToFileSystemAtObjectsDir(MagitRepository i_XmlRepository)
+    {
         int id;
         String rootFolderSHA1, rootFolderContent;
-        String commitDate, commitAuthor, commitMessage;
+        String commitDate, commitAuthor, commitMessage, commitSHA1;
+        List<String> parentsSHA1 = new LinkedList<>();
         Stack<Integer> commitStack = new Stack<>();
-        for( MagitSingleBranch XMLBranch : i_XmlRepository.getMagitBranches().getMagitSingleBranch())
+        MagitSingleCommit currentXMLCommit;
+        Map <Integer, String> commitSHA1ByID = new HashMap<>();
+        SortedSet<MagitSingleCommit> sortedXMLCommitsByDateOfCreation = new TreeSet<>((Comparator<MagitSingleCommit>) (commit1, commit2) ->
         {
-            commitStack.push(Integer.parseInt(XMLBranch.getPointedCommit().getId()));
-            while()
-            for (MagitSingleCommit XMLCommit : i_XmlRepository.getMagitCommits().getMagitSingleCommit())
+            if(commit1.getDateOfCreation().compareTo(commit2.getDateOfCreation())>0)
             {
-                id = Integer.parseInt(XMLCommit.getRootFolder().getId());
-                writeCommitNodesToObjectsDir(i_XmlRepository, "folder", id);
-                rootFolderContent = generateFolderContent(m_ChildrenInformation.size());
-                rootFolderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(rootFolderContent));
-
-                Commit commit = new Commit()
-                m_ChildrenInformation.clear();
+                return 1;
             }
+            else if(commit1.getDateOfCreation().compareTo(commit2.getDateOfCreation())<0)
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
+        });
+        sortedXMLCommitsByDateOfCreation.addAll(i_XmlRepository.getMagitCommits().getMagitSingleCommit());
+        for (MagitSingleCommit XMLCommit : sortedXMLCommitsByDateOfCreation)
+        {
+            id = Integer.parseInt(XMLCommit.getRootFolder().getId());
+            writeCommitNodesToObjectsDir(i_XmlRepository, "folder", id);
+            rootFolderContent = generateFolderContent(m_ChildrenInformation.size());
+            rootFolderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(rootFolderContent));
+            for(PrecedingCommits.PrecedingCommit parent : XMLCommit.getPrecedingCommits().getPrecedingCommit())
+            {
+                parentsSHA1.add(commitSHA1ByID.get(Integer.parseInt(parent.getId())));
+            }
+
+            Commit commit = new Commit(rootFolderSHA1, parentsSHA1, XMLCommit.getMessage(), DateUtils.FormatToDate(XMLCommit.getDateOfCreation()), XMLCommit.getAuthor());
+            commitSHA1 = commit.SHA1();
+            m_Magit.getCommits().put(commitSHA1, commit);
+            commitSHA1ByID.put(Integer.parseInt(XMLCommit.getId()), commitSHA1);
+            m_ChildrenInformation.clear();
+        }
+
+        loadBranchesFromXML(i_XmlRepository, commitSHA1ByID);
+    }
+
+    private void loadBranchesFromXML(MagitRepository i_XmlRepository, Map<Integer, String> i_CommitSHA1ByID)
+    {
+        String branchContent;
+        String branchName;
+        for(MagitSingleBranch XMLBranch : i_XmlRepository.getMagitBranches().getMagitSingleBranch())
+        {
+            branchName = XMLBranch.getName();
+            branchContent = i_CommitSHA1ByID.get(Integer.parseInt(XMLBranch.getPointedCommit().getId()));
+            m_Magit.getBranches().put(branchName, new Branch(branchName, branchContent));
         }
     }
 

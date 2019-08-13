@@ -1,28 +1,38 @@
 package engine;
 
-import mypackage.MagitSingleCommit;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Commit
 {
     private String m_RootFolderSHA1;
-    private String m_ParentSHA1;
+    private List<String> m_ParentsSHA1 = new LinkedList<>();
     private String m_Message;
     private Date m_CommitDate;
     private String m_CommitAuthor;
 
-    public String getParentSHA1() {return m_ParentSHA1;}
+    public Commit(String i_RootFolderSHA1, List<String> i_ParentsSHA1, String i_Message, Date i_CommitDate, String i_Author)
+    {
+        m_RootFolderSHA1 = i_RootFolderSHA1;
+        m_ParentsSHA1.addAll(i_ParentsSHA1);
+        m_Message = i_Message;
+        m_CommitDate = i_CommitDate;
+        m_CommitAuthor = i_Author;
+    }
 
-    public void setParentSHA1(String i_ParentSHA1) { m_ParentSHA1 = i_ParentSHA1; }
+    public List<String> getParentSHA1() {return m_ParentsSHA1;}
+
+    public void setParentSHA1(List<String> i_ParentSHA1) { m_ParentsSHA1 = i_ParentSHA1; }
 
     public Commit(String i_RootFolderSHA1, String i_ParentSHA1, String i_Message)
     {
         // ctor that takes the current time and current user name
         m_RootFolderSHA1 = i_RootFolderSHA1;
-        m_ParentSHA1 = i_ParentSHA1;
+        m_ParentsSHA1.add(i_ParentSHA1);
         m_Message = i_Message;
         m_CommitDate = new Date();
         m_CommitAuthor = EngineManager.getUserName();
@@ -32,21 +42,13 @@ public class Commit
     {
         //ctor that gets all his members as params
         m_RootFolderSHA1 = i_RootFolderSHA1;
-        m_ParentSHA1 = i_ParentSHA1;
+        m_ParentsSHA1.add(i_ParentSHA1);
         m_Message = i_Message;
         m_CommitDate = i_CommitDate;
         m_CommitAuthor = i_Author;
     }
 
-    public Commit(MagitSingleCommit i_XMLCommit)
-    {
-        // ctor that gets an XML commit and creates a regular commit from it.
-        m_RootFolderSHA1 = i_XMLCommit.getRootFolder().getId();
-        m_ParentSHA1 = i_XMLCommit.getPrecedingCommits().getPrecedingCommit().get(0).getId();// TODO - could have 2 parents - fix that.
-        m_Message = i_XMLCommit.getMessage();
-        m_CommitDate = DateUtils.FormatToDate(i_XMLCommit.getDateOfCreation());
-        m_CommitAuthor = i_XMLCommit.getAuthor();
-    }
+    public void addParent(String i_ParentSHA1) { m_ParentsSHA1.add(i_ParentSHA1); }
 
     public void Zip(String i_CommitSHA1FileName)
     {
@@ -60,18 +62,39 @@ public class Commit
         // 3. remove the tmp txt file
         FileUtilities.deleteFile(createTempTxtPath);
     }
+
     @Override
     public String toString()
     {
         return
                 "" + m_RootFolderSHA1 + ','
-                + m_ParentSHA1 + ','
+                + getParentsList() + ','
                 + m_Message + ','
                 + DateUtils.FormatToString(m_CommitDate) + ','
                 + m_CommitAuthor;
     }
 
-    public String SHA1() { return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(this.toString())); }
+    private String getParentsList()
+    {
+        String parentsString;
+
+        if (m_ParentsSHA1.size() == 0)
+        {
+            parentsString = ",";
+        }
+        else if (m_ParentsSHA1.size() == 1)
+        {
+            parentsString = m_ParentsSHA1.get(0) + ",";
+        }
+        else
+        {
+            parentsString = m_ParentsSHA1.get(0) + "," + m_ParentsSHA1.get(1);
+        }
+
+        return parentsString;
+    }
+    //TODO parent sha 1 will be list - the to string method will be different with extra ',' so dont forget to fix the makeSha1Content method
+    public String SHA1() { return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(this.toString(),4)); }
 
     public String getRootFolderSHA1() { return m_RootFolderSHA1; }
 

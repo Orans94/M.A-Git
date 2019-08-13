@@ -22,7 +22,7 @@ public class Folder extends Node
     @Override
     protected String SHA1()
     {
-        return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(m_Content));
+        return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(m_Content,3));
     }
 
     @Override

@@ -26,6 +26,9 @@ public class EngineManager
 {
     private Repository m_Repository;
     private static String m_UserName = "";
+    private XMLValidator m_XMLValidator = new XMLValidator();
+
+    public XMLValidator getXMLValidator() { return m_XMLValidator; }
 
     public static String getUserName()
     {
@@ -82,13 +85,17 @@ public class EngineManager
         return i_BranchName.toUpperCase().equals("HEAD");
     }
 
-    public void readRepositoryFromXMLFile(Path i_XMLFilePath) throws JAXBException, IOException
+    public MagitRepository createXMLRepository(Path i_XMLFilePath) throws JAXBException
     {
         SchemaBasedJAXB jaxb = new SchemaBasedJAXB();
-        MagitRepository xmlRepository = jaxb.createRepositoryFromXML(Paths.get("xml/ex1-small.xml"));
+        return jaxb.createRepositoryFromXML(Paths.get("xml/ex1-small.xml"));// TODO change to i_XMLFilePath
+    }
+
+    public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository) throws IOException
+    {
         // validation here
-        m_Repository = new Repository(Paths.get(xmlRepository.getLocation()));
-        m_Repository.loadXMLRepoToSystem(xmlRepository);//TODO before loading the xml repository - we have to check if its valid
+        m_Repository = new Repository(Paths.get(i_XMLRepository.getLocation()));
+        m_Repository.loadXMLRepoToSystem(i_XMLRepository);//TODO before loading the xml repository - we have to check if its valid
     }
 
     public OpenChanges getFileSystemStatus() throws IOException { return m_Repository.getFileSystemStatus(); }

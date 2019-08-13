@@ -1,4 +1,5 @@
 import engine.*;
+import mypackage.MagitRepository;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -87,11 +88,20 @@ public class UIManager
 
     private void readRepositoryFromXMLFile() throws JAXBException, IOException {
         Path XMLFilePath = requestPath();
-        if(m_Engine.isPathExists(XMLFilePath))
+        if(m_Engine.isPathExists(XMLFilePath))// TODO should we do this check?
         {
             // validate process
-            m_Engine.readRepositoryFromXMLFile(XMLFilePath);
+            MagitRepository XMLRepo = m_Engine.createXMLRepository(XMLFilePath);
+            if(validateXMLRepository(XMLRepo))
+            {
+                m_Engine.readRepositoryFromXMLFile(XMLRepo);
+            }
         }
+    }
+
+    private boolean validateXMLRepository(MagitRepository xmlRepo)
+    {
+        m_Engine.getXMLValidator()
     }
 
     private void showStatus() throws IOException { printOpenChanges(m_Engine.getFileSystemStatus()); }

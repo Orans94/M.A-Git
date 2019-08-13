@@ -1,16 +1,12 @@
 package engine;
 
-import mypackage.*;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Magit
@@ -108,26 +104,53 @@ public class Magit
         { // to all branches in objects\\branches
             currentBranch = entry.getValue();
             commitSHA1 = currentBranch.getCommitSHA1();
-
-            while (!commitSHA1.equals(""))
-            {
-                if (!m_Commits.containsKey(commitSHA1))
-                { // the current commit not found in commits map
-                    commitContent = FileUtilities.getTxtFromZip(commitSHA1 + ".zip", commitSHA1+".txt");
-                    rootFolderSHA1 = StringUtilities.getCommitInformation(commitContent, 0);
-                    parentCommitSHA1 = StringUtilities.getCommitInformation(commitContent, 1);
-                    commitMessage = StringUtilities.getCommitInformation(commitContent, 2);
-                    commitCreateDate = DateUtils.FormatToDate(StringUtilities.getCommitInformation(commitContent, 3));
-                    commitAuthor = StringUtilities.getCommitInformation(commitContent, 4);
-
-                    newCommit = new Commit(rootFolderSHA1, parentCommitSHA1, commitMessage, commitCreateDate, commitAuthor);
-                    m_Commits.put(commitSHA1, newCommit);
-                }
-                commitSHA1 = m_Commits.get(commitSHA1).getParentSHA1();
-            }
-
-
+            loadCommitsToMapsRecursive(commitSHA1);
         }
+    }
+
+    private void loadCommitsToMapsRecursive(String i_CommitSHA1) throws IOException
+    {
+        if (!m_Commits.containsKey(i_CommitSHA1))
+        { // the current commit not found in commits map
+
+           addCommitToMapsByObjectsDir(i_CommitSHA1);
+        }
+        if (m_Commits.get(i_CommitSHA1).getParentSHA1().size() == 2)
+        {
+            loadCommitsToMapsRecursive(m_Commits.get(i_CommitSHA1).getParentSHA1().get(0));
+            loadCommitsToMapsRecursive(m_Commits.get(i_CommitSHA1).getParentSHA1().get(1));
+        }
+        else if (m_Commits.get(i_CommitSHA1).getParentSHA1().size() == 1)
+        {
+            loadCommitsToMapsRecursive(m_Commits.get(i_CommitSHA1).getParentSHA1().get(0));
+        }
+    }
+
+    private void addCommitToMapsByObjectsDir(String i_CommitSHA1) throws IOException
+    {
+        String commitContent, rootFolderSHA1, commitMessage, commitAuthor;
+        List<String> parentsCommitSHA1 = new LinkedList<>();
+        Commit newCommit;
+        Date commitCreateDate;
+
+        commitContent = FileUtilities.getTxtFromZip(i_CommitSHA1 + ".zip", i_CommitSHA1 + ".txt");
+        rootFolderSHA1 = StringUtilities.getCommitInformation(commitContent, 0);
+        parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,1));
+        parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,2));
+        if (parentsCommitSHA1.get(0).equals(""))
+        {
+            parentsCommitSHA1.remove(0);
+        }
+        if (parentsCommitSHA1.get(1).equals(""))
+        {
+            parentsCommitSHA1.remove(1);
+        }
+        commitMessage = StringUtilities.getCommitInformation(commitContent, 3);
+        commitCreateDate = DateUtils.FormatToDate(StringUtilities.getCommitInformation(commitContent, 4));
+        commitAuthor = StringUtilities.getCommitInformation(commitContent, 5);
+
+        newCommit = new Commit(rootFolderSHA1, parentsCommitSHA1, commitMessage, commitCreateDate, commitAuthor);
+        m_Commits.put(i_CommitSHA1, newCommit);
     }
 
     private void loadBranches() throws IOException
@@ -142,57 +165,6 @@ public class Magit
             branchName = FilenameUtils.removeExtension(path.toFile().getName());
             String branchContent = new String(Files.readAllBytes(path));
             m_Branches.put(branchName, new Branch(branchName, branchContent));
-        }
-    }
-
-    public void loadBranchesFromXML(MagitBranches i_MagitBranches)
-    {
-        for(MagitSingleBranch XMLBranch : i_MagitBranches.getMagitSingleBranch())
-        {
-            Branch myBranch = new Branch(XMLBranch);
-            m_Branches.put(myBranch.getName(), myBranch);
-        }
-
-        loadHeadFromXML(i_MagitBranches.getHead());
-    }
-
-    private void loadHeadFromXML(String i_HeadContent)
-    {
-        m_Head.setActiveBranch(m_Branches.get(i_HeadContent));
-    }
-
-    public void loadCommitsFromXML(MagitCommits i_MagitCommits)
-    {
-        for(MagitSingleCommit XMLCommit : i_MagitCommits.getMagitSingleCommit())
-        {
-            Commit myCommit = new Commit(XMLCommit);
-            m_Commits.put(XMLCommit.getId(), myCommit);
-        }
-    }
-
-    public void writeBranchesToFileSystem()
-    {
-        // this method writes all the branches in m_Magit to file system in branches dir.
-        Path destination = m_MagitDir.resolve("branches");
-
-        for(Map.Entry<String, Branch> entry : m_Branches.entrySet())
-        {
-            FileUtilities.createAndWriteTxtFile(destination.resolve(entry.getKey() + ".txt"),entry.getValue().getCommitSHA1());
-        }
-    }
-
-    public void writeHeadToFileSystem()
-    {
-        Path destination = m_MagitDir.resolve("branches").resolve("HEAD.txt");
-        FileUtilities.createAndWriteTxtFile(destination,m_Head.getActiveBranch().getName());
-    }
-
-    public void writeCommitsToFileSystem()
-    {
-        // this method writes all the commits in m_Magit to file system in objects dir.
-        for(Map.Entry<String, Commit> entry : m_Commits.entrySet())
-        {
-            FileUtilities.createZipFileFromContent(entry.getKey(), entry.getValue().getRootFolderSHA1());
         }
     }
 }

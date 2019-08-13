@@ -38,137 +38,12 @@
   <component name="FavoritesManager">
     <favorites_list name="M-A-Git" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Engine/src/Repository.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="109">
-              <caret line="128" selection-start-line="128" selection-end-line="128" />
-              <folding>
-                <element signature="e#2044#2045#0" expanded="true" />
-                <element signature="e#2080#2081#0" expanded="true" />
-                <element signature="e#2136#2137#0" expanded="true" />
-                <element signature="e#2186#2187#0" expanded="true" />
-                <element signature="e#2221#2222#0" expanded="true" />
-                <element signature="e#2250#2251#0" expanded="true" />
-                <element signature="e#2296#2297#0" expanded="true" />
-                <element signature="e#2327#2328#0" expanded="true" />
-                <element signature="e#2362#2363#0" expanded="true" />
-                <element signature="e#2392#2393#0" expanded="true" />
-                <element signature="e#2439#2440#0" expanded="true" />
-                <element signature="e#2477#2478#0" expanded="true" />
-                <element signature="e#17151#17152#0" expanded="true" />
-                <element signature="e#17201#17202#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Engine/src/WalkFileSystemResult.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="13" selection-start-column="13" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Engine/src/WC.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="14" selection-start-line="14" selection-end-line="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Engine/src/Magit.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="103">
-              <caret line="53" column="4" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Engine/src/FileUtilities.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
-              <caret line="163" column="30" selection-start-line="163" selection-start-column="30" selection-end-line="163" selection-end-column="30" />
-              <folding>
-                <element signature="e#5445#5446#0" expanded="true" />
-                <element signature="e#5499#5500#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Engine/src/StringUtilities.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Engine/src/Commit.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
-              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/UI/src/UIManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="109">
-              <caret line="398" selection-start-line="398" selection-end-line="398" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/UI/src/Program.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Engine/src/EngineManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="80" column="65" selection-start-line="80" selection-start-column="65" selection-end-line="80" selection-end-column="65" />
-              <folding>
-                <element signature="e#997#998#0" expanded="true" />
-                <element signature="e#1030#1031#0" expanded="true" />
-                <element signature="e#1091#1092#0" expanded="true" />
-                <element signature="e#1144#1145#0" expanded="true" />
-                <element signature="e#1499#1500#0" expanded="true" />
-                <element signature="e#1542#1543#0" expanded="true" />
-                <element signature="e#1594#1595#0" expanded="true" />
-                <element signature="e#1655#1656#0" expanded="true" />
-                <element signature="e#2168#2169#0" expanded="true" />
-                <element signature="e#2226#2227#0" expanded="true" />
-                <element signature="e#2296#2297#0" expanded="true" />
-                <element signature="e#2360#2361#0" expanded="true" />
-                <element signature="e#2600#2601#0" expanded="true" />
-                <element signature="e#2799#2800#0" expanded="true" />
-                <element signature="e#3100#3101#0" expanded="true" />
-                <element signature="e#3418#3419#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -196,69 +71,8 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/Engine/src/FileUtilities.java" />
-        <option value="$PROJECT_DIR$/Engine/src/DateUtils.java" />
-        <option value="$PROJECT_DIR$/Engine/src/StringUtilities.java" />
-        <option value="$PROJECT_DIR$/Engine/src/WC.java" />
-        <option value="$PROJECT_DIR$/Engine/src/Magit.java" />
-        <option value="$PROJECT_DIR$/Engine/src/EngineManager.java" />
-        <option value="$PROJECT_DIR$/UI/src/UIManager.java" />
-        <option value="$PROJECT_DIR$/Engine/src/Repository.java" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="width" value="1385" />
-    <option name="height" value="1040" />
-  </component>
   <component name="ProjectId" id="1OumKS0SyYkmBmoANalsV1DiRZ5" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="M.A Git" type="b2602c69:ProjectViewProjectNode" />
-              <item name="M.A Git" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="M.A Git" type="b2602c69:ProjectViewProjectNode" />
-              <item name="M.A Git" type="462c0819:PsiDirectoryNode" />
-              <item name="Engine" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="M.A Git" type="b2602c69:ProjectViewProjectNode" />
-              <item name="M.A Git" type="462c0819:PsiDirectoryNode" />
-              <item name="Engine" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="M.A Git" type="b2602c69:ProjectViewProjectNode" />
-              <item name="M.A Git" type="462c0819:PsiDirectoryNode" />
-              <item name="UI" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="M.A Git" type="b2602c69:ProjectViewProjectNode" />
-              <item name="M.A Git" type="462c0819:PsiDirectoryNode" />
-              <item name="UI" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
-  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -319,87 +133,35 @@
       <workItem from="1564993829125" duration="14081000" />
       <workItem from="1565013376501" duration="22526000" />
       <workItem from="1565084663526" duration="12286000" />
+      <workItem from="1565680863752" duration="12061000" />
     </task>
     <servers />
   </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34812000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14563759" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Designer" order="2" />
-      <window_info id="Image Layers" order="3" />
-      <window_info id="Capture Tool" order="4" />
-      <window_info id="UI Designer" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.42351276" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.3286119" />
-      <window_info anchor="bottom" id="Database Changes" order="11" />
-      <window_info anchor="bottom" id="Version Control" order="12" />
-      <window_info anchor="bottom" id="Floobits" order="13" weight="0.29745042" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Maven" order="3" />
-      <window_info anchor="right" id="Palette" order="4" />
-      <window_info anchor="right" id="Capture Analysis" order="5" />
-      <window_info anchor="right" id="Database" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Theme Preview" order="8" />
-    </layout>
-  </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Engine/src/Repository.java</url>
-          <line>250</line>
-          <properties />
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Engine/src/Repository.java</url>
-          <line>343</line>
-          <properties />
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Engine/src/Repository.java</url>
-          <line>152</line>
-          <properties />
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Engine/src/Repository.java</url>
-          <line>171</line>
-          <properties />
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/UI/src/UIManager.java</url>
-          <line>227</line>
-          <properties />
+          <line>237</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/UI/src/UIManager.java</url>
-          <line>389</line>
-          <properties />
+          <line>399</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
@@ -433,166 +195,5 @@
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Engine/src/tomer work.java" />
-    <entry file="file://$PROJECT_DIR$/Engine/src/Node.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/FileUtils.java" />
-    <entry file="file://$PROJECT_DIR$/Engine/src/Folder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UI/src/Menu.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="13" selection-start-column="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/util/List.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="492" column="9" selection-start-line="492" selection-start-column="9" selection-end-line="492" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/DateUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/Item.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="50" column="16" selection-start-line="50" selection-start-column="16" selection-end-line="50" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/NodeMaps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="13" column="30" selection-start-line="13" selection-start-column="30" selection-end-line="13" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/Commit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/StringUtilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/Magit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="53" column="4" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/WC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/WalkFileSystemResult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="13" selection-start-column="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/EngineManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="80" column="65" selection-start-line="80" selection-start-column="65" selection-end-line="80" selection-end-column="65" />
-          <folding>
-            <element signature="e#997#998#0" expanded="true" />
-            <element signature="e#1030#1031#0" expanded="true" />
-            <element signature="e#1091#1092#0" expanded="true" />
-            <element signature="e#1144#1145#0" expanded="true" />
-            <element signature="e#1499#1500#0" expanded="true" />
-            <element signature="e#1542#1543#0" expanded="true" />
-            <element signature="e#1594#1595#0" expanded="true" />
-            <element signature="e#1655#1656#0" expanded="true" />
-            <element signature="e#2168#2169#0" expanded="true" />
-            <element signature="e#2226#2227#0" expanded="true" />
-            <element signature="e#2296#2297#0" expanded="true" />
-            <element signature="e#2360#2361#0" expanded="true" />
-            <element signature="e#2600#2601#0" expanded="true" />
-            <element signature="e#2799#2800#0" expanded="true" />
-            <element signature="e#3100#3101#0" expanded="true" />
-            <element signature="e#3418#3419#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/FileUtilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="163" column="30" selection-start-line="163" selection-start-column="30" selection-end-line="163" selection-end-column="30" />
-          <folding>
-            <element signature="e#5445#5446#0" expanded="true" />
-            <element signature="e#5499#5500#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UI/src/Program.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/src/Repository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="128" selection-start-line="128" selection-end-line="128" />
-          <folding>
-            <element signature="e#2044#2045#0" expanded="true" />
-            <element signature="e#2080#2081#0" expanded="true" />
-            <element signature="e#2136#2137#0" expanded="true" />
-            <element signature="e#2186#2187#0" expanded="true" />
-            <element signature="e#2221#2222#0" expanded="true" />
-            <element signature="e#2250#2251#0" expanded="true" />
-            <element signature="e#2296#2297#0" expanded="true" />
-            <element signature="e#2327#2328#0" expanded="true" />
-            <element signature="e#2362#2363#0" expanded="true" />
-            <element signature="e#2392#2393#0" expanded="true" />
-            <element signature="e#2439#2440#0" expanded="true" />
-            <element signature="e#2477#2478#0" expanded="true" />
-            <element signature="e#17151#17152#0" expanded="true" />
-            <element signature="e#17201#17202#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UI/src/UIManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="398" selection-start-line="398" selection-end-line="398" />
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>
