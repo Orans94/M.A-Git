@@ -114,15 +114,10 @@ public class Magit
         { // the current commit not found in commits map
 
            addCommitToMapsByObjectsDir(i_CommitSHA1);
-        }
-        if (m_Commits.get(i_CommitSHA1).getParentSHA1().size() == 2)
-        {
-            loadCommitsToMapsRecursive(m_Commits.get(i_CommitSHA1).getParentSHA1().get(0));
-            loadCommitsToMapsRecursive(m_Commits.get(i_CommitSHA1).getParentSHA1().get(1));
-        }
-        else if (m_Commits.get(i_CommitSHA1).getParentSHA1().size() == 1)
-        {
-            loadCommitsToMapsRecursive(m_Commits.get(i_CommitSHA1).getParentSHA1().get(0));
+            for(String SHA1 : m_Commits.get(i_CommitSHA1).getParentsSHA1())
+            {
+                loadCommitsToMapsRecursive(SHA1);
+            }
         }
     }
 
@@ -137,14 +132,15 @@ public class Magit
         rootFolderSHA1 = StringUtilities.getCommitInformation(commitContent, 0);
         parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,1));
         parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,2));
-        if (parentsCommitSHA1.get(0).equals(""))
+        parentsCommitSHA1 = parentsCommitSHA1.stream().filter(d->!d.equals("")).collect(Collectors.toList());
+/*        if (parentsCommitSHA1.get(0).equals(""))//TODO
         {
             parentsCommitSHA1.remove(0);
         }
         if (parentsCommitSHA1.get(1).equals(""))
         {
             parentsCommitSHA1.remove(1);
-        }
+        }*/
         commitMessage = StringUtilities.getCommitInformation(commitContent, 3);
         commitCreateDate = DateUtils.FormatToDate(StringUtilities.getCommitInformation(commitContent, 4));
         commitAuthor = StringUtilities.getCommitInformation(commitContent, 5);

@@ -3,6 +3,7 @@ package engine;
 import mypackage.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -116,7 +117,7 @@ public class Repository {
             i_Result.getOpenChanges().getNewNodes().add(i_Path);
             i_Result.getToZipNodes().getSHA1ByPath().put(i_Path, i_SHA1);
             i_Result.getToZipNodes().getNodeBySHA1().put(i_SHA1, i_Node);
-        } else { // the path exists in the engine.WC
+        } else { // the path exists in the WC
             if (i_SHA1.equals(i_TempNodeMaps.getSHA1ByPath().get(i_Path))) { // the file has not been modified
                 i_Result.getUnchangedNodes().getSHA1ByPath().put(i_Path, i_SHA1);
                 i_Result.getUnchangedNodes().getNodeBySHA1().put(i_SHA1, i_TempNodeMaps.getNodeBySHA1().get(i_SHA1));
@@ -175,7 +176,7 @@ public class Repository {
 
     private FileVisitor<Path> getOpenChangesBetweenFileSystemAndCurrentCommitFileVisitor(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult) {
         /*
-        this method is setting i_WalkFileSystemResult to contain all the engine.OpenChanges, unchanged nodes, toZipNodes
+        this method is setting i_WalkFileSystemResult to contain all the OpenChanges, unchanged nodes, toZipNodes
         between the file system and the current commit.
         at the end of the method - the deleted nodes will be all the nodes remained at i_TempNodeMaps.
         If a user of this method want to have an updated deletedNodeList - call addDeletedNodesToDeletedList right after.
@@ -342,7 +343,7 @@ public class Repository {
 
         for (engine.Item item : folder.getItems()) {
             i_NodeMapsToUpdate.getSHA1ByPath().put(startPath.resolve(item.getName()), item.getSHA1());
-            if (item.getType().equals("engine.Folder")) {
+            if (item.getType().equals("folder")) {
                 if (i_LoadToFileSystem) {
                     Files.createDirectory(startPath.resolve(item.getName()));
                 }
@@ -422,7 +423,7 @@ public class Repository {
 
     public OpenChanges delta(Commit i_FirstCommit, Commit i_SecondCommit) throws IOException {
         /*
-        this method recieves 2 Commits and return engine.OpenChanges object represent the delta between the commits.
+        this method recieves 2 Commits and return OpenChanges object represent the delta between the commits.
          */
         String myBlobContent;
         OpenChanges delta;
@@ -478,7 +479,7 @@ public class Repository {
     }
 
     public OpenChanges getFileSystemStatus() throws IOException {
-        // this method return the openChanges objects represents the status of the engine.WC.
+        // this method return the openChanges objects represents the status of the WC.
 
         Commit fileSystemFictiveCommit = commit("", false);
         if (fileSystemFictiveCommit == null) {// wc is clean
@@ -501,16 +502,23 @@ public class Repository {
         createRepositoryNameFile();
         writeXMLObjectsToFileSystemAtObjectsDir(i_XmlRepository);
         loadHead(i_XmlRepository);
+        writeHeadToFileSysmte();
         writeBranchesToFileSystem();
         writeCommitsToFileSystem();
         //load branches commits head and write them to file system
+    }
+
+    private void writeHeadToFileSysmte()
+    {
+        Path destination = Magit.getMagitDir().resolve("branches").resolve("HEAD.txt");
+        FileUtilities.createAndWriteTxtFile(destination, m_Magit.getHead().getActiveBranch().getName());
     }
 
     private void writeCommitsToFileSystem()
     {
         for(Map.Entry<String, Commit> entry : m_Magit.getCommits().entrySet())
         {
-            FileUtilities.createZipFileFromContent(entry.getKey(), entry.getValue().toString());
+            FileUtilities.createZipFileFromContent(entry.getKey(), entry.getValue().toString(), entry.getKey());
         }
     }
 
@@ -558,10 +566,13 @@ public class Repository {
             id = Integer.parseInt(XMLCommit.getRootFolder().getId());
             writeCommitNodesToObjectsDir(i_XmlRepository, "folder", id);
             rootFolderContent = generateFolderContent(m_ChildrenInformation.size());
-            rootFolderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(rootFolderContent));
-            for(PrecedingCommits.PrecedingCommit parent : XMLCommit.getPrecedingCommits().getPrecedingCommit())
+            rootFolderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(rootFolderContent,3));
+            if(XMLCommit.getPrecedingCommits() != null)
             {
-                parentsSHA1.add(commitSHA1ByID.get(Integer.parseInt(parent.getId())));
+                for (PrecedingCommits.PrecedingCommit parent : XMLCommit.getPrecedingCommits().getPrecedingCommit())
+                {
+                    parentsSHA1.add(commitSHA1ByID.get(Integer.parseInt(parent.getId())));
+                }
             }
 
             Commit commit = new Commit(rootFolderSHA1, parentsSHA1, XMLCommit.getMessage(), DateUtils.FormatToDate(XMLCommit.getDateOfCreation()), XMLCommit.getAuthor());
@@ -588,15 +599,15 @@ public class Repository {
 
     private void writeCommitNodesToObjectsDir(MagitRepository i_XmlRepository, String i_Type, int i_ID) {
         if (i_Type.equals("blob")) {
-            MagitBlob magitBlobObj = i_XmlRepository.getMagitBlobs().getMagitBlob().get(i_ID);
+            MagitBlob magitBlobObj = i_XmlRepository.getMagitBlobs().getMagitBlob().get(i_ID-1);
             String blobSHA1 = DigestUtils.sha1Hex(magitBlobObj.getContent());
             engine.Item realItem = new engine.Item(magitBlobObj.getName(), blobSHA1, "blob",
                     magitBlobObj.getLastUpdater(), DateUtils.FormatToDate(magitBlobObj.getLastUpdateDate()));
             m_ChildrenInformation.add(realItem.toString());
-            FileUtilities.createZipFileFromContent(blobSHA1, magitBlobObj.getContent());
+            FileUtilities.createZipFileFromContent(blobSHA1, magitBlobObj.getContent(), FilenameUtils.removeExtension(realItem.getName()));
         } else // type.equals("folder")
         {
-            MagitSingleFolder magitFolderObj = i_XmlRepository.getMagitFolders().getMagitSingleFolder().get(i_ID);
+            MagitSingleFolder magitFolderObj = i_XmlRepository.getMagitFolders().getMagitSingleFolder().get(i_ID-1);
             for (mypackage.Item XMLItem : magitFolderObj.getItems().getItem()) {
                 int XMLItemID = Integer.parseInt(XMLItem.getId());
                 writeCommitNodesToObjectsDir(i_XmlRepository, XMLItem.getType(), XMLItemID);
@@ -604,18 +615,39 @@ public class Repository {
             int numOfChildren = magitFolderObj.getItems().getItem().size();
             //2. add the item information of my children to my content
             String folderContent = generateFolderContent(numOfChildren);
-            String folderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(folderContent));
-            FileUtilities.createZipFileFromContent(folderSHA1, folderContent);
+            String folderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(folderContent,3));
+            FileUtilities.createZipFileFromContent(folderSHA1, folderContent, folderSHA1);
             engine.Item realItem = new engine.Item(magitFolderObj.getName(), folderSHA1, i_Type,
                     magitFolderObj.getLastUpdater(), DateUtils.FormatToDate(magitFolderObj.getLastUpdateDate()));
 
-            if (!i_XmlRepository.getMagitFolders().getMagitSingleFolder().get(i_ID).isIsRoot())
+            if (!i_XmlRepository.getMagitFolders().getMagitSingleFolder().get(i_ID-1).isIsRoot())
             {
                 m_ChildrenInformation = m_ChildrenInformation.stream()
                         .limit(m_ChildrenInformation.size() - numOfChildren)
                         .collect(Collectors.toList());
                 m_ChildrenInformation.add(realItem.toString());
             }
+        }
+    }
+
+    public Set<String> getActiveBranchHistory()
+    {
+        Set<String> commitsHistory = new LinkedHashSet<>();
+        Branch activeBranch = m_Magit.getHead().getActiveBranch();
+        String commitSHA1 = activeBranch.getCommitSHA1();
+
+        createOrderedCommitsHistoryRecursive(commitsHistory, commitSHA1);
+
+        return commitsHistory;
+    }
+
+    private void createOrderedCommitsHistoryRecursive(Set<String> i_CommitsHistory, String i_CommitSHA1)
+    {
+        i_CommitsHistory.add(i_CommitSHA1);
+        Commit currentCommit = m_Magit.getCommits().get(i_CommitSHA1);
+        for(String SHA1 : currentCommit.getParentsSHA1())
+        {
+            createOrderedCommitsHistoryRecursive(i_CommitsHistory, SHA1);
         }
     }
 }

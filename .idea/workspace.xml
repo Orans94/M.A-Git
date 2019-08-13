@@ -45,29 +45,6 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>fun</find>
-      <find>func</find>
-      <find>commit</find>
-      <find>isDir</find>
-      <find>showAll</find>
-      <find>requestPath</find>
-      <find>isUser</find>
-      <find>remove</find>
-      <find>new Branch</find>
-      <find>checkout</find>
-      <find>createCommi</find>
-      <find>delta</find>
-      <find>handleNodeByStatus</find>
-      <find>getOpenChangesFileVisitor</find>
-      <find>get</find>
-      <find>getOpenChanges</find>
-      <find>2428</find>
-      <find>handleNode</find>
-      <find>handle</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -133,7 +110,7 @@
       <workItem from="1564993829125" duration="14081000" />
       <workItem from="1565013376501" duration="22526000" />
       <workItem from="1565084663526" duration="12286000" />
-      <workItem from="1565680863752" duration="12061000" />
+      <workItem from="1565680863752" duration="26959000" />
     </task>
     <servers />
   </component>
@@ -156,44 +133,28 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/UI/src/UIManager.java</url>
-          <line>237</line>
+          <line>285</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/UI/src/UIManager.java</url>
-          <line>399</line>
+          <line>447</line>
           <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Engine/src/engine/FileUtilities.java</url>
+          <line>175</line>
+          <option name="timeStamp" value="55" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="folder.getItems()" language="JAVA" />
+        <watch expression="XMLCommit" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>
-  <component name="debuggerHistoryManager">
-    <expressions id="watch">
-      <expression>
-        <expression-string>folder.getItems()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>m_WorkingCopy.getCommitSHA1().equals(&quot;&quot;)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>m_Engine.m_Repository.m_Magit.getBranches()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>m_Engine.getRepository().getMagit().getBranches()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/M_A_Git$Program.ic" NAME="Program Coverage Results" MODIFIED="1565706122164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

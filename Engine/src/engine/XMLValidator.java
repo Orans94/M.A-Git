@@ -1,6 +1,7 @@
 package engine;
 
 import mypackage.*;
+import org.apache.commons.io.FilenameUtils;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -9,9 +10,12 @@ import java.util.TreeSet;
 public class XMLValidator
 {
     //3.1
-    public boolean isXMLFile(Path i_Path) { return i_Path.endsWith(".xml"); }
+    public boolean isXMLFile(Path i_Path)
+    {
+        return FilenameUtils.getExtension(i_Path.getFileName().toString()).equals("xml");
+    }
 
-    public boolean areBlobsIDsValid(MagitBlobs i_Blobs)
+    private boolean areBlobsIDsValid(MagitBlobs i_Blobs)
     {
         //3.2
         // this method return true if there are no 2 identical ids in blobs
@@ -32,7 +36,7 @@ public class XMLValidator
         return true;
     }
 
-    public boolean areFoldersIDsValid(MagitFolders i_Folders)
+    private boolean areFoldersIDsValid(MagitFolders i_Folders)
     {
         //3.2
         // this method return true if there are no 2 identical ids in folders
@@ -53,7 +57,7 @@ public class XMLValidator
         return true;
     }
 
-    public boolean areCommitsIDsValid(MagitCommits i_Commits)
+    private boolean areCommitsIDsValid(MagitCommits i_Commits)
     {
         //3.2
         // this method return true if there are no 2 identical ids in commits
@@ -100,11 +104,11 @@ public class XMLValidator
                 }
 
                 if(item.getType().equals("blob") && !blobIdSet.contains(item.getId()))
-                {
+                { // reference does not exist
                     return false;
                 }
 
-                if(item.getId().equals(folder.getId()))
+                if(item.getType().equals("folder") && item.getId().equals(folder.getId()))
                 { // self reference
                     return false;
                 }
@@ -132,7 +136,7 @@ public class XMLValidator
             }
             else
             {
-                if(!i_Folders.getMagitSingleFolder().get(Integer.parseInt(commit.getRootFolder().getId())).isIsRoot())
+                if(!i_Folders.getMagitSingleFolder().get(Integer.parseInt(commit.getRootFolder().getId()) -1 ).isIsRoot())
                 {
                     return false;
                 }
@@ -171,5 +175,10 @@ public class XMLValidator
         }
 
         return branchesSetName.contains(i_Head);
+    }
+
+    public boolean areIDsValid(MagitRepository i_XmlRepo)
+    {
+        return areCommitsIDsValid(i_XmlRepo.getMagitCommits()) && areBlobsIDsValid(i_XmlRepo.getMagitBlobs()) && areFoldersIDsValid(i_XmlRepo.getMagitFolders());
     }
 }

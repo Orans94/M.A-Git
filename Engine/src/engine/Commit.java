@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Commit
 {
@@ -18,21 +19,22 @@ public class Commit
     public Commit(String i_RootFolderSHA1, List<String> i_ParentsSHA1, String i_Message, Date i_CommitDate, String i_Author)
     {
         m_RootFolderSHA1 = i_RootFolderSHA1;
-        m_ParentsSHA1.addAll(i_ParentsSHA1);
+        m_ParentsSHA1.addAll(i_ParentsSHA1.stream().filter(d->!d.equals("")).collect(Collectors.toList()));
         m_Message = i_Message;
         m_CommitDate = i_CommitDate;
         m_CommitAuthor = i_Author;
     }
 
-    public List<String> getParentSHA1() {return m_ParentsSHA1;}
-
-    public void setParentSHA1(List<String> i_ParentSHA1) { m_ParentsSHA1 = i_ParentSHA1; }
+    public List<String> getParentsSHA1() {return m_ParentsSHA1;}
 
     public Commit(String i_RootFolderSHA1, String i_ParentSHA1, String i_Message)
     {
         // ctor that takes the current time and current user name
         m_RootFolderSHA1 = i_RootFolderSHA1;
-        m_ParentsSHA1.add(i_ParentSHA1);
+        if(!i_ParentSHA1.equals(""))
+        {
+            m_ParentsSHA1.add(i_ParentSHA1);
+        }
         m_Message = i_Message;
         m_CommitDate = new Date();
         m_CommitAuthor = EngineManager.getUserName();
@@ -42,13 +44,22 @@ public class Commit
     {
         //ctor that gets all his members as params
         m_RootFolderSHA1 = i_RootFolderSHA1;
-        m_ParentsSHA1.add(i_ParentSHA1);
+        if(!i_ParentSHA1.equals(""))
+        {
+            m_ParentsSHA1.add(i_ParentSHA1);
+        }
         m_Message = i_Message;
         m_CommitDate = i_CommitDate;
         m_CommitAuthor = i_Author;
     }
 
-    public void addParent(String i_ParentSHA1) { m_ParentsSHA1.add(i_ParentSHA1); }
+    public void addParent(String i_ParentSHA1)
+    {
+        if(!i_ParentSHA1.equals(""))
+        {
+            m_ParentsSHA1.add(i_ParentSHA1);
+        }
+    }
 
     public void Zip(String i_CommitSHA1FileName)
     {
@@ -80,7 +91,7 @@ public class Commit
 
         if (m_ParentsSHA1.size() == 0)
         {
-            parentsString = ",";
+            parentsString = ",,";
         }
         else if (m_ParentsSHA1.size() == 1)
         {
@@ -94,7 +105,7 @@ public class Commit
         return parentsString;
     }
     //TODO parent sha 1 will be list - the to string method will be different with extra ',' so dont forget to fix the makeSha1Content method
-    public String SHA1() { return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(this.toString(),4)); }
+    public String SHA1() { return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(this.toString(),3)); }
 
     public String getRootFolderSHA1() { return m_RootFolderSHA1; }
 
