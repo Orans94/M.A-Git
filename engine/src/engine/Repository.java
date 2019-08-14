@@ -3,7 +3,6 @@ package engine;
 import mypackage.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -98,6 +97,7 @@ public class Repository {
     private String generateFolderContent(int i_NumOfChildren) {
         List<String> folderContentList = m_ChildrenInformation.stream()
                 .skip(m_ChildrenInformation.size() - i_NumOfChildren)
+                .sorted(Comparator.comparing(String::toString))
                 .collect(Collectors.toList());
         String folderContent = "";
         for (String s : folderContentList) {
@@ -105,7 +105,6 @@ public class Repository {
         }
 
         //delete last line from the string
-        //TODO handle situation => folder is empty and expection has been thrown
         folderContent = folderContent.substring(0, folderContent.length() - 2);
 
         return folderContent;
@@ -495,20 +494,20 @@ public class Repository {
         }
     }
 
-    public void loadXMLRepoToSystem(MagitRepository i_XmlRepository) throws IOException {
+    public void loadXMLRepoToSystem(MagitRepository i_XmlRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException
+    {
         Path XMLRepositoryPath = Paths.get(i_XmlRepository.getLocation());
         createRepositoryDirectories(XMLRepositoryPath);
         m_Name = i_XmlRepository.getName();
         createRepositoryNameFile();
-        writeXMLObjectsToFileSystemAtObjectsDir(i_XmlRepository);
+        writeXMLObjectsToFileSystemAtObjectsDir(i_XmlRepository, i_XMLMagitMaps);
         loadHead(i_XmlRepository);
-        writeHeadToFileSysmte();
+        writeHeadToFileSystem();
         writeBranchesToFileSystem();
         writeCommitsToFileSystem();
-        //load branches commits head and write them to file system
     }
 
-    private void writeHeadToFileSysmte()
+    private void writeHeadToFileSystem()
     {
         Path destination = Magit.getMagitDir().resolve("branches").resolve("HEAD.txt");
         FileUtilities.createAndWriteTxtFile(destination, m_Magit.getHead().getActiveBranch().getName());
@@ -536,10 +535,9 @@ public class Repository {
         m_Magit.getHead().setActiveBranch(m_Magit.getBranches().get(i_XmlRepository.getMagitBranches().getHead()));
     }
 
-    private void writeXMLObjectsToFileSystemAtObjectsDir(MagitRepository i_XmlRepository)
+    private void writeXMLObjectsToFileSystemAtObjectsDir(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps)
     {
-        int id;
-        String rootFolderSHA1, rootFolderContent;
+        String rootFolderSHA1, rootFolderContent, id;
         String commitDate, commitAuthor, commitMessage, commitSHA1;
         List<String> parentsSHA1 = new LinkedList<>();
         Stack<Integer> commitStack = new Stack<>();
@@ -547,11 +545,11 @@ public class Repository {
         Map <Integer, String> commitSHA1ByID = new HashMap<>();
         SortedSet<MagitSingleCommit> sortedXMLCommitsByDateOfCreation = new TreeSet<>((Comparator<MagitSingleCommit>) (commit1, commit2) ->
         {
-            if(commit1.getDateOfCreation().compareTo(commit2.getDateOfCreation())>0)
+            if(DateUtils.FormatToDate( commit1.getDateOfCreation()).compareTo(DateUtils.FormatToDate(commit2.getDateOfCreation()) )>0)
             {
                 return 1;
             }
-            else if(commit1.getDateOfCreation().compareTo(commit2.getDateOfCreation())<0)
+            else if(DateUtils.FormatToDate( commit1.getDateOfCreation()).compareTo(DateUtils.FormatToDate(commit2.getDateOfCreation()))<0)
             {
                 return -1;
             }
@@ -560,11 +558,11 @@ public class Repository {
                 return 0;
             }
         });
-        sortedXMLCommitsByDateOfCreation.addAll(i_XmlRepository.getMagitCommits().getMagitSingleCommit());
+        sortedXMLCommitsByDateOfCreation.addAll(i_XMLMagitMaps.getMagitSingleCommitByID().values().stream().collect(Collectors.toList()));
         for (MagitSingleCommit XMLCommit : sortedXMLCommitsByDateOfCreation)
         {
-            id = Integer.parseInt(XMLCommit.getRootFolder().getId());
-            writeCommitNodesToObjectsDir(i_XmlRepository, "folder", id);
+            id = XMLCommit.getRootFolder().getId();
+            writeCommitNodesToObjectsDir("folder", id, i_XMLMagitMaps);
             rootFolderContent = generateFolderContent(m_ChildrenInformation.size());
             rootFolderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(rootFolderContent,3));
             if(XMLCommit.getPrecedingCommits() != null)
@@ -582,14 +580,14 @@ public class Repository {
             m_ChildrenInformation.clear();
         }
 
-        loadBranchesFromXML(i_XmlRepository, commitSHA1ByID);
+        loadBranchesFromXML(i_XMLRepository.getMagitBranches(), commitSHA1ByID);
     }
 
-    private void loadBranchesFromXML(MagitRepository i_XmlRepository, Map<Integer, String> i_CommitSHA1ByID)
+    private void loadBranchesFromXML(MagitBranches i_XMLBranches, Map<Integer, String> i_CommitSHA1ByID)
     {
         String branchContent;
         String branchName;
-        for(MagitSingleBranch XMLBranch : i_XmlRepository.getMagitBranches().getMagitSingleBranch())
+        for(MagitSingleBranch XMLBranch : i_XMLBranches.getMagitSingleBranch())
         {
             branchName = XMLBranch.getName();
             branchContent = i_CommitSHA1ByID.get(Integer.parseInt(XMLBranch.getPointedCommit().getId()));
@@ -597,9 +595,11 @@ public class Repository {
         }
     }
 
-    private void writeCommitNodesToObjectsDir(MagitRepository i_XmlRepository, String i_Type, int i_ID) {
-        if (i_Type.equals("blob")) {
-            MagitBlob magitBlobObj = i_XmlRepository.getMagitBlobs().getMagitBlob().get(i_ID-1);
+    private void writeCommitNodesToObjectsDir(String i_Type, String i_ID, XMLMagitMaps i_XMLMagitMaps) {
+        if (i_Type.equals("blob"))
+        {
+
+            MagitBlob magitBlobObj = i_XMLMagitMaps.getMagitSingleBlobByID().get(i_ID);
             String blobSHA1 = DigestUtils.sha1Hex(magitBlobObj.getContent());
             engine.Item realItem = new engine.Item(magitBlobObj.getName(), blobSHA1, "blob",
                     magitBlobObj.getLastUpdater(), DateUtils.FormatToDate(magitBlobObj.getLastUpdateDate()));
@@ -607,10 +607,10 @@ public class Repository {
             FileUtilities.createZipFileFromContent(blobSHA1, magitBlobObj.getContent(), realItem.getName());
         } else // type.equals("folder")
         {
-            MagitSingleFolder magitFolderObj = i_XmlRepository.getMagitFolders().getMagitSingleFolder().get(i_ID-1);
+            MagitSingleFolder magitFolderObj = i_XMLMagitMaps.getMagitSingleFolderByID().get(i_ID);
             for (mypackage.Item XMLItem : magitFolderObj.getItems().getItem()) {
-                int XMLItemID = Integer.parseInt(XMLItem.getId());
-                writeCommitNodesToObjectsDir(i_XmlRepository, XMLItem.getType(), XMLItemID);
+                String XMLItemID = XMLItem.getId();
+                writeCommitNodesToObjectsDir(XMLItem.getType(), XMLItemID, i_XMLMagitMaps);
             }
             int numOfChildren = magitFolderObj.getItems().getItem().size();
             //2. add the item information of my children to my content
@@ -620,7 +620,7 @@ public class Repository {
             engine.Item realItem = new engine.Item(magitFolderObj.getName(), folderSHA1, i_Type,
                     magitFolderObj.getLastUpdater(), DateUtils.FormatToDate(magitFolderObj.getLastUpdateDate()));
 
-            if (!i_XmlRepository.getMagitFolders().getMagitSingleFolder().get(i_ID-1).isIsRoot())
+            if (!i_XMLMagitMaps.getMagitSingleFolderByID().get(i_ID).isIsRoot())
             {
                 m_ChildrenInformation = m_ChildrenInformation.stream()
                         .limit(m_ChildrenInformation.size() - numOfChildren)

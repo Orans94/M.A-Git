@@ -4,6 +4,7 @@ import mypackage.MagitRepository;
 import org.apache.commons.io.FileUtils;
 
 import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,9 +28,10 @@ public class EngineManager
 {
     private Repository m_Repository;
     private static String m_UserName = "";
-    private XMLValidator m_XMLValidator = new XMLValidator();
 
-    public XMLValidator getXMLValidator() { return m_XMLValidator; }
+    public XMLManager getXMLManager() { return m_XMLManager; }
+
+    private XMLManager m_XMLManager = new XMLManager();
 
     public static String getUserName()
     {
@@ -86,17 +88,16 @@ public class EngineManager
         return i_BranchName.toUpperCase().equals("HEAD");
     }
 
-    public MagitRepository createXMLRepository(Path i_XMLFilePath) throws JAXBException
-    {
+    public MagitRepository createXMLRepository(Path i_XMLFilePath) throws JAXBException, FileNotFoundException {
         SchemaBasedJAXB jaxb = new SchemaBasedJAXB();
         return jaxb.createRepositoryFromXML(i_XMLFilePath);
     }
 
-    public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository) throws IOException
+    public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException
     {
         // validation here
         m_Repository = new Repository(Paths.get(i_XMLRepository.getLocation()));
-        m_Repository.loadXMLRepoToSystem(i_XMLRepository);
+        m_Repository.loadXMLRepoToSystem(i_XMLRepository, i_XMLMagitMaps);
         m_Repository.checkout(m_Repository.getMagit().getHead().getActiveBranch().getName());
     }
 
@@ -135,4 +136,5 @@ public class EngineManager
         Files.delete(pathToDelete);
     }
 
+    public boolean isDirectoryEmpty(Path i_Path) throws IOException { return FileUtilities.getNumberOfSubNodes(i_Path) == 0;}
 }

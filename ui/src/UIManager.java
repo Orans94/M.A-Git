@@ -1,5 +1,7 @@
 import engine.*;
 import mypackage.MagitRepository;
+import mypackage.MagitSingleCommit;
+import mypackage.MagitSingleFolder;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -89,10 +91,37 @@ public class UIManager
         if(m_Engine.isPathExists(XMLFilePath))// TODO should we do this check?
         {
             // validate process
-            MagitRepository XMLRepo = m_Engine.createXMLRepository(XMLFilePath);
-            if(validateXMLRepository(XMLRepo, XMLFilePath))
+            if(m_Engine.getXMLManager().getXMLValidator().isXMLFile(XMLFilePath))
             {
-                m_Engine.readRepositoryFromXMLFile(XMLRepo);
+                MagitRepository XMLRepo = m_Engine.createXMLRepository(XMLFilePath);
+                m_Engine.getXMLManager().loadXMLRepoToMagitMaps(XMLRepo);
+                if (validateXMLRepository(XMLRepo, XMLFilePath, m_Engine.getXMLManager().getXMLMagitMaps().getMagitSingleFolderByID()))
+                {
+                    if(m_Engine.isRepository(Paths.get(XMLRepo.getLocation())))
+                    {
+                        boolean toStash = doesUserWantToStashExistingRepository();
+                        if(toStash)
+                        {
+                            m_Engine.stashRepository(Paths.get(XMLRepo.getLocation()));
+                            m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
+                        }
+                    }
+                    else
+                    {
+                        if(m_Engine.isDirectoryEmpty(Paths.get(XMLRepo.getLocation())))
+                        {
+                            m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
+                        }
+                        else
+                        {
+                            System.out.println("The directory already has content in it");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                System.out.println("The given path does not represents an XML file");
             }
         }
         else
@@ -101,51 +130,43 @@ public class UIManager
         }
     }
 
-    private boolean validateXMLRepository(MagitRepository i_XmlRepo, Path i_XMLFilePath)
+    private boolean validateXMLRepository(MagitRepository i_XmlRepo, Path i_XMLFilePath, Map<String, MagitSingleFolder> i_MagitFolderByID)
     {
         boolean isXMLTotallyValid = true;
 
-        if(!m_Engine.getXMLValidator().isXMLFile(i_XMLFilePath))
+
+        if(!m_Engine.getXMLManager().getXMLValidator().areIDsValid(i_XmlRepo))
         {
-            // 3.1
+            // 3.2
             isXMLTotallyValid = false;
-            System.out.println("The given path does not represent an XML file");
+            System.out.println("There are 2 identical IDs");
         }
-        else
+
+        if(!m_Engine.getXMLManager().getXMLValidator().areFoldersReferencesValid(i_XmlRepo.getMagitFolders(), i_XmlRepo.getMagitBlobs()))
         {
-            if(!m_Engine.getXMLValidator().areIDsValid(i_XmlRepo))
-            {
-                // 3.2
-                isXMLTotallyValid = false;
-                System.out.println("There are 2 identical IDs");
-            }
+            // 3.3, 3.4, 3.5
+            isXMLTotallyValid = false;
+            System.out.println("Folders references are not valid");
+        }
 
-            if(!m_Engine.getXMLValidator().areFoldersReferencesValid(i_XmlRepo.getMagitFolders(), i_XmlRepo.getMagitBlobs()))
-            {
-                // 3.3, 3.4, 3.5
-                isXMLTotallyValid = false;
-                System.out.println("Folders references are not valid");
-            }
+        if(!m_Engine.getXMLManager().getXMLValidator().areCommitsReferencesAreValid(i_XmlRepo.getMagitCommits(), i_MagitFolderByID))
+        {
+            // 3.6, 3.7
+            isXMLTotallyValid = false;
+            System.out.println("Commits references are not valid");
+        }
 
-            if(!m_Engine.getXMLValidator().areCommitsReferencesAreValid(i_XmlRepo.getMagitCommits(), i_XmlRepo.getMagitFolders()))
-            {
-                // 3.6, 3.7
-                isXMLTotallyValid = false;
-                System.out.println("Commits references are not valid");
-            }
+        if(!m_Engine.getXMLManager().getXMLValidator().areBranchesReferencesAreValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitCommits()))
+        {
+            // 3.8
+            isXMLTotallyValid = false;
+            System.out.println("Branches references are not valid");
+        }
 
-            if(!m_Engine.getXMLValidator().areBranchesReferencesAreValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitCommits()))
-            {
-                // 3.8
-                isXMLTotallyValid = false;
-                System.out.println("Branches references are not valid");
-            }
-
-            if(!m_Engine.getXMLValidator().isHeadReferenceValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitBranches().getHead()))
-            {
-                isXMLTotallyValid = false;
-                System.out.println("Head reference is not valid");
-            }
+        if(!m_Engine.getXMLManager().getXMLValidator().isHeadReferenceValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitBranches().getHead()))
+        {
+            isXMLTotallyValid = false;
+            System.out.println("Head reference is not valid");
         }
 
         return isXMLTotallyValid;
@@ -340,7 +361,7 @@ public class UIManager
                 notifyUserDirtyStatusBeforeCheckout();
                 boolean toCommit = doesUserWantToCommitBeforeCheckout();
                 if (toCommit)
-                {//TODO implement UI commit that gets a commit message, check if its clean already etc..
+                {
                     commit(); // (UI commit)
                 }
             }

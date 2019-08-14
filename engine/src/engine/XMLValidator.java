@@ -4,6 +4,7 @@ import mypackage.*;
 import org.apache.commons.io.FilenameUtils;
 
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -118,25 +119,17 @@ public class XMLValidator
         return true;
     }
 
-    public boolean areCommitsReferencesAreValid(MagitCommits i_Commits, MagitFolders i_Folders)
+    public boolean areCommitsReferencesAreValid(MagitCommits i_Commits, Map<String, MagitSingleFolder> i_MagitSingleFolderByID)
     { // 3.6, 3.7
-
-        Set<String> folderIdSet = new TreeSet<>();
-
-        for(MagitSingleFolder folder : i_Folders.getMagitSingleFolder())
-        { // filling folderIdSet
-            folderIdSet.add(folder.getId());
-        }
-
         for(MagitSingleCommit commit : i_Commits.getMagitSingleCommit())
         {
-            if(!folderIdSet.contains(commit.getRootFolder().getId()))
+            if(!i_MagitSingleFolderByID.containsKey(commit.getRootFolder().getId()))
             {
                 return false;
             }
             else
             {
-                if(!i_Folders.getMagitSingleFolder().get(Integer.parseInt(commit.getRootFolder().getId()) -1 ).isIsRoot())
+                if(!i_MagitSingleFolderByID.get(commit.getRootFolder().getId()).isIsRoot())
                 {
                     return false;
                 }
