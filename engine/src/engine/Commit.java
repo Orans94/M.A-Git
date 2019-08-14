@@ -19,7 +19,14 @@ public class Commit
     public Commit(String i_RootFolderSHA1, List<String> i_ParentsSHA1, String i_Message, Date i_CommitDate, String i_Author)
     {
         m_RootFolderSHA1 = i_RootFolderSHA1;
-        m_ParentsSHA1.addAll(i_ParentsSHA1.stream().filter(d->!d.equals("")).collect(Collectors.toList()));
+        for (String parentSHA1 : i_ParentsSHA1)
+        {
+
+            if (parentSHA1 != null && !parentSHA1.equals(""))
+            {
+                m_ParentsSHA1.add(parentSHA1);
+            }
+        }
         m_Message = i_Message;
         m_CommitDate = i_CommitDate;
         m_CommitAuthor = i_Author;
@@ -31,7 +38,7 @@ public class Commit
     {
         // ctor that takes the current time and current user name
         m_RootFolderSHA1 = i_RootFolderSHA1;
-        if(!i_ParentSHA1.equals(""))
+        if(i_ParentSHA1 != null && !i_ParentSHA1.equals(""))
         {
             m_ParentsSHA1.add(i_ParentSHA1);
         }
@@ -44,7 +51,7 @@ public class Commit
     {
         //ctor that gets all his members as params
         m_RootFolderSHA1 = i_RootFolderSHA1;
-        if(!i_ParentSHA1.equals(""))
+        if(i_ParentSHA1 != null && !i_ParentSHA1.equals(""))
         {
             m_ParentsSHA1.add(i_ParentSHA1);
         }
@@ -55,7 +62,7 @@ public class Commit
 
     public void addParent(String i_ParentSHA1)
     {
-        if(!i_ParentSHA1.equals(""))
+        if(i_ParentSHA1 != null && !i_ParentSHA1.equals(""))
         {
             m_ParentsSHA1.add(i_ParentSHA1);
         }
@@ -91,7 +98,7 @@ public class Commit
 
         if (m_ParentsSHA1.size() == 0)
         {
-            parentsString = ",,";
+            parentsString = ",";
         }
         else if (m_ParentsSHA1.size() == 1)
         {

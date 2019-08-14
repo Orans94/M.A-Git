@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact name="ui:jar">
+    <output-path>$PROJECT_DIR$/out/production/artifacts/ui_jar</output-path>
+    <root id="root">
+      <element id="archive" name="ui.jar">
+        <element id="module-output" name="ui" />
+        <element id="module-output" name="engine" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/resources/commons-codec-1.12.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/resources/commons-io-2.6.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/resources/commons-collections4-4.3.jar" />
+    </root>
+  </artifact>
+</component>

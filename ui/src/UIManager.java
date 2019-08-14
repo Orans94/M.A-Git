@@ -1,5 +1,7 @@
 import engine.*;
 import mypackage.MagitRepository;
+import mypackage.MagitSingleCommit;
+import mypackage.MagitSingleFolder;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -46,7 +48,7 @@ public class UIManager
             case 1:
                 updateUserName();
                 break;
-            case 2: // GIT INIT
+            case 2:
                 initializeRepository();
                 break;
             case 3:
@@ -89,10 +91,39 @@ public class UIManager
         if(m_Engine.isPathExists(XMLFilePath))// TODO should we do this check?
         {
             // validate process
-            MagitRepository XMLRepo = m_Engine.createXMLRepository(XMLFilePath);
-            if(validateXMLRepository(XMLRepo, XMLFilePath))
+            if(m_Engine.getXMLManager().getXMLValidator().isXMLFile(XMLFilePath))
             {
-                m_Engine.readRepositoryFromXMLFile(XMLRepo);
+                MagitRepository XMLRepo = m_Engine.createXMLRepository(XMLFilePath);
+                m_Engine.getXMLManager().loadXMLRepoToMagitMaps(XMLRepo);
+                if (validateXMLRepository(XMLRepo, XMLFilePath, m_Engine.getXMLManager().getXMLMagitMaps().getMagitSingleFolderByID()))
+                {
+                    if(m_Engine.isRepository(Paths.get(XMLRepo.getLocation())))
+                    {
+                        boolean toStash = doesUserWantToStashExistingRepository();
+                        if(toStash)
+                        {
+                            m_Engine.stashRepository(Paths.get(XMLRepo.getLocation()));
+                            m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
+                            System.out.println("Repository " + XMLRepo.getName() + " loaded successfuly from xml file");
+                        }
+                    }
+                    else
+                    {
+                        if(m_Engine.isDirectoryEmpty(Paths.get(XMLRepo.getLocation())))
+                        {
+                            m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
+                            System.out.println("Repository " + XMLRepo.getName() + " loaded successfuly from xml file");
+                        }
+                        else
+                        {
+                            System.out.println("The directory already has content in it");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                System.out.println("The given path does not represents an XML file");
             }
         }
         else
@@ -101,57 +132,59 @@ public class UIManager
         }
     }
 
-    private boolean validateXMLRepository(MagitRepository i_XmlRepo, Path i_XMLFilePath)
+    private boolean validateXMLRepository(MagitRepository i_XmlRepo, Path i_XMLFilePath, Map<String, MagitSingleFolder> i_MagitFolderByID)
     {
         boolean isXMLTotallyValid = true;
 
-        if(!m_Engine.getXMLValidator().isXMLFile(i_XMLFilePath))
+
+        if(!m_Engine.getXMLManager().getXMLValidator().areIDsValid(i_XmlRepo))
         {
-            // 3.1
+            // 3.2
             isXMLTotallyValid = false;
-            System.out.println("The given path does not represent an XML file");
+            System.out.println("There are 2 identical IDs");
         }
-        else
+
+        if(!m_Engine.getXMLManager().getXMLValidator().areFoldersReferencesValid(i_XmlRepo.getMagitFolders(), i_XmlRepo.getMagitBlobs()))
         {
-            if(!m_Engine.getXMLValidator().areIDsValid(i_XmlRepo))
-            {
-                // 3.2
-                isXMLTotallyValid = false;
-                System.out.println("There are 2 identical IDs");
-            }
+            // 3.3, 3.4, 3.5
+            isXMLTotallyValid = false;
+            System.out.println("Folders references are not valid");
+        }
 
-            if(!m_Engine.getXMLValidator().areFoldersReferencesValid(i_XmlRepo.getMagitFolders(), i_XmlRepo.getMagitBlobs()))
-            {
-                // 3.3, 3.4, 3.5
-                isXMLTotallyValid = false;
-                System.out.println("Folders references are not valid");
-            }
+        if(!m_Engine.getXMLManager().getXMLValidator().areCommitsReferencesAreValid(i_XmlRepo.getMagitCommits(), i_MagitFolderByID))
+        {
+            // 3.6, 3.7
+            isXMLTotallyValid = false;
+            System.out.println("Commits references are not valid");
+        }
 
-            if(!m_Engine.getXMLValidator().areCommitsReferencesAreValid(i_XmlRepo.getMagitCommits(), i_XmlRepo.getMagitFolders()))
-            {
-                // 3.6, 3.7
-                isXMLTotallyValid = false;
-                System.out.println("Commits references are not valid");
-            }
+        if(!m_Engine.getXMLManager().getXMLValidator().areBranchesReferencesAreValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitCommits()))
+        {
+            // 3.8
+            isXMLTotallyValid = false;
+            System.out.println("Branches references are not valid");
+        }
 
-            if(!m_Engine.getXMLValidator().areBranchesReferencesAreValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitCommits()))
-            {
-                // 3.8
-                isXMLTotallyValid = false;
-                System.out.println("Branches references are not valid");
-            }
-
-            if(!m_Engine.getXMLValidator().isHeadReferenceValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitBranches().getHead()))
-            {
-                isXMLTotallyValid = false;
-                System.out.println("Head reference is not valid");
-            }
+        if(!m_Engine.getXMLManager().getXMLValidator().isHeadReferenceValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitBranches().getHead()))
+        {
+            isXMLTotallyValid = false;
+            System.out.println("Head reference is not valid");
         }
 
         return isXMLTotallyValid;
     }
 
-    private void showStatus() throws IOException { printOpenChanges(m_Engine.getFileSystemStatus()); }
+    private void showStatus() throws IOException
+    {
+        if(m_Engine.isRepositoryNull())
+        {
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else
+            {
+            printOpenChanges(m_Engine.getFileSystemStatus());
+        }
+    }
 
     private void printOpenChanges(OpenChanges openChanges)
     {
@@ -266,7 +299,7 @@ public class UIManager
     }
 
     private void updateUserName()
-    {//TODO menu.requestusrname??
+    {
         Menu.requestUserName();
         Scanner scanner = new Scanner(System.in);
         String userName = scanner.nextLine();
@@ -276,17 +309,20 @@ public class UIManager
     private void commit() throws IOException //TODO handle exception
     {
         // func #7
-        boolean isWCDirty;
-
-        String commitMessage = requestCommitMessage();
-        isWCDirty = m_Engine.commit(commitMessage);
-        if (isWCDirty)
+        if(m_Engine.isRepositoryNull())
         {
-            System.out.println("Committed successfully");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
         }
-        else
-        {
-            System.out.println("There is nothing to commit, WC status is clean");
+        else {
+            boolean isWCDirty;
+
+            String commitMessage = requestCommitMessage();
+            isWCDirty = m_Engine.commit(commitMessage);
+            if (isWCDirty) {
+                System.out.println("Committed successfully");
+            } else {
+                System.out.println("There is nothing to commit, WC status is clean");
+            }
         }
     }
 
@@ -300,22 +336,23 @@ public class UIManager
     private void createNewBranch()
     {
         // func #9
-        String branchName = requestBranchName();
-        boolean isBranchExists = m_Engine.isBranchExists(branchName);
-        if (isBranchExists)
+        if(m_Engine.isRepositoryNull())
         {
-            System.out.println("Branch " + branchName + " already exists");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
         }
         else
-        {
-            if (m_Engine.isBranchNameEqualsHead(branchName))
             {
-                System.out.println("You can not set branch name to HEAD");
-            }
-            else
-            {
-                m_Engine.createNewBranch(branchName);
-                System.out.println("Branch " + branchName + " created successfully");
+            String branchName = requestBranchName();
+            boolean isBranchExists = m_Engine.isBranchExists(branchName);
+            if (isBranchExists) {
+                System.out.println("Branch " + branchName + " already exists");
+            } else {
+                if (m_Engine.isBranchNameEqualsHead(branchName)) {
+                    System.out.println("You can not set branch name to HEAD");
+                } else {
+                    m_Engine.createNewBranch(branchName);
+                    System.out.println("Branch " + branchName + " created successfully");
+                }
             }
         }
     }
@@ -331,26 +368,27 @@ public class UIManager
     private void checkout() throws IOException
     {
         // func #11
-        String branchName = requestBranchName();
-        if (m_Engine.isBranchExists(branchName))
+        if(m_Engine.isRepositoryNull())
         {
-            OpenChanges openChanges = m_Engine.getFileSystemStatus();
-            if (m_Engine.isFileSystemDirty(openChanges))
-            {
-                notifyUserDirtyStatusBeforeCheckout();
-                boolean toCommit = doesUserWantToCommitBeforeCheckout();
-                if (toCommit)
-                {//TODO implement UI commit that gets a commit message, check if its clean already etc..
-                    commit(); // (UI commit)
-                }
-            }
-
-            m_Engine.checkout(branchName);
-            System.out.println("Checkout made successfully");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
         }
-        else
-        {
-            System.out.println("Branch " + branchName + " does not exists");
+        else {
+            String branchName = requestBranchName();
+            if (m_Engine.isBranchExists(branchName)) {
+                OpenChanges openChanges = m_Engine.getFileSystemStatus();
+                if (m_Engine.isFileSystemDirty(openChanges)) {
+                    notifyUserDirtyStatusBeforeCheckout();
+                    boolean toCommit = doesUserWantToCommitBeforeCheckout();
+                    if (toCommit) {
+                        commit(); // (UI commit)
+                    }
+                }
+
+                m_Engine.checkout(branchName);
+                System.out.println("Checkout made successfully");
+            } else {
+                System.out.println("Branch " + branchName + " does not exists");
+            }
         }
     }
 
@@ -447,34 +485,47 @@ public class UIManager
     private void showAllBranches()
     {
         // func #8
-        Map<String, Branch> branches = m_Engine.getRepository().getMagit().getBranches();
-        Head head = m_Engine.getRepository().getMagit().getHead();
-        for (Map.Entry<String, Branch> entry : branches.entrySet())
+        if(m_Engine.isRepositoryNull())
         {
-            printBranch(entry.getValue(), head);
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else
+            {
+            Map<String, Branch> branches = m_Engine.getRepository().getMagit().getBranches();
+            Head head = m_Engine.getRepository().getMagit().getHead();
+            for (Map.Entry<String, Branch> entry : branches.entrySet()) {
+                printBranch(entry.getValue(), head);
+            }
         }
     }
 
     private void showDetailsOfCurrentCommit()
     {
         // func #5
-        NodeMaps nodeMaps = m_Engine.getRepository().getNodeMaps();
-        if(nodeMaps.isEmpty())
+        if(m_Engine.isRepositoryNull())
         {
-            System.out.println("Commit has not been done yet");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
         }
         else
-        {
-            for (Map.Entry<Path, String> entry : nodeMaps.getSHA1ByPath().entrySet())
             {
-                if (m_Engine.isDirectory(entry.getKey()))
+            NodeMaps nodeMaps = m_Engine.getRepository().getNodeMaps();
+            if (nodeMaps.isEmpty())
+            {
+                System.out.println("Commit has not been done yet");
+            }
+            else
                 {
-                    Folder folder = (Folder) nodeMaps.getNodeBySHA1().get(entry.getValue());
-                    List<Item> items = folder.getItems();
-                    Path folderPath = entry.getKey();
-                    for (Item item : items)
+                for (Map.Entry<Path, String> entry : nodeMaps.getSHA1ByPath().entrySet())
+                {
+                    if (m_Engine.isDirectory(entry.getKey()))
                     {
-                        printCurrentItemDetails(folderPath, item);
+                        Folder folder = (Folder) nodeMaps.getNodeBySHA1().get(entry.getValue());
+                        List<Item> items = folder.getItems();
+                        Path folderPath = entry.getKey();
+                        for (Item item : items)
+                        {
+                            printCurrentItemDetails(folderPath, item);
+                        }
                     }
                 }
             }
@@ -494,13 +545,19 @@ public class UIManager
     private void showActiveBranchHistory()
     {
         // func #12
-        Map<String, Commit> commitBySHA1;
-        Set<String> orderedCommitHistorySHA1;
-        orderedCommitHistorySHA1 = m_Engine.getRepository().getActiveBranchHistory();
-        commitBySHA1 = m_Engine.getRepository().getMagit().getCommits();
-        for(String SHA1 : orderedCommitHistorySHA1)
+        if(m_Engine.isRepositoryNull())
         {
-            printCommit(commitBySHA1.get(SHA1), SHA1);
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else
+            {
+            Map<String, Commit> commitBySHA1;
+            SortedSet<String> orderedCommitHistorySHA1;
+            orderedCommitHistorySHA1 = m_Engine.getRepository().getActiveBranchHistory();
+            commitBySHA1 = m_Engine.getRepository().getMagit().getCommits();
+            for (String SHA1 : orderedCommitHistorySHA1) {
+                printCommit(commitBySHA1.get(SHA1), SHA1);
+            }
         }
     }
 
@@ -516,19 +573,22 @@ public class UIManager
     private void deleteBranch()
     {
         // func #10
-        String branchName = requestBranchName();
-        boolean isHeadBranch = m_Engine.isBranchNameRepresentsHead(branchName);
-        boolean isBranchExists = m_Engine.isBranchExists(branchName);
-        if (isHeadBranch)
+        if(m_Engine.isRepositoryNull())
         {
-            System.out.println("Cannot delete active branch");
-        } else if (!isBranchExists)
-        {
-            System.out.println("Branch " + branchName + " does not exists");
-        } else
-        {
-            m_Engine.deleteBranch(branchName);
-            System.out.println("Branch " + branchName + " deleted successfully");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else {
+            String branchName = requestBranchName();
+            boolean isHeadBranch = m_Engine.isBranchNameRepresentsHead(branchName);
+            boolean isBranchExists = m_Engine.isBranchExists(branchName);
+            if (isHeadBranch) {
+                System.out.println("Cannot delete active branch");
+            } else if (!isBranchExists) {
+                System.out.println("Branch " + branchName + " does not exists");
+            } else {
+                m_Engine.deleteBranch(branchName);
+                System.out.println("Branch " + branchName + " deleted successfully");
+            }
         }
     }
 

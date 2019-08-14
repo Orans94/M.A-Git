@@ -1,29 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="engine:jar" />
+      <artifact name="ui:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="6caeb8b8-a77a-428c-9b85-a3964c86cc36" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/engine_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/ui_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/engine/XMLMagitMaps.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/engine/XMLManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.floo" beforeDir="false" afterPath="$PROJECT_DIR$/.floo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Commit.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Commit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/EngineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/EngineManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/FileUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/FileUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Folder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Folder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Head.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Head.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Magit.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Magit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/NodeMaps.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/NodeMaps.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Repository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/WalkFileSystemResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/WalkFileSystemResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/src/UIManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/UI/src/UIManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/Commit.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/Commit.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/EngineManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/EngineManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/FileUtilities.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/FileUtilities.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/Folder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/Folder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/Head.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/Head.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/Magit.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/Magit.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/NodeMaps.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/NodeMaps.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/Repository$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/Repository$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/Repository$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/Repository$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/Repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/Repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/WalkFileSystemResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/WalkFileSystemResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/Engine.iml" beforeDir="false" afterPath="$PROJECT_DIR$/engine/engine.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Blob.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Blob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Branch.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Branch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Commit.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Commit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/DateUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/DateUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/EngineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/EngineManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/FileUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/FileUtilities.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Folder.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Folder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Head.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Head.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Item.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Magit.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Magit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/MapUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/MapUtilities.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Node.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/NodeMaps.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/NodeMaps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/OpenChanges.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/OpenChanges.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/SchemaBasedJAXB.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/SchemaBasedJAXB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/StringUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/StringUtilities.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/WC.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/WC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/WalkFileSystemResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/WalkFileSystemResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/engine/XMLValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/XMLValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/Item.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MAGit.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MAGit.xsd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitBlob.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitBlob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitBlobs.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitBlobs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitBranches.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitBranches.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitCommits.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitCommits.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitFolders.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitFolders.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitSingleBranch.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitSingleBranch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitSingleCommit.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitSingleCommit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitSingleFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitSingleFolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/ObjectFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/ObjectFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/PrecedingCommits.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/PrecedingCommits.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/RootFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/RootFolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/xml/MAGit.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/xml/MAGit.xsd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/xml/ex1-medium.xml" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/xml/ex1-medium.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/xml/ex1-small.xml" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/xml/ex1-small.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/xml/generateJaxbClasses.bat" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/xml/generateJaxbClasses.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/UI.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ui/ui.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/src/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/src/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/Program.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/src/UIManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/UIManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Commit.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Commit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/EngineManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/EngineManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/SchemaBasedJAXB.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/SchemaBasedJAXB.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLValidator.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/production/UI/UIManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/UI/UIManager.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -56,9 +98,9 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
   </component>
   <component name="RecentsManager">
@@ -81,7 +123,7 @@
   <component name="RunManager">
     <configuration name="Program" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Program" />
-      <module name="UI" />
+      <module name="ui" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -111,6 +153,9 @@
       <workItem from="1565013376501" duration="22526000" />
       <workItem from="1565084663526" duration="12286000" />
       <workItem from="1565680863752" duration="29337000" />
+      <workItem from="1565764217707" duration="185000" />
+      <workItem from="1565764442284" duration="39000" />
+      <workItem from="1565764649260" duration="24198000" />
     </task>
     <servers />
   </component>
@@ -122,7 +167,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -132,22 +179,17 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/UI/src/UIManager.java</url>
+          <url>file://$PROJECT_DIR$/ui/src/UIManager.java</url>
           <line>285</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/UI/src/UIManager.java</url>
+          <url>file://$PROJECT_DIR$/ui/src/UIManager.java</url>
           <line>447</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="XMLCommit" language="JAVA" />
-      </configuration>
-    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/M_A_Git$Program.ic" NAME="Program Coverage Results" MODIFIED="1565706122164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
