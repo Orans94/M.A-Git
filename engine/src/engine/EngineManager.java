@@ -145,6 +145,7 @@ public class EngineManager
     public boolean isDirectoryEmpty(Path i_Path) throws IOException { return FileUtilities.getNumberOfSubNodes(i_Path) == 0;}
 
     public boolean isRepositoryNull() { return m_Repository == null;}
+<<<<<<< HEAD:engine/src/engine/EngineManager.java
 
     public boolean isXMLRepositoryIsEmpty(MagitRepository i_XMLRepo) { return m_XMLManager.isXMLRepositoryIsEmpty(i_XMLRepo); }
 
@@ -159,4 +160,6 @@ public class EngineManager
     public void changeActiveBranchPointedCommit(String i_CommitSHA1) { m_Repository.changeActiveBranchPointedCommit(i_CommitSHA1); }
 
     public String getActiveBranchName() { return m_Repository.getMagit().getHead().getActiveBranch().getName();}
+=======
+>>>>>>> ca6452963ac62c0a924664a2cf47c89895ba8441:engine/src/engine/EngineManager.java
 }

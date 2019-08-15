@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="engine:jar" />
+      <artifact name="ui:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="6caeb8b8-a77a-428c-9b85-a3964c86cc36" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/engine/src/engine/EngineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/EngineManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/src/UIManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/UIManager.java" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/EngineManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/EngineManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/UI/UIManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/UI/UIManager.class" afterDir="false" />
+>>>>>>> ca6452963ac62c0a924664a2cf47c89895ba8441
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -236,9 +248,9 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
   </component>
   <component name="RecentsManager">
@@ -291,9 +303,15 @@
       <workItem from="1565013376501" duration="22526000" />
       <workItem from="1565084663526" duration="12286000" />
       <workItem from="1565680863752" duration="29337000" />
+<<<<<<< HEAD
       <workItem from="1565765045607" duration="301000" />
       <workItem from="1565765363380" duration="21929000" />
       <workItem from="1565846991614" duration="10030000" />
+=======
+      <workItem from="1565764217707" duration="185000" />
+      <workItem from="1565764442284" duration="39000" />
+      <workItem from="1565764649260" duration="25972000" />
+>>>>>>> ca6452963ac62c0a924664a2cf47c89895ba8441
     </task>
     <servers />
   </component>
@@ -353,6 +371,7 @@
         <entry key="MAIN">
           <value>
             <State>
+<<<<<<< HEAD
               <option name="RECENTLY_FILTERED_USER_GROUPS">
                 <collection />
               </option>
@@ -374,6 +393,10 @@
         <entry key="User">
           <value>
             <list />
+=======
+              <option name="COLUMN_ORDER" />
+            </State>
+>>>>>>> ca6452963ac62c0a924664a2cf47c89895ba8441
           </value>
         </entry>
       </map>
@@ -384,9 +407,19 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/ui/src/UIManager.java</url>
+<<<<<<< HEAD
           <line>305</line>
           <properties />
           <option name="timeStamp" value="61" />
+=======
+          <line>285</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ui/src/UIManager.java</url>
+          <line>447</line>
+          <option name="timeStamp" value="27" />
+>>>>>>> ca6452963ac62c0a924664a2cf47c89895ba8441
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
