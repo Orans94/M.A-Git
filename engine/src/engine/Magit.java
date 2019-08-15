@@ -16,7 +16,7 @@ public class Magit
     private static Path m_MagitDir = Paths.get("");
     private Head m_Head;
 
-    public Magit(Path i_MagitPath)
+    public Magit(Path i_MagitPath) throws IOException
     {
         //ctor for new magit
         Branch master = new Branch("master", "");
@@ -48,7 +48,7 @@ public class Magit
 
     public void setHead(Head i_Head) { this.m_Head = i_Head; }
 
-    public String handleNewCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
+    public String handleNewCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage) throws IOException
     {
         Commit commit = createCommit(i_RootFolderSha1, i_ParentSHA1, i_CommitMessage);
         String commitSHA1 = commit.SHA1();
@@ -59,7 +59,7 @@ public class Magit
         return commitSHA1;
     }
 
-    private void setActiveBranchToNewCommit(String i_CommitSHA1)
+    private void setActiveBranchToNewCommit(String i_CommitSHA1) throws IOException
     {
         //set active branch content to new commit sha1
         m_Head.getActiveBranch().setCommitSHA1(i_CommitSHA1);
@@ -133,14 +133,6 @@ public class Magit
         parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,1));
         parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,2));
         parentsCommitSHA1 = parentsCommitSHA1.stream().filter(d->!d.equals("")).collect(Collectors.toList());
-/*        if (parentsCommitSHA1.get(0).equals(""))//TODO
-        {
-            parentsCommitSHA1.remove(0);
-        }
-        if (parentsCommitSHA1.get(1).equals(""))
-        {
-            parentsCommitSHA1.remove(1);
-        }*/
         commitMessage = StringUtilities.getCommitInformation(commitContent, 3);
         commitCreateDate = DateUtils.FormatToDate(StringUtilities.getCommitInformation(commitContent, 4));
         commitAuthor = StringUtilities.getCommitInformation(commitContent, 5);

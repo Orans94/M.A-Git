@@ -14,31 +14,17 @@ import java.util.zip.ZipOutputStream;
 
 public class FileUtilities
 {
-    public static void modifyTxtFile(Path i_Path, String i_Content)
+    public static void modifyTxtFile(Path i_Path, String i_Content) throws IOException
     {
-
+        // this method gets a path to a file and content and overwrites the file content to i_Content
         FileOutputStream writer = null;
-        try
-        {
-            writer = new FileOutputStream(String.valueOf(i_Path.toString()));
-            writer.write(("").getBytes());
-            writer.write(i_Content.getBytes());
-            writer.close();
-
-
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
+        writer = new FileOutputStream(String.valueOf(i_Path.toString()));
+        writer.write(("").getBytes());
+        writer.write(i_Content.getBytes());
+        writer.close();
     }
 
-    public static void createAndWriteTxtFile(Path i_Path, String i_Content)
+    public static void createAndWriteTxtFile(Path i_Path, String i_Content) throws IOException
     {
         try (Writer out1 = new BufferedWriter(
                 new OutputStreamWriter(
@@ -46,22 +32,13 @@ public class FileUtilities
         {
             out1.write(i_Content);
         }
-        catch (UnsupportedEncodingException e)
-        {//TODO
-
-        }
-        catch (FileNotFoundException e)
-        {//TODO
-
-        }
-        catch (IOException e)
-        {//TODO
-
-        }
     }
 
-    public static void createZipFileFromContent(String i_ZipName, String i_Content , String i_NameOfTxtFileInsideZip)
+    public static void createZipFileFromContent(String i_ZipName, String i_Content , String i_NameOfTxtFileInsideZip) throws IOException
     {
+        // this method creates a zip - his name is i_ZipName , he contains a txt file named i_NameOfTxtFileInsideZip
+        // and the content of the txt file is i_Content
+
         if(FilenameUtils.getExtension(i_NameOfTxtFileInsideZip).equals(""))
         {
             i_NameOfTxtFileInsideZip = i_NameOfTxtFileInsideZip.concat(".txt");
@@ -72,37 +49,33 @@ public class FileUtilities
         deleteFile(createdTempTxtPath);
     }
 
-    public static void zip(String i_ZipName, Path i_FilePath)
-    { //TODO handle exepction
+    public static void zip(String i_ZipName, Path i_FilePath) throws IOException
+    {
+        // this method recieves a path to a file and name , and creates a zip file name i_ZipName in objects dir
+
         Path zippingPath = Magit.getMagitDir().resolve("objects").resolve(i_ZipName + ".zip");
-        try
+        String sourceFile = i_FilePath.toString();
+        FileOutputStream fos = new FileOutputStream(zippingPath.toString());
+        ZipOutputStream zipOut = new ZipOutputStream(fos);
+        File fileToZip = new File(sourceFile);
+        FileInputStream fis = new FileInputStream(fileToZip);
+        ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+        zipOut.putNextEntry(zipEntry);
+        byte[] bytes = new byte[1024];
+        int length;
+        while ((length = fis.read(bytes)) >= 0)
         {
-            String sourceFile = i_FilePath.toString();
-            FileOutputStream fos = new FileOutputStream(zippingPath.toString());
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
-            File fileToZip = new File(sourceFile);
-            FileInputStream fis = new FileInputStream(fileToZip);
-            ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-            zipOut.putNextEntry(zipEntry);
-            byte[] bytes = new byte[1024];
-            int length;
-            while ((length = fis.read(bytes)) >= 0)
-            {
-                zipOut.write(bytes, 0, length);
-            }
-            zipOut.close();
-            fis.close();
-            fos.close();
+            zipOut.write(bytes, 0, length);
         }
-        catch (IOException e)
-        {
-
-        }
-
+        zipOut.close();
+        fis.close();
+        fos.close();
     }
 
     public static void unzip(String i_ZipName, Path i_DestToUnZip) throws IOException
     {
+        // this method recieves a zip name and destination path and unzipping the file name i_Zipname to destination
+
         String fileZip = Magit.getMagitDir().resolve("objects").resolve(i_ZipName).toString();
         File destDir = new File(i_DestToUnZip.toString());
         byte[] buffer = new byte[1024];
@@ -125,7 +98,9 @@ public class FileUtilities
     }
 
     public static int getNumberOfSubNodes(Path i_Path) throws IOException
-    { // return number of sub non empty nodes
+    {
+        // this method return number of sub non empty nodes
+
         List<Path> ListOfSubFolders = Files.walk(i_Path, 1)
                 .filter(d -> d.toFile().isDirectory())
                 .filter(d->d!= i_Path)
@@ -144,18 +119,9 @@ public class FileUtilities
         return numOfSubFolders + numOfSubBlobs;
     }
 
-    public static void deleteFile(Path i_FileToDelete)
+    public static void deleteFile(Path i_FileToDelete) throws IOException
     {
-        // using NIO API
-        // TODO handle exception
-        try
-        {
-            Files.delete(i_FileToDelete);
-        }
-        catch (IOException e)
-        {
-
-        }
+        Files.delete(i_FileToDelete);
     }
 
     public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException
@@ -175,7 +141,8 @@ public class FileUtilities
 
     public static String getTxtFromZip(String i_ZipFileName, String i_TxtFileNameInZip) throws IOException
     {
-        //read File From Zip Without extract here
+        //read File From Zip Without extract it
+
         ZipFile zipFile = new ZipFile(Magit.getMagitDir().resolve("objects").resolve(i_ZipFileName).toString());
         ZipEntry zipEntry = zipFile.getEntry(i_TxtFileNameInZip);
 
@@ -195,5 +162,17 @@ public class FileUtilities
     public static boolean isDirectory(Path i_dirToCheck)
     {
         return Files.isDirectory(i_dirToCheck);
+    }
+
+    public static boolean exists(Path i_Path)
+    {
+        try
+        {
+            return Files.exists(i_Path);
+        }
+        catch (SecurityException ex)
+        {
+            throw new SecurityException("read access to " + i_Path + " is denied");
+        }
     }
 }

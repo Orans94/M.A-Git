@@ -1,9 +1,5 @@
 package engine;
 
-import mypackage.MagitSingleBranch;
-
-import java.nio.file.Path;
-
 public class Branch
 {
     private String m_Name;
@@ -14,14 +10,6 @@ public class Branch
         m_CommitSHA1 = i_CommitSHA1;
         m_Name = i_Name;
     }
-
-    public Branch(MagitSingleBranch i_XMLBranch)
-    {
-        // this ctor recieves an XML branch and create a regular branch from it.
-        m_Name = i_XMLBranch.getName();
-        m_CommitSHA1 = i_XMLBranch.getPointedCommit().getId();
-    }
-
 
     public String getName()
     {

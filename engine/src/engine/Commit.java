@@ -2,6 +2,8 @@ package engine;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.LinkedList;
@@ -21,7 +23,6 @@ public class Commit
         m_RootFolderSHA1 = i_RootFolderSHA1;
         for (String parentSHA1 : i_ParentsSHA1)
         {
-
             if (parentSHA1 != null && !parentSHA1.equals(""))
             {
                 m_ParentsSHA1.add(parentSHA1);
@@ -47,39 +48,17 @@ public class Commit
         m_CommitAuthor = EngineManager.getUserName();
     }
 
-    public Commit (String i_RootFolderSHA1, String i_ParentSHA1, String i_Message, Date i_CommitDate, String i_Author)
-    {
-        //ctor that gets all his members as params
-        m_RootFolderSHA1 = i_RootFolderSHA1;
-        if(i_ParentSHA1 != null && !i_ParentSHA1.equals(""))
-        {
-            m_ParentsSHA1.add(i_ParentSHA1);
-        }
-        m_Message = i_Message;
-        m_CommitDate = i_CommitDate;
-        m_CommitAuthor = i_Author;
-    }
-
     public void addParent(String i_ParentSHA1)
     {
+        // this method adding a parent to the commit parent list
         if(i_ParentSHA1 != null && !i_ParentSHA1.equals(""))
         {
             m_ParentsSHA1.add(i_ParentSHA1);
         }
     }
 
-    public void Zip(String i_CommitSHA1FileName)
-    {
-        // 1. creating temp txt file in objects dir
-        Path createTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_CommitSHA1FileName + ".txt");
-        FileUtilities.createAndWriteTxtFile(createTempTxtPath, this.toString());
-
-        // 2. zipping the temp txt file
-        FileUtilities.zip(i_CommitSHA1FileName, createTempTxtPath);
-
-        // 3. remove the tmp txt file
-        FileUtilities.deleteFile(createTempTxtPath);
-    }
+    public void Zip(String i_CommitSHA1FileName) throws IOException
+    { FileUtilities.createZipFileFromContent(i_CommitSHA1FileName, this.toString(), i_CommitSHA1FileName); }
 
     @Override
     public String toString()
@@ -111,7 +90,7 @@ public class Commit
 
         return parentsString;
     }
-    //TODO parent sha 1 will be list - the to string method will be different with extra ',' so dont forget to fix the makeSha1Content method
+
     public String SHA1() { return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(this.toString(),3)); }
 
     public String getRootFolderSHA1() { return m_RootFolderSHA1; }

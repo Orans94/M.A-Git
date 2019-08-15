@@ -6,7 +6,8 @@ import java.nio.file.Paths;
 
 public class Program
 {
-    public static void main(String[] args) throws IOException, JAXBException {
+    public static void main(String[] args) throws IOException, JAXBException
+    {
         UIManager ui = new UIManager();
         ui.Run();
     }

@@ -10,13 +10,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Repository {
+public class Repository
+{
+    public static final String REPOSITORY_NAME_FILE = "RepositoryName.txt";
     private WC m_WorkingCopy;
     private Magit m_Magit;
     private static List<String> m_ChildrenInformation = new LinkedList<>();
     private String m_Name;
 
-    public Repository(Path i_RepPath, String i_Name) throws IOException // TODO catch
+    public Repository(Path i_RepPath, String i_Name) throws IOException
     {
         createRepositoryDirectories(i_RepPath);
         m_Name = i_Name;
@@ -25,65 +27,65 @@ public class Repository {
         createRepositoryNameFile();
     }
 
-    private void createRepositoryNameFile() {
-        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("RepositoryName.txt"), m_Name);
+    private void createRepositoryNameFile() throws IOException
+    {
+        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve(REPOSITORY_NAME_FILE), m_Name);
     }
 
-    public Repository(Path i_RepPath) throws IOException {
+    public Repository(Path i_RepPath) throws IOException
+    {
         m_WorkingCopy = new WC(i_RepPath);
         m_Magit = new Magit();
         Magit.setMagitDir(i_RepPath.resolve(".magit"));
     }
 
-    private void loadNameFromFile() throws IOException {
+    public WC getWorkingCopy() { return m_WorkingCopy; }
+
+    private void loadNameFromFile() throws IOException
+    {
         // this method is reading the repository name file and updating m_Name
         String repositoryName = "";
-        Path fileNamePath = m_WorkingCopy.getWorkingCopyDir().resolve(".magit").resolve("RepositoryName.txt");
-        if (Files.exists(fileNamePath)) {
+        Path fileNamePath = m_WorkingCopy.getWorkingCopyDir().resolve(".magit").resolve(REPOSITORY_NAME_FILE);
+        if (FileUtilities.exists(fileNamePath))
+        {
             repositoryName = new String(Files.readAllBytes(fileNamePath));
         }
 
         m_Name = repositoryName;
     }
 
-    public void clear() throws IOException {
+    public void clear() throws IOException
+    {
         m_WorkingCopy.clear();
         m_Magit.clear();
         m_ChildrenInformation.clear();
         m_Name = null;
     }
 
-    private void createRepositoryDirectories(Path i_RepPath) throws IOException {
+    private void createRepositoryDirectories(Path i_RepPath) throws IOException
+    {
         Files.createDirectory(i_RepPath.resolve(".magit"));
         Files.createDirectory(i_RepPath.resolve(".magit").resolve("branches"));
         Files.createDirectory(i_RepPath.resolve(".magit").resolve("objects"));
     }
 
-    public WC getWorkingCopy() {
-        return m_WorkingCopy;
-    }
-
-    public void setWorkingCopy(WC i_WorkingCopy) {
-        this.m_WorkingCopy = i_WorkingCopy;
-    }
-
-    public String getName() {
+    public String getName()
+    {
         return m_Name;
     }
 
-    public void setName(String i_Name) {
+    public void setName(String i_Name)
+    {
         m_Name = i_Name;
     }
 
-    public Magit getMagit() {
+    public Magit getMagit()
+    {
         return m_Magit;
     }
 
-    public void setMagit(Magit i_Magit) {
-        this.m_Magit = i_Magit;
-    }
-
-    private void updateChildrenInformation(Path i_Dir, int i_NumOfChildren, Folder i_Folder, String i_FolderSHA1) {
+    private void updateChildrenInformation(Path i_Dir, int i_NumOfChildren, Folder i_Folder, String i_FolderSHA1)
+    {
         m_ChildrenInformation = m_ChildrenInformation.stream()
                 .limit(m_ChildrenInformation.size() - i_NumOfChildren)
                 .collect(Collectors.toList());
@@ -94,13 +96,15 @@ public class Repository {
     }
 
 
-    private String generateFolderContent(int i_NumOfChildren) {
+    private String generateFolderContent(int i_NumOfChildren)
+    {
         List<String> folderContentList = m_ChildrenInformation.stream()
                 .skip(m_ChildrenInformation.size() - i_NumOfChildren)
                 .sorted(Comparator.comparing(String::toString))
                 .collect(Collectors.toList());
         String folderContent = "";
-        for (String s : folderContentList) {
+        for (String s : folderContentList)
+        {
             folderContent = folderContent.concat(s).concat(System.lineSeparator());
         }
 
@@ -111,16 +115,23 @@ public class Repository {
     }
 
     private void handleNodeByStatus(WalkFileSystemResult i_Result, String i_SHA1,
-                                    Node i_Node, Path i_Path, NodeMaps i_TempNodeMaps) {
-        if (!i_TempNodeMaps.getSHA1ByPath().containsKey(i_Path)) {// New File!
+                                    Node i_Node, Path i_Path, NodeMaps i_TempNodeMaps)
+    {
+        if (!i_TempNodeMaps.getSHA1ByPath().containsKey(i_Path))
+        {// New File!
             i_Result.getOpenChanges().getNewNodes().add(i_Path);
             i_Result.getToZipNodes().getSHA1ByPath().put(i_Path, i_SHA1);
             i_Result.getToZipNodes().getNodeBySHA1().put(i_SHA1, i_Node);
-        } else { // the path exists in the WC
-            if (i_SHA1.equals(i_TempNodeMaps.getSHA1ByPath().get(i_Path))) { // the file has not been modified
+        }
+        else
+        { // the path exists in the WC
+            if (i_SHA1.equals(i_TempNodeMaps.getSHA1ByPath().get(i_Path)))
+            { // the file has not been modified
                 i_Result.getUnchangedNodes().getSHA1ByPath().put(i_Path, i_SHA1);
                 i_Result.getUnchangedNodes().getNodeBySHA1().put(i_SHA1, i_TempNodeMaps.getNodeBySHA1().get(i_SHA1));
-            } else {// the file has been modified - delete from temp and add to new maps
+            }
+            else
+            {// the file has been modified - delete from temp and add to new maps
                 i_Result.getOpenChanges().getModifiedNodes().add(i_Path);
                 i_Result.getToZipNodes().getSHA1ByPath().put(i_Path, i_SHA1);
                 i_Result.getToZipNodes().getNodeBySHA1().put(i_SHA1, i_Node);
@@ -131,13 +142,15 @@ public class Repository {
         }
     }
 
-    public Commit commit(String i_CommitMessage, boolean i_SaveToFileSystem) throws IOException {
+    public Commit commit(String i_CommitMessage, boolean i_SaveToFileSystem) throws IOException
+    {
         NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
         WalkFileSystemResult result = new WalkFileSystemResult();
         Commit commit = null;
         FileVisitor<Path> fileVisitor = getOpenChangesBetweenFileSystemAndCurrentCommitFileVisitor(tempNodeMaps, result);
         Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
-        if (i_SaveToFileSystem) {
+        if (i_SaveToFileSystem)
+        {
             zipNewAndModifiedNodes(result);
             updateDeletedNodeList(tempNodeMaps, result);
             m_WorkingCopy.setNodeMaps(result.getToZipNodes());
@@ -146,10 +159,14 @@ public class Repository {
         String rootFolderSha1 = getRootFolderSHA1();
         m_ChildrenInformation.clear();
         boolean isWCDirty = isWCDirty(rootFolderSha1);
-        if (isWCDirty) {
-            if (i_SaveToFileSystem) {
-                commit = manageDirtyWC(i_CommitMessage, result, rootFolderSha1);
-            } else {
+        if (isWCDirty)
+        {
+            if (i_SaveToFileSystem)
+            {
+                commit = manageDirtyWC(i_CommitMessage, rootFolderSha1);
+            }
+            else
+            {
                 commit = m_Magit.createCommit(rootFolderSha1, m_WorkingCopy.getCommitSHA1(), "");
             }
         }
@@ -157,42 +174,51 @@ public class Repository {
         return commit;
     }
 
-    private void updateDeletedNodeList(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult) {
-        addUnchangedNodesToNewNodeMaps(i_TempNodeMaps, i_WalkFileSystemResult);
+    private void updateDeletedNodeList(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult)
+    {
+        addUnchangedNodesToNewNodeMaps(i_WalkFileSystemResult);
         i_WalkFileSystemResult.getUnchangedNodes().clear();
         addDeletedNodesToDeletedList(i_TempNodeMaps, i_WalkFileSystemResult);
     }
 
-    private Commit manageDirtyWC(String i_CommitMessage, WalkFileSystemResult i_WalkFileSystemResult, String i_RootFolderSha1) {
+    private Commit manageDirtyWC(String i_CommitMessage, String i_RootFolderSha1) throws IOException
+    {
         String commitSHA1 = m_Magit.handleNewCommit(i_RootFolderSha1
                 , m_Magit.getHead().getActiveBranch().getCommitSHA1()
                 , i_CommitMessage);
-        configureNewCommit(i_WalkFileSystemResult, commitSHA1);
+        configureNewCommit(commitSHA1);
         m_WorkingCopy.setCommitSHA1(commitSHA1);
 
         return m_Magit.getCommits().get(commitSHA1);
     }
 
-    private FileVisitor<Path> getOpenChangesBetweenFileSystemAndCurrentCommitFileVisitor(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult) {
+    private FileVisitor<Path> getOpenChangesBetweenFileSystemAndCurrentCommitFileVisitor(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_WalkFileSystemResult)
+    {
         /*
         this method is setting i_WalkFileSystemResult to contain all the OpenChanges, unchanged nodes, toZipNodes
         between the file system and the current commit.
         at the end of the method - the deleted nodes will be all the nodes remained at i_TempNodeMaps.
         If a user of this method want to have an updated deletedNodeList - call addDeletedNodesToDeletedList right after.
          */
-        return new FileVisitor<Path>() {
+        return new FileVisitor<Path>()
+        {
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                if (dir.getFileName().toString().equals(".magit")) {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+            {
+                if (dir.getFileName().toString().equals(".magit"))
+                {
                     return FileVisitResult.SKIP_SUBTREE;
-                } else {
+                }
+                else
+                {
                     return FileVisitResult.CONTINUE;
                 }
             }
 
 
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+            {
                 // read txt file content , make a blob from it and SHA1 it
                 String blobContent = new String(Files.readAllBytes(file));
                 Blob blob = new Blob(blobContent);
@@ -208,17 +234,20 @@ public class Repository {
             }
 
             @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
+            {
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException { //TODO handle exception
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+            { //TODO handle exception
 
                 //1. L <- Check how many kids I have.
                 int numOfChildren = FileUtilities.getNumberOfSubNodes(dir);
                 numOfChildren += m_WorkingCopy.getWorkingCopyDir() == dir ? -1 : 0;
-                if (numOfChildren != 0) {
+                if (numOfChildren != 0)
+                {
                     //2. add the item information of my children to my content
                     String folderContent = generateFolderContent(numOfChildren);
 
@@ -243,63 +272,63 @@ public class Repository {
         };
     }
 
-    private void configureNewCommit(WalkFileSystemResult i_Result, String i_CommitSHA1)
+    private void configureNewCommit(String i_CommitSHA1)
     {
         m_Magit.getCommits().get(i_CommitSHA1).addParent(m_WorkingCopy.getCommitSHA1());
     }
 
-    private boolean isWCDirty(String i_RootFolderSha1) {
+    private boolean isWCDirty(String i_RootFolderSha1)
+    {
         return m_WorkingCopy.getCommitSHA1().equals("") ||
                 !i_RootFolderSha1.equals(m_Magit.getCommits().get(m_WorkingCopy.getCommitSHA1()).getRootFolderSHA1());
     }
 
 
-    private String getRootFolderSHA1() {
+    private String getRootFolderSHA1()
+    {
         String rootFolderItemString = m_ChildrenInformation.get(0);
         return engine.Item.getSha1FromItemString(rootFolderItemString);
     }
 
-    private void addDeletedNodesToDeletedList(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_Result) {
-        for (Map.Entry<Path, String> entry : i_TempNodeMaps.getSHA1ByPath().entrySet()) {
+    private void addDeletedNodesToDeletedList(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_Result)
+    {
+        for (Map.Entry<Path, String> entry : i_TempNodeMaps.getSHA1ByPath().entrySet())
+        {
             i_Result.getOpenChanges().getDeletedNodes().add(entry.getKey());
         }
     }
 
-    private void addUnchangedNodesToNewNodeMaps(NodeMaps i_TempNodeMaps, WalkFileSystemResult i_Result) {
-        for (Map.Entry<Path, String> entry : i_Result.getUnchangedNodes().getSHA1ByPath().entrySet()) {
+    private void addUnchangedNodesToNewNodeMaps(WalkFileSystemResult i_Result)
+    {
+        for (Map.Entry<Path, String> entry : i_Result.getUnchangedNodes().getSHA1ByPath().entrySet())
+        {
             i_Result.getToZipNodes().getSHA1ByPath().put(entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<String, Node> entry : i_Result.getUnchangedNodes().getNodeBySHA1().entrySet()) {
+        for (Map.Entry<String, Node> entry : i_Result.getUnchangedNodes().getNodeBySHA1().entrySet())
+        {
             i_Result.getToZipNodes().getNodeBySHA1().put(entry.getKey(), entry.getValue());
         }
     }
 
-    private void zipNewAndModifiedNodes(WalkFileSystemResult i_Result) {
-        for (Map.Entry<Path, String> entry : i_Result.getToZipNodes().getSHA1ByPath().entrySet()) {
+    private void zipNewAndModifiedNodes(WalkFileSystemResult i_Result) throws IOException
+    {
+        for (Map.Entry<Path, String> entry : i_Result.getToZipNodes().getSHA1ByPath().entrySet())
+        {
             i_Result.getToZipNodes().getNodeBySHA1().get(entry.getValue()).Zip(entry.getValue(), entry.getKey());
         }
     }
 
-    public OpenChanges getOpenChanges() throws IOException {
-        NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
-        WalkFileSystemResult result = new WalkFileSystemResult();
-
-        FileVisitor<Path> fileVisitor = getOpenChangesBetweenFileSystemAndCurrentCommitFileVisitor(tempNodeMaps, result);
-        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
-
-        m_ChildrenInformation.clear();
-        return result.getOpenChanges();
-    }
-
-    public void createNewBranch(String i_BranchName) {
+    public void createNewBranch(String i_BranchName) throws IOException
+    {
         Branch activeBranch = m_Magit.getHead().getActiveBranch();
         Branch newBranch = new Branch(i_BranchName, activeBranch.getCommitSHA1());
         FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_BranchName + ".txt"), activeBranch.getCommitSHA1());
         m_Magit.getBranches().put(i_BranchName, newBranch);
     }
 
-    public void checkout(String i_BranchName) throws IOException {
+    public void checkout(String i_BranchName) throws IOException
+    {
         String commitSHA1 = m_Magit.getBranches().get(i_BranchName).getCommitSHA1();
         String rootFolderSHA1 = m_Magit.getCommits().get(commitSHA1).getRootFolderSHA1();
         // clear repository- clear file system and clear nodes map
@@ -314,7 +343,8 @@ public class Repository {
         setNodeMapsByRootFolder(m_WorkingCopy.getWorkingCopyDir(), m_WorkingCopy.getNodeMaps(), true);
     }
 
-    public void setNodeMapsByRootFolder(Path startPath, NodeMaps i_NodeMapsToUpdate, boolean i_LoadToFileSystem) throws IOException {
+    public void setNodeMapsByRootFolder(Path startPath, NodeMaps i_NodeMapsToUpdate, boolean i_LoadToFileSystem) throws IOException
+    {
         /*
         this method is setting i_NodeMapsToUpdate by the rootFolder given in startPath.
         if i_LoadToFileSystem is true - it also set the nodes to the file system working copy
@@ -340,18 +370,24 @@ public class Repository {
 
         folder.createItemListFromContent();
 
-        for (engine.Item item : folder.getItems()) {
+        for (engine.Item item : folder.getItems())
+        {
             i_NodeMapsToUpdate.getSHA1ByPath().put(startPath.resolve(item.getName()), item.getSHA1());
-            if (item.getType().equals("folder")) {
-                if (i_LoadToFileSystem) {
+            if (item.getType().equals("folder"))
+            {
+                if (i_LoadToFileSystem)
+                {
                     Files.createDirectory(startPath.resolve(item.getName()));
                 }
                 setNodeMapsByRootFolder(startPath.resolve(item.getName()), i_NodeMapsToUpdate, i_LoadToFileSystem);
-            } else {
+            }
+            else
+            {
                 // getting the blob SHA1 by it path
                 zipName = i_NodeMapsToUpdate.getSHA1ByPath().get(startPath.resolve(item.getName()));
                 myBlobContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"), item.getName());
-                if (i_LoadToFileSystem) {
+                if (i_LoadToFileSystem)
+                {
                     FileUtilities.createAndWriteTxtFile(startPath.resolve(item.getName()), myBlobContent);
                 }
                 Blob blob = new Blob(myBlobContent);
@@ -360,36 +396,49 @@ public class Repository {
         }
     }
 
-    private void workingCopyFileSystemClear() throws IOException {
+    private void workingCopyFileSystemClear() throws IOException
+    {
         Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), getRemoveFileVisitor());
     }
 
-    private SimpleFileVisitor<Path> getRemoveFileVisitor() {
-        return new SimpleFileVisitor<Path>() {
+    private SimpleFileVisitor<Path> getRemoveFileVisitor()
+    {
+        return new SimpleFileVisitor<Path>()
+        {
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                if (dir.getFileName().toString().equals(".magit")) {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+            {
+                if (dir.getFileName().toString().equals(".magit"))
+                {
                     return FileVisitResult.SKIP_SUBTREE;
-                } else {
+                }
+                else
+                {
                     return FileVisitResult.CONTINUE;
                 }
             }
 
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+            {
                 Files.delete(file);
 
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (exc != null) {
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+            {
+                if (exc != null)
+                {
                     throw exc;
                 }
-                if (!dir.equals(m_WorkingCopy.getWorkingCopyDir())) {
-                    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dir)) {
-                        if (dirStream.iterator().hasNext()) {
+                if (!dir.equals(m_WorkingCopy.getWorkingCopyDir()))
+                {
+                    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dir))
+                    {
+                        if (dirStream.iterator().hasNext())
+                        {
                             FileUtils.cleanDirectory(dir.toFile());
                         }
                     }
@@ -400,16 +449,19 @@ public class Repository {
         };
     }
 
-    public NodeMaps getNodeMaps() {
+    public NodeMaps getNodeMaps()
+    {
         return m_WorkingCopy.getNodeMaps();
     }
 
-    public void deleteBranch(String i_branchName) {
+    public void deleteBranch(String i_branchName) throws IOException
+    {
         m_Magit.getBranches().remove(i_branchName);
         FileUtilities.deleteFile(Magit.getMagitDir().resolve("branches").resolve(i_branchName + ".txt"));
     }
 
-    public void loadRepository(Path i_RepPath) throws IOException {
+    public void loadRepository(Path i_RepPath) throws IOException
+    {
         clear();
         loadNameFromFile();
         m_WorkingCopy.setWorkingCopyDir(i_RepPath);
@@ -420,7 +472,8 @@ public class Repository {
         setNodeMapsByRootFolder(i_RepPath, m_WorkingCopy.getNodeMaps(), false);
     }
 
-    public OpenChanges delta(Commit i_FirstCommit, Commit i_SecondCommit) throws IOException {
+    public OpenChanges delta(Commit i_FirstCommit, Commit i_SecondCommit) throws IOException
+    {
         /*
         this method recieves 2 Commits and return OpenChanges object represent the delta between the commits.
          */
@@ -434,30 +487,41 @@ public class Repository {
         setNodeMapsByRootFolder(m_WorkingCopy.getWorkingCopyDir(), secondCommitNodeMaps, false);
         Date firstCommitDate = i_FirstCommit.getCommitDate();
         Date secondCommitDate = i_SecondCommit.getCommitDate();
-        if (firstCommitDate.after(secondCommitDate)) {
+        if (firstCommitDate.after(secondCommitDate))
+        {
             delta = computeDelta(secondCommitNodeMaps, firstCommitNodeMaps);
-        } else {
+        }
+        else
+        {
             delta = computeDelta(firstCommitNodeMaps, secondCommitNodeMaps);
         }
 
         return delta;
     }
 
-    private OpenChanges computeDelta(NodeMaps i_OlderCommitNodeMaps, NodeMaps i_NewerCommitNodeMaps) {
+    private OpenChanges computeDelta(NodeMaps i_OlderCommitNodeMaps, NodeMaps i_NewerCommitNodeMaps)
+    {
         OpenChanges delta = new OpenChanges();
 
-        for (Map.Entry<Path, String> entry : i_OlderCommitNodeMaps.getSHA1ByPath().entrySet()) {
-            if (isContainsKey(i_NewerCommitNodeMaps, entry)) {
-                if (isDifferentSHA1(i_NewerCommitNodeMaps, entry)) {// Modified node
+        for (Map.Entry<Path, String> entry : i_OlderCommitNodeMaps.getSHA1ByPath().entrySet())
+        {
+            if (isContainsKey(i_NewerCommitNodeMaps, entry))
+            {
+                if (isDifferentSHA1(i_NewerCommitNodeMaps, entry))
+                {// Modified node
                     delta.getModifiedNodes().add(entry.getKey());
                 }
-            } else {// Deleted node
+            }
+            else
+            {// Deleted node
                 delta.getDeletedNodes().add(entry.getKey());
             }
         }
 
-        for (Map.Entry<Path, String> entry : i_NewerCommitNodeMaps.getSHA1ByPath().entrySet()) {
-            if (!isContainsKey(i_OlderCommitNodeMaps, entry)) {
+        for (Map.Entry<Path, String> entry : i_NewerCommitNodeMaps.getSHA1ByPath().entrySet())
+        {
+            if (!isContainsKey(i_OlderCommitNodeMaps, entry))
+            {
                 delta.getNewNodes().add(entry.getKey());
             }
         }
@@ -465,32 +529,49 @@ public class Repository {
         return delta;
     }
 
-    private boolean isContainsKey(NodeMaps i_NodeMap, Map.Entry<Path, String> i_Entry) {
+    private boolean isContainsKey(NodeMaps i_NodeMap, Map.Entry<Path, String> i_Entry)
+    {
         return i_NodeMap.getSHA1ByPath().containsKey(i_Entry.getKey());
     }
 
-    private boolean isDifferentSHA1(NodeMaps i_NodeMap, Map.Entry<Path, String> i_Entry) {
+    private boolean isDifferentSHA1(NodeMaps i_NodeMap, Map.Entry<Path, String> i_Entry)
+    {
         return !i_NodeMap.getSHA1ByPath().get(i_Entry.getKey()).equals(i_Entry.getValue());
     }
 
-    private void addRootFolderToPathMap(NodeMaps i_NodeMap, Commit i_Commit) {
+    private void addRootFolderToPathMap(NodeMaps i_NodeMap, Commit i_Commit)
+    {
         i_NodeMap.getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), i_Commit.getRootFolderSHA1());
     }
 
-    public OpenChanges getFileSystemStatus() throws IOException {
+    public OpenChanges getFileSystemStatus() throws IOException
+    {
         // this method return the openChanges objects represents the status of the WC.
 
-        Commit fileSystemFictiveCommit = commit("", false);
-        if (fileSystemFictiveCommit == null) {// wc is clean
-            return new OpenChanges();
-        } else { // there are changes - compute delta
-            NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
-            WalkFileSystemResult result = new WalkFileSystemResult();
-            FileVisitor<Path> fileVisitor = getOpenChangesBetweenFileSystemAndCurrentCommitFileVisitor(tempNodeMaps, result);
-            Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
-            addDeletedNodesToDeletedList(tempNodeMaps, result);
+        if(isRootFolderEmpty())
+        {
+            OpenChanges openChanges = new OpenChanges();
+            openChanges.getDeletedNodes().addAll(m_WorkingCopy.getNodeMaps().getSHA1ByPath().keySet());
 
-            return result.getOpenChanges();
+            return openChanges;
+        }
+        else
+        {
+            Commit fileSystemFictiveCommit = commit("", false);
+            if (fileSystemFictiveCommit == null)
+            {// wc is clean
+                return new OpenChanges();
+            }
+            else
+            { // there are changes - compute delta
+                NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
+                WalkFileSystemResult result = new WalkFileSystemResult();
+                FileVisitor<Path> fileVisitor = getOpenChangesBetweenFileSystemAndCurrentCommitFileVisitor(tempNodeMaps, result);
+                Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
+                addDeletedNodesToDeletedList(tempNodeMaps, result);
+
+                return result.getOpenChanges();
+            }
         }
     }
 
@@ -507,26 +588,26 @@ public class Repository {
         writeCommitsToFileSystem();
     }
 
-    private void writeHeadToFileSystem()
+    private void writeHeadToFileSystem() throws IOException
     {
         Path destination = Magit.getMagitDir().resolve("branches").resolve("HEAD.txt");
         FileUtilities.createAndWriteTxtFile(destination, m_Magit.getHead().getActiveBranch().getName());
     }
 
-    private void writeCommitsToFileSystem()
+    private void writeCommitsToFileSystem() throws IOException
     {
-        for(Map.Entry<String, Commit> entry : m_Magit.getCommits().entrySet())
+        for (Map.Entry<String, Commit> entry : m_Magit.getCommits().entrySet())
         {
             FileUtilities.createZipFileFromContent(entry.getKey(), entry.getValue().toString(), entry.getKey());
         }
     }
 
-    private void writeBranchesToFileSystem()
+    private void writeBranchesToFileSystem() throws IOException
     {
         Path destination = Magit.getMagitDir().resolve("branches");
-        for(Map.Entry<String, Branch> entry : m_Magit.getBranches().entrySet())
+        for (Map.Entry<String, Branch> entry : m_Magit.getBranches().entrySet())
         {
-            FileUtilities.createAndWriteTxtFile(destination.resolve(entry.getKey()+ ".txt"), entry.getValue().getCommitSHA1());
+            FileUtilities.createAndWriteTxtFile(destination.resolve(entry.getKey() + ".txt"), entry.getValue().getCommitSHA1());
         }
     }
 
@@ -535,21 +616,21 @@ public class Repository {
         m_Magit.getHead().setActiveBranch(m_Magit.getBranches().get(i_XmlRepository.getMagitBranches().getHead()));
     }
 
-    private void writeXMLObjectsToFileSystemAtObjectsDir(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps)
+    private void writeXMLObjectsToFileSystemAtObjectsDir(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException
     {
         String rootFolderSHA1, rootFolderContent, id;
         String commitDate, commitAuthor, commitMessage, commitSHA1;
         List<String> parentsSHA1 = new LinkedList<>();
         Stack<Integer> commitStack = new Stack<>();
         MagitSingleCommit currentXMLCommit;
-        Map <Integer, String> commitSHA1ByID = new HashMap<>();
+        Map<Integer, String> commitSHA1ByID = new HashMap<>();
         SortedSet<MagitSingleCommit> sortedXMLCommitsByDateOfCreation = new TreeSet<>((Comparator<MagitSingleCommit>) (commit1, commit2) ->
         {
-            if(DateUtils.FormatToDate( commit1.getDateOfCreation()).compareTo(DateUtils.FormatToDate(commit2.getDateOfCreation()) )>0)
+            if (DateUtils.FormatToDate(commit1.getDateOfCreation()).compareTo(DateUtils.FormatToDate(commit2.getDateOfCreation())) > 0)
             {
                 return 1;
             }
-            else if(DateUtils.FormatToDate( commit1.getDateOfCreation()).compareTo(DateUtils.FormatToDate(commit2.getDateOfCreation()))<0)
+            else if (DateUtils.FormatToDate(commit1.getDateOfCreation()).compareTo(DateUtils.FormatToDate(commit2.getDateOfCreation())) < 0)
             {
                 return -1;
             }
@@ -564,8 +645,8 @@ public class Repository {
             id = XMLCommit.getRootFolder().getId();
             writeCommitNodesToObjectsDir("folder", id, i_XMLMagitMaps);
             rootFolderContent = generateFolderContent(m_ChildrenInformation.size());
-            rootFolderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(rootFolderContent,3));
-            if(XMLCommit.getPrecedingCommits() != null)
+            rootFolderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(rootFolderContent, 3));
+            if (XMLCommit.getPrecedingCommits() != null)
             {
                 for (PrecedingCommits.PrecedingCommit parent : XMLCommit.getPrecedingCommits().getPrecedingCommit())
                 {
@@ -588,7 +669,7 @@ public class Repository {
     {
         String branchContent;
         String branchName;
-        for(MagitSingleBranch XMLBranch : i_XMLBranches.getMagitSingleBranch())
+        for (MagitSingleBranch XMLBranch : i_XMLBranches.getMagitSingleBranch())
         {
             branchName = XMLBranch.getName();
             branchContent = i_CommitSHA1ByID.get(Integer.parseInt(XMLBranch.getPointedCommit().getId()));
@@ -596,7 +677,8 @@ public class Repository {
         }
     }
 
-    private void writeCommitNodesToObjectsDir(String i_Type, String i_ID, XMLMagitMaps i_XMLMagitMaps) {
+    private void writeCommitNodesToObjectsDir(String i_Type, String i_ID, XMLMagitMaps i_XMLMagitMaps) throws IOException
+    {
         if (i_Type.equals("blob"))
         {
 
@@ -606,17 +688,19 @@ public class Repository {
                     magitBlobObj.getLastUpdater(), DateUtils.FormatToDate(magitBlobObj.getLastUpdateDate()));
             m_ChildrenInformation.add(realItem.toString());
             FileUtilities.createZipFileFromContent(blobSHA1, magitBlobObj.getContent(), realItem.getName());
-        } else // type.equals("folder")
+        }
+        else // type.equals("folder")
         {
             MagitSingleFolder magitFolderObj = i_XMLMagitMaps.getMagitSingleFolderByID().get(i_ID);
-            for (mypackage.Item XMLItem : magitFolderObj.getItems().getItem()) {
+            for (mypackage.Item XMLItem : magitFolderObj.getItems().getItem())
+            {
                 String XMLItemID = XMLItem.getId();
                 writeCommitNodesToObjectsDir(XMLItem.getType(), XMLItemID, i_XMLMagitMaps);
             }
             int numOfChildren = magitFolderObj.getItems().getItem().size();
             //2. add the item information of my children to my content
             String folderContent = generateFolderContent(numOfChildren);
-            String folderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(folderContent,3));
+            String folderSHA1 = DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(folderContent, 3));
             FileUtilities.createZipFileFromContent(folderSHA1, folderContent, folderSHA1);
             engine.Item realItem = new engine.Item(magitFolderObj.getName(), folderSHA1, i_Type,
                     magitFolderObj.getLastUpdater(), DateUtils.FormatToDate(magitFolderObj.getLastUpdateDate()));
@@ -633,14 +717,16 @@ public class Repository {
 
     public SortedSet<String> getActiveBranchHistory()
     {
-        SortedSet<String> commitsHistory = new TreeSet<>(new Comparator<String>() {
+        SortedSet<String> commitsHistory = new TreeSet<>(new Comparator<String>()
+        {
             @Override
-            public int compare(String i_FirstSHA1, String i_SecondSHA1) {
-                if(m_Magit.getCommits().get(i_FirstSHA1).getCommitDate().compareTo(m_Magit.getCommits().get(i_SecondSHA1).getCommitDate()) >0 )
+            public int compare(String i_FirstSHA1, String i_SecondSHA1)
+            {
+                if (m_Magit.getCommits().get(i_FirstSHA1).getCommitDate().compareTo(m_Magit.getCommits().get(i_SecondSHA1).getCommitDate()) > 0)
                 {
                     return -1;
                 }
-                else if(m_Magit.getCommits().get(i_FirstSHA1).getCommitDate().compareTo(m_Magit.getCommits().get(i_SecondSHA1).getCommitDate()) < 0)
+                else if (m_Magit.getCommits().get(i_FirstSHA1).getCommitDate().compareTo(m_Magit.getCommits().get(i_SecondSHA1).getCommitDate()) < 0)
                 {
                     return 1;
                 }
@@ -652,7 +738,6 @@ public class Repository {
         });
         Branch activeBranch = m_Magit.getHead().getActiveBranch();
         String commitSHA1 = activeBranch.getCommitSHA1();
-        //TODO take care to order commits by date !!!!!
         createCommitsHistoryRecursive(commitsHistory, commitSHA1);
 
         return commitsHistory;
@@ -662,17 +747,23 @@ public class Repository {
     {
         i_CommitsHistory.add(i_CommitSHA1);
         Commit currentCommit = m_Magit.getCommits().get(i_CommitSHA1);
-        for(String SHA1 : currentCommit.getParentsSHA1())
+        for (String SHA1 : currentCommit.getParentsSHA1())
         {
             createCommitsHistoryRecursive(i_CommitsHistory, SHA1);
         }
     }
 
-    public void changeActiveBranchPointedCommit(String i_CommitSHA1)
+    public void changeActiveBranchPointedCommit(String i_CommitSHA1) throws IOException
     {
         String activeBranchName = m_Magit.getHead().getActiveBranch().getName();
         Path destination = Magit.getMagitDir().resolve("branches").resolve(activeBranchName + ".txt");
         m_Magit.getBranches().get(activeBranchName).setCommitSHA1(i_CommitSHA1);
         FileUtilities.modifyTxtFile(destination, i_CommitSHA1);
+    }
+
+    public boolean isRootFolderEmpty() throws IOException
+    {
+        // assuming only magit folder inside root folder.
+        return FileUtilities.getNumberOfSubNodes(m_WorkingCopy.getWorkingCopyDir()) == 1;
     }
 }

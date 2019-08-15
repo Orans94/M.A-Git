@@ -20,7 +20,7 @@ public class Menu
         System.out.println("10. Delete branch");
         System.out.println("11. Checkout");
         System.out.println("12. Show commit history of current branch");
-        System.out.println("13. Changed branch pointed commit");
+        System.out.println("13. Change active branch pointed commit");
         System.out.println("14. Exit");
     }
 }

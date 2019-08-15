@@ -19,15 +19,9 @@ public class OpenChanges
 
     public List<Path> getDeletedNodes() { return m_DeletedNodes; }
 
-    public void setDeletedNodes(List<Path> i_DeletedNodes) { this.m_DeletedNodes = i_DeletedNodes; }
-
     public List<Path> getNewNodes() { return m_NewNodes; }
 
-    public void setNewNodes(List<Path> i_NewNodes) { this.m_NewNodes = i_NewNodes; }
-
     public List<Path> getModifiedNodes() { return m_ModifiedNodes; }
-
-    public void setModifiedNodes(List<Path> i_ModifiedNodes) { this.m_ModifiedNodes = i_ModifiedNodes; }
 
     public boolean isFileSystemClean() { return m_DeletedNodes.isEmpty() && m_ModifiedNodes.isEmpty() && m_NewNodes.isEmpty(); }
 }

@@ -1,12 +1,13 @@
 package engine;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class Head
 {
     private Branch m_ActiveBranch;
     
-    public Head(Branch i_ActiveBranch, Path i_Path)
+    public Head(Branch i_ActiveBranch, Path i_Path) throws IOException
     {
         m_ActiveBranch = i_ActiveBranch;
         FileUtilities.createAndWriteTxtFile(i_Path.resolve("branches").resolve("HEAD.txt"), i_ActiveBranch.getName());

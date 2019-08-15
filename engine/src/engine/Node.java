@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Date;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -12,7 +13,7 @@ abstract public class Node
 
     protected String SHA1() { return DigestUtils.sha1Hex(m_Content); }
 
-    protected void Zip(String i_SHA1FileName, Path i_PathOfTheFile) { FileUtilities.zip(i_SHA1FileName, i_PathOfTheFile); }
+    protected void Zip(String i_SHA1FileName, Path i_PathOfTheFile) throws IOException { FileUtilities.zip(i_SHA1FileName, i_PathOfTheFile); }
 
     public String generateStringInformation(String i_Sha1, String i_FileName)
     {

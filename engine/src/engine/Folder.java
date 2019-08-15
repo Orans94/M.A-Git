@@ -1,6 +1,8 @@
 package engine;
 
 import org.apache.commons.codec.digest.DigestUtils;
+
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,10 +10,9 @@ import java.util.List;
 public class Folder extends Node
 {
     public List<Item> getItems() { return m_Items; }
+    private List<Item> m_Items;
 
     public void setItems(List<Item> i_Items) { m_Items = i_Items; }
-
-    private List<Item> m_Items;
 
     public Folder(String i_Content)
     {
@@ -26,7 +27,7 @@ public class Folder extends Node
     }
 
     @Override
-    protected void Zip(String i_SHA1FileName, Path i_PathOfTheFile)
+    protected void Zip(String i_SHA1FileName, Path i_PathOfTheFile) throws IOException
     {
         // 1. creating temp txt file in objects dir
         Path createdTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_SHA1FileName + ".txt");
@@ -55,6 +56,8 @@ public class Folder extends Node
 
     public void createItemListFromContent()
     {
+        // this method creating an item list from the content of the node
+
         String[] lines = m_Content.split(System.lineSeparator());
         for (String line : lines)
         {
