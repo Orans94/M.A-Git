@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class Repository
 
     public WC getWorkingCopy() { return m_WorkingCopy; }
 
-    private void loadNameFromFile() throws IOException
+    public void loadNameFromFile() throws IOException
     {
         // this method is reading the repository name file and updating m_Name
         String repositoryName = "";
@@ -241,7 +242,7 @@ public class Repository
 
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
-            { //TODO handle exception
+            {
 
                 //1. L <- Check how many kids I have.
                 int numOfChildren = FileUtilities.getNumberOfSubNodes(dir);
@@ -460,8 +461,7 @@ public class Repository
         FileUtilities.deleteFile(Magit.getMagitDir().resolve("branches").resolve(i_branchName + ".txt"));
     }
 
-    public void loadRepository(Path i_RepPath) throws IOException
-    {
+    public void loadRepository(Path i_RepPath) throws IOException, ParseException {
         clear();
         loadNameFromFile();
         m_WorkingCopy.setWorkingCopyDir(i_RepPath);
@@ -575,8 +575,7 @@ public class Repository
         }
     }
 
-    public void loadXMLRepoToSystem(MagitRepository i_XmlRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException
-    {
+    public void loadXMLRepoToSystem(MagitRepository i_XmlRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException {
         Path XMLRepositoryPath = Paths.get(i_XmlRepository.getLocation());
         createRepositoryDirectories(XMLRepositoryPath);
         m_Name = i_XmlRepository.getName();
@@ -616,8 +615,7 @@ public class Repository
         m_Magit.getHead().setActiveBranch(m_Magit.getBranches().get(i_XmlRepository.getMagitBranches().getHead()));
     }
 
-    private void writeXMLObjectsToFileSystemAtObjectsDir(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException
-    {
+    private void writeXMLObjectsToFileSystemAtObjectsDir(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException {
         String rootFolderSHA1, rootFolderContent, id;
         String commitDate, commitAuthor, commitMessage, commitSHA1;
         List<String> parentsSHA1 = new LinkedList<>();
@@ -672,13 +670,19 @@ public class Repository
         for (MagitSingleBranch XMLBranch : i_XMLBranches.getMagitSingleBranch())
         {
             branchName = XMLBranch.getName();
-            branchContent = i_CommitSHA1ByID.get(Integer.parseInt(XMLBranch.getPointedCommit().getId()));
+            if (XMLBranch.getPointedCommit().getId().equals(""))
+            {
+                branchContent = "";
+            }
+            else
+            {
+                branchContent = i_CommitSHA1ByID.get(Integer.parseInt(XMLBranch.getPointedCommit().getId()));
+            }
             m_Magit.getBranches().put(branchName, new Branch(branchName, branchContent));
         }
     }
 
-    private void writeCommitNodesToObjectsDir(String i_Type, String i_ID, XMLMagitMaps i_XMLMagitMaps) throws IOException
-    {
+    private void writeCommitNodesToObjectsDir(String i_Type, String i_ID, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException {
         if (i_Type.equals("blob"))
         {
 

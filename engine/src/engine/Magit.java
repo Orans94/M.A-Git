@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,23 +79,21 @@ public class Magit
         m_Branches.clear();
     }
 
-    public void load(Path i_repPath) throws IOException
-    {
+    public void load(Path i_repPath) throws IOException, ParseException {
         m_MagitDir = i_repPath.resolve(".magit");
         loadBranches();
         loadHead();
         loadCommits();
     }
 
-    private void loadHead() throws IOException
+    public void loadHead() throws IOException
     {
         Path headPath = m_MagitDir.resolve("branches").resolve("HEAD.txt");
         String headContent = new String(Files.readAllBytes(headPath));
         m_Head.setActiveBranch(m_Branches.get(headContent));
     }
 
-    private void loadCommits() throws IOException
-    { // assuming branches is already loaded to m.a git system
+    private void loadCommits() throws IOException, ParseException { // assuming branches is already loaded to m.a git system
         Commit newCommit;
         Branch currentBranch;
         String commitSHA1, parentCommitSHA1, commitContent, rootFolderSHA1, commitMessage, commitAuthor;
@@ -108,8 +107,7 @@ public class Magit
         }
     }
 
-    private void loadCommitsToMapsRecursive(String i_CommitSHA1) throws IOException
-    {
+    private void loadCommitsToMapsRecursive(String i_CommitSHA1) throws IOException, ParseException {
         if (!m_Commits.containsKey(i_CommitSHA1))
         { // the current commit not found in commits map
 
@@ -121,8 +119,7 @@ public class Magit
         }
     }
 
-    private void addCommitToMapsByObjectsDir(String i_CommitSHA1) throws IOException
-    {
+    private void addCommitToMapsByObjectsDir(String i_CommitSHA1) throws IOException, ParseException {
         String commitContent, rootFolderSHA1, commitMessage, commitAuthor;
         List<String> parentsCommitSHA1 = new LinkedList<>();
         Commit newCommit;
@@ -141,7 +138,7 @@ public class Magit
         m_Commits.put(i_CommitSHA1, newCommit);
     }
 
-    private void loadBranches() throws IOException
+    public void loadBranches() throws IOException
     {
         String branchName;
         List<Path> branches = Files.walk(m_MagitDir.resolve("branches"), 1)

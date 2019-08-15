@@ -11,7 +11,7 @@ public class Menu
         System.out.println("1. Update user name");
         System.out.println("2. Initialize repository");
         System.out.println("3. Read repository details from XML file");
-        System.out.println("4. Change repository");
+        System.out.println("4. Load repository by path");
         System.out.println("5. Show details of current commit");
         System.out.println("6. Show status");
         System.out.println("7. Commit");

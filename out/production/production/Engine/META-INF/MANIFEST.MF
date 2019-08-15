@@ -1,5 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: 
-Class-Path: commons-codec-1.12.jar commons-io-2.6.jar commons-collection
- s4-4.3.jar
+Class-Path: lib\commons-codec-1.12.jar lib\commons-io-2.6.jar lib\commons-collections4-4.3.jar
+Main-Class: Program
 

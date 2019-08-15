@@ -16,9 +16,9 @@ public class DateUtils
         try
         {
             return m_Format.parse(i_String);
-
-        } catch (ParseException e)
-        {//TODO handle exception
+        }
+        catch(ParseException e)
+        {
             return null;
         }
     }

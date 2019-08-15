@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,8 +67,7 @@ public class EngineManager
         return jaxb.createRepositoryFromXML(i_XMLFilePath);
     }
 
-    public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException
-    {
+    public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException {
         m_Repository = new Repository(Paths.get(i_XMLRepository.getLocation()));
         m_Repository.loadXMLRepoToSystem(i_XMLRepository, i_XMLMagitMaps);
         m_Repository.checkout(m_Repository.getMagit().getHead().getActiveBranch().getName());
@@ -81,8 +81,7 @@ public class EngineManager
 
     public Repository getRepository() { return m_Repository; }
 
-    public void changeRepository(Path i_RepoPath) throws IOException
-    {
+    public void loadRepositoryByPath(Path i_RepoPath) throws IOException, ParseException {
         m_Repository = new Repository(i_RepoPath);
         m_Repository.loadRepository(i_RepoPath);
     }
@@ -162,14 +161,19 @@ public class EngineManager
     public void loadEmptyRepository(Path i_RepoPath) throws IOException
     {
         m_Repository = new Repository(i_RepoPath);
-        Path repositoryNamePath = Magit.getMagitDir().resolve(Repository.REPOSITORY_NAME_FILE);
-        String repoName = new String(Files.readAllBytes(repositoryNamePath));
-        m_Repository.setName(repoName);
+        m_Repository.loadNameFromFile();
+        m_Repository.getMagit().loadBranches();
+        m_Repository.getMagit().loadHead();
     }
 
     public boolean isRootFolderEmpty() throws IOException
     {
         // assuming the root folder including only .magit folder
         return m_Repository.isRootFolderEmpty();
+    }
+
+    public void createEmptyRepository(Path i_RepoPath, String i_RepoName) throws IOException
+    {
+        m_Repository = new Repository(i_RepoPath, i_RepoName);
     }
 }

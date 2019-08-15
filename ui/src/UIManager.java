@@ -6,6 +6,7 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.*;
 
 public class UIManager
@@ -21,6 +22,7 @@ public class UIManager
         {
             menu.Show();
             didUserChoseToExit = handleUserChoice();
+            System.out.println(System.lineSeparator());
         }
         System.out.println("Exiting M.A-Git");
     }
@@ -59,7 +61,7 @@ public class UIManager
                     readRepositoryFromXMLFile();
                     break;
                 case 4:
-                    changeRepository();
+                    loadRepositoryByPath();
                     break;
                 case 5:
                     showDetailsOfCurrentCommit();
@@ -95,7 +97,6 @@ public class UIManager
         catch (Exception ex)
         {
             System.out.println("error: " + ex.getMessage());
-            ex.printStackTrace();
         }
         return false;
     }
@@ -159,7 +160,7 @@ public class UIManager
         return scanner.nextLine();
     }
 
-    private void readRepositoryFromXMLFile() throws JAXBException, IOException
+    private void readRepositoryFromXMLFile() throws JAXBException, IOException, ParseException
     {
         Path XMLFilePath = requestPath();
         Path XMLRepositoryLocation;
@@ -182,8 +183,8 @@ public class UIManager
                         if (toStash)
                         {
                             m_Engine.stashRepository(XMLRepositoryLocation);
-                            m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
-                            System.out.println("Repository " + XMLRepo.getName() + " loaded successfully from xml file");
+                            m_Engine.createEmptyRepository(XMLRepositoryLocation, XMLRepo.getName());
+                            notifyRepositoryHasBeenLoaded();
                         }
                     }
                     else
@@ -195,13 +196,7 @@ public class UIManager
                 {
                     if (isRepositoryAlreadyExistsInPath)
                     {
-                        toStash = doesUserWantToStashExistingRepository();
-                        if (toStash)
-                        {
-                            m_Engine.stashRepository(XMLRepositoryLocation);
-                            m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
-                            System.out.println("Repository " + XMLRepo.getName() + " loaded successfully from xml file");
-                        }
+                        readRepositoryIfUserChosedToStash(XMLRepositoryLocation, XMLRepo);
                     }
                     else
                     {
@@ -225,6 +220,18 @@ public class UIManager
         else
         {
             System.out.println("Path does not exists");
+        }
+    }
+
+    private void readRepositoryIfUserChosedToStash(Path i_XMLRepositoryLocation, MagitRepository XMLRepo) throws IOException, ParseException
+    {
+        boolean toStash;
+        toStash = doesUserWantToStashExistingRepository();
+        if (toStash)
+        {
+            m_Engine.stashRepository(i_XMLRepositoryLocation);
+            m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
+            notifyRepositoryHasBeenLoaded();
         }
     }
 
@@ -279,13 +286,13 @@ public class UIManager
         else
         {
             //if(!m_Engine.isRootFolderEmpty())
-          //  {
-                printOpenChanges(m_Engine.getFileSystemStatus());
-           // }
-          //  else
-          //  {
-               // System.out.println("Root folder is empty");
-           // }
+            //  {
+            printOpenChanges(m_Engine.getFileSystemStatus());
+            // }
+            //  else
+            //  {
+            // System.out.println("Root folder is empty");
+            // }
         }
     }
 
@@ -403,7 +410,7 @@ public class UIManager
         else
         {
             boolean isWCDirty;
-            if(!m_Engine.isRootFolderEmpty())
+            if (!m_Engine.isRootFolderEmpty())
             {
                 String commitMessage = requestCommitMessage();
                 isWCDirty = m_Engine.commit(commitMessage);
@@ -467,17 +474,8 @@ public class UIManager
                         }
                         else
                         {
-                            if (m_Engine.isBranchPointedCommitSHA1Empty(branchName))
-                            {
-                                System.out.println("Commit reference from branch" + branchName + " is not valid");
-                                System.out.println("The system did not checked out");
-                                ;
-                            }
-                            else
-                            {
-                                m_Engine.setActiveBranchName(branchName);
-                                System.out.println("Checkout to branch " + branchName + " has been made successfully");
-                            }
+                            m_Engine.setActiveBranchName(branchName);
+                            System.out.println("Checkout to branch " + branchName + " has been made successfully");
                         }
                     }
                 }
@@ -531,7 +529,7 @@ public class UIManager
             String branchName = requestBranchName();
             if (m_Engine.isBranchExists(branchName))
             {
-                if(!m_Engine.isBranchPointedCommitSHA1Empty(branchName))
+                if (!m_Engine.isBranchPointedCommitSHA1Empty(branchName))
                 {
                     OpenChanges openChanges = m_Engine.getFileSystemStatus();
                     if (m_Engine.isFileSystemDirty(openChanges))
@@ -549,7 +547,8 @@ public class UIManager
                 }
                 else
                 {
-                    System.out.println("Branch " +branchName+ " is not pointing on a commit");
+                    System.out.println("Branch " + branchName + " is not pointing on a commit");
+                    System.out.println("The system did not checked out");
                 }
             }
             else
@@ -624,7 +623,7 @@ public class UIManager
         System.out.println("The number you entered is not valid, please enter a valid number from the list below:");
     }
 
-    private void changeRepository() throws IOException
+    private void loadRepositoryByPath() throws IOException, ParseException
     {
         // func #4
         Path repoPath = requestPath();
@@ -640,7 +639,7 @@ public class UIManager
                 }
                 else
                 {
-                    m_Engine.changeRepository(repoPath);
+                    m_Engine.loadRepositoryByPath(repoPath);
                     notifyRepositoryHasBeenLoaded();
                 }
             }
@@ -732,7 +731,7 @@ public class UIManager
         else
         {
             String activeBranchName = m_Engine.getActiveBranchName();
-            if(!m_Engine.isBranchPointedCommitSHA1Empty(activeBranchName))
+            if (!m_Engine.isBranchPointedCommitSHA1Empty(activeBranchName))
             {
                 Map<String, Commit> commitBySHA1;
                 SortedSet<String> orderedCommitHistorySHA1;
@@ -745,7 +744,7 @@ public class UIManager
             }
             else
             {
-                System.out.println("Active branch "+ activeBranchName +" is not pointing on a commit");
+                System.out.println("Active branch " + activeBranchName + " is not pointing on a commit");
             }
         }
     }

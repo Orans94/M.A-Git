@@ -185,15 +185,15 @@ public class XMLValidator
 
         for (MagitSingleBranch branch : i_XMLRepo.getMagitBranches().getMagitSingleBranch())
         {
-            if (!branch.getPointedCommit().equals(""))
+            if (!branch.getPointedCommit().getId().equals(""))
             { // all branches not pointed to any commit.
                 return false;
             }
         }
 
-        isMagitBlobsAreNull = i_XMLRepo.getMagitBlobs().getMagitBlob() == null;
-        isMagitFoldersAreNull = i_XMLRepo.getMagitFolders().getMagitSingleFolder() == null;
-        isMagitCommitsAreNull = i_XMLRepo.getMagitCommits().getMagitSingleCommit() == null;
+        isMagitBlobsAreNull = i_XMLRepo.getMagitBlobs().getMagitBlob().size() == 0;
+        isMagitFoldersAreNull = i_XMLRepo.getMagitFolders().getMagitSingleFolder().size() == 0;
+        isMagitCommitsAreNull = i_XMLRepo.getMagitCommits().getMagitSingleCommit().size() == 0;
 
         return isMagitBlobsAreNull && isMagitFoldersAreNull && isMagitCommitsAreNull;
     }
