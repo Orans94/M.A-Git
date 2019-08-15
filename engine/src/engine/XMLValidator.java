@@ -150,6 +150,10 @@ public class XMLValidator
 
         for(MagitSingleBranch branch : i_Branches.getMagitSingleBranch())
         {
+            if(branch.getPointedCommit() == null)
+            {
+                return false;
+            }
             if(!commitIdSet.contains(branch.getPointedCommit().getId()))
             {
                 return false;
@@ -173,5 +177,24 @@ public class XMLValidator
     public boolean areIDsValid(MagitRepository i_XmlRepo)
     {
         return areCommitsIDsValid(i_XmlRepo.getMagitCommits()) && areBlobsIDsValid(i_XmlRepo.getMagitBlobs()) && areFoldersIDsValid(i_XmlRepo.getMagitFolders());
+    }
+
+    public boolean isXMLRepositoryIsEmpty(MagitRepository i_XMLRepo)
+    {
+        boolean isMagitBlobsAreNull, isMagitFoldersAreNull, isMagitCommitsAreNull;
+
+        for (MagitSingleBranch branch : i_XMLRepo.getMagitBranches().getMagitSingleBranch())
+        {
+            if (!branch.getPointedCommit().equals(""))
+            { // all branches not pointed to any commit.
+                return false;
+            }
+        }
+
+        isMagitBlobsAreNull = i_XMLRepo.getMagitBlobs().getMagitBlob() == null;
+        isMagitFoldersAreNull = i_XMLRepo.getMagitFolders().getMagitSingleFolder() == null;
+        isMagitCommitsAreNull = i_XMLRepo.getMagitCommits().getMagitSingleCommit() == null;
+
+        return isMagitBlobsAreNull && isMagitFoldersAreNull && isMagitCommitsAreNull;
     }
 }

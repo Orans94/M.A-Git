@@ -2,76 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6caeb8b8-a77a-428c-9b85-a3964c86cc36" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/engine_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/ui_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/engine/XMLMagitMaps.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/engine/XMLManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UI/src/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/artifacts/engine_jar/commons-codec-1.12.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/artifacts/engine_jar/commons-collections4-4.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/artifacts/engine_jar/commons-io-2.6.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/artifacts/engine_jar/engine.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/artifacts/ui_jar/commons-codec-1.12.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/artifacts/ui_jar/commons-collections4-4.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/artifacts/ui_jar/commons-io-2.6.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/artifacts/ui_jar/ui.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/production/Engine/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLMagitMaps.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLManager.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/production/UI/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Blob.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Blob.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Branch.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Branch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Commit.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Commit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/DateUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/DateUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/EngineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/EngineManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/FileUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/FileUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Folder.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Folder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Head.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Head.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Magit.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Magit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/MapUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/MapUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Node.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/NodeMaps.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/NodeMaps.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/OpenChanges.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/OpenChanges.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Repository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/SchemaBasedJAXB.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/SchemaBasedJAXB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/StringUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/StringUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/WC.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/WC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/WalkFileSystemResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/WalkFileSystemResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/engine/XMLValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/XMLValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MAGit.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MAGit.xsd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitBlob.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitBlob.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitBlobs.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitBlobs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitBranches.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitBranches.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitCommits.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitCommits.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitFolders.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitFolders.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitSingleBranch.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitSingleBranch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitSingleCommit.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitSingleCommit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/MagitSingleFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/MagitSingleFolder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/ObjectFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/ObjectFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/PrecedingCommits.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/PrecedingCommits.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/mypackage/RootFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/mypackage/RootFolder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/xml/MAGit.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/xml/MAGit.xsd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/xml/ex1-medium.xml" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/xml/ex1-medium.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/xml/ex1-small.xml" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/xml/ex1-small.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/xml/generateJaxbClasses.bat" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/xml/generateJaxbClasses.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/UI.iml" beforeDir="false" afterPath="$PROJECT_DIR$/UI/UI.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/src/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/src/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/Program.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/src/UIManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/UIManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Commit.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Commit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/src/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/engine/EngineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/EngineManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/engine/Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/engine/XMLValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/XMLValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/artifacts/engine_jar/engine.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/artifacts/engine_jar/engine.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/artifacts/ui_jar/ui.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/artifacts/ui_jar/ui.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/EngineManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/EngineManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/SchemaBasedJAXB.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/SchemaBasedJAXB.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLManager.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLValidator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/UI/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/production/UI/Menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/UI/Menu.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/production/UI/UIManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/UI/UIManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/src/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/src/UIManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/UIManager.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -87,11 +33,42 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/engine/src/engine/Repository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="234" selection-start-line="234" selection-end-line="234" />
+            <state relative-caret-position="80">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/engine/src/engine/FileUtilities.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="156">
+              <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ui/src/Menu.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="40">
+              <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
+              <folding>
+                <element signature="e#65#66#0" expanded="true" />
+                <element signature="e#125#126#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/util/stream/ReferencePipeline.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="406" column="18" selection-start-line="406" selection-start-column="18" selection-end-line="406" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -99,8 +76,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ui/src/UIManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="73">
-              <caret line="174" column="82" selection-start-line="174" selection-start-column="82" selection-end-line="174" selection-end-column="82" />
+            <state relative-caret-position="131">
+              <caret line="299" column="38" lean-forward="true" selection-start-line="299" selection-start-column="38" selection-end-line="299" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -109,26 +86,46 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/nio/file/Files.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="328">
+              <caret line="2381" column="26" selection-start-line="2381" selection-start-column="26" selection-end-line="2381" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/engine/src/engine/Head.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="160">
+              <caret line="8" column="11" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/engine/src/engine/EngineManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="103" column="93" selection-start-line="103" selection-start-column="93" selection-end-line="103" selection-end-column="93" />
+            <state relative-caret-position="111">
+              <caret line="58" column="40" selection-start-line="58" selection-start-column="40" selection-end-line="58" selection-end-column="40" />
               <folding>
-                <element signature="e#1283#1284#0" expanded="true" />
-                <element signature="e#1316#1317#0" expanded="true" />
-                <element signature="e#1377#1378#0" expanded="true" />
-                <element signature="e#1430#1431#0" expanded="true" />
-                <element signature="e#1785#1786#0" expanded="true" />
-                <element signature="e#1828#1829#0" expanded="true" />
-                <element signature="e#1880#1881#0" expanded="true" />
-                <element signature="e#1941#1942#0" expanded="true" />
-                <element signature="e#2184#2185#0" expanded="true" />
-                <element signature="e#2239#2240#0" expanded="true" />
-                <element signature="e#2454#2455#0" expanded="true" />
-                <element signature="e#2512#2513#0" expanded="true" />
-                <element signature="e#2582#2583#0" expanded="true" />
-                <element signature="e#2646#2647#0" expanded="true" />
+                <element signature="e#1366#1367#0" expanded="true" />
+                <element signature="e#1419#1420#0" expanded="true" />
+                <element signature="e#2082#2083#0" expanded="true" />
+                <element signature="e#2380#2381#0" expanded="true" />
+                <element signature="e#2653#2654#0" expanded="true" />
+                <element signature="e#2787#2788#0" expanded="true" />
+                <element signature="e#4428#4429#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/engine/src/engine/XMLManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="321">
+              <caret line="37" column="93" selection-start-line="37" selection-start-column="93" selection-end-line="37" selection-end-column="93" />
             </state>
           </provider>
         </entry>
@@ -136,62 +133,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/engine/src/engine/XMLValidator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="367">
-              <caret line="136" selection-start-line="136" selection-end-line="136" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/engine/src/engine/WC.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="24" column="37" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/engine/src/engine/Folder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="63" selection-start-line="63" selection-end-line="63" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/engine/src/engine/Node.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="10" selection-start-line="10" selection-end-line="10" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/engine/src/engine/SchemaBasedJAXB.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="20" column="54" selection-start-line="20" selection-start-column="54" selection-end-line="20" selection-end-column="54" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/engine/src/mypackage/MagitRepository.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="36" selection-start-line="36" selection-end-line="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/engine/src/engine/Commit.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-820">
-              <caret line="64" column="23" selection-start-line="64" selection-start-column="23" selection-end-line="64" selection-end-column="23" />
+            <state relative-caret-position="361">
+              <caret line="191" column="9" selection-start-line="191" selection-start-column="9" selection-end-line="191" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -210,6 +153,10 @@
       <find>loadXMLRepoToSystem</find>
       <find>sort</find>
       <find>writeCo</find>
+      <find>TreeSet</find>
+      <find>Path</find>
+      <find>catch</find>
+      <find>init</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -222,18 +169,19 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/engine/src/engine/SchemaBasedJAXB.java" />
-        <option value="$PROJECT_DIR$/engine/src/engine/EngineManager.java" />
-        <option value="$PROJECT_DIR$/engine/src/engine/XMLValidator.java" />
         <option value="$PROJECT_DIR$/engine/src/engine/Commit.java" />
-        <option value="$PROJECT_DIR$/ui/src/UIManager.java" />
         <option value="$PROJECT_DIR$/engine/src/engine/Repository.java" />
+        <option value="$PROJECT_DIR$/engine/src/engine/XMLManager.java" />
+        <option value="$PROJECT_DIR$/engine/src/engine/XMLValidator.java" />
+        <option value="$PROJECT_DIR$/ui/src/UIManager.java" />
+        <option value="$PROJECT_DIR$/engine/src/engine/EngineManager.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="width" value="1385" />
-    <option name="height" value="1040" />
+    <option name="x" value="952" />
+    <option name="width" value="977" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectId" id="1OumKS0SyYkmBmoANalsV1DiRZ5" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -294,7 +242,13 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TryoutProject" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
@@ -352,12 +306,13 @@
       <workItem from="1565084663526" duration="12286000" />
       <workItem from="1565680863752" duration="29337000" />
       <workItem from="1565765045607" duration="301000" />
-      <workItem from="1565765363380" duration="15848000" />
+      <workItem from="1565765363380" duration="21929000" />
+      <workItem from="1565846991614" duration="9344000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16149000" />
+    <option name="totallyTimeSpent" value="31574000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -372,27 +327,27 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25302014" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.40915394" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3654391" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.29036826" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Floobits" order="9" visible="true" weight="0.30736545" />
+      <window_info anchor="bottom" id="Floobits" order="9" weight="0.04249292" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.3286119" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="13" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -443,18 +398,10 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <condition expression="dir.equals(Paths.get(&quot;c:\\repo1\\fol2&quot;))" language="JAVA" />
-          <url>file://$PROJECT_DIR$/engine/src/engine/Repository.java</url>
-          <line>218</line>
+          <url>file://$PROJECT_DIR$/ui/src/UIManager.java</url>
+          <line>294</line>
           <properties />
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <condition expression="magitFolderObj.name.equals(&quot;fol2&quot;)" language="JAVA" />
-          <url>file://$PROJECT_DIR$/engine/src/engine/Repository.java</url>
-          <line>616</line>
-          <properties />
-          <option name="timeStamp" value="53" />
+          <option name="timeStamp" value="61" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -465,12 +412,17 @@
   <component name="debuggerHistoryManager">
     <expressions id="breakpointCondition">
       <expression>
-        <expression-string>dir.equals(Paths.get(&quot; c:\\repo1\\fol2&quot;))</expression-string>
+        <expression-string>dir.equals(Paths.get(&quot;c:\\repo1\\fol2&quot;))</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
         <expression-string>magitFolderObj.name.equals(&quot;fol2&quot;)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>dir.equals(Paths.get(&quot; c:\\repo1\\fol2&quot;))</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -491,11 +443,6 @@
       </expression>
       <expression>
         <expression-string>magitFolderObj.getName().equals(&quot;fol2&quot;)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>dir.equals(Paths.get(&quot;c:\\repo1\\fol2&quot;))</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -529,13 +476,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/engine/src/engine/XMLValidator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="136" selection-start-line="136" selection-end-line="136" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/engine/src/mypackage/MagitRepository.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="115">
@@ -557,13 +497,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/engine/src/engine/WC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="24" column="37" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/engine/src/engine/Node.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="141">
@@ -578,10 +511,148 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/util/Scanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="1529" column="37" selection-start-line="1529" selection-start-column="15" selection-end-line="1529" selection-end-column="37" />
+          <folding>
+            <element signature="e#21679#21680#0" expanded="true" />
+            <element signature="e#21750#21751#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/nio/file/Paths.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="82" column="23" selection-start-line="82" selection-start-column="23" selection-end-line="82" selection-end-column="23" />
+          <folding>
+            <element signature="e#2673#2674#0" expanded="true" />
+            <element signature="e#2741#2742#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/lang/Integer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="610" column="19" selection-start-line="610" selection-start-column="19" selection-end-line="611" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="975" column="19" selection-start-line="975" selection-start-column="19" selection-end-line="975" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/nio/file/Path.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="603" column="6" lean-forward="true" selection-start-line="603" selection-start-column="6" selection-end-line="603" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/resources/commons-io-2.6.jar!/org/apache/commons/io/FileUtils.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="952" column="15" selection-start-line="952" selection-start-column="15" selection-end-line="952" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/engine/src/engine/Magit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="25" column="20" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/util/Map.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4060">
+          <caret line="229" column="68" selection-start-line="229" selection-start-column="68" selection-end-line="229" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/engine/src/engine/Branch.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="11" column="11" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/engine/src/engine/WC.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="18" column="11" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/engine/src/engine/Head.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="8" column="11" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/util/stream/ReferencePipeline.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="406" column="18" selection-start-line="406" selection-start-column="18" selection-end-line="406" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/engine/src/engine/Repository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/engine/src/engine/XMLManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="37" column="93" selection-start-line="37" selection-start-column="93" selection-end-line="37" selection-end-column="93" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/engine/src/engine/XMLValidator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="191" column="9" selection-start-line="191" selection-start-column="9" selection-end-line="191" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/Menu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
+          <folding>
+            <element signature="e#65#66#0" expanded="true" />
+            <element signature="e#125#126#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/engine/src/engine/FileUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/nio/file/Files.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="2381" column="26" selection-start-line="2381" selection-start-column="26" selection-end-line="2381" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ui/src/UIManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="73">
-          <caret line="174" column="82" selection-start-line="174" selection-start-column="82" selection-end-line="174" selection-end-column="82" />
+        <state relative-caret-position="131">
+          <caret line="299" column="38" lean-forward="true" selection-start-line="299" selection-start-column="38" selection-end-line="299" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -590,31 +661,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/engine/src/engine/EngineManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="103" column="93" selection-start-line="103" selection-start-column="93" selection-end-line="103" selection-end-column="93" />
+        <state relative-caret-position="111">
+          <caret line="58" column="40" selection-start-line="58" selection-start-column="40" selection-end-line="58" selection-end-column="40" />
           <folding>
-            <element signature="e#1283#1284#0" expanded="true" />
-            <element signature="e#1316#1317#0" expanded="true" />
-            <element signature="e#1377#1378#0" expanded="true" />
-            <element signature="e#1430#1431#0" expanded="true" />
-            <element signature="e#1785#1786#0" expanded="true" />
-            <element signature="e#1828#1829#0" expanded="true" />
-            <element signature="e#1880#1881#0" expanded="true" />
-            <element signature="e#1941#1942#0" expanded="true" />
-            <element signature="e#2184#2185#0" expanded="true" />
-            <element signature="e#2239#2240#0" expanded="true" />
-            <element signature="e#2454#2455#0" expanded="true" />
-            <element signature="e#2512#2513#0" expanded="true" />
-            <element signature="e#2582#2583#0" expanded="true" />
-            <element signature="e#2646#2647#0" expanded="true" />
+            <element signature="e#1366#1367#0" expanded="true" />
+            <element signature="e#1419#1420#0" expanded="true" />
+            <element signature="e#2082#2083#0" expanded="true" />
+            <element signature="e#2380#2381#0" expanded="true" />
+            <element signature="e#2653#2654#0" expanded="true" />
+            <element signature="e#2787#2788#0" expanded="true" />
+            <element signature="e#4428#4429#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/engine/src/engine/Repository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="234" selection-start-line="234" selection-end-line="234" />
         </state>
       </provider>
     </entry>

@@ -578,6 +578,7 @@ public class Repository {
             m_Magit.getCommits().put(commitSHA1, commit);
             commitSHA1ByID.put(Integer.parseInt(XMLCommit.getId()), commitSHA1);
             m_ChildrenInformation.clear();
+            parentsSHA1.clear();
         }
 
         loadBranchesFromXML(i_XMLRepository.getMagitBranches(), commitSHA1ByID);
@@ -630,24 +631,48 @@ public class Repository {
         }
     }
 
-    public Set<String> getActiveBranchHistory()
+    public SortedSet<String> getActiveBranchHistory()
     {
-        Set<String> commitsHistory = new LinkedHashSet<>();
+        SortedSet<String> commitsHistory = new TreeSet<>(new Comparator<String>() {
+            @Override
+            public int compare(String i_FirstSHA1, String i_SecondSHA1) {
+                if(m_Magit.getCommits().get(i_FirstSHA1).getCommitDate().compareTo(m_Magit.getCommits().get(i_SecondSHA1).getCommitDate()) >0 )
+                {
+                    return -1;
+                }
+                else if(m_Magit.getCommits().get(i_FirstSHA1).getCommitDate().compareTo(m_Magit.getCommits().get(i_SecondSHA1).getCommitDate()) < 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        });
         Branch activeBranch = m_Magit.getHead().getActiveBranch();
         String commitSHA1 = activeBranch.getCommitSHA1();
-
-        createOrderedCommitsHistoryRecursive(commitsHistory, commitSHA1);
+        //TODO take care to order commits by date !!!!!
+        createCommitsHistoryRecursive(commitsHistory, commitSHA1);
 
         return commitsHistory;
     }
 
-    private void createOrderedCommitsHistoryRecursive(Set<String> i_CommitsHistory, String i_CommitSHA1)
+    private void createCommitsHistoryRecursive(SortedSet<String> i_CommitsHistory, String i_CommitSHA1)
     {
         i_CommitsHistory.add(i_CommitSHA1);
         Commit currentCommit = m_Magit.getCommits().get(i_CommitSHA1);
         for(String SHA1 : currentCommit.getParentsSHA1())
         {
-            createOrderedCommitsHistoryRecursive(i_CommitsHistory, SHA1);
+            createCommitsHistoryRecursive(i_CommitsHistory, SHA1);
         }
+    }
+
+    public void changeActiveBranchPointedCommit(String i_CommitSHA1)
+    {
+        String activeBranchName = m_Magit.getHead().getActiveBranch().getName();
+        Path destination = Magit.getMagitDir().resolve("branches").resolve(activeBranchName + ".txt");
+        m_Magit.getBranches().get(activeBranchName).setCommitSHA1(i_CommitSHA1);
+        FileUtilities.modifyTxtFile(destination, i_CommitSHA1);
     }
 }

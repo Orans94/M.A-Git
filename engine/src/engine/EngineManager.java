@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
 //ENGINE ASSUMPTIONS:
 //1.  m_Engine.ReadRepositoryFromXMLFile(XMLFilePath);
 //    maybe returning a value if something is wrong and if so what is wrong(Exception or string?)
@@ -55,7 +54,14 @@ public class EngineManager
 
     public boolean isPathExists(Path i_Path)
     {
-        return Files.exists(i_Path);
+        try
+        {
+            return Files.exists(i_Path);
+        }
+        catch (SecurityException ex)
+        {
+            throw new SecurityException("error: read access to file is denied");
+        }
     }
 
     public boolean isRepository(Path i_Path)
@@ -137,4 +143,18 @@ public class EngineManager
     }
 
     public boolean isDirectoryEmpty(Path i_Path) throws IOException { return FileUtilities.getNumberOfSubNodes(i_Path) == 0;}
+
+    public boolean isRepositoryNull() { return m_Repository == null;}
+
+    public boolean isXMLRepositoryIsEmpty(MagitRepository i_XMLRepo) { return m_XMLManager.isXMLRepositoryIsEmpty(i_XMLRepo); }
+
+    public boolean isBranchPointedCommitSHA1Empty(String i_BranchName)
+    {
+        return m_Repository.getMagit().getBranches().get(i_BranchName).getCommitSHA1() == null ||
+                m_Repository.getMagit().getBranches().get(i_BranchName).getCommitSHA1().equals("");
+    }
+
+    public boolean isCommitSHA1Exists(String i_CommitSHA1) { return m_Repository.getMagit().getCommits().containsKey(i_CommitSHA1); }
+
+    public void changeActiveBranchPointedCommit(String i_CommitSHA1) { m_Repository.changeActiveBranchPointedCommit(i_CommitSHA1); }
 }

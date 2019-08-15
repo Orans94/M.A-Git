@@ -1,6 +1,5 @@
 import engine.*;
 import mypackage.MagitRepository;
-import mypackage.MagitSingleCommit;
 import mypackage.MagitSingleFolder;
 
 import javax.xml.bind.JAXBException;
@@ -9,23 +8,25 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static java.lang.System.exit;
-
 public class UIManager
 {
     private EngineManager m_Engine = new EngineManager();
 
-    public void Run() throws IOException, JAXBException {
+    public void Run() throws IOException, JAXBException
+    {
+        boolean didUserChoseToExit = false;
         Menu menu = new Menu();
         updateUserName();
         while (true)// actually while user didnt choose to exit
-        {
+        {//TODO while exit
             menu.Show();
             handleUserChoice();
         }
     }
 
-    private void handleUserChoice() throws IOException, JAXBException {
+    private boolean handleUserChoice() throws IOException, JAXBException
+    {
+        // this method return true if user chose to exit
         int userChoiceInt = 0;
         Scanner scanner = new Scanner(System.in);
         boolean isParseFailed = true;
@@ -43,51 +44,112 @@ public class UIManager
             }
         }
 
-        switch (userChoiceInt)
+        try
         {
-            case 1:
-                updateUserName();
-                break;
-            case 2: // GIT INIT
-                initializeRepository();
-                break;
-            case 3:
-                readRepositoryFromXMLFile();
-                break;
-            case 4:
-                changeRepository();
-                break;
-            case 5:
-                showDetailsOfCurrentCommit();
-                break;
-            case 6:
-                showStatus();
-                break;
-            case 7: // COMMIT
-                commit();
-                break;
-            case 8:
-                showAllBranches();
-                break;
-            case 9:
-                createNewBranch();
-                break;
-            case 10:
-                deleteBranch();
-                break;
-            case 11:
-                checkout();
-                break;
-            case 12:
-                showActiveBranchHistory();
-                break;
-            default:
-                exit(0);
+            switch (userChoiceInt)
+            {
+                case 1:
+                    updateUserName();
+                    break;
+                case 2:
+                    initializeRepository();
+                    break;
+                case 3:
+                    readRepositoryFromXMLFile();
+                    break;
+                case 4:
+                    changeRepository();
+                    break;
+                case 5:
+                    showDetailsOfCurrentCommit();
+                    break;
+                case 6:
+                    showStatus();
+                    break;
+                case 7: // COMMIT
+                    commit();
+                    break;
+                case 8:
+                    showAllBranches();
+                    break;
+                case 9:
+                    createNewBranch();
+                    break;
+                case 10:
+                    deleteBranch();
+                    break;
+                case 11:
+                    checkout();
+                    break;
+                case 12:
+                    showActiveBranchHistory();
+                    break;
+                case 13:
+                    changeActiveBranchPointedCommit();
+                    break;
+                case 14:// exit
+                    return true;
+            }
         }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    private void changeActiveBranchPointedCommit() throws IOException
+    {
+        if(m_Engine.isRepositoryNull())
+        {
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else
+        {
+
+            String commitSHA1 = getCommitSHA1FromUser();
+            if (m_Engine.isCommitSHA1Exists(commitSHA1))
+            {
+                OpenChanges openChanges = m_Engine.getFileSystemStatus();
+                if(m_Engine.isFileSystemDirty(openChanges))
+                {
+                    int userChoiceInt;
+                    System.out.println("Please notice, the WC is dirty. if you will continue all changes will be lost");
+                    System.out.println("Would you like to continue?");
+                    System.out.println("1. Yes");
+                    System.out.println("2. No");
+                    Scanner scanner = new Scanner(System.in);
+                    String userChoice = scanner.nextLine();
+                    userChoiceInt = Integer.parseInt(userChoice);
+                    while(!isUserChoiceInRange(1,2, user))
+                }
+                else
+                {
+
+                }
+                m_Engine.changeActiveBranchPointedCommit(commitSHA1);
+                System.out.println("The active branch is now pointing on commit " + commitSHA1);
+            }
+            else
+            {
+                System.out.println("The SHA1 you entered does not represents an existing commit");
+            }
+        }
+    }
+
+    private String getCommitSHA1FromUser()
+    {
+        System.out.println("Please enter SHA1 represents the new pointed commit");;
+        Scanner scanner = new Scanner(System.in);
+
+        return scanner.nextLine();
     }
 
     private void readRepositoryFromXMLFile() throws JAXBException, IOException {
         Path XMLFilePath = requestPath();
+        Path XMLRepositoryLocation;
+        boolean isRepositoryAlreadyExistsInPath, toStash;
+
         if(m_Engine.isPathExists(XMLFilePath))// TODO should we do this check?
         {
             // validate process
@@ -95,22 +157,43 @@ public class UIManager
             {
                 MagitRepository XMLRepo = m_Engine.createXMLRepository(XMLFilePath);
                 m_Engine.getXMLManager().loadXMLRepoToMagitMaps(XMLRepo);
-                if (validateXMLRepository(XMLRepo, XMLFilePath, m_Engine.getXMLManager().getXMLMagitMaps().getMagitSingleFolderByID()))
+                XMLRepositoryLocation = Paths.get(XMLRepo.getLocation());
+                isRepositoryAlreadyExistsInPath = m_Engine.isRepository(XMLRepositoryLocation);
+                if (m_Engine.isXMLRepositoryIsEmpty(XMLRepo))
                 {
-                    if(m_Engine.isRepository(Paths.get(XMLRepo.getLocation())))
+                    if(isRepositoryAlreadyExistsInPath)
                     {
-                        boolean toStash = doesUserWantToStashExistingRepository();
-                        if(toStash)
+                        toStash = doesUserWantToStashExistingRepository();
+                        if (toStash)
                         {
-                            m_Engine.stashRepository(Paths.get(XMLRepo.getLocation()));
+                            m_Engine.stashRepository(XMLRepositoryLocation);
                             m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
+                            System.out.println("Repository " + XMLRepo.getName() + " loaded successfully from xml file");
                         }
                     }
                     else
                     {
-                        if(m_Engine.isDirectoryEmpty(Paths.get(XMLRepo.getLocation())))
+                        createNewRepository(XMLRepositoryLocation);
+                    }
+                }
+                else if (validateXMLRepository(XMLRepo, XMLFilePath, m_Engine.getXMLManager().getXMLMagitMaps().getMagitSingleFolderByID()))
+                {
+                    if(isRepositoryAlreadyExistsInPath)
+                    {
+                        toStash = doesUserWantToStashExistingRepository();
+                        if(toStash)
+                        {
+                            m_Engine.stashRepository(XMLRepositoryLocation);
+                            m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
+                            System.out.println("Repository " + XMLRepo.getName() + " loaded successfully from xml file");
+                        }
+                    }
+                    else
+                    {
+                        if(m_Engine.isDirectoryEmpty(XMLRepositoryLocation))
                         {
                             m_Engine.readRepositoryFromXMLFile(XMLRepo, m_Engine.getXMLManager().getXMLMagitMaps());
+                            System.out.println("Repository " + XMLRepo.getName() + " loaded successfully from xml file");
                         }
                         else
                         {
@@ -172,7 +255,17 @@ public class UIManager
         return isXMLTotallyValid;
     }
 
-    private void showStatus() throws IOException { printOpenChanges(m_Engine.getFileSystemStatus()); }
+    private void showStatus() throws IOException
+    {
+        if(m_Engine.isRepositoryNull())
+        {
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else
+            {
+            printOpenChanges(m_Engine.getFileSystemStatus());
+        }
+    }
 
     private void printOpenChanges(OpenChanges openChanges)
     {
@@ -243,7 +336,6 @@ public class UIManager
         System.out.println("The directory is already a repository");
         boolean isValid = true;
         int choiceInt;
-
         do
         {
             System.out.println("Would you like to stash the existing repository?");
@@ -287,7 +379,7 @@ public class UIManager
     }
 
     private void updateUserName()
-    {//TODO menu.requestusrname??
+    {
         Menu.requestUserName();
         Scanner scanner = new Scanner(System.in);
         String userName = scanner.nextLine();
@@ -297,17 +389,20 @@ public class UIManager
     private void commit() throws IOException //TODO handle exception
     {
         // func #7
-        boolean isWCDirty;
-
-        String commitMessage = requestCommitMessage();
-        isWCDirty = m_Engine.commit(commitMessage);
-        if (isWCDirty)
+        if(m_Engine.isRepositoryNull())
         {
-            System.out.println("Committed successfully");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
         }
-        else
-        {
-            System.out.println("There is nothing to commit, WC status is clean");
+        else {
+            boolean isWCDirty;
+
+            String commitMessage = requestCommitMessage();
+            isWCDirty = m_Engine.commit(commitMessage);
+            if (isWCDirty) {
+                System.out.println("Committed successfully");
+            } else {
+                System.out.println("There is nothing to commit, WC status is clean");
+            }
         }
     }
 
@@ -318,27 +413,78 @@ public class UIManager
         return scanner.nextLine();
     }
 
-    private void createNewBranch()
+    private void createNewBranch() throws IOException
     {
         // func #9
-        String branchName = requestBranchName();
-        boolean isBranchExists = m_Engine.isBranchExists(branchName);
-        if (isBranchExists)
+        boolean toCheckout;
+
+        if(m_Engine.isRepositoryNull())
         {
-            System.out.println("Branch " + branchName + " already exists");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
         }
         else
-        {
-            if (m_Engine.isBranchNameEqualsHead(branchName))
             {
-                System.out.println("You can not set branch name to HEAD");
-            }
-            else
-            {
-                m_Engine.createNewBranch(branchName);
-                System.out.println("Branch " + branchName + " created successfully");
+            String branchName = requestBranchName();
+            boolean isBranchExists = m_Engine.isBranchExists(branchName);
+            if (isBranchExists) {
+                System.out.println("Branch " + branchName + " already exists");
+            } else {
+                if (m_Engine.isBranchNameEqualsHead(branchName)) {
+                    System.out.println("You can not set branch name to HEAD");
+                } else {
+                    m_Engine.createNewBranch(branchName);
+                    System.out.println("Branch " + branchName + " created successfully");
+                    toCheckout = doesUserWantToCheckoutAfterCreatingNewBranch();
+                    if(toCheckout)
+                    {
+                        OpenChanges openChanges = m_Engine.getFileSystemStatus();
+                        if(m_Engine.isFileSystemDirty(openChanges))
+                        {
+                            System.out.println("The WC status is dirty, the system did not checked out");
+                        }
+                        else
+                        {
+                            if(m_Engine.isBranchPointedCommitSHA1Empty(branchName))
+                            {
+                                System.out.println("Commit reference from branch" + branchName + " is not valid");
+                                System.out.println("The system did not checked out");;
+                            }
+                            else
+                            {
+                                m_Engine.checkout(branchName);
+                                System.out.println("Checkout to branch "+branchName+ " has been made successfully");
+                            }
+                        }
+                    }
+                }
             }
         }
+    }
+
+    private boolean doesUserWantToCheckoutAfterCreatingNewBranch()
+    {
+        showUserCheckoutChoice();
+        Scanner scanner = new Scanner(System.in);
+        String userChoice = scanner.nextLine();
+        int userChoiceInt = Integer.parseInt(userChoice);
+        boolean isInRange = isUserChoiceInRange(1, 2, userChoiceInt);
+        while (!isInRange)
+        {
+            userChoiceNotInRange();
+            showUserCheckoutChoice();
+            userChoice = scanner.nextLine();
+            userChoiceInt = Integer.parseInt(userChoice);
+            isInRange = isUserChoiceInRange(1, 2, userChoiceInt);
+        }
+
+        return userChoice.equals("1");
+    }
+
+    private void showUserCheckoutChoice()
+    {
+        System.out.println("Would you like to checkout the newly created branch?");
+        System.out.println("1. Yes");
+        System.out.println("2. No");
     }
 
     private String requestBranchName()
@@ -352,26 +498,28 @@ public class UIManager
     private void checkout() throws IOException
     {
         // func #11
-        String branchName = requestBranchName();
-        if (m_Engine.isBranchExists(branchName))
+        if(m_Engine.isRepositoryNull())
         {
-            OpenChanges openChanges = m_Engine.getFileSystemStatus();
-            if (m_Engine.isFileSystemDirty(openChanges))
-            {
-                notifyUserDirtyStatusBeforeCheckout();
-                boolean toCommit = doesUserWantToCommitBeforeCheckout();
-                if (toCommit)
-                {
-                    commit(); // (UI commit)
-                }
-            }
-
-            m_Engine.checkout(branchName);
-            System.out.println("Checkout made successfully");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
         }
-        else
-        {
-            System.out.println("Branch " + branchName + " does not exists");
+        else {
+            String branchName = requestBranchName();
+            if (m_Engine.isBranchExists(branchName))
+            {
+                OpenChanges openChanges = m_Engine.getFileSystemStatus();
+                if (m_Engine.isFileSystemDirty(openChanges)) {
+                    notifyUserDirtyStatusBeforeCheckout();
+                    boolean toCommit = doesUserWantToCommitBeforeCheckout();
+                    if (toCommit) {
+                        commit(); // (UI commit)
+                    }
+                }
+
+                m_Engine.checkout(branchName);
+                System.out.println("Checkout made successfully");
+            } else {
+                System.out.println("Branch " + branchName + " does not exists");
+            }
         }
     }
 
@@ -468,34 +616,47 @@ public class UIManager
     private void showAllBranches()
     {
         // func #8
-        Map<String, Branch> branches = m_Engine.getRepository().getMagit().getBranches();
-        Head head = m_Engine.getRepository().getMagit().getHead();
-        for (Map.Entry<String, Branch> entry : branches.entrySet())
+        if(m_Engine.isRepositoryNull())
         {
-            printBranch(entry.getValue(), head);
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else
+            {
+            Map<String, Branch> branches = m_Engine.getRepository().getMagit().getBranches();
+            Head head = m_Engine.getRepository().getMagit().getHead();
+            for (Map.Entry<String, Branch> entry : branches.entrySet()) {
+                printBranch(entry.getValue(), head);
+            }
         }
     }
 
     private void showDetailsOfCurrentCommit()
     {
         // func #5
-        NodeMaps nodeMaps = m_Engine.getRepository().getNodeMaps();
-        if(nodeMaps.isEmpty())
+        if(m_Engine.isRepositoryNull())
         {
-            System.out.println("Commit has not been done yet");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
         }
         else
-        {
-            for (Map.Entry<Path, String> entry : nodeMaps.getSHA1ByPath().entrySet())
             {
-                if (m_Engine.isDirectory(entry.getKey()))
+            NodeMaps nodeMaps = m_Engine.getRepository().getNodeMaps();
+            if (nodeMaps.isEmpty())
+            {
+                System.out.println("Commit has not been done yet");
+            }
+            else
                 {
-                    Folder folder = (Folder) nodeMaps.getNodeBySHA1().get(entry.getValue());
-                    List<Item> items = folder.getItems();
-                    Path folderPath = entry.getKey();
-                    for (Item item : items)
+                for (Map.Entry<Path, String> entry : nodeMaps.getSHA1ByPath().entrySet())
+                {
+                    if (m_Engine.isDirectory(entry.getKey()))
                     {
-                        printCurrentItemDetails(folderPath, item);
+                        Folder folder = (Folder) nodeMaps.getNodeBySHA1().get(entry.getValue());
+                        List<Item> items = folder.getItems();
+                        Path folderPath = entry.getKey();
+                        for (Item item : items)
+                        {
+                            printCurrentItemDetails(folderPath, item);
+                        }
                     }
                 }
             }
@@ -515,13 +676,19 @@ public class UIManager
     private void showActiveBranchHistory()
     {
         // func #12
-        Map<String, Commit> commitBySHA1;
-        Set<String> orderedCommitHistorySHA1;
-        orderedCommitHistorySHA1 = m_Engine.getRepository().getActiveBranchHistory();
-        commitBySHA1 = m_Engine.getRepository().getMagit().getCommits();
-        for(String SHA1 : orderedCommitHistorySHA1)
+        if(m_Engine.isRepositoryNull())
         {
-            printCommit(commitBySHA1.get(SHA1), SHA1);
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else
+            {
+            Map<String, Commit> commitBySHA1;
+            SortedSet<String> orderedCommitHistorySHA1;
+            orderedCommitHistorySHA1 = m_Engine.getRepository().getActiveBranchHistory();
+            commitBySHA1 = m_Engine.getRepository().getMagit().getCommits();
+            for (String SHA1 : orderedCommitHistorySHA1) {
+                printCommit(commitBySHA1.get(SHA1), SHA1);
+            }
         }
     }
 
@@ -537,19 +704,22 @@ public class UIManager
     private void deleteBranch()
     {
         // func #10
-        String branchName = requestBranchName();
-        boolean isHeadBranch = m_Engine.isBranchNameRepresentsHead(branchName);
-        boolean isBranchExists = m_Engine.isBranchExists(branchName);
-        if (isHeadBranch)
+        if(m_Engine.isRepositoryNull())
         {
-            System.out.println("Cannot delete active branch");
-        } else if (!isBranchExists)
-        {
-            System.out.println("Branch " + branchName + " does not exists");
-        } else
-        {
-            m_Engine.deleteBranch(branchName);
-            System.out.println("Branch " + branchName + " deleted successfully");
+            System.out.println("Repository have to be loaded or initialized before making this operation");
+        }
+        else {
+            String branchName = requestBranchName();
+            boolean isHeadBranch = m_Engine.isBranchNameRepresentsHead(branchName);
+            boolean isBranchExists = m_Engine.isBranchExists(branchName);
+            if (isHeadBranch) {
+                System.out.println("Cannot delete active branch");
+            } else if (!isBranchExists) {
+                System.out.println("Branch " + branchName + " does not exists");
+            } else {
+                m_Engine.deleteBranch(branchName);
+                System.out.println("Branch " + branchName + " deleted successfully");
+            }
         }
     }
 
