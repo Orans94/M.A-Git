@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6caeb8b8-a77a-428c-9b85-a3964c86cc36" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/src/META-INF/MANIFEST.MF" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/engine/src/engine/EngineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/EngineManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/engine/Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/Repository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/engine/XMLValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/engine/XMLValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/artifacts/engine_jar/engine.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/artifacts/engine_jar/engine.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/artifacts/ui_jar/ui.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/artifacts/ui_jar/ui.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/EngineManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/EngineManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/Repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/Engine/engine/XMLValidator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/UI/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/UI/Menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/UI/Menu.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/production/UI/UIManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/production/UI/UIManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/src/UIManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/UIManager.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -77,7 +63,7 @@
         <entry file="file://$PROJECT_DIR$/ui/src/UIManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="131">
-              <caret line="299" column="38" lean-forward="true" selection-start-line="299" selection-start-column="38" selection-end-line="299" selection-end-column="38" />
+              <caret line="310" column="38" lean-forward="true" selection-start-line="310" selection-start-column="38" selection-end-line="310" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -307,12 +293,12 @@
       <workItem from="1565680863752" duration="29337000" />
       <workItem from="1565765045607" duration="301000" />
       <workItem from="1565765363380" duration="21929000" />
-      <workItem from="1565846991614" duration="9344000" />
+      <workItem from="1565846991614" duration="10030000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31574000" />
+    <option name="totallyTimeSpent" value="32260000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -325,9 +311,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.40915394" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19932885" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -337,13 +322,13 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.29036826" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.29036826" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Floobits" order="9" weight="0.04249292" />
+      <window_info active="true" anchor="bottom" id="Floobits" order="9" visible="true" weight="0.48866856" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.3286119" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
@@ -399,7 +384,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/ui/src/UIManager.java</url>
-          <line>294</line>
+          <line>305</line>
           <properties />
           <option name="timeStamp" value="61" />
         </line-breakpoint>
@@ -652,7 +637,7 @@
     <entry file="file://$PROJECT_DIR$/ui/src/UIManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="131">
-          <caret line="299" column="38" lean-forward="true" selection-start-line="299" selection-start-column="38" selection-end-line="299" selection-end-column="38" />
+          <caret line="310" column="38" lean-forward="true" selection-start-line="310" selection-start-column="38" selection-end-line="310" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -114,21 +114,32 @@ public class UIManager
                 if(m_Engine.isFileSystemDirty(openChanges))
                 {
                     int userChoiceInt;
-                    System.out.println("Please notice, the WC is dirty. if you will continue all changes will be lost");
-                    System.out.println("Would you like to continue?");
-                    System.out.println("1. Yes");
-                    System.out.println("2. No");
-                    Scanner scanner = new Scanner(System.in);
-                    String userChoice = scanner.nextLine();
-                    userChoiceInt = Integer.parseInt(userChoice);
-                    while(!isUserChoiceInRange(1,2, user))
+                    do
+                    {
+                        System.out.println("Please notice, the WC is dirty. if you will continue all changes will be lost");
+                        System.out.println("Would you like to continue?");
+                        System.out.println("1. Yes");
+                        System.out.println("2. No");
+                        Scanner scanner = new Scanner(System.in);
+                        String userChoice = scanner.nextLine();
+                        userChoiceInt = Integer.parseInt(userChoice);
+                    }while(!isUserChoiceInRange(1,2, userChoiceInt));
+
+                    if(userChoiceInt == 1)
+                    {
+                        m_Engine.changeActiveBranchPointedCommit(commitSHA1);
+                        System.out.println("The active branch is now pointing on commit " + commitSHA1);
+                        m_Engine.checkout(m_Engine.getActiveBranchName());
+                        showDetailsOfCurrentCommit();
+                    }
                 }
                 else
                 {
-
+                    m_Engine.changeActiveBranchPointedCommit(commitSHA1);
+                    System.out.println("The active branch is now pointing on commit " + commitSHA1);
+                    m_Engine.checkout(m_Engine.getActiveBranchName());
+                    showDetailsOfCurrentCommit();
                 }
-                m_Engine.changeActiveBranchPointedCommit(commitSHA1);
-                System.out.println("The active branch is now pointing on commit " + commitSHA1);
             }
             else
             {
