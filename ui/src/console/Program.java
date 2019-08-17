@@ -1,8 +1,7 @@
+package console;
+
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Program
 {

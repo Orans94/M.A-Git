@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.top.TopController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="Start">
+            <items>
+              <MenuItem fx:id="createNewRepository" mnemonicParsing="false" text="Create new repository" />
+                  <MenuItem mnemonicParsing="false" text="Load repository by path" />
+                  <MenuItem mnemonicParsing="false" text="Load repository by XML file" />
+                  <MenuItem mnemonicParsing="false" text="Clone repository" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="View" />
+          <Menu mnemonicParsing="false" text="Commands">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <HBox prefHeight="0.0" prefWidth="904.0">
+         <children>
+            <Button mnemonicParsing="false" text="Refresh" />
+            <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </SplitMenuButton>
+            <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Checkout (Active)">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </SplitMenuButton>
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" text="Push" />
+            <Button mnemonicParsing="false" text="Pull" />
+            <Button mnemonicParsing="false" text="Commit(diff)" />
+            <Button mnemonicParsing="false" text="Show status" />
+            <Button mnemonicParsing="false" text="Create Branch" />
+            <Button mnemonicParsing="false" text="Delete Branch" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

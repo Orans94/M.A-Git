@@ -1,3 +1,5 @@
+package console;
+
 import engine.*;
 import mypackage.MagitRepository;
 import mypackage.MagitSingleFolder;

@@ -34,4 +34,6 @@ public class XMLManager
     public XMLValidator getXMLValidator() { return m_XMLValidator; }
 
     public XMLMagitMaps getXMLMagitMaps() { return m_XMLMagitMaps; }
+
+    public boolean isXMLRepositoryIsEmpty(MagitRepository i_XMLRepo) { return m_XMLValidator.isXMLRepositoryIsEmpty(i_XMLRepo);}
 }
