@@ -4,12 +4,13 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.top.TopController">
+<VBox prefHeight="63.0" prefWidth="1275.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.top.TopController">
    <children>
       <MenuBar>
         <menus>
@@ -21,40 +22,62 @@
                   <MenuItem mnemonicParsing="false" text="Clone repository" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="View" />
+          <Menu mnemonicParsing="false" text="View">
+               <items>
+                  <RadioMenuItem mnemonicParsing="false" selected="true" text="Light theme">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="themes" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem mnemonicParsing="false" text="Dark theme" toggleGroup="$themes" />
+                  <RadioMenuItem mnemonicParsing="false" text="Stadium theme" toggleGroup="$themes" />
+                  <RadioMenuItem mnemonicParsing="false" text="Choose backgroud photo" toggleGroup="$themes" />
+               </items></Menu>
           <Menu mnemonicParsing="false" text="Commands">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" text="Commit" />
+                  <MenuItem mnemonicParsing="false" text="Pull / Fetch" />
+                  <MenuItem mnemonicParsing="false" text="Push" />
+                  <MenuItem mnemonicParsing="false" text="Create new branch" />
+                  <MenuItem mnemonicParsing="false" text="Delete Branch" />
+                  <MenuItem mnemonicParsing="false" text="Checkout" />
+                  <MenuItem mnemonicParsing="false" text="Merge" />
+                  <MenuItem mnemonicParsing="false" text="Reset branch" />
+                  <MenuItem mnemonicParsing="false" text="Show all branches" />
+                  <MenuItem mnemonicParsing="false" text="Show commit history of current branch" />
+                  <MenuItem mnemonicParsing="false" text="Show status" />
+                  <MenuItem mnemonicParsing="false" text="Show details of current commit" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Help">
               <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Contact us" />
+                  <MenuItem mnemonicParsing="false" text="About" />
               </items>
             </Menu>
         </menus>
       </MenuBar>
-      <HBox prefHeight="0.0" prefWidth="904.0">
+      <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" prefWidth="904.0" VBox.vgrow="NEVER">
          <children>
-            <Button mnemonicParsing="false" text="Refresh" />
-            <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath">
+            <Button mnemonicParsing="false" text="Refresh" HBox.hgrow="NEVER" />
+            <SplitMenuButton maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath" HBox.hgrow="ALWAYS">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
               </items>
             </SplitMenuButton>
-            <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Checkout (Active)">
+            <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Checkout (Active)" HBox.hgrow="NEVER">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
               </items>
             </SplitMenuButton>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" text="Push" />
-            <Button mnemonicParsing="false" text="Pull" />
-            <Button mnemonicParsing="false" text="Commit(diff)" />
-            <Button mnemonicParsing="false" text="Show status" />
-            <Button mnemonicParsing="false" text="Create Branch" />
-            <Button mnemonicParsing="false" text="Delete Branch" />
+            <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="116.0" text="Push" HBox.hgrow="NEVER" />
+            <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="104.0" text="Pull" HBox.hgrow="NEVER" />
+            <Button mnemonicParsing="false" text="Commit(diff)" HBox.hgrow="NEVER" />
+            <Button mnemonicParsing="false" text="Show status" HBox.hgrow="NEVER" />
+            <Button mnemonicParsing="false" text="Create Branch" HBox.hgrow="NEVER" />
+            <Button mnemonicParsing="false" text="Delete Branch" HBox.hgrow="NEVER" />
          </children>
       </HBox>
    </children>
