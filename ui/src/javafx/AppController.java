@@ -39,8 +39,8 @@ public class AppController
         }
     }
 
-    public void createNewRepositoryClicked(ActionEvent event) throws IOException
+    public void createNewRepository(ActionEvent actionEvent)
     {
-        m_Engine.createRepository(Paths.get("C:\\Users\\Tomer\\Desktop\\Testing"), "oranthegay");
+
     }
 }

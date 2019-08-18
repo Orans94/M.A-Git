@@ -16,7 +16,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Start">
             <items>
-              <MenuItem fx:id="createNewRepository" mnemonicParsing="false" onAction="#createNewRepositoryClicked" text="Create new repository" />
+              <MenuItem fx:id="createNewRepository" mnemonicParsing="false" onAction="#createNewRepositoryAction" text="Create new repository" />
                   <MenuItem fx:id="loadRepositoryByPath" mnemonicParsing="false" text="Load repository by path" />
                   <MenuItem fx:id="loadRepositoryFromXML" mnemonicParsing="false" text="Load repository by XML file" />
                   <MenuItem fx:id="cloneRepository" mnemonicParsing="false" text="Clone repository" />

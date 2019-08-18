@@ -8,8 +8,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 
-import java.io.IOException;
-
 public class TopController
 {
     private AppController m_MainController;
@@ -45,8 +43,8 @@ public class TopController
         m_MainController = i_MainController;
     }
 
-    public void createNewRepositoryClicked(ActionEvent action) throws IOException
+    public void createNewRepositoryAction(ActionEvent actionEvent)
     {
-        m_MainController.createNewRepositoryClicked(action);
+        m_MainController.createNewRepository(actionEvent);
     }
 }
