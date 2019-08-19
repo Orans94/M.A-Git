@@ -5,13 +5,25 @@ import javafx.bottom.BottomController;
 import javafx.center.CenterController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.left.LeftController;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.top.TopController;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Paths;
+
+import static javafx.CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE;
+import static javafx.CommonResourcesPaths.CREATE_NEW_REPOSITORY_FXML_RESOURCE;
 
 public class AppController
 {
@@ -41,6 +53,5 @@ public class AppController
 
     public void createNewRepository(ActionEvent actionEvent)
     {
-
     }
 }

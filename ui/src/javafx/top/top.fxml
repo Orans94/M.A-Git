@@ -5,6 +5,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
@@ -16,6 +17,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="Start">
             <items>
+                  <MenuItem fx:id="createNewRepository1" mnemonicParsing="false" onAction="#createNewRepositoryAction" text="Update username" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem fx:id="createNewRepository" mnemonicParsing="false" onAction="#createNewRepositoryAction" text="Create new repository" />
                   <MenuItem fx:id="loadRepositoryByPath" mnemonicParsing="false" text="Load repository by path" />
                   <MenuItem fx:id="loadRepositoryFromXML" mnemonicParsing="false" text="Load repository by XML file" />

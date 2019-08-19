@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -31,5 +32,15 @@ public class Main extends Application
         Scene scene = new Scene(root,1800,800 );
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
+        //--------------------------
+     /*   Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText("Look, an Information Dialog");
+        alert.setContentText("I have a great message for you!");
+
+        alert.showAndWait();*/
+        //--------------------------
     }
 }
