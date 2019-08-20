@@ -1,7 +1,6 @@
-package javafx.bottom;
+package javafx.primary.bottom;
 
 import javafx.AppController;
-import javafx.fxml.FXML;
 
 public class BottomController
 {

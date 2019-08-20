@@ -1,8 +1,8 @@
-package javafx.left;
+package javafx.primary.center;
 
 import javafx.AppController;
 
-public class LeftController
+public class CenterController
 {
     private AppController m_MainController;
 

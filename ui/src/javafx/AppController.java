@@ -1,29 +1,15 @@
 package javafx;
 
 import engine.EngineManager;
-import javafx.bottom.BottomController;
-import javafx.center.CenterController;
+import javafx.primary.bottom.BottomController;
+import javafx.primary.center.CenterController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.left.LeftController;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.primary.left.LeftController;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.top.TopController;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Paths;
-
-import static javafx.CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE;
-import static javafx.CommonResourcesPaths.CREATE_NEW_REPOSITORY_FXML_RESOURCE;
+import javafx.primary.top.TopController;
 
 public class AppController
 {
@@ -51,7 +37,19 @@ public class AppController
         }
     }
 
-    public void createNewRepository(ActionEvent actionEvent)
+
+    public void createNewBranch(CheckBox i_CheckoutAfterCreateCheckbox, String i_BranchName)
     {
+        m_Engine.createNewBranch(i_BranchName);
+        if(i_CheckoutAfterCreateCheckbox.isSelected())
+        {
+            m_Engine.setActiveBranchName(i_BranchName);
+        }
     }
+
+    public void commit(String i_Message) { m_Engine.commit(i_Message); }
+
+    public void checkout(String i_BranchName) { m_Engine.checkout(i_BranchName); }
+
+    public void deleteBranch(String i_BranchName) { m_Engine.deleteBranch(i_BranchName); }
 }

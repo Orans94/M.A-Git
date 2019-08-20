@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox alignment="CENTER" fillWidth="false" maxHeight="150.0" maxWidth="500.0" minHeight="150.0" minWidth="500.0" prefHeight="150.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="createNewBranchComponent" alignment="CENTER" fillWidth="false" maxHeight="150.0" maxWidth="500.0" minHeight="150.0" minWidth="500.0" prefHeight="150.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.popup.createnewbranch.CreateNewBranchController">
    <children>
       <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="75.0" maxWidth="500.0" minHeight="75.0" minWidth="500.0" prefHeight="75.0" prefWidth="500.0" VBox.vgrow="NEVER">
          <children>

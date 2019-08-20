@@ -1,11 +1,17 @@
-package javafx.top;
+package javafx.primary.top;
 
 import javafx.AppController;
 import javafx.StageFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.primary.top.popup.checkout.CheckoutController;
+import javafx.primary.top.popup.commit.CommitController;
+import javafx.primary.top.popup.createnewbranch.CreateNewBranchController;
+import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryController;
+import javafx.primary.top.popup.deletebranch.DeleteBranchController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,6 +26,17 @@ public class TopController
 {
     private AppController m_MainController;
 
+    //---------new--------
+    @FXML private CreateNewBranchController createNewBranchComponentController;
+    @FXML private CommitController commitComponentController;
+    @FXML private DeleteBranchController deleteBranchComponentController;
+    @FXML private CheckoutController checkoutComponentController;
+    @FXML private CreateNewRepositoryController createNewRepositoryComponentController;
+
+    //---------new--------
+
+
+    //-------old-----------
     @FXML private MenuItem createNewRepository;
     @FXML private MenuItem loadRepositoryByPath;
     @FXML private MenuItem loadRepositoryFromXML;
@@ -44,12 +61,8 @@ public class TopController
     @FXML private MenuItem contactUs;
     @FXML private MenuItem about;
     @FXML private Button refresh;
-
-    @FXML
-    private TextField directoryTextField;
-
-    @FXML
-    private TextField repositoryNameTextField;
+    @FXML private TextField directoryTextField;
+    @FXML private TextField repositoryNameTextField;
 
 
     public void setMainController(AppController i_MainController)
@@ -93,4 +106,15 @@ public class TopController
         String pathString = filePath != null ? filePath.toString() : "";
         directoryTextField.setText(pathString);
     }
+
+    public void createNewBranch(CheckBox i_CheckoutAfterCreateCheckbox, String i_BranchName)
+    {
+        m_MainController.createNewBranch(i_CheckoutAfterCreateCheckbox, i_BranchName);
+    }
+
+    public void commit(String i_Message) { m_MainController.commit(i_Message); }
+
+    public void checkout(String i_BranchName) { m_MainController.checkout(i_BranchName);}
+
+    public void deleteBranch(String i_BranchName) { m_MainController.deleteBranch(i_BranchName); }
 }
