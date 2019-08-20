@@ -1,8 +1,9 @@
 package javafx.primary.top;
 
 import javafx.AppController;
+import javafx.ComponentControllerConnector;
 import javafx.event.ActionEvent;
-import javafx.factories.StageFactory;
+import javafx.StageUtilities;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.primary.top.popup.checkout.CheckoutController;
@@ -10,14 +11,14 @@ import javafx.primary.top.popup.commit.CommitController;
 import javafx.primary.top.popup.createnewbranch.CreateNewBranchController;
 import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryController;
 import javafx.primary.top.popup.deletebranch.DeleteBranchController;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Path;
 
 import static javafx.CommonResourcesPaths.*;
@@ -28,9 +29,13 @@ public class TopController
 
     // ------ CONTROLLERS AND COMPONENTS ------
 
+    @FXML private VBox m_CreateNewBranchComponent;
     @FXML private CreateNewBranchController m_CreateNewBranchComponentController;
+    @FXML private VBox m_DeleteBranchComponent;
     @FXML private DeleteBranchController m_DeleteBranchComponentController;
+    @FXML private VBox m_CheckoutComponent;
     @FXML private CheckoutController m_CheckoutComponentController;
+    @FXML private VBox m_CommitComponent;
     @FXML private CommitController m_CommitComponentController;
     @FXML private VBox m_CreateNewRepositoryComponent;
     @FXML private CreateNewRepositoryController m_CreateNewRepositoryComponentController;
@@ -74,46 +79,35 @@ public class TopController
     @FXML
     public void initialize() throws IOException
     {
-        // create new repo
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        URL url = getClass().getResource(CREATE_NEW_REPOSITORY_FXML_RESOURCE);
-        fxmlLoader.setLocation(url);
-        VBox createNewRepositoryComponent = fxmlLoader.load(url.openStream());
-        CreateNewRepositoryController createNewRepositoryController = fxmlLoader.getController();
+        ComponentControllerConnector connector = new ComponentControllerConnector();
 
-
-        // create new branch
-        fxmlLoader = new FXMLLoader();
-        url = getClass().getResource(CREATE_NEW_BRANCH_FXML_RESOURCE);
-        fxmlLoader.setLocation(url);
-        VBox createNewBranchComponent = fxmlLoader.load(url.openStream());
-        CreateNewRepositoryController createNewBranchController = fxmlLoader.getController();
-
-        // commit
-        fxmlLoader = new FXMLLoader();
-        url = getClass().getResource(COMMIT_FXML_RESOURCE);
-        fxmlLoader.setLocation(url);
-        VBox commitComponent = fxmlLoader.load(url.openStream());
-        CommitController commitController = fxmlLoader.getController();
-
-        // checkout
-        fxmlLoader = new FXMLLoader();
-        url = getClass().getResource(CHECKOUT_FXML_RESOURCE);
-        fxmlLoader.setLocation(url);
-        VBox checkoutComponent = fxmlLoader.load(url.openStream());
-        CheckoutController checkoutController = fxmlLoader.getController();
-
-
-
-        m_CreateNewRepositoryComponent = createNewRepositoryComponent;
-
-        m_CreateNewRepositoryComponentController = createNewRepositoryController;
-
+        // connect controllers and components
+        FXMLLoader fxmlLoader = connector.getFXMLLoader(CREATE_NEW_REPOSITORY_FXML_RESOURCE);
+        m_CreateNewRepositoryComponent = fxmlLoader.getRoot();
+        m_CreateNewRepositoryComponentController = fxmlLoader.getController();
         m_CreateNewRepositoryComponentController.setTopController(this);
-        /*m_CreateNewBranchComponentController.setTopController(this);
+
+        fxmlLoader = connector.getFXMLLoader(CHECKOUT_FXML_RESOURCE);
+        m_CheckoutComponent = fxmlLoader.getRoot();
+        m_CheckoutComponentController = fxmlLoader.getController();
+        m_CheckoutComponentController.setTopController(this);
+
+        fxmlLoader = connector.getFXMLLoader(COMMIT_FXML_RESOURCE);
+        m_CommitComponent = fxmlLoader.getRoot();
+        m_CommitComponentController = fxmlLoader.getController();
         m_CommitComponentController.setTopController(this);
+
+        fxmlLoader = connector.getFXMLLoader(CREATE_NEW_BRANCH_FXML_RESOURCE);
+        m_CreateNewBranchComponent = fxmlLoader.getRoot();
+        m_CreateNewBranchComponentController = fxmlLoader.getController();
+        m_CreateNewBranchComponentController.setTopController(this);
+
+        fxmlLoader = connector.getFXMLLoader(DELETE_BRANCH_FXML_RESOURCE);
+        m_DeleteBranchComponent = fxmlLoader.getRoot();
+        m_DeleteBranchComponentController = fxmlLoader.getController();
         m_DeleteBranchComponentController.setTopController(this);
-        m_CheckoutComponentController.setTopController(this);*/
+
+
     }
 
     public void setMainController(AppController i_MainController)
@@ -123,8 +117,7 @@ public class TopController
 
     public void createNewRepositoryButtonAction(ActionEvent actionEvent)
     {
-        StageFactory stageFactory = new StageFactory();
-        Stage stage = stageFactory.createPopupStage("Create new repository", m_CreateNewRepositoryComponent, Modality.APPLICATION_MODAL);
+        Stage stage = StageUtilities.createPopupStage("Create new repository", m_CreateNewRepositoryComponent, Modality.APPLICATION_MODAL);
         stage.showAndWait();
     }
 

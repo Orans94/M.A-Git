@@ -1,20 +1,21 @@
 package javafx.primary.top.popup.createnewrepository;
 
+import javafx.StageUtilities;
 import javafx.event.ActionEvent;
-import javafx.factories.AlertFactory;
+import javafx.AlertFactory;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 public class CreateNewRepositoryController
 {
@@ -76,8 +77,10 @@ public class CreateNewRepositoryController
             // user didn't enter path or name
             errorAlertUserInputIsMissing();
         }
-    }
 
+        // close the dialog.
+        StageUtilities.closeOpenSceneByActionEvent(event);
+    }
 
     private void errorAlertUserInputIsMissing()
     {
@@ -94,7 +97,7 @@ public class CreateNewRepositoryController
 
         // ask user if he want to stash the existing repository
         Alert alert = alertFactory.createYesNoAlert("Create new repository", "Would you like to stash the existing repository?");
-        boolean isUserWantToStash = alert.showAndWait().get() == ButtonType.YES;
+        boolean isUserWantToStash = alert.showAndWait().get().getText().equals("Yes");
 
         if (isUserWantToStash)
         {
