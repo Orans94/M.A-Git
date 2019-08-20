@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
 public class CommitController
 {
     @FXML private TextField commitMessageTextField;
@@ -16,5 +18,6 @@ public class CommitController
 
     public void setTopController(TopController i_TopController){ m_TopController = i_TopController;}
 
-    @FXML void commitAction(ActionEvent event) { m_TopController.commit(commitMessageTextField.getText()); }
+    @FXML void commitAction(ActionEvent event) throws IOException
+    { m_TopController.commit(commitMessageTextField.getText()); }
 }

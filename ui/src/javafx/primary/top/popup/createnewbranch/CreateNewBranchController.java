@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
 public class CreateNewBranchController
 {
     @FXML private TopController m_TopController;
@@ -16,5 +18,6 @@ public class CreateNewBranchController
 
     public void setTopController(TopController i_TopController){ m_TopController = i_TopController;}
 
-    @FXML void createNewBranchAction(ActionEvent event) { m_TopController.createNewBranch(checkoutAfterCreateCheckbox, branchNameTextField.getText()); }
+    @FXML void createNewBranchAction(ActionEvent event) throws IOException
+    { m_TopController.createNewBranch(checkoutAfterCreateCheckbox, branchNameTextField.getText()); }
 }

@@ -18,12 +18,12 @@
                </HBox.margin>
             </Label>
             <Region prefHeight="54.0" prefWidth="51.0" />
-            <TextField fx:id="directoryTextField" alignment="TOP_LEFT" prefHeight="31.0" prefWidth="477.0">
+            <TextField fx:id="directoryTextField" alignment="TOP_LEFT" editable="false" prefHeight="31.0" prefWidth="477.0">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>
             </TextField>
-            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#createNewRepositoryBrowseButtonAction" prefHeight="9.0" prefWidth="110.0" text="Browse">
+            <Button fx:id="browseButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#browseButtonAction" prefHeight="9.0" prefWidth="110.0" text="Browse">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>
@@ -50,7 +50,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>
             </Region>
-            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="9.0" prefWidth="110.0" text="Create">
+            <Button fx:id="createButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#createButtonAction" prefHeight="9.0" prefWidth="110.0" text="Create">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>

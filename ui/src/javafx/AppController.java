@@ -11,8 +11,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.primary.top.TopController;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 public class AppController
 {
+    // ------ CONTROLLERS AND COMPONENTS ------
+
     @FXML private VBox m_TopComponent;
     @FXML private TopController m_TopComponentController;
     @FXML private VBox m_LeftComponent;
@@ -21,6 +26,8 @@ public class AppController
     @FXML private CenterController m_CenterComponentController;
     @FXML private BorderPane m_BottomComponent;
     @FXML private BottomController m_BottomComponentController;
+
+    // ------ CONTROLLERS AND COMPONENTS ------
 
     private EngineManager m_Engine = new EngineManager();
 
@@ -38,7 +45,7 @@ public class AppController
     }
 
 
-    public void createNewBranch(CheckBox i_CheckoutAfterCreateCheckbox, String i_BranchName)
+    public void createNewBranch(CheckBox i_CheckoutAfterCreateCheckbox, String i_BranchName) throws IOException
     {
         m_Engine.createNewBranch(i_BranchName);
         if(i_CheckoutAfterCreateCheckbox.isSelected())
@@ -47,9 +54,24 @@ public class AppController
         }
     }
 
-    public void commit(String i_Message) { m_Engine.commit(i_Message); }
+    public void commit(String i_Message) throws IOException { m_Engine.commit(i_Message); }
 
-    public void checkout(String i_BranchName) { m_Engine.checkout(i_BranchName); }
+    public void checkout(String i_BranchName) throws IOException { m_Engine.checkout(i_BranchName); }
 
-    public void deleteBranch(String i_BranchName) { m_Engine.deleteBranch(i_BranchName); }
+    public void deleteBranch(String i_BranchName) throws IOException { m_Engine.deleteBranch(i_BranchName); }
+
+    public boolean isRepository(Path i_UserInputPath)
+    {
+        return m_Engine.isRepository(i_UserInputPath);
+    }
+
+    public void stashRepository(Path i_UserInputPath) throws IOException
+    {
+        m_Engine.stashRepository(i_UserInputPath);
+    }
+
+    public void createNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException
+    {
+        m_Engine.createRepository(i_UserInputPath, i_UserInputRepoName);
+    }
 }

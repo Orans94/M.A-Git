@@ -6,6 +6,8 @@ import javafx.primary.top.TopController;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitMenuButton;
 
+import java.io.IOException;
+
 public class DeleteBranchController
 {
     @FXML private TopController m_TopController;
@@ -14,5 +16,6 @@ public class DeleteBranchController
 
     public void setTopController(TopController i_TopController){ m_TopController = i_TopController;}
 
-    @FXML void deleteBranch(ActionEvent event) { m_TopController.deleteBranch(branchNameSplitMenuButton.getText());}
+    @FXML void deleteBranch(ActionEvent event) throws IOException
+    { m_TopController.deleteBranch(branchNameSplitMenuButton.getText());}
 }
