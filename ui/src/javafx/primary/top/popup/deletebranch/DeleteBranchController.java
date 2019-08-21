@@ -1,5 +1,6 @@
 package javafx.primary.top.popup.deletebranch;
 
+import javafx.AlertFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
@@ -14,8 +15,11 @@ public class DeleteBranchController
     @FXML private SplitMenuButton branchNameSplitMenuButton;
     @FXML private Button deleteBranchButton;
 
-    public void setTopController(TopController i_TopController){ m_TopController = i_TopController;}
+    @FXML
+    void deleteBranchAction(ActionEvent event)
+    {
 
-    @FXML void deleteBranch(ActionEvent event) throws IOException
-    { m_TopController.deleteBranch(branchNameSplitMenuButton.getText());}
+    }
+
+    public void setTopController(TopController i_TopController){ m_TopController = i_TopController;}
 }

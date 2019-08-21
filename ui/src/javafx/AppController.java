@@ -1,12 +1,11 @@
 package javafx;
 
 import engine.EngineManager;
+import engine.OpenChanges;
 import javafx.primary.bottom.BottomController;
 import javafx.primary.center.CenterController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.left.LeftController;
-import javafx.scene.control.CheckBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.primary.top.TopController;
@@ -45,16 +44,9 @@ public class AppController
     }
 
 
-    public void createNewBranch(CheckBox i_CheckoutAfterCreateCheckbox, String i_BranchName) throws IOException
-    {
-        m_Engine.createNewBranch(i_BranchName);
-        if(i_CheckoutAfterCreateCheckbox.isSelected())
-        {
-            m_Engine.setActiveBranchName(i_BranchName);
-        }
-    }
+    public void createNewBranch(String i_BranchName) throws IOException { m_Engine.createNewBranch(i_BranchName); }
 
-    public void commit(String i_Message) throws IOException { m_Engine.commit(i_Message); }
+    public boolean commit(String i_Message) throws IOException { return m_Engine.commit(i_Message); }
 
     public void checkout(String i_BranchName) throws IOException { m_Engine.checkout(i_BranchName); }
 
@@ -65,13 +57,24 @@ public class AppController
         return m_Engine.isRepository(i_UserInputPath);
     }
 
-    public void stashRepository(Path i_UserInputPath) throws IOException
-    {
-        m_Engine.stashRepository(i_UserInputPath);
-    }
+    public void stashRepository(Path i_UserInputPath) throws IOException { m_Engine.stashRepository(i_UserInputPath); }
 
-    public void createNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException
+    public void createNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException { m_Engine.createRepository(i_UserInputPath, i_UserInputRepoName); }
+
+    public boolean isRootFolderEmpty() throws IOException { return m_Engine.isRootFolderEmpty(); }
+
+    public boolean isRepositoryNull() { return m_Engine.isRepositoryNull(); }
+
+    public boolean isBranchExists(String i_BranchName) { return m_Engine.isBranchExists(i_BranchName); }
+
+    public boolean isBranchNameEqualsHead(String i_BranchName) { return m_Engine.isBranchNameEqualsHead(i_BranchName); }
+
+    public OpenChanges getFileSystemStatus() throws IOException { return m_Engine.getFileSystemStatus(); }
+
+    public boolean isFileSystemDirty(OpenChanges i_OpenChanges) { return m_Engine.isFileSystemDirty(i_OpenChanges); }
+
+    public void setActiveBranchName(String i_BranchName) throws IOException
     {
-        m_Engine.createRepository(i_UserInputPath, i_UserInputRepoName);
+        m_Engine.setActiveBranchName(i_BranchName);
     }
 }

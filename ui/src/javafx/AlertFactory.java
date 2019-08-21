@@ -6,7 +6,7 @@ import javafx.scene.control.ButtonType;
 
 public class AlertFactory
 {
-    public Alert createYesNoAlert(String i_Title, String i_Content)
+    public static Alert createYesNoAlert(String i_Title, String i_Content)
     {
         Alert yesNoAlert = new Alert(Alert.AlertType.CONFIRMATION);
         yesNoAlert.setTitle(i_Title);
@@ -18,7 +18,7 @@ public class AlertFactory
         return yesNoAlert;
     }
 
-    public Alert createErrorAlert(String i_Title, String i_Content)
+    public static Alert createErrorAlert(String i_Title, String i_Content)
     {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setTitle(i_Title);
@@ -27,7 +27,7 @@ public class AlertFactory
         return errorAlert;
     }
 
-    public Alert createInformationAlert(String i_Title, String i_Content)
+    public static Alert createInformationAlert(String i_Title, String i_Content)
     {
         Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
         informationAlert.setTitle(i_Title);

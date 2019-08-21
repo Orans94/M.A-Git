@@ -84,19 +84,14 @@ public class CreateNewRepositoryController
 
     private void errorAlertUserInputIsMissing()
     {
-        AlertFactory alertFactory = new AlertFactory();
-
-        alertFactory.createErrorAlert("Create new repository" , "Directory path or repository name are missing")
+        AlertFactory.createErrorAlert("Create new repository" , "Directory path or repository name are missing")
                 .showAndWait();
     }
 
     private void handleStashAndCreateNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException
     {
-        AlertFactory alertFactory = new AlertFactory();
-
-
         // ask user if he want to stash the existing repository
-        Alert alert = alertFactory.createYesNoAlert("Create new repository", "Would you like to stash the existing repository?");
+        Alert alert = AlertFactory.createYesNoAlert("Create new repository", "Would you like to stash the existing repository?");
         boolean isUserWantToStash = alert.showAndWait().get().getText().equals("Yes");
 
         if (isUserWantToStash)
@@ -108,11 +103,9 @@ public class CreateNewRepositoryController
 
     private void createNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException
     {
-        AlertFactory alertFactory = new AlertFactory();
-
         // ask user if he want to stash the existing repository
-        Alert alert = alertFactory.createInformationAlert("Create new repository", "A new repository has been initialized!");
-        alert.showAndWait();
+        AlertFactory.createInformationAlert("Create new repository", "A new repository has been initialized!")
+                .showAndWait();
         m_TopController.createNewRepository(i_UserInputPath, i_UserInputRepoName);
     }
 

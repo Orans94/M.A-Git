@@ -1,5 +1,6 @@
 package javafx.primary.top;
 
+import engine.OpenChanges;
 import javafx.AppController;
 import javafx.ComponentControllerConnector;
 import javafx.event.ActionEvent;
@@ -43,8 +44,6 @@ public class TopController
     // ------ CONTROLLERS AND COMPONENTS ------
 
 
-
-    //-------old-----------
     @FXML private MenuItem createNewRepositoryMenuItem;
     @FXML private MenuItem loadRepositoryByPathMenuItem;
     @FXML private MenuItem loadRepositoryFromXMLMenuItem;
@@ -115,19 +114,33 @@ public class TopController
         m_MainController = i_MainController;
     }
 
+    @FXML
     public void createNewRepositoryButtonAction(ActionEvent actionEvent)
     {
         Stage stage = StageUtilities.createPopupStage("Create new repository", m_CreateNewRepositoryComponent, Modality.APPLICATION_MODAL);
         stage.showAndWait();
     }
 
-    public void createNewBranch(CheckBox i_CheckoutAfterCreateCheckbox, String i_BranchName) throws IOException
+    @FXML
+    void createBranchAction(ActionEvent event)
     {
-        m_MainController.createNewBranch(i_CheckoutAfterCreateCheckbox, i_BranchName);
+        StageUtilities.createPopupStage("Create new branch", m_CreateNewBranchComponent, Modality.APPLICATION_MODAL)
+                .showAndWait();
     }
 
-    public void commit(String i_Message) throws IOException
-    { m_MainController.commit(i_Message); }
+    @FXML
+    private void commitAction(ActionEvent event)
+    {
+        StageUtilities.createPopupStage("Commit", m_CommitComponent, Modality.APPLICATION_MODAL).showAndWait();
+    }
+
+    public void createNewBranch(String i_BranchName) throws IOException
+    {
+        m_MainController.createNewBranch(i_BranchName);
+    }
+
+    public boolean commit(String i_Message) throws IOException
+    { return m_MainController.commit(i_Message); }
 
     public void checkout(String i_BranchName) throws IOException
     { m_MainController.checkout(i_BranchName);}
@@ -148,5 +161,40 @@ public class TopController
     public void createNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException
     {
         m_MainController.createNewRepository(i_UserInputPath, i_UserInputRepoName);
+    }
+
+    public boolean isRootFolderEmpty() throws IOException
+    {
+        return m_MainController.isRootFolderEmpty();
+    }
+
+    public boolean isRepositoryNull()
+    {
+        return m_MainController.isRepositoryNull();
+    }
+
+    public boolean isBranchExists(String i_BranchName)
+    {
+        return m_MainController.isBranchExists(i_BranchName);
+    }
+
+    public boolean isBranchNameEqualsHead(String i_BranchName)
+    {
+        return m_MainController.isBranchNameEqualsHead(i_BranchName);
+    }
+
+    public OpenChanges getFileSystemStatus() throws IOException
+    {
+        return m_MainController.getFileSystemStatus();
+    }
+
+    public boolean isFileSystemDirty(OpenChanges i_OpenChanges)
+    {
+        return m_MainController.isFileSystemDirty(i_OpenChanges);
+    }
+
+    public void setActiveBranchName(String i_BranchName) throws IOException
+    {
+        m_MainController.setActiveBranchName(i_BranchName);
     }
 }

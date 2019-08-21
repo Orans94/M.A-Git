@@ -30,12 +30,7 @@
       </HBox>
       <HBox maxHeight="75.0" maxWidth="500.0" minHeight="75.0" minWidth="500.0" prefHeight="75.0" prefWidth="500.0">
          <children>
-            <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="38.0" prefWidth="80.0" text="Cancel">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />
-               </HBox.margin>
-            </Button>
-            <Region prefHeight="75.0" prefWidth="272.0" />
+            <Region prefHeight="75.0" prefWidth="368.0" />
             <Button fx:id="commitButton" mnemonicParsing="false" onAction="#commitAction" prefHeight="36.0" prefWidth="77.0" text="Commit">
                <HBox.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />
