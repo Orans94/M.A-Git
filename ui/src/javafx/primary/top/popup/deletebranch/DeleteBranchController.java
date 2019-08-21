@@ -15,11 +15,11 @@ public class DeleteBranchController
     @FXML private SplitMenuButton branchNameSplitMenuButton;
     @FXML private Button deleteBranchButton;
 
-    @FXML
+   /* @FXML
     void deleteBranchAction(ActionEvent event)
     {
 
-    }
+    }*/
 
     public void setTopController(TopController i_TopController){ m_TopController = i_TopController;}
 }

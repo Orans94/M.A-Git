@@ -28,7 +28,7 @@
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <Region prefHeight="78.0" prefWidth="350.0" />
-            <Button fx:id="deleteBranchButton" mnemonicParsing="false" onAction="#deleteBranchAction" prefHeight="42.0" prefWidth="98.0" text="Delete branch">
+            <Button fx:id="deleteBranchButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="98.0" text="Delete branch">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>

@@ -118,20 +118,25 @@ public class TopController
     public void createNewRepositoryButtonAction(ActionEvent actionEvent)
     {
         Stage stage = StageUtilities.createPopupStage("Create new repository", m_CreateNewRepositoryComponent, Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
         stage.showAndWait();
     }
 
     @FXML
     void createBranchAction(ActionEvent event)
     {
-        StageUtilities.createPopupStage("Create new branch", m_CreateNewBranchComponent, Modality.APPLICATION_MODAL)
-                .showAndWait();
+        Stage stage = StageUtilities.createPopupStage("Create new branch", m_CreateNewBranchComponent, Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.showAndWait();
+
     }
 
     @FXML
     private void commitAction(ActionEvent event)
     {
-        StageUtilities.createPopupStage("Commit", m_CommitComponent, Modality.APPLICATION_MODAL).showAndWait();
+        Stage stage = StageUtilities.createPopupStage("Commit", m_CommitComponent, Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.showAndWait();
     }
 
     public void createNewBranch(String i_BranchName) throws IOException
