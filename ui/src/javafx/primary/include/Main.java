@@ -25,6 +25,8 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        primaryStage.setTitle("M.A Git");
+
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL url = getClass().getResource(APP_FXML_INCLUDE_RESOURCE);
         fxmlLoader.setLocation(url);

@@ -21,7 +21,7 @@
                                 <ImageView pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER" />
                             </children>
                         </HBox>
-                        <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="commitsTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="230.0" sortable="false" text="Message" />
                                 <TableColumn editable="false" minWidth="100.0" prefWidth="100.0" resizable="false" sortable="false" text="Author" />
