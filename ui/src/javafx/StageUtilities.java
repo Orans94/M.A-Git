@@ -3,20 +3,15 @@ package javafx;
 import javafx.fxml.FXMLLoader;
 import javafx.primary.top.TopController;
 import javafx.primary.top.popup.PopupController;
-import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryController;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.lang.reflect.Method;
-
-import static javafx.CommonResourcesPaths.CREATE_NEW_REPOSITORY_FXML_RESOURCE;
 
 public class StageUtilities
 {
@@ -35,24 +30,36 @@ public class StageUtilities
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
 
-        // wire up the new scene's controller to topController
+        // wiring up the new scene's controller to topController
         PopupController popupController = fxmlLoader.getController();
         popupController.setTopController(i_ControllerToWire);
-        i_ControllerToWire.setCreateNewRepositoryComponent(root);
-        i_ControllerToWire.setCreateNewRepositoryComponentController(popupController);
 
-        String setMethodname = popupController.getClass().getSimpleName();
-        setMethodname = setMethodname.substring(0,setMethodname.length()-10);
-        setMethodname = "set" + setMethodname + "ComponentController";
-        Method setMethodToInvoke;
+        // wiring up top controller to new popupcontroller and it component
+        // ---------------------- ASSUMPTIONS ----------------------
+        // * component name of component in topController it "xComponent"
+        // * controller name of controller in topController it "xController"
+        // * this operation using setter methods
+        // ------------------- END OF ASSUMPTIONS ------------------
 
- /*       try
+        String setMethodsName = popupController.getClass().getSimpleName();
+        setMethodsName = setMethodsName.substring(0, setMethodsName.length()-10);
+        String setComponentMethodName = "set" + setMethodsName + "Component";
+        String setControllerMethodName = "set" + setMethodsName + "ComponentController";
+
+        try
         {
-            setMethodToInvoke = i_ControllerToWire.getClass().getMethod(methodName, param1.class, param2.class, ..);
-        } catch (SecurityException e) { ... }
-        catch (NoSuchMethodException e) { ... }
+            // getting set methods of topController using reflection
+            Method setComponentMethod = i_ControllerToWire.getClass().getMethod(setComponentMethodName, Parent.class);
+            Method setControllerMethod = i_ControllerToWire.getClass().getMethod(setControllerMethodName, PopupController.class);
 
-*/
+            // invoke setters methods
+            setComponentMethod.invoke(root, root);
+            setControllerMethod.invoke(popupController,popupController);
+        } catch (Exception ex)
+        {
+            // TODO handle exception
+        }
+
         return stage;
     }
 

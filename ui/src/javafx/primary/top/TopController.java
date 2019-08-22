@@ -31,7 +31,6 @@ public class TopController
 
     // ------ CONTROLLERS AND COMPONENTS ------
 
-
     @FXML private VBox m_CreateNewBranchComponent;
     @FXML private CreateNewBranchController m_CreateNewBranchComponentController;
     @FXML private VBox m_DeleteBranchComponent;
@@ -43,54 +42,6 @@ public class TopController
     @FXML private VBox m_CreateNewRepositoryComponent;
     @FXML private CreateNewRepositoryController m_CreateNewRepositoryComponentController;
 
-    public void setCreateNewRepositoryComponent(Parent i_CreateNewRepositoryComponent)
-    {
-        this.m_CreateNewRepositoryComponent = (VBox)i_CreateNewRepositoryComponent;
-    }
-
-    public void setCreateNewRepositoryComponentController(PopupController i_CreateNewRepositoryComponentController)
-    {
-        this.m_CreateNewRepositoryComponentController = (CreateNewRepositoryController)i_CreateNewRepositoryComponentController;
-    }
-    public void setCreateNewBranchComponent(Parent i_CreateNewBranchComponent)
-    {
-        this.m_CreateNewBranchComponent = (VBox) i_CreateNewBranchComponent;
-    }
-
-    public void setCreateNewBranchComponentController(PopupController i_CreateNewBranchComponentController)
-    {
-        this.m_CreateNewBranchComponentController = (CreateNewBranchController) i_CreateNewBranchComponentController;
-    }
-
-    public void setDeleteBranchComponent(Parent i_DeleteBranchComponent)
-    {
-        this.m_DeleteBranchComponent = (VBox) i_DeleteBranchComponent;
-    }
-
-    public void setDeleteBranchComponentController(PopupController i_DeleteBranchComponentController)
-    {
-        this.m_DeleteBranchComponentController = (DeleteBranchController) i_DeleteBranchComponentController;
-    }
-
-    public void setCheckoutComponent(Parent i_CheckoutComponent)
-    {
-        this.m_CheckoutComponent = (VBox) i_CheckoutComponent;
-    }
-
-    public void setCheckoutComponentController(PopupController i_CheckoutComponentController)
-    {
-        this.m_CheckoutComponentController = (CheckoutController) i_CheckoutComponentController;
-    }
-
-    public void setCommitComponent(Parent i_CommitComponent)
-    {
-        this.m_CommitComponent = (VBox) i_CommitComponent;
-    }
-
-    public void setCommitComponentController(PopupController i_CommitComponentController)
-    {
-        this.m_CommitComponentController = (CommitController) i_CommitComponentController;
-    }
     // ------ CONTROLLERS AND COMPONENTS ------
 
     @FXML private MenuItem createNewRepositoryMenuItem;
@@ -157,7 +108,54 @@ public class TopController
 
 
     }
+    public void setCreateNewRepositoryComponent(Parent i_CreateNewRepositoryComponent)
+    {
+        this.m_CreateNewRepositoryComponent = (VBox)i_CreateNewRepositoryComponent;
+    }
 
+    public void setCreateNewRepositoryComponentController(PopupController i_CreateNewRepositoryComponentController)
+    {
+        this.m_CreateNewRepositoryComponentController = (CreateNewRepositoryController)i_CreateNewRepositoryComponentController;
+    }
+    public void setCreateNewBranchComponent(Parent i_CreateNewBranchComponent)
+    {
+        this.m_CreateNewBranchComponent = (VBox) i_CreateNewBranchComponent;
+    }
+
+    public void setCreateNewBranchComponentController(PopupController i_CreateNewBranchComponentController)
+    {
+        this.m_CreateNewBranchComponentController = (CreateNewBranchController) i_CreateNewBranchComponentController;
+    }
+
+    public void setDeleteBranchComponent(Parent i_DeleteBranchComponent)
+    {
+        this.m_DeleteBranchComponent = (VBox) i_DeleteBranchComponent;
+    }
+
+    public void setDeleteBranchComponentController(PopupController i_DeleteBranchComponentController)
+    {
+        this.m_DeleteBranchComponentController = (DeleteBranchController) i_DeleteBranchComponentController;
+    }
+
+    public void setCheckoutComponent(Parent i_CheckoutComponent)
+    {
+        this.m_CheckoutComponent = (VBox) i_CheckoutComponent;
+    }
+
+    public void setCheckoutComponentController(PopupController i_CheckoutComponentController)
+    {
+        this.m_CheckoutComponentController = (CheckoutController) i_CheckoutComponentController;
+    }
+
+    public void setCommitComponent(Parent i_CommitComponent)
+    {
+        this.m_CommitComponent = (VBox) i_CommitComponent;
+    }
+
+    public void setCommitComponentController(PopupController i_CommitComponentController)
+    {
+        this.m_CommitComponentController = (CommitController) i_CommitComponentController;
+    }
 
     public void setMainController(AppController i_MainController)
     {

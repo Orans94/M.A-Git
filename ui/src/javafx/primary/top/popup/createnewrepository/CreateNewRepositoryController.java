@@ -72,15 +72,15 @@ public class CreateNewRepositoryController implements PopupController
                 // the path isn't repository, init this path and inform user
                 createNewRepository(userInputPath, userInputRepoName);
             }
+
+            // close the dialog.
+            StageUtilities.closeOpenSceneByActionEvent(event);
         }
         else
         {
             // user didn't enter path or name
             errorAlertUserInputIsMissing();
         }
-
-        // close the dialog.
-        StageUtilities.closeOpenSceneByActionEvent(event);
     }
 
     private void errorAlertUserInputIsMissing()
