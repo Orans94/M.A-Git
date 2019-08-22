@@ -4,12 +4,13 @@ import javafx.AlertFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
+import javafx.primary.top.popup.PopupController;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitMenuButton;
 
 import java.io.IOException;
 
-public class DeleteBranchController
+public class DeleteBranchController implements PopupController
 {
     @FXML private TopController m_TopController;
     @FXML private SplitMenuButton branchNameSplitMenuButton;

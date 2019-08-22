@@ -5,13 +5,14 @@ import javafx.AlertFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
+import javafx.primary.top.popup.PopupController;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class CreateNewBranchController
+public class CreateNewBranchController implements PopupController
 {
     @FXML private TopController m_TopController;
     @FXML private CheckBox checkoutAfterCreateCheckbox;

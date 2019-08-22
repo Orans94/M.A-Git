@@ -3,12 +3,13 @@ package javafx.primary.top.popup.checkout;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
+import javafx.primary.top.popup.PopupController;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitMenuButton;
 
 import java.io.IOException;
 
-public class CheckoutController
+public class CheckoutController implements PopupController
 {
     @FXML private SplitMenuButton branchNamesSplitMenuButton;
     @FXML private Button checkoutButton;

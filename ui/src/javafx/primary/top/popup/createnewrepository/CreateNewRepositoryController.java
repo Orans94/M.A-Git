@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.AlertFactory;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
+import javafx.primary.top.popup.PopupController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class CreateNewRepositoryController
+public class CreateNewRepositoryController implements PopupController
 {
     @FXML private TopController m_TopController;
     @FXML private VBox createNewRepositoryComponent;

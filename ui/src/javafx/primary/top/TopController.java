@@ -7,16 +7,17 @@ import javafx.event.ActionEvent;
 import javafx.StageUtilities;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.primary.top.popup.PopupController;
 import javafx.primary.top.popup.checkout.CheckoutController;
 import javafx.primary.top.popup.commit.CommitController;
 import javafx.primary.top.popup.createnewbranch.CreateNewBranchController;
 import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryController;
 import javafx.primary.top.popup.deletebranch.DeleteBranchController;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class TopController
 
     // ------ CONTROLLERS AND COMPONENTS ------
 
+
     @FXML private VBox m_CreateNewBranchComponent;
     @FXML private CreateNewBranchController m_CreateNewBranchComponentController;
     @FXML private VBox m_DeleteBranchComponent;
@@ -41,8 +43,55 @@ public class TopController
     @FXML private VBox m_CreateNewRepositoryComponent;
     @FXML private CreateNewRepositoryController m_CreateNewRepositoryComponentController;
 
-    // ------ CONTROLLERS AND COMPONENTS ------
+    public void setCreateNewRepositoryComponent(Parent i_CreateNewRepositoryComponent)
+    {
+        this.m_CreateNewRepositoryComponent = (VBox)i_CreateNewRepositoryComponent;
+    }
 
+    public void setCreateNewRepositoryComponentController(PopupController i_CreateNewRepositoryComponentController)
+    {
+        this.m_CreateNewRepositoryComponentController = (CreateNewRepositoryController)i_CreateNewRepositoryComponentController;
+    }
+    public void setCreateNewBranchComponent(Parent i_CreateNewBranchComponent)
+    {
+        this.m_CreateNewBranchComponent = (VBox) i_CreateNewBranchComponent;
+    }
+
+    public void setCreateNewBranchComponentController(PopupController i_CreateNewBranchComponentController)
+    {
+        this.m_CreateNewBranchComponentController = (CreateNewBranchController) i_CreateNewBranchComponentController;
+    }
+
+    public void setDeleteBranchComponent(Parent i_DeleteBranchComponent)
+    {
+        this.m_DeleteBranchComponent = (VBox) i_DeleteBranchComponent;
+    }
+
+    public void setDeleteBranchComponentController(PopupController i_DeleteBranchComponentController)
+    {
+        this.m_DeleteBranchComponentController = (DeleteBranchController) i_DeleteBranchComponentController;
+    }
+
+    public void setCheckoutComponent(Parent i_CheckoutComponent)
+    {
+        this.m_CheckoutComponent = (VBox) i_CheckoutComponent;
+    }
+
+    public void setCheckoutComponentController(PopupController i_CheckoutComponentController)
+    {
+        this.m_CheckoutComponentController = (CheckoutController) i_CheckoutComponentController;
+    }
+
+    public void setCommitComponent(Parent i_CommitComponent)
+    {
+        this.m_CommitComponent = (VBox) i_CommitComponent;
+    }
+
+    public void setCommitComponentController(PopupController i_CommitComponentController)
+    {
+        this.m_CommitComponentController = (CommitController) i_CommitComponentController;
+    }
+    // ------ CONTROLLERS AND COMPONENTS ------
 
     @FXML private MenuItem createNewRepositoryMenuItem;
     @FXML private MenuItem loadRepositoryByPathMenuItem;
@@ -109,32 +158,33 @@ public class TopController
 
     }
 
+
     public void setMainController(AppController i_MainController)
     {
         m_MainController = i_MainController;
     }
 
     @FXML
-    public void createNewRepositoryButtonAction(ActionEvent actionEvent)
+    public void createNewRepositoryButtonAction(ActionEvent actionEvent) throws IOException
     {
-        Stage stage = StageUtilities.createPopupStage("Create new repository", m_CreateNewRepositoryComponent, Modality.APPLICATION_MODAL);
+        Stage stage = StageUtilities.createPopupStage("Create new repository", CREATE_NEW_REPOSITORY_FXML_RESOURCE, this);
         stage.setResizable(false);
         stage.showAndWait();
     }
 
     @FXML
-    void createBranchAction(ActionEvent event)
+    void createBranchAction(ActionEvent event) throws IOException
     {
-        Stage stage = StageUtilities.createPopupStage("Create new branch", m_CreateNewBranchComponent, Modality.APPLICATION_MODAL);
+        Stage stage = StageUtilities.createPopupStage("Create new branch", CREATE_NEW_BRANCH_FXML_RESOURCE,this);
         stage.setResizable(false);
         stage.showAndWait();
 
     }
 
     @FXML
-    private void commitAction(ActionEvent event)
+    private void commitAction(ActionEvent event) throws IOException
     {
-        Stage stage = StageUtilities.createPopupStage("Commit", m_CommitComponent, Modality.APPLICATION_MODAL);
+        Stage stage = StageUtilities.createPopupStage("Commit", COMMIT_FXML_RESOURCE, this);
         stage.setResizable(false);
         stage.showAndWait();
     }

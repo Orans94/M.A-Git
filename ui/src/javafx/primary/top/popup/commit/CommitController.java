@@ -4,6 +4,7 @@ import javafx.AlertFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
+import javafx.primary.top.popup.PopupController;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitMenuButton;
@@ -11,7 +12,7 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class CommitController
+public class CommitController implements PopupController
 {
     @FXML private TextField commitMessageTextField;
     @FXML private Button commitButton;
