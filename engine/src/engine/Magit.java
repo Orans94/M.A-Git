@@ -52,7 +52,7 @@ public class Magit
     public String handleNewCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage) throws IOException
     {
         Commit commit = createCommit(i_RootFolderSha1, i_ParentSHA1, i_CommitMessage);
-        String commitSHA1 = commit.SHA1();
+        String commitSHA1 = commit.getSHA1();
         m_Commits.put(commitSHA1, commit);
         setActiveBranchToNewCommit(commitSHA1);
         commit.Zip(commitSHA1);

@@ -4,7 +4,6 @@ import engine.Commit;
 import javafx.AppController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -37,23 +36,20 @@ public class CenterController
     public void initialize()
     {
         preventColumnReordering(commitsTableView);
-        messageTableColumn.setCellValueFactory(new PropertyValueFactory<>("m_Message"));
-        authorTableColumn.setCellValueFactory(new PropertyValueFactory<> ("m_CommitAuthor"));
-        dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("m_CommitDate"));
 
-        // assign commit sha1 also
-        //sha1TableColumn.setCellValueFactory(new PropertyValueFactory<>(""));
+        messageTableColumn.setCellValueFactory(new PropertyValueFactory<>("Message"));
+        authorTableColumn.setCellValueFactory(new PropertyValueFactory<>("CommitAuthor"));
+        dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("CommitDate"));
+        sha1TableColumn.setCellValueFactory(new PropertyValueFactory<>("SHA1"));
     }
 
-    private void tableViewLoad(ObservableList<Commit> i_CommitsData) { commitsTableView.setItems(getInitialTableData()); }
+    private void tableViewLoad(ObservableList<Commit> i_CommitsData) { commitsTableView.setItems(getCommitsData()); }
 
-    private ObservableList<Commit> getInitialTableData() {
-        return m_commitsObservableList;
-    }
+    private ObservableList<Commit> getCommitsData() { return m_commitsObservableList;}
 
     public void addCommitToObservableList(Commit i_Commit)
     {
-        m_commitsObservableList.add(i_Commit);
+        m_commitsObservableList.add(0,i_Commit);
         tableViewLoad(m_commitsObservableList);
     }
 

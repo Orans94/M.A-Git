@@ -653,7 +653,7 @@ public class Repository
             }
 
             Commit commit = new Commit(rootFolderSHA1, parentsSHA1, XMLCommit.getMessage(), DateUtils.FormatToDate(XMLCommit.getDateOfCreation()), XMLCommit.getAuthor());
-            commitSHA1 = commit.SHA1();
+            commitSHA1 = commit.getSHA1();
             m_Magit.getCommits().put(commitSHA1, commit);
             commitSHA1ByID.put(Integer.parseInt(XMLCommit.getId()), commitSHA1);
             m_ChildrenInformation.clear();

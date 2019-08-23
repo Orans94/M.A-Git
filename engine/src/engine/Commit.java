@@ -91,7 +91,7 @@ public class Commit
         return parentsString;
     }
 
-    public String SHA1() { return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(this.toString(),3)); }
+    public String getSHA1() { return DigestUtils.sha1Hex(StringUtilities.makeSHA1Content(this.toString(),3)); }
 
     public String getRootFolderSHA1() { return m_RootFolderSHA1; }
 
