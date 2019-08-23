@@ -152,4 +152,11 @@ public class Magit
             m_Branches.put(branchName, new Branch(branchName, branchContent));
         }
     }
+
+    public Commit getNewestCommitByItDate()
+    {
+        return m_Commits.values()
+                .stream()
+                .max(Comparator.comparing(Commit::getCommitDate)).get();
+    }
 }

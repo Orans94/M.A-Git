@@ -176,4 +176,9 @@ public class EngineManager
     {
         m_Repository = new Repository(i_RepoPath, i_RepoName);
     }
+
+    public Commit getNewestCommitByItDate()
+    {
+        return m_Repository.getNewestCommitByItDate();
+    }
 }

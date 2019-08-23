@@ -37,6 +37,7 @@ public class CommitController implements PopupController
                 if (isWCDirty)
                 {
                     AlertFactory.createInformationAlert("Commit", "Commited successfully").showAndWait();
+                    m_TopController.addNewestCommitToTableView();
                 }
                 else
                 {

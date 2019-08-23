@@ -770,4 +770,9 @@ public class Repository
         // assuming only magit folder inside root folder.
         return FileUtilities.getNumberOfSubNodes(m_WorkingCopy.getWorkingCopyDir()) == 1;
     }
+
+    public Commit getNewestCommitByItDate()
+    {
+        return m_Magit.getNewestCommitByItDate();
+    }
 }

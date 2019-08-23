@@ -1,5 +1,6 @@
 package javafx;
 
+import engine.Commit;
 import engine.EngineManager;
 import engine.OpenChanges;
 import javafx.primary.bottom.BottomController;
@@ -76,5 +77,12 @@ public class AppController
     public void setActiveBranchName(String i_BranchName) throws IOException
     {
         m_Engine.setActiveBranchName(i_BranchName);
+    }
+
+    public void addNewestCommitToTableView()
+    {
+        Commit newestCommit = m_Engine.getNewestCommitByItDate();
+
+        m_CenterComponentController.addCommitToObservableList(newestCommit);
     }
 }

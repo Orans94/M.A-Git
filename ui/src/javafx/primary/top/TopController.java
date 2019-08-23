@@ -250,4 +250,9 @@ public class TopController
     {
         m_MainController.setActiveBranchName(i_BranchName);
     }
+
+    public void addNewestCommitToTableView()
+    {
+        m_MainController.addNewestCommitToTableView();
+    }
 }
