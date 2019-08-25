@@ -9,4 +9,7 @@ public class CommonResourcesPaths
     public final static String COMMIT_FXML_RESOURCE = "/javafx/primary/top/popup/commit/commit.fxml";
     public final static String CHECKOUT_FXML_RESOURCE = "/javafx/primary/top/popup/checkout/checkout.fxml";
     public final static String LOAD_REPOSITORY_BY_PATH_FXML_RESOURCE = "/javafx/primary/top/popup/loadrepositorybypath/loadRepositoryByPath.fxml";
+    public final static String SHOW_INFORMATION_FXML_RESOURCE = "/javafx/primary/top/popup/showinformation/showInformation.fxml";
+    public final static String LOAD_REPOSITORY_BY_XML_FXML_RESOURCE = "/javafx/primary/top/popup/loadrepositorybyxml/loadRepositoryByXML.fxml";
+    public final static String UPDATE_USERNAME_FXML_RESOURCE = "/javafx/primary/top/popup/updateusername/updateUsername.fxml";
 }

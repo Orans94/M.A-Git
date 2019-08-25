@@ -1,6 +1,6 @@
 package engine;
 
-import mypackage.MagitRepository;
+import mypackage.*;
 import org.apache.commons.io.FileUtils;
 
 import javax.xml.bind.JAXBException;
@@ -11,12 +11,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 public class EngineManager
 {
     private Repository m_Repository;
-    private static String m_UserName = "";
+    private static String m_UserName = "Administrator";
     private XMLManager m_XMLManager = new XMLManager();
 
 
@@ -187,5 +189,61 @@ public class EngineManager
     public String getRepositoryName()
     {
         return m_Repository.getName();
+    }
+
+    public Map<String, Commit> getCommits() { return m_Repository.getMagit().getCommits();}
+
+    public SortedSet<String> getActiveBranchHistory() { return m_Repository.getActiveBranchHistory();}
+
+    public Map<String, Branch> getBranches() { return m_Repository.getMagit().getBranches();}
+
+    public Head getHead() { return m_Repository.getMagit().getHead();}
+
+    public void loadXMLRepoToMagitMaps(MagitRepository i_XMLRepo)
+    {
+        m_XMLManager.loadXMLRepoToMagitMaps(i_XMLRepo);
+    }
+
+    public NodeMaps getNodeMaps() { return m_Repository.getNodeMaps();}
+
+    public Branch getActiveBranch()
+    {
+        Head head = m_Repository.getMagit().getHead();
+        return m_Repository.getMagit().getBranches().get(head.getActiveBranch().getName());
+    }
+
+    public Map<String, MagitSingleFolder> getMagitSingleFolderByID()
+    {
+        return m_XMLManager.getMagitSingleFolderByID();
+    }
+
+    public boolean areIDsValid(MagitRepository i_XMLRepo)
+    {
+        return m_XMLManager.areIDsValid(i_XMLRepo);
+    }
+
+    public boolean areFoldersReferencesValid(MagitFolders magitFolders, MagitBlobs magitBlobs)
+    {
+        return m_XMLManager.areFoldersReferencesValid(magitFolders, magitBlobs);
+    }
+
+    public boolean areCommitsReferencesAreValid(MagitCommits magitCommits, Map<String, MagitSingleFolder> i_magitFolderByID)
+    {
+        return m_XMLManager.areCommitsReferencesAreValid(magitCommits, i_magitFolderByID);
+    }
+
+    public boolean areBranchesReferencesAreValid(MagitBranches magitBranches, MagitCommits magitCommits)
+    {
+        return m_XMLManager.areBranchesReferencesAreValid(magitBranches, magitCommits);
+    }
+
+    public boolean isHeadReferenceValid(MagitBranches magitBranches, String head)
+    {
+        return m_XMLManager.isHeadReferenceValid(magitBranches, head);
+    }
+
+    public XMLMagitMaps getXMLMagitMaps()
+    {
+        return m_XMLManager.getXMLMagitMaps();
     }
 }

@@ -10,6 +10,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
+import javafx.stage.Window;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 
@@ -68,5 +70,13 @@ public class StageUtilities
         Node source = (Node)i_Event.getSource();
         Stage stage = (Stage)source.getScene().getWindow();
         stage.close();
+    }
+
+    public static Window getCurrentShowedWindow(ActionEvent i_Event)
+    {
+        Node source = (Node)i_Event.getSource();
+        Window theStage = source.getScene().getWindow();
+
+        return theStage;
     }
 }

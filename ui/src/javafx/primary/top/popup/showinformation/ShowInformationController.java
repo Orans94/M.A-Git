@@ -1,18 +1,27 @@
 package javafx.primary.top.popup.showinformation;
 
 import engine.*;
+import javafx.AlertFactory;
+import javafx.StageUtilities;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
 import javafx.primary.top.popup.PopupController;
+import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 
 public class ShowInformationController implements PopupController
 {
+    public TextArea getInformationTextArea()
+    {
+        return informationTextArea;
+    }
 
+    @FXML private TextArea informationTextArea;
     @FXML private TopController m_TopController;
 
     @Override
@@ -20,18 +29,7 @@ public class ShowInformationController implements PopupController
 
     public void showAllBranches(Map<String, Branch> i_Branches, Head i_Head)
     {
-        String branchesInformation;
-
-        if (m_TopController.isRepositoryNull())
-        {
-            //TODO show error
-            System.out.println("Repository have to be loaded or initialized before making this operation");
-        }
-        else
-        {
-            branchesInformation = getBranchesInformation(i_Branches, i_Head);
-            //show textbox scene
-        }
+        informationTextArea.setText(getBranchesInformation(i_Branches, i_Head));
     }
 
     private String getBranchesInformation(Map<String, Branch> i_Branches, Head i_Head)
@@ -50,14 +48,14 @@ public class ShowInformationController implements PopupController
         String result = "";
         boolean isGitHaveCommits = m_TopController.isCommitExists(i_Branch.getCommitSHA1());
         String commitMessage = isGitHaveCommits ?
-               m_TopController.getCommitMessage(i_Branch.getCommitSHA1()) : "";
+                m_TopController.getCommitMessage(i_Branch.getCommitSHA1()) : "";
         if (i_Branch == i_Head.getActiveBranch())
         {
             result = result.concat("1. Branch name: " + i_Branch.getName() + " (HEAD)" + System.lineSeparator());
         }
         else
         {
-           result = result.concat("1. Branch name: " + i_Branch.getName() + System.lineSeparator());
+            result = result.concat("1. Branch name: " + i_Branch.getName() + System.lineSeparator());
         }
         if (isGitHaveCommits)
         {
@@ -70,24 +68,17 @@ public class ShowInformationController implements PopupController
 
     public void showDetailsOfCurrentCommit(NodeMaps i_NodeMaps)
     {
-        String currentCommitDetails;
-
-        if (m_TopController.isRepositoryNull())
+        if (i_NodeMaps.isEmpty())
         {
-            //TODO show error
-            System.out.println("Repository have to be loaded or initialized before making this operation");
+            //show error
+            AlertFactory.createErrorAlert("Show details of current commit", "Commit has not been done yet")
+                    .showAndWait();
+            //TODO close scene
+            // result = null
         }
         else
         {
-            if (i_NodeMaps.isEmpty())
-            {
-                //show error
-            }
-            else
-            {
-                currentCommitDetails = getCurrentCommitInformation(i_NodeMaps);
-                //show textbox scene
-            }
+            informationTextArea.setText(getCurrentCommitInformation(i_NodeMaps));
         }
     }
 
@@ -108,6 +99,8 @@ public class ShowInformationController implements PopupController
                 }
             }
         }
+
+        return result;
     }
 
     private String getCurrentItemDetails(Path i_FolderPath, Item i_Item)
@@ -122,28 +115,19 @@ public class ShowInformationController implements PopupController
         return result;
     }
 
-    private void showStatus() throws IOException
+    public void showStatus() throws IOException
     {
         String statusInformation;
 
-        if (m_TopController.isRepositoryNull())
-        {
-            //TODO show error
-            AlertFa
-            System.out.println("Repository have to be loaded or initialized before making this operation");
-        }
-        else
-        {
-            //if(!m_Engine.isRootFolderEmpty())
-            //  {
-            statusInformation = getOpenChanges(m_TopController.getFileSystemStatus());
-            //show scene
-            // }
-            //  else
-            //  {
-            // System.out.println("Root folder is empty");
-            // }
-        }
+        //TODO
+        //if(!m_Engine.isRootFolderEmpty())
+        //  {
+        informationTextArea.setText(getOpenChanges(m_TopController.getFileSystemStatus()));
+        // }
+        //  else
+        //  {
+        // System.out.println("Root folder is empty");
+        // }
     }
 
     private String getOpenChanges(OpenChanges openChanges)
@@ -152,8 +136,10 @@ public class ShowInformationController implements PopupController
 
         if (openChanges.isFileSystemClean())
         {
-            //TODO show error
-            System.out.println("WC is clean");
+            AlertFactory.createInformationAlert("Show status", "WC is clean")
+                    .showAndWait();
+            //TODO close scene
+            // result = null
         }
         else
         {
@@ -177,4 +163,46 @@ public class ShowInformationController implements PopupController
 
         return result;
     }
+
+    public String showActiveBranchHistory(Branch i_Branch)
+    {
+        String result = "";
+
+        String activeBranchName = i_Branch.getName();
+        if (!m_TopController.isBranchPointedCommitSHA1Empty(activeBranchName))
+        {
+            Map<String, Commit> commitBySHA1;
+            SortedSet<String> orderedCommitHistorySHA1;
+            orderedCommitHistorySHA1 = m_TopController.getActiveBranchHistory();
+            commitBySHA1 = m_TopController.getCommits();
+            for (String SHA1 : orderedCommitHistorySHA1)
+            {
+                result = result.concat(getCommit(commitBySHA1.get(SHA1), SHA1) + System.lineSeparator());
+            }
+            informationTextArea.setText(result);
+        }
+        else
+        {
+            AlertFactory.createErrorAlert("Show active branch history", "Active branch " + activeBranchName + " is not pointing on a commit")
+                    .showAndWait();
+            //TODO close scene maybe return null
+            // result = null
+        }
+
+        return result;
+    }
+
+    private String getCommit(Commit i_Commit, String i_CommitSHA1)
+    {
+        String result = "";
+
+        result = result.concat("1. SHA1: " + i_CommitSHA1);
+        result = result.concat("2. Commit message: " + i_Commit.getMessage());
+        result = result.concat("3. Commit date: " + DateUtils.FormatToString(i_Commit.getCommitDate()));
+        result = result.concat("4. Commit author: " + i_Commit.getCommitAuthor());
+        result = result.concat(System.lineSeparator());
+
+         return result;
+    }
+
 }

@@ -9,29 +9,41 @@ import javafx.event.ActionEvent;
 import sun.misc.ExtensionInfo;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BrowseManager
 {
+    private static final String EMPTY_STRING = "";
+
     public File openDirectoryChooser(ActionEvent i_Event)
     {
-        Node source = (Node)i_Event.getSource();
-        Window theStage = source.getScene().getWindow();
+        Window currentWindow = StageUtilities.getCurrentShowedWindow(i_Event);
 
         // get directory from user
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(theStage);
+        File selectedDirectory = directoryChooser.showDialog(currentWindow);
 
         return selectedDirectory;
     }
 
     public File openFileChooser(ActionEvent i_Event)
     {
-        openFileChooser(i_Event,)
+        return openFileChooser(i_Event, EMPTY_STRING);
     }
 
-    public File openFileChooser(ActionEvent i_Event, FileChooser.ExtensionFilter ... i_Fillters)
+    public File openFileChooser(ActionEvent i_Event, String ... i_ExtensionFilters)
     {
+        Window currentWindow = StageUtilities.getCurrentShowedWindow(i_Event);
+        FileChooser fileChooser = new FileChooser();
 
+        if (i_ExtensionFilters.length == 1 && !i_ExtensionFilters[0].equals(EMPTY_STRING))
+        {
+            FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("XML files",i_ExtensionFilters);
+            fileChooser.getExtensionFilters().add(filter);
+        }
+
+        return fileChooser.showOpenDialog(currentWindow);
     }
 
 

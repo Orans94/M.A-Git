@@ -1,11 +1,7 @@
 package engine;
 
-import mypackage.MagitBlob;
-import mypackage.MagitRepository;
-import mypackage.MagitSingleCommit;
-import mypackage.MagitSingleFolder;
+import mypackage.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class XMLManager
@@ -36,4 +32,34 @@ public class XMLManager
     public XMLMagitMaps getXMLMagitMaps() { return m_XMLMagitMaps; }
 
     public boolean isXMLRepositoryIsEmpty(MagitRepository i_XMLRepo) { return m_XMLValidator.isXMLRepositoryIsEmpty(i_XMLRepo);}
+
+    public Map<String, MagitSingleFolder> getMagitSingleFolderByID()
+    {
+        return getMagitSingleFolderByID();
+    }
+
+    public boolean areIDsValid(MagitRepository i_XMLRepo)
+    {
+        return areIDsValid(i_XMLRepo);
+    }
+
+    public boolean areFoldersReferencesValid(MagitFolders magitFolders, MagitBlobs magitBlobs)
+    {
+        return areFoldersReferencesValid(magitFolders, magitBlobs);
+    }
+
+    public boolean areCommitsReferencesAreValid(MagitCommits magitCommits, Map<String, MagitSingleFolder> i_magitFolderByID)
+    {
+        return m_XMLValidator.areCommitsReferencesAreValid(magitCommits,i_magitFolderByID);
+    }
+
+    public boolean isHeadReferenceValid(MagitBranches magitBranches, String head)
+    {
+        return m_XMLValidator.isHeadReferenceValid(magitBranches, head);
+    }
+
+    public boolean areBranchesReferencesAreValid(MagitBranches magitBranches, MagitCommits magitCommits)
+    {
+        return m_XMLValidator.areBranchesReferencesAreValid(magitBranches, magitCommits);
+    }
 }

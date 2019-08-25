@@ -2,6 +2,7 @@ package javafx.primary.top.popup.loadrepositorybypath;
 
 import javafx.AlertFactory;
 import javafx.BrowseManager;
+import javafx.StageUtilities;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
@@ -69,6 +70,7 @@ public class LoadRepositoryByPathController implements PopupController
                 m_TopController.loadRepositoryByPath(userInputPath);
                 notifyRepositoryHasBeenLoaded();
             }
+            StageUtilities.closeOpenSceneByActionEvent(event);
         }
         else
         {

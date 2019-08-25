@@ -1,8 +1,6 @@
 package javafx;
 
-import engine.Commit;
-import engine.EngineManager;
-import engine.OpenChanges;
+import engine.*;
 import javafx.primary.bottom.BottomController;
 import javafx.primary.center.CenterController;
 import javafx.fxml.FXML;
@@ -10,10 +8,15 @@ import javafx.primary.left.LeftController;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.primary.top.TopController;
+import mypackage.*;
 
+import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.ParseException;
+import java.util.Map;
+import java.util.SortedSet;
 
 public class AppController
 {
@@ -111,5 +114,88 @@ public class AppController
     public String getRepositoryName()
     {
         return m_Engine.getRepositoryName();
+    }
+
+    public Map<String, Commit> getCommits() { return m_Engine.getCommits();}
+
+    public boolean isBranchPointedCommitSHA1Empty(String i_ActiveBranchName) { return m_Engine.isBranchPointedCommitSHA1Empty(i_ActiveBranchName);}
+
+    public SortedSet<String> getActiveBranchHistory() { return m_Engine.getActiveBranchHistory();}
+
+    public MagitRepository createXMLRepository(Path i_XMLFilePath) throws JAXBException, FileNotFoundException { return m_Engine.createXMLRepository(i_XMLFilePath); }
+
+    public Map<String, Branch> getBranches() { return m_Engine.getBranches();}
+
+    public Head getHead() { return m_Engine.getHead();}
+
+    public void loadXMLRepoToMagitMaps(MagitRepository i_XMLRepo)
+    {
+        m_Engine.loadXMLRepoToMagitMaps(i_XMLRepo);
+    }
+
+    public NodeMaps getNodeMaps() { return m_Engine.getNodeMaps();}
+
+    public Branch getActiveBranch() { return m_Engine.getActiveBranch();}
+
+    public void createEmptyRepository(Path i_XMLRepositoryLocation, String i_RepositoryName) throws IOException
+    {
+        m_Engine.createEmptyRepository(i_XMLRepositoryLocation, i_RepositoryName);
+    }
+
+    public void createRepository(Path i_RepositoryPath, String i_RepositoryName) throws IOException
+    {
+        m_Engine.createRepository(i_RepositoryPath,i_RepositoryName);
+    }
+
+    public Map<String, MagitSingleFolder> getMagitSingleFolderByID()
+    {
+        return m_Engine.getMagitSingleFolderByID();
+    }
+
+    public boolean areIDsValid(MagitRepository i_XMLRepo)
+    {
+        return m_Engine.areIDsValid(i_XMLRepo);
+    }
+
+    public boolean areFoldersReferencesValid(MagitFolders magitFolders, MagitBlobs magitBlobs)
+    {
+        return m_Engine.areFoldersReferencesValid(magitFolders,magitBlobs);
+    }
+
+    public boolean areCommitsReferencesAreValid(MagitCommits magitCommits, Map<String, MagitSingleFolder> i_magitFolderByID)
+    {
+        return m_Engine.areCommitsReferencesAreValid(magitCommits, i_magitFolderByID);
+    }
+
+    public boolean areBranchesReferencesAreValid(MagitBranches magitBranches, MagitCommits magitCommits)
+    {
+        return m_Engine.areBranchesReferencesAreValid(magitBranches, magitCommits);
+    }
+
+    public boolean isHeadReferenceValid(MagitBranches magitBranches, String head)
+    {
+        return m_Engine.isHeadReferenceValid(magitBranches, head);
+    }
+
+    public void readRepositoryFromXMLFile(MagitRepository i_xmlRepository, XMLMagitMaps i_xmlMagitMaps) throws IOException, ParseException
+    {
+        m_Engine.readRepositoryFromXMLFile(i_xmlRepository, i_xmlMagitMaps);
+    }
+
+    public XMLMagitMaps getXMLMagitMaps()
+    {
+        return m_Engine.getXMLMagitMaps();
+    }
+
+    public boolean isDirectoryEmpty(Path xmlRepositoryLocation) throws IOException
+    {
+        return m_Engine.isDirectoryEmpty(xmlRepositoryLocation);
+    }
+
+    public void updateUsername(String i_Username) { EngineManager.setUserName(i_Username);}
+
+    public boolean isXMLRepositoryEmpty(MagitRepository xmlRepo)
+    {
+        return m_Engine.isXMLRepositoryEmpty(xmlRepo);
     }
 }

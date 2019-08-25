@@ -2,6 +2,7 @@ package javafx.primary.top.popup.createnewbranch;
 
 import engine.OpenChanges;
 import javafx.AlertFactory;
+import javafx.StageUtilities;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
@@ -9,6 +10,7 @@ import javafx.primary.top.popup.PopupController;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -54,7 +56,7 @@ public class CreateNewBranchController implements PopupController
                         if (m_TopController.isFileSystemDirty(openChanges))
                         {
                             // Create new branch , WC dirty - didnt checkout
-                            AlertFactory.createErrorAlert("Create New Branch", "Branch " + branchName + " created successfully"
+                            AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully"
                             +System.lineSeparator()+"The WC status is dirty, the system did not checked out")
                                     .showAndWait();
                         }
@@ -62,7 +64,7 @@ public class CreateNewBranchController implements PopupController
                         {
                             // Crate new branch and Checkout
                             m_TopController.setActiveBranchName(branchName);
-                            AlertFactory.createErrorAlert("Create New Branch", "Branch " + branchName + " created successfully"
+                            AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully"
                                     +System.lineSeparator()+ "Checkout to branch " + branchName + " has been made successfully")
                                     .showAndWait();
                         }
@@ -70,11 +72,13 @@ public class CreateNewBranchController implements PopupController
                     else
                     {
                         // create new branch
-                        AlertFactory.createErrorAlert("Create New Branch", "Branch " + branchName + " created successfully")
+                        AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully")
                                 .showAndWait();
                     }
                 }
             }
         }
+
+        StageUtilities.closeOpenSceneByActionEvent(event);
     }
 }

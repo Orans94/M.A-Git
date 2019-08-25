@@ -1,6 +1,7 @@
 package javafx.primary.top.popup.commit;
 
 import javafx.AlertFactory;
+import javafx.StageUtilities;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
@@ -52,5 +53,6 @@ public class CommitController implements PopupController
             }
         }
 
+        StageUtilities.closeOpenSceneByActionEvent(event);
     }
 }
