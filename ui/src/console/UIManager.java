@@ -633,7 +633,7 @@ public class UIManager
         {
             if (m_Engine.isRepository(repoPath))
             {
-                if (m_Engine.IsRepositoryEmpty(repoPath))
+                if (m_Engine.isRepositoryEmpty(repoPath))
                 {
                     // the given path is an empty repository
                     m_Engine.loadEmptyRepository(repoPath);

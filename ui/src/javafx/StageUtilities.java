@@ -41,10 +41,10 @@ public class StageUtilities
         // * this operation using setter methods
         // ------------------- END OF ASSUMPTIONS ------------------
 
-        String setMethodsName = popupController.getClass().getSimpleName();
-        setMethodsName = setMethodsName.substring(0, setMethodsName.length()-10);
-        String setComponentMethodName = "set" + setMethodsName + "Component";
-        String setControllerMethodName = "set" + setMethodsName + "ComponentController";
+        String featureName = popupController.getClass().getSimpleName();
+        featureName = featureName.substring(0, featureName.length()-10);
+        String setComponentMethodName = "set" + featureName + "Component";
+        String setControllerMethodName = "set" + featureName + "ComponentController";
 
         try
         {

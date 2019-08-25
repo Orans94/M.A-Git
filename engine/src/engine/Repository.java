@@ -187,7 +187,6 @@ public class Repository
         String commitSHA1 = m_Magit.handleNewCommit(i_RootFolderSha1
                 , m_Magit.getHead().getActiveBranch().getCommitSHA1()
                 , i_CommitMessage);
-        configureNewCommit(commitSHA1);
         m_WorkingCopy.setCommitSHA1(commitSHA1);
 
         return m_Magit.getCommits().get(commitSHA1);
@@ -271,11 +270,6 @@ public class Repository
                 return FileVisitResult.CONTINUE;
             }
         };
-    }
-
-    private void configureNewCommit(String i_CommitSHA1)
-    {
-        m_Magit.getCommits().get(i_CommitSHA1).addParent(m_WorkingCopy.getCommitSHA1());
     }
 
     private boolean isWCDirty(String i_RootFolderSha1)

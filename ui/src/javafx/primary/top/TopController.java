@@ -13,6 +13,7 @@ import javafx.primary.top.popup.commit.CommitController;
 import javafx.primary.top.popup.createnewbranch.CreateNewBranchController;
 import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryController;
 import javafx.primary.top.popup.deletebranch.DeleteBranchController;
+import javafx.primary.top.popup.loadrepositorybypath.LoadRepositoryByPathController;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.ParseException;
 
 import static javafx.CommonResourcesPaths.*;
 
@@ -41,6 +43,8 @@ public class TopController
     @FXML private CommitController m_CommitComponentController;
     @FXML private VBox m_CreateNewRepositoryComponent;
     @FXML private CreateNewRepositoryController m_CreateNewRepositoryComponentController;
+    @FXML private VBox m_LoadRepositoryByPathComponent;
+    @FXML private LoadRepositoryByPathController m_LoadRepositoryByPathComponentController;
 
     // ------ CONTROLLERS AND COMPONENTS ------
 
@@ -105,6 +109,11 @@ public class TopController
         m_DeleteBranchComponent = fxmlLoader.getRoot();
         m_DeleteBranchComponentController = fxmlLoader.getController();
         m_DeleteBranchComponentController.setTopController(this);
+
+        fxmlLoader = connector.getFXMLLoader(LOAD_REPOSITORY_BY_PATH_FXML_RESOURCE);
+        m_LoadRepositoryByPathComponent = fxmlLoader.getRoot();
+        m_LoadRepositoryByPathComponentController = fxmlLoader.getController();
+        m_LoadRepositoryByPathComponentController.setTopController(this);
 
 
     }
@@ -254,5 +263,25 @@ public class TopController
     public void addNewestCommitToTableView()
     {
         m_MainController.addNewestCommitToTableView();
+    }
+
+    public boolean isRepositoryEmpty(Path userInputPath) throws IOException
+    {
+        return m_MainController.isRepositoryEmpty(userInputPath);
+    }
+
+    public void loadEmptyRepository(Path userInputPath) throws IOException
+    {
+        m_MainController.loadEmptyRepository(userInputPath);
+    }
+
+    public void loadRepositoryByPath(Path userInputPath) throws IOException, ParseException
+    {
+        m_MainController.loadRepositoryByPath(userInputPath);
+    }
+
+    public String getRepositoryName()
+    {
+        return m_MainController.getRepositoryName();
     }
 }

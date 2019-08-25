@@ -1,17 +1,16 @@
 package javafx.primary.top.popup.createnewrepository;
 
+import javafx.BrowseManager;
 import javafx.StageUtilities;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.AlertFactory;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
 import javafx.primary.top.popup.PopupController;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,19 +26,25 @@ public class CreateNewRepositoryController implements PopupController
     @FXML private TextField repositoryNameTextField;
     @FXML private Button createButton;
 
+
     public void setTopController(TopController i_TopController){ m_TopController = i_TopController; }
+
+    @FXML
+    public void initialize()
+    {
+        // binding Create button to directory text field
+        BooleanBinding isTextFieldEmpty = Bindings.isEmpty(directoryTextField.textProperty());
+        createButton.disableProperty().bind(isTextFieldEmpty);
+    }
 
     @FXML
     void browseButtonAction(ActionEvent event)
     {
-        Node source = (Node)event.getSource();
-        Window theStage = source.getScene().getWindow();
 
-        // get directory from user
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(theStage);
+        BrowseManager browseManager = new BrowseManager();
+        File selectedDirectory = browseManager.openDirectoryChooser(event);
 
-        // if user choosed a directory set it to directoryTextField
+        // if user chose a directory set it to directoryTextField
         if (selectedDirectory != null)
         {
             directoryTextField.setText(selectedDirectory.toString());
@@ -49,44 +54,24 @@ public class CreateNewRepositoryController implements PopupController
     @FXML
     void createButtonAction(ActionEvent event) throws IOException
     {
-        boolean isRepoNameIsntEmpty, isUserChoosedPath;
         String userInputRepoName = repositoryNameTextField.getText();
         Path userInputPath;
 
-        // check if the user chose path
-        isUserChoosedPath = directoryTextField.getText().length() != 0;
-        // check if the user entered a repository name
-        isRepoNameIsntEmpty = repositoryNameTextField.getText().length() != 0;
-
-        if (isUserChoosedPath && isRepoNameIsntEmpty)
+        userInputPath = Paths.get(directoryTextField.getText());
+        // check if the path is already a repository
+        if (m_TopController.isRepository(userInputPath))
         {
-            userInputPath = Paths.get(directoryTextField.getText());
-            // check if the path is already a repository
-            if (m_TopController.isRepository(userInputPath))
-            {
-                // stash and initialize new repository if user wants to
-                handleStashAndCreateNewRepository(userInputPath, userInputRepoName);
-            }
-            else
-            {
-                // the path isn't repository, init this path and inform user
-                createNewRepository(userInputPath, userInputRepoName);
-            }
-
-            // close the dialog.
-            StageUtilities.closeOpenSceneByActionEvent(event);
+            // stash and initialize new repository if user wants to
+            handleStashAndCreateNewRepository(userInputPath, userInputRepoName);
         }
         else
         {
-            // user didn't enter path or name
-            errorAlertUserInputIsMissing();
+            // the path isn't repository, init this path and inform user
+            createNewRepository(userInputPath, userInputRepoName);
         }
-    }
 
-    private void errorAlertUserInputIsMissing()
-    {
-        AlertFactory.createErrorAlert("Create new repository" , "Directory path or repository name are missing")
-                .showAndWait();
+        // close the dialog.
+        StageUtilities.closeOpenSceneByActionEvent(event);
     }
 
     private void handleStashAndCreateNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException

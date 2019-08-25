@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.popup.showinformation.ShowInformationController">
+   <content>
+      <TextArea fx:id="informationTextArea" maxHeight="397.0" maxWidth="597.0" minHeight="397.0" minWidth="597.0" prefHeight="397.0" prefWidth="597.0" />
+   </content>
+</ScrollPane>

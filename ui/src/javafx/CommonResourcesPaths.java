@@ -8,4 +8,5 @@ public class CommonResourcesPaths
     public final static String DELETE_BRANCH_FXML_RESOURCE = "/javafx/primary/top/popup/deletebranch/deleteBranch.fxml";
     public final static String COMMIT_FXML_RESOURCE = "/javafx/primary/top/popup/commit/commit.fxml";
     public final static String CHECKOUT_FXML_RESOURCE = "/javafx/primary/top/popup/checkout/checkout.fxml";
+    public final static String LOAD_REPOSITORY_BY_PATH_FXML_RESOURCE = "/javafx/primary/top/popup/loadrepositorybypath/loadRepositoryByPath.fxml";
 }

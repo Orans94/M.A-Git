@@ -13,6 +13,7 @@ import javafx.primary.top.TopController;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.ParseException;
 
 public class AppController
 {
@@ -84,5 +85,31 @@ public class AppController
         Commit newestCommit = m_Engine.getNewestCommitByItDate();
 
         m_CenterComponentController.addCommitToObservableList(newestCommit);
+    }
+
+    public boolean isCommitExists(String i_CommitSHA1) { return m_Engine.isCommitSHA1Exists(i_CommitSHA1);}
+
+    public String getCommitMessage(String i_CommitSHA1) { return m_Engine.getCommitMessage(i_CommitSHA1);}
+
+    public boolean isRepositoryEmpty(Path userInputPath) throws IOException
+    {
+        return m_Engine.isRepositoryEmpty(userInputPath);
+    }
+
+    public void loadEmptyRepository(Path userInputPath) throws IOException
+    {
+        m_Engine.loadEmptyRepository(userInputPath);
+    }
+
+    public void loadRepositoryByPath(Path userInputPath) throws IOException, ParseException
+    {
+        m_Engine.loadRepositoryByPath(userInputPath);
+    }
+
+    public boolean isDirectory(Path i_Path) { return m_Engine.isDirectory(i_Path);}
+
+    public String getRepositoryName()
+    {
+        return m_Engine.getRepositoryName();
     }
 }

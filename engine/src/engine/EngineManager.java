@@ -132,7 +132,7 @@ public class EngineManager
         FileUtilities.modifyTxtFile(Magit.getMagitDir().resolve("branches").resolve("HEAD.txt"), i_BranchName);
     }
 
-    public boolean IsRepositoryEmpty(Path i_RepoPath) throws IOException
+    public boolean isRepositoryEmpty(Path i_RepoPath) throws IOException
     {
         // this method return true if objects folder is empty and all the branches not pointing to any commit
         Path branchesDir = i_RepoPath.resolve(".magit").resolve("branches");
@@ -180,5 +180,12 @@ public class EngineManager
     public Commit getNewestCommitByItDate()
     {
         return m_Repository.getNewestCommitByItDate();
+    }
+
+    public String getCommitMessage(String i_CommitSHA1) { return m_Repository.getMagit().getCommits().get(i_CommitSHA1).getMessage();}
+
+    public String getRepositoryName()
+    {
+        return m_Repository.getName();
     }
 }
