@@ -47,9 +47,9 @@
                   <MenuItem fx:id="mergeMenuItem" mnemonicParsing="false" text="Merge" />
                   <MenuItem fx:id="resetBranchMenuItem" mnemonicParsing="false" text="Reset branch" />
                   <MenuItem fx:id="showAllBranchesMenuItem" mnemonicParsing="false" onAction="#showAllBranchesAction" text="Show all branches" />
-                  <MenuItem fx:id="showCurrentBranchHistoryMenuItem" mnemonicParsing="false" onAction="#showCommitHistoryAction" text="Show commit history of current branch" />
+                  <MenuItem fx:id="showCurrentCommitDetailsMenuItem" mnemonicParsing="false" onAction="#showCurrentCommitDetailsAction" text="Show current commit details" />
                   <MenuItem fx:id="showStatusMenuItem" mnemonicParsing="false" onAction="#showStatusAction" text="Show status" />
-                  <MenuItem fx:id="showCurrentCommitDetailsMenuItem" mnemonicParsing="false" onAction="#showActiveBranchHistoryAction" text="Show active branch history" />
+                  <MenuItem fx:id="showActiveBranchHistoryMenuItem" mnemonicParsing="false" onAction="#showActiveBranchHistoryAction" text="Show active branch history" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Help">

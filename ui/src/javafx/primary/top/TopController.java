@@ -16,8 +16,7 @@ import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryControlle
 import javafx.primary.top.popup.deletebranch.DeleteBranchController;
 import javafx.primary.top.popup.loadrepositorybypath.LoadRepositoryByPathController;
 import javafx.primary.top.popup.loadrepositorybyxml.LoadRepositoryByXMLController;
-import javafx.primary.top.popup.showinformation.ShowInformationController;
-import javafx.primary.top.popup.showinformation.ShowStatus;
+import javafx.primary.top.popup.showinformation.*;
 import javafx.primary.top.popup.updateusername.UpdateUsernameController;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -285,14 +284,19 @@ public class TopController
     {
         if(isRepositoryNull())
         {
-            AlertFactory.createErrorAlert("Show commit history", "Repository have to be loaded or initialized before making this operation")
+            AlertFactory.createErrorAlert("Show active branch history", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
+        }
+        else if (isBranchPointedCommitSHA1Empty(m_MainController.getActiveBranch().getName()))
+        {
+            AlertFactory.createErrorAlert("Show active branch history", "Active branch " + m_MainController.getActiveBranch().getName() + " is not pointing on a commit")
                     .showAndWait();
         }
         else
         {
             Branch activeBranch = m_MainController.getActiveBranch();
-            //m_ShowInformationComponentController.showActiveBranchHistory(activeBranch);
             Stage stage = StageUtilities.createPopupStage("Show active branch history", SHOW_INFORMATION_FXML_RESOURCE, this);
+            m_ShowInformationComponentController.setInformationTextArea(new ShowActiveBranchHistory(m_MainController.getActiveBranch(), m_ShowInformationComponentController));
             stage.showAndWait();
         }
     }
@@ -307,10 +311,8 @@ public class TopController
         }
         else
         {
-            Head head = m_MainController.getHead();
-            Map<String, Branch> branches = m_MainController.getBranches();
-            Stage stage = StageUtilities.createPopupStage("Show all Branches", SHOW_INFORMATION_FXML_RESOURCE, this);
-            //m_ShowInformationComponentController.showAllBranches(branches, head);
+            Stage stage = StageUtilities.createPopupStage("Show all branches", SHOW_INFORMATION_FXML_RESOURCE, this);
+            m_ShowInformationComponentController.setInformationTextArea(new ShowAllBranches(m_MainController.getBranches(), m_MainController.getHead(), m_ShowInformationComponentController));
             stage.showAndWait();
         }
     }
@@ -346,8 +348,6 @@ public class TopController
             m_ShowInformationComponentController.setInformationTextArea(new ShowStatus(m_MainController.getFileSystemStatus()));
             stage.showAndWait();
         }
-
-
     }
 
     @FXML
@@ -586,5 +586,26 @@ public class TopController
     public boolean isBranchNameRepresentsHead(String i_BranchName)
     {
         return m_MainController.isBranchNameRepresentsHead(i_BranchName);
+    }
+
+    public void showCurrentCommitDetailsAction(ActionEvent actionEvent) throws IOException
+    {
+        if(isRepositoryNull())
+        {
+            AlertFactory.createErrorAlert("Show current commit details", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
+        }
+        else if (m_MainController.getCommits().size() == 0)
+        {
+            // commit haven't been done yet
+            AlertFactory.createErrorAlert("Show current commit details", "Commit haven't been done yet")
+                    .showAndWait();
+        }
+        else
+        {
+            Stage stage = StageUtilities.createPopupStage("Show current commit details", SHOW_INFORMATION_FXML_RESOURCE, this);
+            m_ShowInformationComponentController.setInformationTextArea(new ShowCurrentCommitDetails(m_MainController.getNodeMaps(), m_ShowInformationComponentController));
+            stage.showAndWait();
+        }
     }
 }

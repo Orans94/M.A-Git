@@ -7,8 +7,9 @@ import java.util.Map;
 
 public class ShowAllBranches implements Showable
 {
+    private ShowInformationController m_ShowInformationController;
     private Map<String, Branch> m_Branches;
-    private Map<String, String> m_CommitsMessage;
+    private Map<String, String> m_CommitsMessageBy;
     private Head m_Head;
 
 
@@ -16,6 +17,7 @@ public class ShowAllBranches implements Showable
     {
         m_Branches = i_Branches;
         m_Head = i_Head;
+        m_ShowInformationController = i_ShowInformationController;
     }
 
     @Override
@@ -29,19 +31,18 @@ public class ShowAllBranches implements Showable
         String result = "";
         for (Branch branch : i_Branches.values())
         {
-       //    result = result.concat(getSingleBranchInformation(branch, i_Head) + System.lineSeparator());
+           result = result.concat(getSingleBranchInformation(branch, i_Head) + System.lineSeparator());
         }
 
         return result;
     }
-/*
 
     private String getSingleBranchInformation(Branch i_Branch, Head i_Head)
     {
         String result = "";
-       // boolean isGitHaveCommits = m_ShowInformationController.isCommitExists(i_Branch.getCommitSHA1());
-       // String commitMessage = isGitHaveCommits ?
-               // m_ShowInformationController.getCommitMessage(i_Branch.getCommitSHA1()) : "";
+       boolean isGitHaveCommits = m_ShowInformationController.isCommitExists(i_Branch.getCommitSHA1());
+       String commitMessage = isGitHaveCommits ?
+                m_ShowInformationController.getCommitMessage(i_Branch.getCommitSHA1()) : "";
         if (i_Branch == i_Head.getActiveBranch())
         {
             result = result.concat("1. Branch name: " + i_Branch.getName() + " (HEAD)" + System.lineSeparator());
@@ -58,5 +59,4 @@ public class ShowAllBranches implements Showable
 
         return result;
     }
-*/
 }
