@@ -62,6 +62,8 @@ public class LoadRepositoryByXMLController implements PopupController
     @FXML
     void loadButtonAction(ActionEvent event) throws IOException, JAXBException, ParseException
     {
+        //TODO when creating repository from XML we assumed that the directory already exists
+        //TODO ask aviad if thats ok or we should create the directory if it doesnt exists(C:/repo1)
         Path XMLFilePath;
         Path XMLRepositoryLocation;
         boolean isRepositoryAlreadyExistsInPath, toStash;
@@ -82,12 +84,14 @@ public class LoadRepositoryByXMLController implements PopupController
                 {
                     m_TopController.stashRepository(XMLRepositoryLocation);
                     m_TopController.createEmptyRepository(XMLRepositoryLocation, repositoryName);
+                    m_TopController.addCommitsToTableView();
                     notifyRepositoryHasBeenLoaded();
                 }
             }
             else
             {
                 createNewRepository(XMLRepositoryLocation, repositoryName);
+                m_TopController.addCommitsToTableView();
                 notifyRepositoryHasBeenCreated();
             }
         }
@@ -100,6 +104,7 @@ public class LoadRepositoryByXMLController implements PopupController
                 {
                     m_TopController.stashRepository(XMLRepositoryLocation);
                     m_TopController.readRepositoryFromXMLFile(XMLRepo, m_TopController.getXMLMagitMaps());
+                    m_TopController.addCommitsToTableView();
                     notifyRepositoryHasBeenLoaded();
                 }
             }
@@ -108,6 +113,7 @@ public class LoadRepositoryByXMLController implements PopupController
                 if (m_TopController.isDirectoryEmpty(XMLRepositoryLocation))
                 {
                     m_TopController.readRepositoryFromXMLFile(XMLRepo, m_TopController.getXMLMagitMaps());
+                    m_TopController.addCommitsToTableView();
                     notifyRepositoryLoadedSuccessfullyFromXML(XMLRepo.getName());
                 }
                 else

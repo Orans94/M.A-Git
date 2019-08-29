@@ -35,17 +35,17 @@ public class XMLManager
 
     public Map<String, MagitSingleFolder> getMagitSingleFolderByID()
     {
-        return getMagitSingleFolderByID();
+        return m_XMLMagitMaps.getMagitSingleFolderByID();
     }
 
     public boolean areIDsValid(MagitRepository i_XMLRepo)
     {
-        return areIDsValid(i_XMLRepo);
+        return m_XMLValidator.areIDsValid(i_XMLRepo);
     }
 
     public boolean areFoldersReferencesValid(MagitFolders magitFolders, MagitBlobs magitBlobs)
     {
-        return areFoldersReferencesValid(magitFolders, magitBlobs);
+        return m_XMLValidator.areFoldersReferencesValid(magitFolders, magitBlobs);
     }
 
     public boolean areCommitsReferencesAreValid(MagitCommits magitCommits, Map<String, MagitSingleFolder> i_magitFolderByID)

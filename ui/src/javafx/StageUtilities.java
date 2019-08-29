@@ -27,13 +27,27 @@ public class StageUtilities
 
         // configure the new stage
         Stage stage = new Stage();
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.setUserData(fxmlLoader);
+        stage.setScene(scene);
         stage.setTitle(i_Title);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
 
         // wiring up the new scene's controller to topController
         PopupController popupController = fxmlLoader.getController();
+
+/*
+        //-----------------delete
+        if (fxmlLoader.getController() instanceof ShowInformationController)
+        {
+            ShowInformationController showInformationController = fxmlLoader.getController();
+            showInformationController.setShowable(new ShowStam());
+            showInformationController.setInformationTextArea("dsadad");
+        }
+        //-----------------delete
+*/
+
         popupController.setTopController(i_ControllerToWire);
 
         // wiring up top controller to new popupcontroller and it component
@@ -55,9 +69,11 @@ public class StageUtilities
             Method setControllerMethod = i_ControllerToWire.getClass().getMethod(setControllerMethodName, PopupController.class);
 
             // invoke setters methods
-            setComponentMethod.invoke(root, root);
-            setControllerMethod.invoke(popupController,popupController);
-        } catch (Exception ex)
+            setComponentMethod.invoke(i_ControllerToWire, root);
+            setControllerMethod.invoke(i_ControllerToWire,popupController);
+        }
+
+        catch (Exception ex)
         {
             // TODO handle exception
         }

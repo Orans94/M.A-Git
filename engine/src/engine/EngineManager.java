@@ -123,6 +123,11 @@ public class EngineManager
 
     public boolean isCommitSHA1Exists(String i_CommitSHA1) { return m_Repository.getMagit().getCommits().containsKey(i_CommitSHA1); }
 
+    public Map<String, String> getCommitsMessageBySHA1()
+    {
+        return m_Repository.getCommitsMessageBySHA1();
+    }
+
     public void changeActiveBranchPointedCommit(String i_CommitSHA1) throws IOException
     { m_Repository.changeActiveBranchPointedCommit(i_CommitSHA1); }
 

@@ -17,6 +17,7 @@ import javafx.primary.top.popup.deletebranch.DeleteBranchController;
 import javafx.primary.top.popup.loadrepositorybypath.LoadRepositoryByPathController;
 import javafx.primary.top.popup.loadrepositorybyxml.LoadRepositoryByXMLController;
 import javafx.primary.top.popup.showinformation.ShowInformationController;
+import javafx.primary.top.popup.showinformation.ShowStatus;
 import javafx.primary.top.popup.updateusername.UpdateUsernameController;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -30,6 +31,7 @@ import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.SortedSet;
@@ -56,7 +58,7 @@ public class TopController
     @FXML private LoadRepositoryByPathController m_LoadRepositoryByPathComponentController;
     @FXML private VBox m_LoadRepositoryByXMLComponent;
     @FXML private LoadRepositoryByXMLController m_LoadRepositoryByXMLComponentController;
-    @FXML private ScrollPane m_ShowInformationComponent;
+    @FXML private VBox m_ShowInformationComponent;
     @FXML private ShowInformationController m_ShowInformationComponentController;
     @FXML private VBox m_UpdateUsernameComponent;
     @FXML private UpdateUsernameController m_UpdateUsernameComponentController;
@@ -93,6 +95,7 @@ public class TopController
     @FXML private Button showStatusButton;
     @FXML private Button createNewBranchButton;
     @FXML private Button deleteBranchButton;
+    @FXML private SplitMenuButton repositoryFullPathSplitMenuButton;
 
     @FXML
     public void initialize() throws IOException
@@ -158,7 +161,7 @@ public class TopController
 
     public void setLoadRepositoryByXMLComponentController(PopupController m_LoadRepositoryByXMLComponentController) { this.m_LoadRepositoryByXMLComponentController = (LoadRepositoryByXMLController) m_LoadRepositoryByXMLComponentController; }
 
-    public void setShowInformationComponent(Parent m_ShowInformationComponent) { this.m_ShowInformationComponent = (ScrollPane) m_ShowInformationComponent; }
+    public void setShowInformationComponent(Parent m_ShowInformationComponent) { this.m_ShowInformationComponent = (VBox) m_ShowInformationComponent; }
 
     public void setShowInformationComponentController(PopupController m_ShowInformationComponentController) { this.m_ShowInformationComponentController = (ShowInformationController) m_ShowInformationComponentController; }
 
@@ -229,7 +232,6 @@ public class TopController
     {
         Stage stage = StageUtilities.createPopupStage("Create new branch", CREATE_NEW_BRANCH_FXML_RESOURCE, this);
         stage.showAndWait();
-
     }
 
     @FXML
@@ -247,6 +249,38 @@ public class TopController
     }
 
     @FXML
+    void checkoutAction(ActionEvent event) throws IOException
+    {
+        if(isRepositoryNull())
+        {
+            AlertFactory.createErrorAlert("Checkout", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
+        }
+        else
+        {
+            Stage stage = StageUtilities.createPopupStage("Checkout", CHECKOUT_FXML_RESOURCE, this);
+            m_CheckoutComponentController.bindBranchesToChoiceBox(event);
+            stage.showAndWait();
+        }
+    }
+
+    @FXML
+    void deleteBranchAction(ActionEvent event) throws IOException
+    {
+        if(isRepositoryNull())
+        {
+            AlertFactory.createErrorAlert("Delete branch", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
+        }
+        else
+        {
+            Stage stage = StageUtilities.createPopupStage("Delete Branch", DELETE_BRANCH_FXML_RESOURCE, this);
+            m_DeleteBranchComponentController.bindBranchesToChoiceBox(event);
+            stage.showAndWait();
+        }
+    }
+
+    @FXML
     void showActiveBranchHistoryAction(ActionEvent event) throws IOException
     {
         if(isRepositoryNull())
@@ -257,7 +291,7 @@ public class TopController
         else
         {
             Branch activeBranch = m_MainController.getActiveBranch();
-            m_ShowInformationComponentController.showActiveBranchHistory(activeBranch);
+            //m_ShowInformationComponentController.showActiveBranchHistory(activeBranch);
             Stage stage = StageUtilities.createPopupStage("Show active branch history", SHOW_INFORMATION_FXML_RESOURCE, this);
             stage.showAndWait();
         }
@@ -276,7 +310,7 @@ public class TopController
             Head head = m_MainController.getHead();
             Map<String, Branch> branches = m_MainController.getBranches();
             Stage stage = StageUtilities.createPopupStage("Show all Branches", SHOW_INFORMATION_FXML_RESOURCE, this);
-            m_ShowInformationComponentController.showAllBranches(branches, head);
+            //m_ShowInformationComponentController.showAllBranches(branches, head);
             stage.showAndWait();
         }
     }
@@ -292,7 +326,7 @@ public class TopController
         else
         {
             NodeMaps nodeMaps = m_MainController.getNodeMaps();
-            m_ShowInformationComponentController.showDetailsOfCurrentCommit(nodeMaps);
+            //m_ShowInformationComponentController.showDetailsOfCurrentCommit(nodeMaps);
             Stage stage = StageUtilities.createPopupStage("Show commit history", SHOW_INFORMATION_FXML_RESOURCE, this);
             stage.showAndWait();
         }
@@ -308,15 +342,12 @@ public class TopController
         }
         else
         {
-            m_ShowInformationComponentController.showStatus();
             Stage stage = StageUtilities.createPopupStage("Show status", SHOW_INFORMATION_FXML_RESOURCE, this);
+            m_ShowInformationComponentController.setInformationTextArea(new ShowStatus(m_MainController.getFileSystemStatus()));
             stage.showAndWait();
         }
-    }
 
-    @FXML
-    public void updateUserNameAction(ActionEvent actionEvent)
-    {
+
     }
 
     @FXML
@@ -365,7 +396,13 @@ public class TopController
 
     public void createNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException
     {
+        setRepositoryFullPathSplitMenuButton(i_UserInputPath);
         m_MainController.createNewRepository(i_UserInputPath, i_UserInputRepoName);
+    }
+
+    private void setRepositoryFullPathSplitMenuButton(Path i_UserInputPath)
+    {
+        repositoryFullPathSplitMenuButton.setText(i_UserInputPath.toString());
     }
 
     public boolean isRootFolderEmpty() throws IOException
@@ -413,14 +450,16 @@ public class TopController
         return m_MainController.isRepositoryEmpty(userInputPath);
     }
 
-    public void loadEmptyRepository(Path userInputPath) throws IOException
+    public void loadEmptyRepository(Path i_UserInputPath) throws IOException
     {
-        m_MainController.loadEmptyRepository(userInputPath);
+        setRepositoryFullPathSplitMenuButton(i_UserInputPath);
+        m_MainController.loadEmptyRepository(i_UserInputPath);
     }
 
-    public void loadRepositoryByPath(Path userInputPath) throws IOException, ParseException
+    public void loadRepositoryByPath(Path i_UserInputPath) throws IOException, ParseException
     {
-        m_MainController.loadRepositoryByPath(userInputPath);
+        setRepositoryFullPathSplitMenuButton(i_UserInputPath);
+        m_MainController.loadRepositoryByPath(i_UserInputPath);
     }
 
     public String getRepositoryName()
@@ -440,11 +479,13 @@ public class TopController
 
     public void createEmptyRepository(Path i_XMLRepositoryLocation, String i_RepositoryName) throws IOException
     {
+        setRepositoryFullPathSplitMenuButton(i_XMLRepositoryLocation);
         m_MainController.createEmptyRepository(i_XMLRepositoryLocation, i_RepositoryName);
     }
 
     public void createRepository(Path i_RepositoryPath, String i_RepositoryName) throws IOException
     {
+        setRepositoryFullPathSplitMenuButton(i_RepositoryPath);
         m_MainController.createRepository(i_RepositoryPath, i_RepositoryName);
     }
 
@@ -480,6 +521,7 @@ public class TopController
 
     public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException
     {
+        setRepositoryFullPathSplitMenuButton(Paths.get(i_XMLRepository.getLocation()));
         m_MainController.readRepositoryFromXMLFile(i_XMLRepository, i_XMLMagitMaps);
     }
 
@@ -519,5 +561,30 @@ public class TopController
     public boolean isXMLRepositoryEmpty(MagitRepository xmlRepo)
     {
         return m_MainController.isXMLRepositoryEmpty(xmlRepo);
+    }
+
+    public void addCommitsToTableView()
+    {
+        m_MainController.addCommitsToTableView();
+    }
+
+    public Map<String, Branch> getBranches()
+    {
+        return m_MainController.getBranches();
+    }
+
+    public Branch getActiveBranch()
+    {
+        return m_MainController.getActiveBranch();
+    }
+
+    public void showCommitScene(ActionEvent event) throws IOException
+    {
+        commitAction(event);
+    }
+
+    public boolean isBranchNameRepresentsHead(String i_BranchName)
+    {
+        return m_MainController.isBranchNameRepresentsHead(i_BranchName);
     }
 }

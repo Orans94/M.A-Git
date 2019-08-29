@@ -198,4 +198,15 @@ public class AppController
     {
         return m_Engine.isXMLRepositoryEmpty(xmlRepo);
     }
+
+    public void addCommitsToTableView()
+    {
+        Map<String, Commit> commits = m_Engine.getCommits();
+        m_CenterComponentController.addAllCommitsToTableView(commits);
+    }
+
+    public boolean isBranchNameRepresentsHead(String i_BranchName)
+    {
+        return m_Engine.isBranchNameRepresentsHead(i_BranchName);
+    }
 }

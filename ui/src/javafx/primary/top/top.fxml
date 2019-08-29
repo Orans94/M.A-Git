@@ -42,8 +42,8 @@
                   <MenuItem fx:id="pullMenuItem" mnemonicParsing="false" text="Pull / Fetch" />
                   <MenuItem fx:id="pushMenuItem" mnemonicParsing="false" text="Push" />
                   <MenuItem fx:id="createNewBranchMenuItem" mnemonicParsing="false" onAction="#createBranchAction" text="Create new branch" />
-                  <MenuItem fx:id="deleteBranchMenuItem" mnemonicParsing="false" text="Delete Branch" />
-                  <MenuItem fx:id="checkoutMenuItem" mnemonicParsing="false" text="Checkout" />
+                  <MenuItem fx:id="deleteBranchMenuItem" mnemonicParsing="false" onAction="#deleteBranchAction" text="Delete Branch" />
+                  <MenuItem fx:id="checkoutMenuItem" mnemonicParsing="false" onAction="#checkoutAction" text="Checkout" />
                   <MenuItem fx:id="mergeMenuItem" mnemonicParsing="false" text="Merge" />
                   <MenuItem fx:id="resetBranchMenuItem" mnemonicParsing="false" text="Reset branch" />
                   <MenuItem fx:id="showAllBranchesMenuItem" mnemonicParsing="false" onAction="#showAllBranchesAction" text="Show all branches" />
@@ -63,7 +63,7 @@
       <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" prefWidth="904.0" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="refreshButton" mnemonicParsing="false" text="Refresh" HBox.hgrow="NEVER" />
-            <SplitMenuButton maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath" HBox.hgrow="ALWAYS">
+            <SplitMenuButton fx:id="repositoryFullPathSplitMenuButton" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath" HBox.hgrow="ALWAYS">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
@@ -80,7 +80,7 @@
             <Button fx:id="commitButton" mnemonicParsing="false" onAction="#commitAction" text="Commit(diff)" HBox.hgrow="NEVER" />
             <Button fx:id="showStatusButton" mnemonicParsing="false" onAction="#showStatusAction" text="Show status" HBox.hgrow="NEVER" />
             <Button fx:id="createNewBranchButton" mnemonicParsing="false" onAction="#createBranchAction" text="Create Branch" HBox.hgrow="NEVER" />
-            <Button fx:id="deleteBranchButton" mnemonicParsing="false" text="Delete Branch" HBox.hgrow="NEVER" />
+            <Button fx:id="deleteBranchButton" mnemonicParsing="false" onAction="#deleteBranchAction" text="Delete Branch" HBox.hgrow="NEVER" />
          </children>
       </HBox>
    </children>
