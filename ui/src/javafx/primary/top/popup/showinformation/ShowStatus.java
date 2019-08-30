@@ -2,6 +2,7 @@ package javafx.primary.top.popup.showinformation;
 
 import engine.OpenChanges;
 import javafx.AlertFactory;
+import javafx.StageUtilities;
 
 import java.nio.file.Path;
 import java.util.List;

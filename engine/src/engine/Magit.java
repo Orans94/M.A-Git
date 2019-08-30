@@ -103,7 +103,10 @@ public class Magit
         { // to all branches in objects\\branches
             currentBranch = entry.getValue();
             commitSHA1 = currentBranch.getCommitSHA1();
-            loadCommitsToMapsRecursive(commitSHA1);
+            if(!commitSHA1.equals(""))
+            {
+                loadCommitsToMapsRecursive(commitSHA1);
+            }
         }
     }
 

@@ -62,9 +62,12 @@ public class CenterController
         tableViewLoad(m_CommitsObservableList);
     }
 
-    public static <T> void preventColumnReordering(TableView<T> tableView) {
-        Platform.runLater(() -> {
-            for (Node header : tableView.lookupAll(".column-header")) {
+    private static <T> void preventColumnReordering(TableView<T> tableView)
+    {
+        Platform.runLater(() ->
+        {
+            for (Node header : tableView.lookupAll(".column-header"))
+            {
                 header.addEventFilter(MouseEvent.MOUSE_DRAGGED, Event::consume);
             }
         });

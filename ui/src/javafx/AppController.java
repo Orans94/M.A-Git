@@ -209,4 +209,14 @@ public class AppController
     {
         return m_Engine.isBranchNameRepresentsHead(i_BranchName);
     }
+
+    public void changeActiveBranchPointedCommit(String i_CommitSHA1) throws IOException
+    {
+        m_Engine.changeActiveBranchPointedCommit(i_CommitSHA1);
+    }
+
+    public String getActiveBranchName()
+    {
+        return m_Engine.getActiveBranchName();
+    }
 }

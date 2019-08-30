@@ -12,4 +12,5 @@ public class CommonResourcesPaths
     public final static String SHOW_INFORMATION_FXML_RESOURCE = "/javafx/primary/top/popup/showinformation/showInformation.fxml";
     public final static String LOAD_REPOSITORY_BY_XML_FXML_RESOURCE = "/javafx/primary/top/popup/loadrepositorybyxml/loadRepositoryByXML.fxml";
     public final static String UPDATE_USERNAME_FXML_RESOURCE = "/javafx/primary/top/popup/updateusername/updateUsername.fxml";
+    public final static String RESET_BRANCH_FXML_RESOURCE = "/javafx/primary/top/popup/resetbranch/resetbranch.fxml";
 }

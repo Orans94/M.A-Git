@@ -45,7 +45,7 @@
                   <MenuItem fx:id="deleteBranchMenuItem" mnemonicParsing="false" onAction="#deleteBranchAction" text="Delete Branch" />
                   <MenuItem fx:id="checkoutMenuItem" mnemonicParsing="false" onAction="#checkoutAction" text="Checkout" />
                   <MenuItem fx:id="mergeMenuItem" mnemonicParsing="false" text="Merge" />
-                  <MenuItem fx:id="resetBranchMenuItem" mnemonicParsing="false" text="Reset branch" />
+                  <MenuItem fx:id="resetBranchMenuItem" mnemonicParsing="false" onAction="#resetBranchAction" text="Reset branch" />
                   <MenuItem fx:id="showAllBranchesMenuItem" mnemonicParsing="false" onAction="#showAllBranchesAction" text="Show all branches" />
                   <MenuItem fx:id="showCurrentCommitDetailsMenuItem" mnemonicParsing="false" onAction="#showCurrentCommitDetailsAction" text="Show current commit details" />
                   <MenuItem fx:id="showStatusMenuItem" mnemonicParsing="false" onAction="#showStatusAction" text="Show status" />

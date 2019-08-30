@@ -16,6 +16,7 @@ import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryControlle
 import javafx.primary.top.popup.deletebranch.DeleteBranchController;
 import javafx.primary.top.popup.loadrepositorybypath.LoadRepositoryByPathController;
 import javafx.primary.top.popup.loadrepositorybyxml.LoadRepositoryByXMLController;
+import javafx.primary.top.popup.resetbranch.ResetBranchController;
 import javafx.primary.top.popup.showinformation.*;
 import javafx.primary.top.popup.updateusername.UpdateUsernameController;
 import javafx.scene.Parent;
@@ -61,6 +62,8 @@ public class TopController
     @FXML private ShowInformationController m_ShowInformationComponentController;
     @FXML private VBox m_UpdateUsernameComponent;
     @FXML private UpdateUsernameController m_UpdateUsernameComponentController;
+    @FXML private ScrollPane m_ResetBranchComponent;
+    @FXML private ResetBranchController m_ResetBranchComponentController;
 
     // ------ CONTROLLERS AND COMPONENTS ------
 
@@ -146,6 +149,11 @@ public class TopController
         m_UpdateUsernameComponent= fxmlLoader.getRoot();
         m_UpdateUsernameComponentController = fxmlLoader.getController();
         m_UpdateUsernameComponentController.setTopController(this);
+
+        fxmlLoader = connector.getFXMLLoader(RESET_BRANCH_FXML_RESOURCE);
+        m_ResetBranchComponent= fxmlLoader.getRoot();
+        m_ResetBranchComponentController = fxmlLoader.getController();
+        m_ResetBranchComponentController.setTopController(this);
     }
 
     public void setUpdateUsernameComponent(Parent i_UpdateUsernameComponent) { this.m_UpdateUsernameComponent = (VBox) i_UpdateUsernameComponent; }
@@ -214,6 +222,16 @@ public class TopController
         this.m_CommitComponentController = (CommitController) i_CommitComponentController;
     }
 
+    public void setResetBranchComponent(Parent i_ResetBranchComponent)
+    {
+        this.m_ResetBranchComponent = (ScrollPane) i_ResetBranchComponent;
+    }
+
+    public void setResetBranchComponentController(PopupController i_ResetBranchComponentController)
+    {
+        this.m_ResetBranchComponentController = (ResetBranchController) i_ResetBranchComponentController;
+    }
+
     public void setMainController(AppController i_MainController)
     {
         m_MainController = i_MainController;
@@ -275,6 +293,22 @@ public class TopController
         {
             Stage stage = StageUtilities.createPopupStage("Delete Branch", DELETE_BRANCH_FXML_RESOURCE, this);
             m_DeleteBranchComponentController.bindBranchesToChoiceBox(event);
+            stage.showAndWait();
+        }
+    }
+
+    @FXML
+    void resetBranchAction(ActionEvent event) throws IOException
+    {
+        if(isRepositoryNull())
+        {
+            AlertFactory.createErrorAlert("Reset branch", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
+        }
+        else
+        {
+            Stage stage = StageUtilities.createPopupStage("Reset Branch", RESET_BRANCH_FXML_RESOURCE, this);
+            m_ResetBranchComponentController.bindCommitsToTableView();
             stage.showAndWait();
         }
     }
@@ -607,5 +641,20 @@ public class TopController
             m_ShowInformationComponentController.setInformationTextArea(new ShowCurrentCommitDetails(m_MainController.getNodeMaps(), m_ShowInformationComponentController));
             stage.showAndWait();
         }
+    }
+
+    public void changeActiveBranchPointedCommit(String i_CommitSHA1) throws IOException
+    {
+        m_MainController.changeActiveBranchPointedCommit(i_CommitSHA1);
+    }
+
+    public String getActiveBranchName()
+    {
+        return m_MainController.getActiveBranchName();
+    }
+
+    public void showDetailsOfCurrentCommitScene(ActionEvent event) throws IOException
+    {
+        showCurrentCommitDetailsAction(event);
     }
 }
