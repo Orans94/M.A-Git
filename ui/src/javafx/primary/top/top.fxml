@@ -17,11 +17,11 @@
         <menus>
           <Menu mnemonicParsing="false" text="Start">
             <items>
-                  <MenuItem fx:id="updateUsernameMenuItem" mnemonicParsing="false" onAction="#updateUsernameAction" text="Update username" />
+                  <MenuItem fx:id="updateUsernameMenuItem" mnemonicParsing="false" onAction="#updateUsernameMenuItemAction" text="Update username" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem fx:id="createNewRepositoryMenuItem" mnemonicParsing="false" onAction="#createNewRepositoryButtonAction" text="Create new repository" />
-                  <MenuItem fx:id="loadRepositoryByPathMenuItem" mnemonicParsing="false" onAction="#loadRepositoryByPathAction" text="Load repository by path" />
-                  <MenuItem fx:id="loadRepositoryFromXMLMenuItem" mnemonicParsing="false" onAction="#loadRepositoryByXMLAction" text="Load repository by XML file" />
+              <MenuItem fx:id="createNewRepositoryMenuItem" mnemonicParsing="false" onAction="#createNewRepositoryMenuItemAction" text="Create new repository" />
+                  <MenuItem fx:id="loadRepositoryByPathMenuItem" mnemonicParsing="false" onAction="#loadRepositoryByPathMenuItemAction" text="Load repository by path" />
+                  <MenuItem fx:id="loadRepositoryFromXMLMenuItem" mnemonicParsing="false" onAction="#loadRepositoryByXMLMenuItemAction" text="Load repository by XML file" />
                   <MenuItem fx:id="cloneRepositoryMenuItem" mnemonicParsing="false" text="Clone repository" />
             </items>
           </Menu>
@@ -38,18 +38,18 @@
                </items></Menu>
           <Menu mnemonicParsing="false" text="Commands">
             <items>
-              <MenuItem fx:id="commitMenuItem" mnemonicParsing="false" onAction="#commitAction" text="Commit" />
+              <MenuItem fx:id="commitMenuItem" mnemonicParsing="false" onAction="#commitMenuItemAction" text="Commit" />
                   <MenuItem fx:id="pullMenuItem" mnemonicParsing="false" text="Pull / Fetch" />
                   <MenuItem fx:id="pushMenuItem" mnemonicParsing="false" text="Push" />
-                  <MenuItem fx:id="createNewBranchMenuItem" mnemonicParsing="false" onAction="#createBranchAction" text="Create new branch" />
-                  <MenuItem fx:id="deleteBranchMenuItem" mnemonicParsing="false" onAction="#deleteBranchAction" text="Delete Branch" />
-                  <MenuItem fx:id="checkoutMenuItem" mnemonicParsing="false" onAction="#checkoutAction" text="Checkout" />
-                  <MenuItem fx:id="mergeMenuItem" mnemonicParsing="false" text="Merge" />
-                  <MenuItem fx:id="resetBranchMenuItem" mnemonicParsing="false" onAction="#resetBranchAction" text="Reset branch" />
-                  <MenuItem fx:id="showAllBranchesMenuItem" mnemonicParsing="false" onAction="#showAllBranchesAction" text="Show all branches" />
-                  <MenuItem fx:id="showCurrentCommitDetailsMenuItem" mnemonicParsing="false" onAction="#showCurrentCommitDetailsAction" text="Show current commit details" />
-                  <MenuItem fx:id="showStatusMenuItem" mnemonicParsing="false" onAction="#showStatusAction" text="Show status" />
-                  <MenuItem fx:id="showActiveBranchHistoryMenuItem" mnemonicParsing="false" onAction="#showActiveBranchHistoryAction" text="Show active branch history" />
+                  <MenuItem fx:id="createNewBranchMenuItem" mnemonicParsing="false" onAction="#createBranchMenuItemAction" text="Create new branch" />
+                  <MenuItem fx:id="deleteBranchMenuItem" mnemonicParsing="false" onAction="#deleteBranchMenuItemAction" text="Delete Branch" />
+                  <MenuItem fx:id="checkoutMenuItem" mnemonicParsing="false" onAction="#checkoutMenuItemAction" text="Checkout" />
+                  <MenuItem fx:id="mergeMenuItem" mnemonicParsing="false" onAction="#mergeMenuItemAction" text="Merge" />
+                  <MenuItem fx:id="resetBranchMenuItem" mnemonicParsing="false" onAction="#resetBranchMenuItemAction" text="Reset branch" />
+                  <MenuItem fx:id="showAllBranchesMenuItem" mnemonicParsing="false" onAction="#showAllBranchesMenuItemAction" text="Show all branches" />
+                  <MenuItem fx:id="showCurrentCommitDetailsMenuItem" mnemonicParsing="false" onAction="#showCurrentCommitDetailsMenuItemAction" text="Show current commit details" />
+                  <MenuItem fx:id="showStatusMenuItem" mnemonicParsing="false" onAction="#showStatusMenuItemAction" text="Show status" />
+                  <MenuItem fx:id="showActiveBranchHistoryMenuItem" mnemonicParsing="false" onAction="#showActiveBranchHistoryMenuItemAction" text="Show active branch history" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Help">
@@ -77,10 +77,10 @@
             </SplitMenuButton>
             <Button fx:id="pushButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="116.0" text="Push" HBox.hgrow="NEVER" />
             <Button fx:id="pullButton" mnemonicParsing="false" prefHeight="23.0" prefWidth="104.0" text="Pull" HBox.hgrow="NEVER" />
-            <Button fx:id="commitButton" mnemonicParsing="false" onAction="#commitAction" text="Commit(diff)" HBox.hgrow="NEVER" />
-            <Button fx:id="showStatusButton" mnemonicParsing="false" onAction="#showStatusAction" text="Show status" HBox.hgrow="NEVER" />
-            <Button fx:id="createNewBranchButton" mnemonicParsing="false" onAction="#createBranchAction" text="Create Branch" HBox.hgrow="NEVER" />
-            <Button fx:id="deleteBranchButton" mnemonicParsing="false" onAction="#deleteBranchAction" text="Delete Branch" HBox.hgrow="NEVER" />
+            <Button fx:id="commitButton" mnemonicParsing="false" onAction="#commitMenuItemAction" text="Commit(diff)" HBox.hgrow="NEVER" />
+            <Button fx:id="showStatusButton" mnemonicParsing="false" onAction="#showStatusMenuItemAction" text="Show status" HBox.hgrow="NEVER" />
+            <Button fx:id="createNewBranchButton" mnemonicParsing="false" onAction="#createBranchMenuItemAction" text="Create Branch" HBox.hgrow="NEVER" />
+            <Button fx:id="deleteBranchButton" mnemonicParsing="false" onAction="#deleteBranchMenuItemAction" text="Delete Branch" HBox.hgrow="NEVER" />
          </children>
       </HBox>
    </children>

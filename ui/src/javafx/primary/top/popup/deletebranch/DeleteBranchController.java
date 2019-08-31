@@ -58,5 +58,4 @@ public class DeleteBranchController implements PopupController
 
         branchNamesChoiceBox.setValue(activeBranch.getName());
     }
-
 }

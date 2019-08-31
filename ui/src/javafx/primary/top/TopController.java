@@ -16,6 +16,7 @@ import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryControlle
 import javafx.primary.top.popup.deletebranch.DeleteBranchController;
 import javafx.primary.top.popup.loadrepositorybypath.LoadRepositoryByPathController;
 import javafx.primary.top.popup.loadrepositorybyxml.LoadRepositoryByXMLController;
+import javafx.primary.top.popup.merge.MergeSelectBranchController;
 import javafx.primary.top.popup.resetbranch.ResetBranchController;
 import javafx.primary.top.popup.showinformation.*;
 import javafx.primary.top.popup.updateusername.UpdateUsernameController;
@@ -64,6 +65,8 @@ public class TopController
     @FXML private UpdateUsernameController m_UpdateUsernameComponentController;
     @FXML private ScrollPane m_ResetBranchComponent;
     @FXML private ResetBranchController m_ResetBranchComponentController;
+    @FXML private VBox m_MergeSelectBranchComponent;
+    @FXML private MergeSelectBranchController m_MergeSelectBranchComponentController;
 
     // ------ CONTROLLERS AND COMPONENTS ------
 
@@ -99,63 +102,6 @@ public class TopController
     @FXML private Button deleteBranchButton;
     @FXML private SplitMenuButton repositoryFullPathSplitMenuButton;
 
-    @FXML
-    public void initialize() throws IOException
-    {
-        ComponentControllerConnector connector = new ComponentControllerConnector();
-
-        // connect controllers and components
-        FXMLLoader fxmlLoader = connector.getFXMLLoader(CREATE_NEW_REPOSITORY_FXML_RESOURCE);
-        m_CreateNewRepositoryComponent = fxmlLoader.getRoot();
-        m_CreateNewRepositoryComponentController = fxmlLoader.getController();
-        m_CreateNewRepositoryComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(CHECKOUT_FXML_RESOURCE);
-        m_CheckoutComponent = fxmlLoader.getRoot();
-        m_CheckoutComponentController = fxmlLoader.getController();
-        m_CheckoutComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(COMMIT_FXML_RESOURCE);
-        m_CommitComponent = fxmlLoader.getRoot();
-        m_CommitComponentController = fxmlLoader.getController();
-        m_CommitComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(CREATE_NEW_BRANCH_FXML_RESOURCE);
-        m_CreateNewBranchComponent = fxmlLoader.getRoot();
-        m_CreateNewBranchComponentController = fxmlLoader.getController();
-        m_CreateNewBranchComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(DELETE_BRANCH_FXML_RESOURCE);
-        m_DeleteBranchComponent = fxmlLoader.getRoot();
-        m_DeleteBranchComponentController = fxmlLoader.getController();
-        m_DeleteBranchComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(LOAD_REPOSITORY_BY_PATH_FXML_RESOURCE);
-        m_LoadRepositoryByPathComponent = fxmlLoader.getRoot();
-        m_LoadRepositoryByPathComponentController = fxmlLoader.getController();
-        m_LoadRepositoryByPathComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(SHOW_INFORMATION_FXML_RESOURCE);
-        m_ShowInformationComponent = fxmlLoader.getRoot();
-        m_ShowInformationComponentController = fxmlLoader.getController();
-        m_ShowInformationComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(LOAD_REPOSITORY_BY_XML_FXML_RESOURCE);
-        m_LoadRepositoryByXMLComponent = fxmlLoader.getRoot();
-        m_LoadRepositoryByXMLComponentController = fxmlLoader.getController();
-        m_LoadRepositoryByXMLComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(UPDATE_USERNAME_FXML_RESOURCE);
-        m_UpdateUsernameComponent= fxmlLoader.getRoot();
-        m_UpdateUsernameComponentController = fxmlLoader.getController();
-        m_UpdateUsernameComponentController.setTopController(this);
-
-        fxmlLoader = connector.getFXMLLoader(RESET_BRANCH_FXML_RESOURCE);
-        m_ResetBranchComponent= fxmlLoader.getRoot();
-        m_ResetBranchComponentController = fxmlLoader.getController();
-        m_ResetBranchComponentController.setTopController(this);
-    }
-
     public void setUpdateUsernameComponent(Parent i_UpdateUsernameComponent) { this.m_UpdateUsernameComponent = (VBox) i_UpdateUsernameComponent; }
 
     public void setUpdateUsernameComponentController(PopupController i_UpdateUsernameComponentController) { this.m_UpdateUsernameComponentController = (UpdateUsernameController) i_UpdateUsernameComponentController; }
@@ -172,10 +118,7 @@ public class TopController
 
     public void setShowInformationComponentController(PopupController m_ShowInformationComponentController) { this.m_ShowInformationComponentController = (ShowInformationController) m_ShowInformationComponentController; }
 
-    public void setCreateNewRepositoryComponent(Parent i_CreateNewRepositoryComponent)
-    {
-        this.m_CreateNewRepositoryComponent = (VBox) i_CreateNewRepositoryComponent;
-    }
+    public void setCreateNewRepositoryComponent(Parent i_CreateNewRepositoryComponent) { this.m_CreateNewRepositoryComponent = (VBox) i_CreateNewRepositoryComponent; }
 
     public void setCreateNewRepositoryComponentController(PopupController i_CreateNewRepositoryComponentController)
     {
@@ -232,41 +175,52 @@ public class TopController
         this.m_ResetBranchComponentController = (ResetBranchController) i_ResetBranchComponentController;
     }
 
+
+    public void setMergeSelectBranchComponent(Parent m_MergeSelectBranchComponent)
+    {
+        this.m_MergeSelectBranchComponent = (VBox) m_MergeSelectBranchComponent;
+    }
+
+    public void setMergeSelectBranchComponentController(PopupController m_MergeSelectBranchComponentController)
+    {
+        this.m_MergeSelectBranchComponentController = (MergeSelectBranchController) m_MergeSelectBranchComponentController;
+    }
+
     public void setMainController(AppController i_MainController)
     {
         m_MainController = i_MainController;
     }
 
     @FXML
-    public void createNewRepositoryButtonAction(ActionEvent actionEvent) throws IOException
+    public void createNewRepositoryMenuItemAction(ActionEvent actionEvent) throws IOException
     {
         Stage stage = StageUtilities.createPopupStage("Create new repository", CREATE_NEW_REPOSITORY_FXML_RESOURCE, this);
         stage.showAndWait();
     }
 
     @FXML
-    void createBranchAction(ActionEvent event) throws IOException
+    void createBranchMenuItemAction(ActionEvent event) throws IOException
     {
         Stage stage = StageUtilities.createPopupStage("Create new branch", CREATE_NEW_BRANCH_FXML_RESOURCE, this);
         stage.showAndWait();
     }
 
     @FXML
-    private void commitAction(ActionEvent event) throws IOException
+    private void commitMenuItemAction(ActionEvent event) throws IOException
     {
         Stage stage = StageUtilities.createPopupStage("Commit", COMMIT_FXML_RESOURCE, this);
         stage.showAndWait();
     }
 
     @FXML
-    private void updateUsernameAction(ActionEvent event) throws IOException
+    private void updateUsernameMenuItemAction(ActionEvent event) throws IOException
     {
         Stage stage = StageUtilities.createPopupStage("Update username", UPDATE_USERNAME_FXML_RESOURCE, this);
         stage.showAndWait();
     }
 
     @FXML
-    void checkoutAction(ActionEvent event) throws IOException
+    void checkoutMenuItemAction(ActionEvent event) throws IOException
     {
         if(isRepositoryNull())
         {
@@ -282,7 +236,7 @@ public class TopController
     }
 
     @FXML
-    void deleteBranchAction(ActionEvent event) throws IOException
+    void deleteBranchMenuItemAction(ActionEvent event) throws IOException
     {
         if(isRepositoryNull())
         {
@@ -298,7 +252,7 @@ public class TopController
     }
 
     @FXML
-    void resetBranchAction(ActionEvent event) throws IOException
+    void resetBranchMenuItemAction(ActionEvent event) throws IOException
     {
         if(isRepositoryNull())
         {
@@ -314,7 +268,7 @@ public class TopController
     }
 
     @FXML
-    void showActiveBranchHistoryAction(ActionEvent event) throws IOException
+    void showActiveBranchHistoryMenuItemAction(ActionEvent event) throws IOException
     {
         if(isRepositoryNull())
         {
@@ -336,7 +290,7 @@ public class TopController
     }
 
     @FXML
-    void showAllBranchesAction(ActionEvent event) throws IOException
+    void showAllBranchesMenuItemAction(ActionEvent event) throws IOException
     {
         if(isRepositoryNull())
         {
@@ -352,24 +306,7 @@ public class TopController
     }
 
     @FXML
-    void showCommitHistoryAction(ActionEvent event) throws IOException
-    {
-        if(isRepositoryNull())
-        {
-            AlertFactory.createErrorAlert("Show commit history", "Repository have to be loaded or initialized before making this operation")
-            .showAndWait();
-        }
-        else
-        {
-            NodeMaps nodeMaps = m_MainController.getNodeMaps();
-            //m_ShowInformationComponentController.showDetailsOfCurrentCommit(nodeMaps);
-            Stage stage = StageUtilities.createPopupStage("Show commit history", SHOW_INFORMATION_FXML_RESOURCE, this);
-            stage.showAndWait();
-        }
-    }
-
-    @FXML
-    void showStatusAction(ActionEvent event) throws IOException
+    void showStatusMenuItemAction(ActionEvent event) throws IOException
     {
         if(isRepositoryNull())
         {
@@ -384,15 +321,36 @@ public class TopController
         }
     }
 
+    public void showCurrentCommitDetailsMenuItemAction(ActionEvent actionEvent) throws IOException
+    {
+        if(isRepositoryNull())
+        {
+            AlertFactory.createErrorAlert("Show current commit details", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
+        }
+        else if (m_MainController.getCommits().size() == 0)
+        {
+            // commit haven't been done yet
+            AlertFactory.createErrorAlert("Show current commit details", "Commit haven't been done yet")
+                    .showAndWait();
+        }
+        else
+        {
+            Stage stage = StageUtilities.createPopupStage("Show current commit details", SHOW_INFORMATION_FXML_RESOURCE, this);
+            m_ShowInformationComponentController.setInformationTextArea(new ShowCurrentCommitDetails(m_MainController.getNodeMaps(), m_ShowInformationComponentController));
+            stage.showAndWait();
+        }
+    }
+
     @FXML
-    public void loadRepositoryByPathAction(ActionEvent actionEvent) throws IOException
+    public void loadRepositoryByPathMenuItemAction(ActionEvent actionEvent) throws IOException
     {
         Stage stage = StageUtilities.createPopupStage("Load repository", LOAD_REPOSITORY_BY_PATH_FXML_RESOURCE, this);
         stage.showAndWait();
     }
 
     @FXML
-    public void loadRepositoryByXMLAction(ActionEvent actionEvent) throws IOException
+    public void loadRepositoryByXMLMenuItemAction(ActionEvent actionEvent) throws IOException
     {
         Stage stage = StageUtilities.createPopupStage("Load repository", LOAD_REPOSITORY_BY_XML_FXML_RESOURCE, this);
         stage.showAndWait();
@@ -614,33 +572,12 @@ public class TopController
 
     public void showCommitScene(ActionEvent event) throws IOException
     {
-        commitAction(event);
+        commitMenuItemAction(event);
     }
 
     public boolean isBranchNameRepresentsHead(String i_BranchName)
     {
         return m_MainController.isBranchNameRepresentsHead(i_BranchName);
-    }
-
-    public void showCurrentCommitDetailsAction(ActionEvent actionEvent) throws IOException
-    {
-        if(isRepositoryNull())
-        {
-            AlertFactory.createErrorAlert("Show current commit details", "Repository have to be loaded or initialized before making this operation")
-                    .showAndWait();
-        }
-        else if (m_MainController.getCommits().size() == 0)
-        {
-            // commit haven't been done yet
-            AlertFactory.createErrorAlert("Show current commit details", "Commit haven't been done yet")
-                    .showAndWait();
-        }
-        else
-        {
-            Stage stage = StageUtilities.createPopupStage("Show current commit details", SHOW_INFORMATION_FXML_RESOURCE, this);
-            m_ShowInformationComponentController.setInformationTextArea(new ShowCurrentCommitDetails(m_MainController.getNodeMaps(), m_ShowInformationComponentController));
-            stage.showAndWait();
-        }
     }
 
     public void changeActiveBranchPointedCommit(String i_CommitSHA1) throws IOException
@@ -655,6 +592,21 @@ public class TopController
 
     public void showDetailsOfCurrentCommitScene(ActionEvent event) throws IOException
     {
-        showCurrentCommitDetailsAction(event);
+        showCurrentCommitDetailsMenuItemAction(event);
+    }
+
+    public void mergeMenuItemAction(ActionEvent actionEvent) throws IOException
+    {
+        if(isRepositoryNull())
+        {
+            AlertFactory.createErrorAlert("Merge", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
+        }
+        else
+        {
+            Stage stage = StageUtilities.createPopupStage("Merge", MERGE_SELECT_BRANCH_FXML_RESOURCE, this);
+            m_MergeSelectBranchComponentController.bindBranchesToChoiceBox();
+            stage.showAndWait();
+        }
     }
 }

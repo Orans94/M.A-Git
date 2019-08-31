@@ -36,18 +36,6 @@ public class StageUtilities
 
         // wiring up the new scene's controller to topController
         PopupController popupController = fxmlLoader.getController();
-
-/*
-        //-----------------delete
-        if (fxmlLoader.getController() instanceof ShowInformationController)
-        {
-            ShowInformationController showInformationController = fxmlLoader.getController();
-            showInformationController.setShowable(new ShowStam());
-            showInformationController.setInformationTextArea("dsadad");
-        }
-        //-----------------delete
-*/
-
         popupController.setTopController(i_ControllerToWire);
 
         // wiring up top controller to new popupcontroller and it component
