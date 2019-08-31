@@ -1,6 +1,8 @@
-package javafx.primary.top.popup.merge;
+package javafx.primary.top.popup.merge.selectbranch;
 
 import engine.Branch;
+import javafx.AlertFactory;
+import javafx.StageUtilities;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
@@ -23,22 +25,40 @@ public class MergeSelectBranchController implements PopupController
 
     @FXML void startMergeButtonAction(ActionEvent event)
     {
+        // get their branch name
+        String theirBranchName = branchNamesChoiceBox.getValue();
 
+        // get our, their and ancestor branches
+
+        // union all file from 3 commits to to data structure
+
+        // for each file (path)
+
+            // find merge conflicts
+
+            // solve conflicts- show mergeSolveConflict scene
+        //
+
+
+        StageUtilities.closeOpenSceneByActionEvent(event);
     }
 
     public void bindBranchesToChoiceBox()
     {
         Map<String, Branch> branches = m_TopController.getBranches();
-        addAllBranchesToChoiceBox(branches);
+        addAllBranchesExceptActiveToChoiceBox(branches);
     }
 
-    public void addAllBranchesToChoiceBox(Map<String, Branch> i_Branches)
+    public void addAllBranchesExceptActiveToChoiceBox(Map<String, Branch> i_Branches)
     {
         Branch activeBranch = m_TopController.getActiveBranch();
 
         for(Branch branch : i_Branches.values())
         {
-            branchNamesChoiceBox.getItems().add(branch.getName());
+            if (!m_TopController.getActiveBranch().equals(branch))
+            {
+                branchNamesChoiceBox.getItems().add(branch.getName());
+            }
         }
 
         branchNamesChoiceBox.setValue(activeBranch.getName());
