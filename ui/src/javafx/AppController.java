@@ -47,15 +47,7 @@ public class AppController
             m_LeftComponentController.setMainController(this);
             m_TopComponentController.setMainController(this);
         }
-
-        bindCenterSelectedCommitToBottomComponent();
     }
-
-    private void bindCenterSelectedCommitToBottomComponent()
-    {
-
-    }
-
 
     public void createNewBranch(String i_BranchName) throws IOException { m_Engine.createNewBranch(i_BranchName); }
 
@@ -228,7 +220,7 @@ public class AppController
         return m_Engine.getActiveBranchName();
     }
 
-    public void newCommitSeletectedOnCenterTableView(Commit i_NewValue, String i_CommitSHA1)
+    public void newCommitSelectedOnCenterTableView(Commit i_NewValue, String i_CommitSHA1)
     {
         m_BottomComponentController.setBottomTabsDetails(i_NewValue, i_CommitSHA1);
     }
@@ -241,5 +233,10 @@ public class AppController
     public Folder getFolderBySHA1(String i_FolderSHA1)
     {
         return m_Engine.getFolderBySHA1(i_FolderSHA1);
+    }
+
+    public Node getNodeBySHA1(String i_ItemSHA1)
+    {
+        return m_Engine.getNodeBySHA1(i_ItemSHA1);
     }
 }

@@ -338,7 +338,7 @@ public class Repository
         setNodeMapsByRootFolder(m_WorkingCopy.getWorkingCopyDir(), m_WorkingCopy.getNodeMaps(), true);
     }
 
-    public void setNodeMapsByRootFolder(Path startPath, NodeMaps i_NodeMapsToUpdate, boolean i_LoadToFileSystem) throws IOException
+    public void setNodeMapsByRootFolder(Path i_StartPath, NodeMaps i_NodeMapsToUpdate, boolean i_LoadToFileSystem) throws IOException
     {
         /*
         this method is setting i_NodeMapsToUpdate by the rootFolder given in startPath.
@@ -354,7 +354,7 @@ public class Repository
         String myBlobContent;
 
         // getting the SHA1 of the folder by it path
-        String zipName = i_NodeMapsToUpdate.getSHA1ByPath().get(startPath);
+        String zipName = i_NodeMapsToUpdate.getSHA1ByPath().get(i_StartPath);
 
         // creating folder
         String myDirContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"), zipName.concat(".txt"));
@@ -367,23 +367,23 @@ public class Repository
 
         for (engine.Item item : folder.getItems())
         {
-            i_NodeMapsToUpdate.getSHA1ByPath().put(startPath.resolve(item.getName()), item.getSHA1());
+            i_NodeMapsToUpdate.getSHA1ByPath().put(i_StartPath.resolve(item.getName()), item.getSHA1());
             if (item.getType().equals("folder"))
             {
                 if (i_LoadToFileSystem)
                 {
-                    Files.createDirectory(startPath.resolve(item.getName()));
+                    Files.createDirectory(i_StartPath.resolve(item.getName()));
                 }
-                setNodeMapsByRootFolder(startPath.resolve(item.getName()), i_NodeMapsToUpdate, i_LoadToFileSystem);
+                setNodeMapsByRootFolder(i_StartPath.resolve(item.getName()), i_NodeMapsToUpdate, i_LoadToFileSystem);
             }
             else
             {
                 // getting the blob SHA1 by it path
-                zipName = i_NodeMapsToUpdate.getSHA1ByPath().get(startPath.resolve(item.getName()));
+                zipName = i_NodeMapsToUpdate.getSHA1ByPath().get(i_StartPath.resolve(item.getName()));
                 myBlobContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"), item.getName());
                 if (i_LoadToFileSystem)
                 {
-                    FileUtilities.createAndWriteTxtFile(startPath.resolve(item.getName()), myBlobContent);
+                    FileUtilities.createAndWriteTxtFile(i_StartPath.resolve(item.getName()), myBlobContent);
                 }
                 Blob blob = new Blob(myBlobContent);
                 i_NodeMapsToUpdate.getNodeBySHA1().put(zipName, blob);
@@ -778,5 +778,10 @@ public class Repository
     public Folder getFolderBySHA1(String i_FolderSHA1)
     {
         return (Folder)m_WorkingCopy.getNodeMaps().getNodeBySHA1().get(i_FolderSHA1);
+    }
+
+    public Node getNodeBySHA1(String i_ItemSHA1)
+    {
+        return m_WorkingCopy.getNodeMaps().getNodeBySHA1().get(i_ItemSHA1);
     }
 }

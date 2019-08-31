@@ -22,4 +22,6 @@ abstract public class Node
                 EngineManager.getUserName() + "," +
                 DateUtils.FormatToString(new Date());
     }
+
+    public String getContent(){return m_Content;}
 }

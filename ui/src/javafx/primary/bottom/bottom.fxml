@@ -16,7 +16,7 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="-Infinity" prefHeight="213.0" prefWidth="835.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.bottom.BottomController">
    <center>
-      <TabPane fx:id="bottomTabPane" minHeight="32.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="bottomTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab fx:id="commitTab" closable="false" text="Commit">
             <content>
@@ -103,9 +103,9 @@
           </Tab>
           <Tab closable="false" text="File Tree">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="155.0" prefWidth="814.0">
+              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="155.0" prefWidth="814.0">
                      <children>
-                        <SplitPane dividerPositions="0.29797979797979796" prefHeight="160.0" prefWidth="835.0">
+                        <SplitPane disable="true" dividerPositions="0.29797979797979796" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="160.0" prefWidth="835.0">
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="269.0">
                                  <children>
@@ -120,13 +120,13 @@
                                     </ScrollPane>
                                  </children>
                               </AnchorPane>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="537.0">
+                            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="537.0" SplitPane.resizableWithParent="false">
                                  <children>
-                                    <ScrollPane prefHeight="159.0" prefWidth="581.0">
+                                    <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="159.0" prefWidth="581.0">
                                       <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="157.0" prefWidth="579.0">
+                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="157.0" prefWidth="579.0">
                                              <children>
-                                                <TextArea fx:id="commitFileTextArea" prefHeight="156.0" prefWidth="580.0" />
+                                                <TextArea fx:id="commitFileTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="156.0" prefWidth="580.0" />
                                              </children>
                                           </AnchorPane>
                                       </content>

@@ -256,4 +256,9 @@ public class EngineManager
     {
         return m_Repository.getFolderBySHA1(i_FolderSHA1);
     }
+
+    public Node getNodeBySHA1(String i_ItemSHA1)
+    {
+        return m_Repository.getNodeBySHA1(i_ItemSHA1);
+    }
 }

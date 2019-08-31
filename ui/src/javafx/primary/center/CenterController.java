@@ -56,7 +56,7 @@ public class CenterController
             public void changed(ObservableValue<? extends Commit> observable, Commit oldValue, Commit newValue)
             {
                 String commitSHA1 = sha1TableColumn.getCellData(commitsTableView.getSelectionModel().getSelectedIndex());
-                m_MainController.newCommitSeletectedOnCenterTableView(newValue, commitSHA1);
+                m_MainController.newCommitSelectedOnCenterTableView(newValue, commitSHA1);
             }
         });
     }

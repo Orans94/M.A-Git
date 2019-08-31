@@ -2,6 +2,8 @@ package javafx.primary.bottom;
 
 import engine.*;
 import javafx.AppController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -17,10 +19,7 @@ public class BottomController
     private AppController m_MainController;
     private Image folderIcon = new Image(getClass().getResourceAsStream("/javafx/primary/bottom/icons/folderIcon.png"));
     private Image blobIcon = new Image(getClass().getResourceAsStream("/javafx/primary/bottom/icons/blobIcon.png"));
-    public void setMainController(AppController i_MainController)
-    {
-        m_MainController = i_MainController;
-    }
+    private Map<TreeItem<String>, Folder> m_FolderByTreeItem = new HashMap<>();
 
     @FXML private TabPane bottomTabPane;
     @FXML private Tab commitTab;
@@ -33,6 +32,59 @@ public class BottomController
     @FXML private TreeView<String> commitTreeView;
     @FXML private TextArea commitFileTextArea;
 
+
+    @FXML
+    public void initialize()
+    {
+        bindSelectedFileToTextArea();
+    }
+
+    private void bindSelectedFileToTextArea()
+    {
+        commitTreeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue, TreeItem<String> newValue)
+            {
+                if(newValue.isLeaf())
+                {
+                   commitFileTextArea.setText(getBlobContent(newValue));
+                }
+                else
+                {
+                    clearTextArea();
+                }
+            }
+        });
+    }
+
+    public void setMainController(AppController i_MainController)
+    {
+        m_MainController = i_MainController;
+    }
+
+    private String getBlobContent(TreeItem<String> i_Children)
+    {
+        String itemSHA1;
+        Node blob = null;
+
+        Folder parent = m_FolderByTreeItem.get(i_Children.getParent());
+        for(Item item : parent.getItems())
+        {
+            if(item.getName().equals(i_Children.getValue()))
+            {
+                itemSHA1 = item.getSHA1();
+                blob = m_MainController.getNodeBySHA1(itemSHA1);
+            }
+        }
+
+        return blob.getContent();
+    }
+
+    private void clearTextArea()
+    {
+        commitFileTextArea.clear();
+    }
     public void setBottomTabsDetails(Commit i_NewValue, String i_CommitSHA1)
     {
         setCommitTabDetails(i_NewValue, i_CommitSHA1);
@@ -41,8 +93,10 @@ public class BottomController
 
     private void setFileTreeTabDetails(Commit i_NewValue)
     {
+        //TODO mistake - went to working copy and this commit is not for sure on working copy
         Folder rootFolder = m_MainController.getFolderBySHA1(i_NewValue.getRootFolderSHA1());
         TreeItem<String> root = new TreeItem<>("Root folder", new ImageView(folderIcon));
+        m_FolderByTreeItem.put(root, rootFolder);
         setFileTreeTabDetailsRecursion(rootFolder, root);
         commitTreeView.setRoot(root);
     }
@@ -61,6 +115,7 @@ public class BottomController
                 TreeItem<String> folderTreeItem = new TreeItem<>(item.getName(), new ImageView(folderIcon));
                 i_RootTreeItem.getChildren().add(folderTreeItem);
                 Folder folder = m_MainController.getFolderBySHA1(item.getSHA1());
+                m_FolderByTreeItem.put(folderTreeItem, folder);
                 setFileTreeTabDetailsRecursion(folder, folderTreeItem);
             }
         }
