@@ -162,4 +162,19 @@ public class Magit
                 .stream()
                 .max(Comparator.comparing(Commit::getCommitDate)).get();
     }
+
+    public List<Branch> getContainedBranches(String i_CommitSHA1)
+    {
+        List<Branch> containedBranches = new LinkedList<>();
+
+        for(Branch branch : m_Branches.values())
+        {
+            if(branch.getCommitSHA1().equals(i_CommitSHA1))
+            {
+                containedBranches.add(branch);
+            }
+        }
+
+        return containedBranches;
+    }
 }

@@ -769,4 +769,14 @@ public class Repository
     {
         return m_Magit.getNewestCommitByItDate();
     }
+
+    public List<Branch> getContainedBranches(String i_CommitSHA1)
+    {
+        return m_Magit.getContainedBranches(i_CommitSHA1);
+    }
+
+    public Folder getFolderBySHA1(String i_FolderSHA1)
+    {
+        return (Folder)m_WorkingCopy.getNodeMaps().getNodeBySHA1().get(i_FolderSHA1);
+    }
 }

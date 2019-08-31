@@ -1,32 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.bottom.BottomController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="-Infinity" prefHeight="213.0" prefWidth="835.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.bottom.BottomController">
    <center>
-      <TabPane minHeight="32.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="bottomTabPane" minHeight="32.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab closable="false" text="Commit">
+          <Tab fx:id="commitTab" closable="false" text="Commit">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="181.0" prefWidth="829.0">
+                           <children>
+                              <HBox prefHeight="54.0" prefWidth="600.0">
+                                 <children>
+                                    <Label text="Author">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Text fx:id="authorText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="262.0" HBox.hgrow="NEVER">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                    <Label text="Parents">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Text fx:id="parentText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="428.0" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="56.0" prefWidth="600.0">
+                                 <children>
+                                    <Label text="Date">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Text fx:id="dateText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="274.0" HBox.hgrow="NEVER">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                    <Label text="Message">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="420.0" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="48.0" prefWidth="600.0">
+                                 <children>
+                                    <Label text="Contained in branches:">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Text fx:id="containedInBranchesText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="179.0" HBox.hgrow="NEVER">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                    <Label text="SHA1">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Text fx:id="sha1Text" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="436.0" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children></AnchorPane>
             </content>
           </Tab>
           <Tab closable="false" text="File Tree">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="155.0" prefWidth="814.0">
+                     <children>
+                        <SplitPane dividerPositions="0.29797979797979796" prefHeight="160.0" prefWidth="835.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="269.0">
+                                 <children>
+                                    <ScrollPane prefHeight="156.0" prefWidth="246.0">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="154.0" prefWidth="244.0">
+                                             <children>
+                                                <TreeView fx:id="commitTreeView" prefHeight="154.0" prefWidth="245.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </ScrollPane>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="537.0">
+                                 <children>
+                                    <ScrollPane prefHeight="159.0" prefWidth="581.0">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="157.0" prefWidth="579.0">
+                                             <children>
+                                                <TextArea fx:id="commitFileTextArea" prefHeight="156.0" prefWidth="580.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </ScrollPane>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>
       </TabPane>
    </center>
    <bottom>
-      <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="32.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="29.0" prefHeight="29.0" prefWidth="810.0" BorderPane.alignment="CENTER">
          <children>
             <Label text="Task Process" />
          </children>

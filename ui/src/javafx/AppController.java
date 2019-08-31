@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -46,6 +47,13 @@ public class AppController
             m_LeftComponentController.setMainController(this);
             m_TopComponentController.setMainController(this);
         }
+
+        bindCenterSelectedCommitToBottomComponent();
+    }
+
+    private void bindCenterSelectedCommitToBottomComponent()
+    {
+
     }
 
 
@@ -218,5 +226,20 @@ public class AppController
     public String getActiveBranchName()
     {
         return m_Engine.getActiveBranchName();
+    }
+
+    public void newCommitSeletectedOnCenterTableView(Commit i_NewValue, String i_CommitSHA1)
+    {
+        m_BottomComponentController.setBottomTabsDetails(i_NewValue, i_CommitSHA1);
+    }
+
+    public List<Branch> getContainedBranches(String i_CommitSHA1)
+    {
+        return m_Engine.getContainedBranches(i_CommitSHA1);
+    }
+
+    public Folder getFolderBySHA1(String i_FolderSHA1)
+    {
+        return m_Engine.getFolderBySHA1(i_FolderSHA1);
     }
 }

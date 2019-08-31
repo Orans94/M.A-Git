@@ -63,12 +63,7 @@
       <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" prefWidth="904.0" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="refreshButton" mnemonicParsing="false" text="Refresh" HBox.hgrow="NEVER" />
-            <SplitMenuButton fx:id="repositoryFullPathSplitMenuButton" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath" HBox.hgrow="ALWAYS">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
-            </SplitMenuButton>
+            <SplitMenuButton fx:id="repositoryFullPathSplitMenuButton" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath" HBox.hgrow="ALWAYS" />
             <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Checkout (Active)" HBox.hgrow="NEVER">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />

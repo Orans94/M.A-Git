@@ -3,6 +3,8 @@ package javafx.primary.center;
 import engine.Commit;
 import javafx.AppController;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -42,6 +44,21 @@ public class CenterController
         authorTableColumn.setCellValueFactory(new PropertyValueFactory<>("CommitAuthor"));
         dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("CommitDate"));
         sha1TableColumn.setCellValueFactory(new PropertyValueFactory<>("SHA1"));
+
+        bindSelectedCommitChangedToMainController();
+    }
+
+    private void bindSelectedCommitChangedToMainController()
+    {
+        commitsTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Commit>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Commit> observable, Commit oldValue, Commit newValue)
+            {
+                String commitSHA1 = sha1TableColumn.getCellData(commitsTableView.getSelectionModel().getSelectedIndex());
+                m_MainController.newCommitSeletectedOnCenterTableView(newValue, commitSHA1);
+            }
+        });
     }
 
     private void tableViewLoad(ObservableList<Commit> i_CommitsData) { commitsTableView.setItems(getCommitsData()); }

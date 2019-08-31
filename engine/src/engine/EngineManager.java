@@ -246,4 +246,14 @@ public class EngineManager
     {
         return m_XMLManager.getXMLMagitMaps();
     }
+
+    public List<Branch> getContainedBranches(String i_CommitSHA1)
+    {
+        return m_Repository.getContainedBranches(i_CommitSHA1);
+    }
+
+    public Folder getFolderBySHA1(String i_FolderSHA1)
+    {
+        return m_Repository.getFolderBySHA1(i_FolderSHA1);
+    }
 }

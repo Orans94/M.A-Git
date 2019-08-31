@@ -1,5 +1,7 @@
 package javafx;
 
+import javafx.scene.image.Image;
+
 public class CommonResourcesPaths
 {
     public final static String APP_FXML_INCLUDE_RESOURCE = "/javafx/primary/include/app.fxml";
