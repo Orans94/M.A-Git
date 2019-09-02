@@ -15,6 +15,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,15 @@ public class CenterController
             public void changed(ObservableValue<? extends Commit> observable, Commit oldValue, Commit newValue)
             {
                 String commitSHA1 = sha1TableColumn.getCellData(commitsTableView.getSelectionModel().getSelectedIndex());
-                m_MainController.newCommitSelectedOnCenterTableView(newValue, commitSHA1);
+                try
+                {
+                    m_MainController.newCommitSelectedOnCenterTableView(newValue, commitSHA1);
+                }
+                catch (IOException e)
+                {
+                    //TODO
+                    e.printStackTrace();
+                }
             }
         });
     }

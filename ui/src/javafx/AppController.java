@@ -220,8 +220,13 @@ public class AppController
         return m_Engine.getActiveBranchName();
     }
 
-    public void newCommitSelectedOnCenterTableView(Commit i_NewValue, String i_CommitSHA1)
+    public void newCommitSelectedOnCenterTableView(Commit i_NewValue, String i_CommitSHA1) throws IOException
     {
+        if(m_Engine.getLazyLoadedNodeMapsByCommitSHA1(i_CommitSHA1) == null)
+        {
+            m_Engine.lazyLoadCommitFromFileSystem(i_NewValue, i_CommitSHA1);
+        }
+
         m_BottomComponentController.setBottomTabsDetails(i_NewValue, i_CommitSHA1);
     }
 
@@ -238,5 +243,15 @@ public class AppController
     public Node getNodeBySHA1(String i_ItemSHA1)
     {
         return m_Engine.getNodeBySHA1(i_ItemSHA1);
+    }
+
+    public Folder getLazyLoadedFolderBySHA1(String i_CommitSHA1, String i_RootFolderSHA1)
+    {
+        return (Folder) m_Engine.getLazyLoadedNodeMapsByCommitSHA1(i_CommitSHA1).getNodeBySHA1().get(i_RootFolderSHA1);
+    }
+
+    public List<Path> merge(String i_TheirBranchName)
+    {
+        return m_Engine.merge(i_TheirBranchName);
     }
 }

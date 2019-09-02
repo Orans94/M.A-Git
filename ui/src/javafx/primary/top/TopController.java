@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -606,5 +607,10 @@ public class TopController
             m_MergeSelectBranchComponentController.bindBranchesToChoiceBox();
             stage.showAndWait();
         }
+    }
+
+    public List<Path> merge(String i_TheirBranchName)
+    {
+        return m_MainController.merge(i_TheirBranchName);
     }
 }

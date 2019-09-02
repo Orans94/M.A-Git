@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -20,7 +21,7 @@ public class EngineManager
     private Repository m_Repository;
     private static String m_UserName = "Administrator";
     private XMLManager m_XMLManager = new XMLManager();
-
+    private Map<String, NodeMaps> m_LazyLoadedNodeMapsByCommitSHA1 = new HashMap<>();
 
     public XMLManager getXMLManager() { return m_XMLManager; }
 
@@ -260,5 +261,24 @@ public class EngineManager
     public Node getNodeBySHA1(String i_ItemSHA1)
     {
         return m_Repository.getNodeBySHA1(i_ItemSHA1);
+    }
+
+    public void lazyLoadCommitFromFileSystem(Commit i_NewValue, String i_CommitSHA1) throws IOException
+    {
+        NodeMaps commitNodeMaps = new NodeMaps();
+        Path rootFolderPath = Magit.getMagitDir().resolve("objects").resolve(i_NewValue.getRootFolderSHA1() + ".zip");
+        commitNodeMaps.getSHA1ByPath().put(rootFolderPath, i_NewValue.getRootFolderSHA1());
+        m_Repository.setNodeMapsByRootFolder(rootFolderPath, commitNodeMaps, false);
+        m_LazyLoadedNodeMapsByCommitSHA1.put(i_CommitSHA1, commitNodeMaps);
+    }
+
+    public NodeMaps getLazyLoadedNodeMapsByCommitSHA1(String i_CommitSHA1)
+    {
+        return m_LazyLoadedNodeMapsByCommitSHA1.getOrDefault(i_CommitSHA1, null);
+    }
+
+    public List<Path> merge(String i_TheirBranchName)
+    {
+        return m_Repository.merge(i_TheirBranchName);
     }
 }

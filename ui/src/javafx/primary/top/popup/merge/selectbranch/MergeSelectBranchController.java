@@ -2,6 +2,7 @@ package javafx.primary.top.popup.merge.selectbranch;
 
 import engine.Branch;
 import engine.Commit;
+import engine.NodeMaps;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,21 +35,27 @@ public class MergeSelectBranchController implements PopupController
         Branch ourBranch = m_TopController.getActiveBranch();
         Branch theirBranch = m_TopController.getBranches().get(theirBranchName);
 
-        // getting our and their acutal commits
+        // getting our and their actual commits
         Commit ourCommit = m_TopController.getCommits().get(ourBranch.getCommitSHA1());
         Commit theirCommit = m_TopController.getCommits().get(theirBranch.getCommitSHA1());
 
-        // getting ancestor branch
+        // getting ancestor commit
         Commit ancestorCommit = m_TopController.getCommitAncestor(ourCommit, theirCommit);
 
-        // union all file from 3 commits to to data structure
+
+
+        m_TopController.merge(theirBranchName);
+        // conflicts
         List<Path> mergeConflictsFilesList = m_TopController.getMergeConflicts(ancestorCommit, ourCommit, theirCommit);
+        ///////////////////////////////////////////////////////////////////
 
         // for each file (path)
-        for (Path conflictedFilePath : mergeConflictsFilesList)
+/*        for (Path conflictedFilePath : mergeConflictsFilesList)
         {
-            // open merge solve conflict scene
-        }
+            // open merge solve conflict scene and solve conflict
+        }*/
+
+        //commit
 
 
 

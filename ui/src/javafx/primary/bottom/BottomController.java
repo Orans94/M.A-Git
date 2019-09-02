@@ -46,9 +46,16 @@ public class BottomController
             @Override
             public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue, TreeItem<String> newValue)
             {
-                if(newValue.isLeaf())
+                if(newValue != null)
                 {
-                   commitFileTextArea.setText(getBlobContent(newValue));
+                    if (newValue.isLeaf())
+                    {
+                        commitFileTextArea.setText(getBlobContent(newValue));
+                    }
+                    else
+                    {
+                        clearTextArea();
+                    }
                 }
                 else
                 {
@@ -88,20 +95,20 @@ public class BottomController
     public void setBottomTabsDetails(Commit i_NewValue, String i_CommitSHA1)
     {
         setCommitTabDetails(i_NewValue, i_CommitSHA1);
-        setFileTreeTabDetails(i_NewValue);
+        setFileTreeTabDetails(i_NewValue, i_CommitSHA1);
     }
 
-    private void setFileTreeTabDetails(Commit i_NewValue)
+    private void setFileTreeTabDetails(Commit i_NewValue, String i_CommitSHA1)
     {
-        //TODO mistake - went to working copy and this commit is not for sure on working copy
-        Folder rootFolder = m_MainController.getFolderBySHA1(i_NewValue.getRootFolderSHA1());
+        //ASSUMPTION: when we get here - the i_NewValue commit is already loaded to m_LazyLoaded.. in EngineManager
+        Folder rootFolder = m_MainController.getLazyLoadedFolderBySHA1(i_CommitSHA1 ,i_NewValue.getRootFolderSHA1());
         TreeItem<String> root = new TreeItem<>("Root folder", new ImageView(folderIcon));
         m_FolderByTreeItem.put(root, rootFolder);
-        setFileTreeTabDetailsRecursion(rootFolder, root);
+        setFileTreeTabDetailsRecursion(rootFolder, root, i_CommitSHA1);
         commitTreeView.setRoot(root);
     }
 
-    private void setFileTreeTabDetailsRecursion(Folder i_RootFolder, TreeItem<String> i_RootTreeItem)
+    private void setFileTreeTabDetailsRecursion(Folder i_RootFolder, TreeItem<String> i_RootTreeItem, String i_CommitSHA1)
     {
         //this method is walking on the folders of the commit and making a treeview from it
         for (Item item : i_RootFolder.getItems())
@@ -114,9 +121,9 @@ public class BottomController
             {
                 TreeItem<String> folderTreeItem = new TreeItem<>(item.getName(), new ImageView(folderIcon));
                 i_RootTreeItem.getChildren().add(folderTreeItem);
-                Folder folder = m_MainController.getFolderBySHA1(item.getSHA1());
+                Folder folder = m_MainController.getLazyLoadedFolderBySHA1(i_CommitSHA1, item.getSHA1());
                 m_FolderByTreeItem.put(folderTreeItem, folder);
-                setFileTreeTabDetailsRecursion(folder, folderTreeItem);
+                setFileTreeTabDetailsRecursion(folder, folderTreeItem, i_CommitSHA1);
             }
         }
     }

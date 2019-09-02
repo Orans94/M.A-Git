@@ -3,6 +3,8 @@ package engine;
 import mypackage.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import puk.team.course.magit.ancestor.finder.AncestorFinder;
+import puk.team.course.magit.ancestor.finder.CommitRepresentative;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -777,11 +779,82 @@ public class Repository
 
     public Folder getFolderBySHA1(String i_FolderSHA1)
     {
-        return (Folder)m_WorkingCopy.getNodeMaps().getNodeBySHA1().get(i_FolderSHA1);
+        if(m_WorkingCopy.getNodeMaps().getNodeBySHA1().containsKey(i_FolderSHA1))
+        {
+            return (Folder) m_WorkingCopy.getNodeMaps().getNodeBySHA1().get(i_FolderSHA1);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public Node getNodeBySHA1(String i_ItemSHA1)
     {
         return m_WorkingCopy.getNodeMaps().getNodeBySHA1().get(i_ItemSHA1);
     }
+
+    public List<Path> merge(String i_TheirBranchName) throws IOException
+    {
+        MergeNodeMaps mergeNodeMaps = new MergeNodeMaps();
+        Branch theirBranch = m_Magit.getBranches().get(i_TheirBranchName);
+        Commit theirCommit = m_Magit.getCommits().get(theirBranch.getCommitSHA1());
+        generateCommitsNodeMaps(mergeNodeMaps, theirCommit);
+        unionCommitsNodeMaps(mergeNodeMaps);
+        mergeUnconflictedNodesAndGetConflictedNodeMaps(mergeNodeMaps);
+        //TODO
+        return null;
+    }
+
+    private void mergeUnconflictedNodesAndGetConflictedNodeMaps(MergeNodeMaps i_MergeNodeMaps)
+    {
+
+        
+    }
+
+    private void unionCommitsNodeMaps(MergeNodeMaps i_MergeNodeMaps)
+    {
+        NodeMaps unionNodeMaps = i_MergeNodeMaps.getUnionNodeMaps();
+        unionNodeMaps.putAll(i_MergeNodeMaps.getTheirNodeMaps());
+        unionNodeMaps.putAll(i_MergeNodeMaps.getOursNodeMaps());
+        unionNodeMaps.putAll(i_MergeNodeMaps.getAncestorNodeMaps());
+    }
+
+    private void generateCommitsNodeMaps(MergeNodeMaps i_MergeNodeMaps, Commit i_TheirCommit) throws IOException
+    {
+        generateAncestorCommitNodeMaps(i_MergeNodeMaps, i_TheirCommit);
+        generateTheirCommitNodeMaps(i_MergeNodeMaps,i_TheirCommit);
+        generateOursCommitNodeMaps(i_MergeNodeMaps);
+    }
+
+    private void generateAncestorCommitNodeMaps(MergeNodeMaps i_MergeNodeMaps, Commit i_TheirCommit) throws IOException
+    {
+        String ourCommitSHA1, ancestorSHA1;
+        Commit ourCommit, ancestorCommit;
+
+        ourCommitSHA1 = m_Magit.getHead().getActiveBranch().getCommitSHA1();
+        ourCommit = m_Magit.getCommits().get(ourCommitSHA1);
+        AncestorFinder finder = new AncestorFinder(SHA1 -> m_Magit.getCommits().get(SHA1));
+        ancestorSHA1 = finder.traceAncestor(ourCommit.getSHA1(), i_TheirCommit.getSHA1());
+        ancestorCommit = m_Magit.getCommits().get(ancestorSHA1);
+
+        NodeMaps ancestorNodeMaps = i_MergeNodeMaps.getAncestorNodeMaps();
+        Path rootFolderPath = m_WorkingCopy.getWorkingCopyDir();
+        ancestorNodeMaps.getSHA1ByPath().put(rootFolderPath, ancestorCommit.getRootFolderSHA1());
+        setNodeMapsByRootFolder(rootFolderPath, ancestorNodeMaps, false);
+    }
+
+    private void generateTheirCommitNodeMaps(MergeNodeMaps i_MergeNodeMaps, Commit i_TheirCommit) throws IOException
+    {
+        NodeMaps theirNodeMaps = i_MergeNodeMaps.getTheirNodeMaps();
+        Path rootFolderPath = m_WorkingCopy.getWorkingCopyDir();
+        theirNodeMaps.getSHA1ByPath().put(rootFolderPath, i_TheirCommit.getRootFolderSHA1());
+        setNodeMapsByRootFolder(rootFolderPath, theirNodeMaps, false);
+    }
+
+    private void generateOursCommitNodeMaps(MergeNodeMaps i_MergeNodeMaps)
+    {
+        i_MergeNodeMaps.setOursNodeMaps(m_WorkingCopy.getNodeMaps());
+    }
+
 }

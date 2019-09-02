@@ -35,4 +35,10 @@ public class NodeMaps
     public Map<Path, String> getSHA1ByPath() { return m_SHA1ByPath; }
 
     public boolean isEmpty(){return m_NodeBySHA1.isEmpty() && m_SHA1ByPath.isEmpty();}
+
+    public void putAll(NodeMaps i_NodeMaps)
+    {
+        m_NodeBySHA1.putAll(i_NodeMaps.getNodeBySHA1());
+        m_SHA1ByPath.putAll(i_NodeMaps.getSHA1ByPath());
+    }
 }

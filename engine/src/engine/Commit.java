@@ -1,6 +1,7 @@
 package engine;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import puk.team.course.magit.ancestor.finder.CommitRepresentative;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Commit
+public class Commit implements CommitRepresentative
 {
     private String m_RootFolderSHA1;
     private List<String> m_ParentsSHA1 = new LinkedList<>();
@@ -102,4 +103,22 @@ public class Commit
     public String getCommitAuthor() { return m_CommitAuthor; }
 
     public String getMessage() { return m_Message; }
+
+    @Override
+    public String getSha1()
+    {
+        return getSHA1();
+    }
+
+    @Override
+    public String getFirstPrecedingSha1()
+    {
+        return m_ParentsSHA1.size() > 0 ? m_ParentsSHA1.get(0) : StringFinals.EMPTY_STRING;
+    }
+
+    @Override
+    public String getSecondPrecedingSha1()
+    {
+        return m_ParentsSHA1.size() > 1 ? m_ParentsSHA1.get(1) : StringFinals.EMPTY_STRING;
+    }
 }
