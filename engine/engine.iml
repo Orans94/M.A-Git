@@ -37,16 +37,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/OneDrive - The Academic College of Tel-Aviv Jaffa - MTA/לימודים/קיץ/Java/M.A Git/ספריות צד שלישי/AncestorFinder.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/AncestorFinder.jar!/" />
+          <root url="jar://$MODULE_DIR$/../resources/AncestorFinder.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

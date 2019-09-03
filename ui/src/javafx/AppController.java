@@ -250,7 +250,7 @@ public class AppController
         return (Folder) m_Engine.getLazyLoadedNodeMapsByCommitSHA1(i_CommitSHA1).getNodeBySHA1().get(i_RootFolderSHA1);
     }
 
-    public List<Path> merge(String i_TheirBranchName)
+    public List<Path> merge(String i_TheirBranchName) throws IOException
     {
         return m_Engine.merge(i_TheirBranchName);
     }

@@ -40,13 +40,18 @@ public class MergeSelectBranchController implements PopupController
         Commit theirCommit = m_TopController.getCommits().get(theirBranch.getCommitSHA1());
 
         // getting ancestor commit
-        Commit ancestorCommit = m_TopController.getCommitAncestor(ourCommit, theirCommit);
+        //Commit ancestorCommit = m_TopController.getCommitAncestor(ourCommit, theirCommit);
 
 
+        try{
+            m_TopController.merge(theirBranchName);
+        }
+        catch(Exception e)
+        {
 
-        m_TopController.merge(theirBranchName);
+        }
         // conflicts
-        List<Path> mergeConflictsFilesList = m_TopController.getMergeConflicts(ancestorCommit, ourCommit, theirCommit);
+        //List<Path> mergeConflictsFilesList = m_TopController.getMergeConflicts(ancestorCommit, ourCommit, theirCommit);
         ///////////////////////////////////////////////////////////////////
 
         // for each file (path)

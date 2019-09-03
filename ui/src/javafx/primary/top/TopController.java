@@ -609,7 +609,7 @@ public class TopController
         }
     }
 
-    public List<Path> merge(String i_TheirBranchName)
+    public List<Path> merge(String i_TheirBranchName) throws IOException
     {
         return m_MainController.merge(i_TheirBranchName);
     }

@@ -794,6 +794,7 @@ public class Repository
         return m_WorkingCopy.getNodeMaps().getNodeBySHA1().get(i_ItemSHA1);
     }
 
+
     public List<Path> merge(String i_TheirBranchName) throws IOException
     {
         MergeNodeMaps mergeNodeMaps = new MergeNodeMaps();
@@ -808,8 +809,17 @@ public class Repository
 
     private void mergeUnconflictedNodesAndGetConflictedNodeMaps(MergeNodeMaps i_MergeNodeMaps)
     {
+        //
+        // for each file in union ask this question:
+        // isAncestorExists
+        // isOursExists
+        // isTheirExists
+        // isAncestorEqualOurs
+        // isAncestorEqualTheirs
+        // isTheirsEqualOurs
 
-        
+        // for each file in union
+        //
     }
 
     private void unionCommitsNodeMaps(MergeNodeMaps i_MergeNodeMaps)
