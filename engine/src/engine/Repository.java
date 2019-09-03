@@ -3,6 +3,7 @@ package engine;
 import mypackage.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import puk.team.course.magit.ancestor.finder.AncestorFinder;
 import puk.team.course.magit.ancestor.finder.CommitRepresentative;
 
@@ -809,17 +810,141 @@ public class Repository
 
     private void mergeUnconflictedNodesAndGetConflictedNodeMaps(MergeNodeMaps i_MergeNodeMaps)
     {
+          mergeFromNodeMapsRecursive(m_WorkingCopy.getWorkingCopyDir(), i_MergeNodeMaps);
+
+
+
+
+
+
         //
         // for each file in union ask this question:
-        // isAncestorExists
-        // isOursExists
-        // isTheirExists
-        // isAncestorEqualOurs
-        // isAncestorEqualTheirs
-        // isTheirsEqualOurs
+
 
         // for each file in union
         //
+    }
+
+    private void mergeFromNodeMapsRecursive(Path i_CurrentPath, MergeNodeMaps i_MergeNodeMaps)
+    {
+        Map<Path, String> unionSHA1ByPath = i_MergeNodeMaps.getUnionNodeMaps().getSHA1ByPath();
+        // union all path from three map to one
+        Set<Path> childernPaths = generateChildernPathsList(i_CurrentPath, unionSHA1ByPath.keySet());
+        for(Path path : childernPaths)
+        {
+            if (isPathRepresentsAFolder(path))
+            {
+                mergeFromNodeMapsRecursive(path, i_MergeNodeMaps);
+                //TODO - handle the folder
+
+            }
+            else
+            {
+                //handle blob - conflict(add to list) or not conflict(solve)
+                boolean isExistInAncestor, isExistInOurs, isExistInTheir, isAncestorEqualsOurs, isAncestorEqualsTheirs
+                        , isTheirsEqualsOurs;
+                String decision;
+                isExistInAncestor = isBlobExistsInAncestorNodeMap(path, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath());
+                isExistInOurs = isBlobExistsInOursNodeMap(path, i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
+                isExistInTheir =  isBlobExistsInTheirNodeMap(path, i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath());
+                isAncestorEqualsOurs = isExistInAncestor && isExistInOurs && isBlobInAncestorEqualBlobInOurs(path, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
+                isAncestorEqualsTheirs = isExistInAncestor && isExistInTheir && isBlobInAncestorEqualsBlobInTheirs(path, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath());
+                isTheirsEqualsOurs = isExistInTheir && isExistInOurs && isBlobInTheirsEqualsBlobInOurs(path, i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
+                eConflictCases conflictCases = eConflictCases.getItem(isExistInAncestor, isExistInOurs, isExistInTheir, isAncestorEqualsOurs, isAncestorEqualsTheirs, isTheirsEqualsOurs).get();
+                if(conflictCases.isConflict())
+                {
+                    addToNodeMaps(path, i_MergeNodeMaps.getUnionNodeMaps(), i_MergeNodeMaps.getConflictsNodeMaps());
+                    removeFromNodeMaps(path, i_MergeNodeMaps.getUnionNodeMaps());
+                }
+                else // not conflict
+                {
+                    decision = conflictCases.getFileVersionToTake();
+                    handleDecision(path, i_MergeNodeMaps, decision);
+                }
+
+            }
+        }
+        //foreach children:
+             //if i have a folder children : mergeFromNodeMapsRecursive(i_CurrentPath.resolve(item.getName()))
+            //else
+            //
+    }
+
+    private void handleDecision(Path i_Path, MergeNodeMaps i_MergeNodeMaps, String i_Decision)
+    {
+        if(i_Decision.equals("ours"))
+        {
+            changeUnionNodeMapsAccordingToDecision(i_Path, i_MergeNodeMaps.getOursNodeMaps(), i_MergeNodeMaps.getUnionNodeMaps());
+        }
+        else // theirs
+        {
+            changeUnionNodeMapsAccordingToDecision(i_Path, i_MergeNodeMaps.getTheirNodeMaps(), i_MergeNodeMaps.getUnionNodeMaps());
+        }
+    }
+
+    private void changeUnionNodeMapsAccordingToDecision(Path i_Path, NodeMaps i_DecidedVersionNodeMaps, NodeMaps i_UnionNodeMaps)
+    {
+        String decidedVersionSHA1 = i_DecidedVersionNodeMaps.getSHA1ByPath().get(i_Path);
+
+        if(i_DecidedVersionNodeMaps.getSHA1ByPath().containsKey(i_Path))
+        {
+            i_UnionNodeMaps.getSHA1ByPath().put(i_Path, decidedVersionSHA1);
+            i_UnionNodeMaps.getNodeBySHA1().put(decidedVersionSHA1, i_DecidedVersionNodeMaps.getNodeBySHA1().get(decidedVersionSHA1));
+        }
+        else
+        {
+            i_UnionNodeMaps.getSHA1ByPath().remove(i_Path);
+            i_UnionNodeMaps.getNodeBySHA1().remove(decidedVersionSHA1);
+        }
+    }
+
+    private void removeFromNodeMaps(Path i_PathToRemove, NodeMaps i_NodeMapsToDeleteFrom)
+    {
+        String srcSHA1 = i_NodeMapsToDeleteFrom.getSHA1ByPath().get(i_PathToRemove);
+        i_NodeMapsToDeleteFrom.getSHA1ByPath().remove(i_PathToRemove);
+        i_NodeMapsToDeleteFrom.getNodeBySHA1().remove(srcSHA1);
+    }
+
+    private void addToNodeMaps(Path i_PathFileToAdd, NodeMaps i_SourceNodeMaps, NodeMaps i_DestinationNodeMaps)
+    {
+        String srcSHA1 = i_SourceNodeMaps.getSHA1ByPath().get(i_PathFileToAdd);
+        i_DestinationNodeMaps.getSHA1ByPath().put(i_PathFileToAdd, srcSHA1);
+        i_DestinationNodeMaps.getNodeBySHA1().put(srcSHA1, i_SourceNodeMaps.getNodeBySHA1().get(srcSHA1));
+    }
+
+    private boolean isBlobInTheirsEqualsBlobInOurs(Path i_Path, Map<Path, String> i_TheirSha1ByPath, Map<Path, String> i_OurSha1ByPath1)
+    {
+        return i_TheirSha1ByPath.get(i_Path).equals(i_OurSha1ByPath1.get(i_Path));
+    }
+
+    private boolean isBlobInAncestorEqualsBlobInTheirs(Path i_Path, Map<Path, String> i_AncestorSha1ByPath, Map<Path, String> i_TheirSha1ByPath1)
+    {
+        return i_AncestorSha1ByPath.get(i_Path).equals(i_TheirSha1ByPath1.get(i_Path));
+    }
+
+    private boolean isBlobInAncestorEqualBlobInOurs(Path i_Path, Map<Path, String> i_AncestorSha1ByPath, Map<Path, String> i_OurSha1ByPath1)
+    {
+        return i_AncestorSha1ByPath.get(i_Path).equals(i_OurSha1ByPath1.get(i_Path));
+    }
+
+    private boolean isBlobExistsInTheirNodeMap(Path i_Path, Map<Path, String> i_TheirSha1ByPath)
+    {
+        return i_TheirSha1ByPath.containsKey(i_Path);
+    }
+
+    private boolean isBlobExistsInOursNodeMap(Path i_Path, Map<Path, String> i_OursSha1ByPath)
+    {
+        return i_OursSha1ByPath.containsKey(i_Path);
+    }
+
+    private boolean isBlobExistsInAncestorNodeMap(Path i_Path, Map<Path, String> i_AncestorSHA1ByPath)
+    {
+        return i_AncestorSHA1ByPath.containsKey(i_Path);
+    }
+
+    private boolean isPathRepresentsAFolder(Path i_Path)
+    {
+        return FilenameUtils.getExtension(i_Path.toString()).equals("");
     }
 
     private void unionCommitsNodeMaps(MergeNodeMaps i_MergeNodeMaps)
