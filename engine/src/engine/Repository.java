@@ -5,7 +5,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import puk.team.course.magit.ancestor.finder.AncestorFinder;
-import puk.team.course.magit.ancestor.finder.CommitRepresentative;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -829,7 +828,7 @@ public class Repository
     {
         Map<Path, String> unionSHA1ByPath = i_MergeNodeMaps.getUnionNodeMaps().getSHA1ByPath();
         // union all path from three map to one
-        Set<Path> childernPaths = generateChildernPathsList(i_CurrentPath, unionSHA1ByPath.keySet());
+        Set<Path> childernPaths = generateSubDirectoriesPathsSet(i_CurrentPath, unionSHA1ByPath.keySet());
         for(Path path : childernPaths)
         {
             if (isPathRepresentsAFolder(path))
@@ -868,6 +867,28 @@ public class Repository
              //if i have a folder children : mergeFromNodeMapsRecursive(i_CurrentPath.resolve(item.getName()))
             //else
             //
+    }
+
+    private Set<Path> generateSubDirectoriesPathsSet(Path i_CurrentPath, Set<Path> i_Paths)
+    {
+        Set<Path> result = new HashSet<>();
+
+        // getting all sub blob and folders path
+        List<Path> subNodesList = i_Paths.stream()
+                .filter(p -> p.startsWith(i_CurrentPath))
+                .collect(Collectors.toList());
+        Path subNodePath;
+
+        for (Path path : subNodesList)
+        {
+            subNodePath = i_CurrentPath.getRoot().resolve(path.subpath(0, i_CurrentPath.getNameCount() + 1));
+            if (isPathRepresentsAFolder(subNodePath))
+            {
+                result.add(subNodePath);
+            }
+        }
+
+        return result;
     }
 
     private void handleDecision(Path i_Path, MergeNodeMaps i_MergeNodeMaps, String i_Decision)
