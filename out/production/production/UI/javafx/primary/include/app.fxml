@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="100.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.AppController">
+   <left>
+      <fx:include fx:id="m_LeftComponent" minHeight="150.0" prefHeight="450.0" source="../left/left.fxml" />
+   </left>
+   <top>
+      <fx:include fx:id="m_TopComponent" source="../top/top.fxml" />
+   </top>
+   <bottom>
+      <fx:include fx:id="m_BottomComponent" minHeight="150.0" prefHeight="250.0" source="../bottom/bottom.fxml" />
+   </bottom>
+   <center>
+      <fx:include fx:id="m_CenterComponent" minHeight="150.0" prefHeight="450.0" source="../center/center.fxml" />
+   </center>
+</BorderPane>

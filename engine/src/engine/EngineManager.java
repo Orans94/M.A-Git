@@ -176,4 +176,9 @@ public class EngineManager
     {
         m_Repository = new Repository(i_RepoPath, i_RepoName);
     }
+
+    public void createRepositoryPathDirectories(Path i_XmlRepositoryLocation) throws IOException
+    {
+        Files.createDirectories(i_XmlRepositoryLocation);
+    }
 }

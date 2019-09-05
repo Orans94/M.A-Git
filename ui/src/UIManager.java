@@ -4,6 +4,7 @@ import mypackage.MagitSingleFolder;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -174,6 +175,11 @@ public class UIManager
                 MagitRepository XMLRepo = m_Engine.createXMLRepository(XMLFilePath);
                 m_Engine.getXMLManager().loadXMLRepoToMagitMaps(XMLRepo);
                 XMLRepositoryLocation = Paths.get(XMLRepo.getLocation());
+                if(!m_Engine.isPathExists(XMLRepositoryLocation))
+                {
+                    m_Engine.createRepositoryPathDirectories(XMLRepositoryLocation);
+                }
+
                 isRepositoryAlreadyExistsInPath = m_Engine.isRepository(XMLRepositoryLocation);
                 if (m_Engine.isXMLRepositoryEmpty(XMLRepo))
                 {
@@ -189,7 +195,8 @@ public class UIManager
                     }
                     else
                     {
-                        createNewRepository(XMLRepositoryLocation);
+                        m_Engine.createEmptyRepository(XMLRepositoryLocation, XMLRepo.getName());
+                        notifyRepositoryHasBeenLoaded();
                     }
                 }
                 else if (validateXMLRepository(XMLRepo, XMLFilePath, m_Engine.getXMLManager().getXMLMagitMaps().getMagitSingleFolderByID()))
@@ -322,26 +329,14 @@ public class UIManager
     private void initializeRepository() throws IOException
     {
         Path repPath = requestPath();
-        if (m_Engine.isPathExists(repPath))
-        { //  the path is exists
-            if (m_Engine.isRepository(repPath)) // check if there is repo in path\\repositoryName
-            {
-                // the dir is repository
-                boolean toStash = doesUserWantToStashExistingRepository();
-                if (toStash)
-                {
-                    m_Engine.stashRepository(repPath);
-                    createNewRepository(repPath);
-                }
-            }
-            else
-            {
-                createNewRepository(repPath);
-            }
+        if (!m_Engine.isPathExists(repPath))
+        {
+            m_Engine.createRepositoryPathDirectories(repPath);
+            createNewRepository(repPath);
         }
         else
         {
-            System.out.println("Path does not exists");
+            System.out.println("The given path already exists");
         }
     }
 
@@ -377,11 +372,20 @@ public class UIManager
 
     private Path requestPath()
     {
+        Path path;
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
         System.out.println("Please enter a legal path");
         String pathString = myObj.nextLine();  // Read path input
+        try
+        {
+            path = Paths.get(pathString);
+        }
+        catch (InvalidPathException e)
+        {
+            throw new InvalidPathException(pathString, "Invalid path entered");
+        }
 
-        return Paths.get(pathString);
+        return path;
     }
 
     private String requestRepositoryName()

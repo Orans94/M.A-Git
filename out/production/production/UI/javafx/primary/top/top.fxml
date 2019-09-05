@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="63.0" prefWidth="1275.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.TopController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="Start">
+            <items>
+                  <MenuItem fx:id="updateUsernameMenuItem" mnemonicParsing="false" onAction="#updateUsernameMenuItemAction" text="Update username" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem fx:id="createNewRepositoryMenuItem" mnemonicParsing="false" onAction="#createNewRepositoryMenuItemAction" text="Create new repository" />
+                  <MenuItem fx:id="loadRepositoryByPathMenuItem" mnemonicParsing="false" onAction="#loadRepositoryByPathMenuItemAction" text="Load repository by path" />
+                  <MenuItem fx:id="loadRepositoryFromXMLMenuItem" mnemonicParsing="false" onAction="#loadRepositoryByXMLMenuItemAction" text="Load repository by XML file" />
+                  <MenuItem fx:id="cloneRepositoryMenuItem" mnemonicParsing="false" text="Clone repository" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="View">
+               <items>
+                  <RadioMenuItem fx:id="changeThemeToLightRadioMenuItem" mnemonicParsing="false" selected="true" text="Light theme">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="themes" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="changeThemeToDarkRadioMenuItem" mnemonicParsing="false" text="Dark theme" toggleGroup="$themes" />
+                  <RadioMenuItem fx:id="changeThemeToStadiumRadioMenuItem" mnemonicParsing="false" text="Stadium theme" toggleGroup="$themes" />
+                  <RadioMenuItem fx:id="setBackgroundImageRadioMenuItem" mnemonicParsing="false" text="Choose backgroud photo" toggleGroup="$themes" />
+               </items></Menu>
+          <Menu mnemonicParsing="false" text="Commands">
+            <items>
+              <MenuItem fx:id="commitMenuItem" mnemonicParsing="false" onAction="#commitMenuItemAction" text="Commit" />
+                  <MenuItem fx:id="pullMenuItem" mnemonicParsing="false" text="Pull / Fetch" />
+                  <MenuItem fx:id="pushMenuItem" mnemonicParsing="false" text="Push" />
+                  <MenuItem fx:id="createNewBranchMenuItem" mnemonicParsing="false" onAction="#createBranchMenuItemAction" text="Create new branch" />
+                  <MenuItem fx:id="deleteBranchMenuItem" mnemonicParsing="false" onAction="#deleteBranchMenuItemAction" text="Delete Branch" />
+                  <MenuItem fx:id="checkoutMenuItem" mnemonicParsing="false" onAction="#checkoutMenuItemAction" text="Checkout" />
+                  <MenuItem fx:id="mergeMenuItem" mnemonicParsing="false" onAction="#mergeMenuItemAction" text="Merge" />
+                  <MenuItem fx:id="resetBranchMenuItem" mnemonicParsing="false" onAction="#resetBranchMenuItemAction" text="Reset branch" />
+                  <MenuItem fx:id="showAllBranchesMenuItem" mnemonicParsing="false" onAction="#showAllBranchesMenuItemAction" text="Show all branches" />
+                  <MenuItem fx:id="showCurrentCommitDetailsMenuItem" mnemonicParsing="false" onAction="#showCurrentCommitDetailsMenuItemAction" text="Show current commit details" />
+                  <MenuItem fx:id="showStatusMenuItem" mnemonicParsing="false" onAction="#showStatusMenuItemAction" text="Show status" />
+                  <MenuItem fx:id="showActiveBranchHistoryMenuItem" mnemonicParsing="false" onAction="#showActiveBranchHistoryMenuItemAction" text="Show active branch history" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem fx:id="contactUsMenuItem" mnemonicParsing="false" text="Contact us" />
+                  <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="About" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" prefWidth="904.0" VBox.vgrow="NEVER">
+         <children>
+            <Button fx:id="refreshButton" mnemonicParsing="false" text="Refresh" HBox.hgrow="NEVER" />
+            <SplitMenuButton fx:id="repositoryFullPathSplitMenuButton" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath" HBox.hgrow="ALWAYS" />
+            <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Checkout (Active)" HBox.hgrow="NEVER">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </SplitMenuButton>
+            <Button fx:id="pushButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="116.0" text="Push" HBox.hgrow="NEVER" />
+            <Button fx:id="pullButton" mnemonicParsing="false" prefHeight="23.0" prefWidth="104.0" text="Pull" HBox.hgrow="NEVER" />
+            <Button fx:id="commitButton" mnemonicParsing="false" onAction="#commitMenuItemAction" text="Commit(diff)" HBox.hgrow="NEVER" />
+            <Button fx:id="showStatusButton" mnemonicParsing="false" onAction="#showStatusMenuItemAction" text="Show status" HBox.hgrow="NEVER" />
+            <Button fx:id="createNewBranchButton" mnemonicParsing="false" onAction="#createBranchMenuItemAction" text="Create Branch" HBox.hgrow="NEVER" />
+            <Button fx:id="deleteBranchButton" mnemonicParsing="false" onAction="#deleteBranchMenuItemAction" text="Delete Branch" HBox.hgrow="NEVER" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

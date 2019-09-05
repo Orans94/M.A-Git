@@ -155,6 +155,9 @@ public class FileUtilities
         {
             result.write(buffer, 0, length);
         }
+        zipFile.close();
+        inputStream.close();
+        result.close();
 
         return result.toString("UTF-8");
     }
