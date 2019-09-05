@@ -81,7 +81,8 @@ public class BottomController
             if(item.getName().equals(i_Children.getValue()))
             {
                 itemSHA1 = item.getSHA1();
-                blob = m_MainController.getNodeBySHA1(itemSHA1);
+                String selectedCommitSHA1 = m_MainController.getSelectedCommitFromTableView();
+                blob = m_MainController.getLazyLoadedNodeBySHA1(selectedCommitSHA1, itemSHA1);
             }
         }
 
@@ -101,7 +102,7 @@ public class BottomController
     private void setFileTreeTabDetails(Commit i_NewValue, String i_CommitSHA1)
     {
         //ASSUMPTION: when we get here - the i_NewValue commit is already loaded to m_LazyLoaded.. in EngineManager
-        Folder rootFolder = m_MainController.getLazyLoadedFolderBySHA1(i_CommitSHA1 ,i_NewValue.getRootFolderSHA1());
+        Folder rootFolder = (Folder)m_MainController.getLazyLoadedNodeBySHA1(i_CommitSHA1 ,i_NewValue.getRootFolderSHA1());
         TreeItem<String> root = new TreeItem<>("Root folder", new ImageView(folderIcon));
         m_FolderByTreeItem.put(root, rootFolder);
         setFileTreeTabDetailsRecursion(rootFolder, root, i_CommitSHA1);
@@ -121,7 +122,7 @@ public class BottomController
             {
                 TreeItem<String> folderTreeItem = new TreeItem<>(item.getName(), new ImageView(folderIcon));
                 i_RootTreeItem.getChildren().add(folderTreeItem);
-                Folder folder = m_MainController.getLazyLoadedFolderBySHA1(i_CommitSHA1, item.getSHA1());
+                Folder folder = (Folder)m_MainController.getLazyLoadedNodeBySHA1(i_CommitSHA1, item.getSHA1());
                 m_FolderByTreeItem.put(folderTreeItem, folder);
                 setFileTreeTabDetailsRecursion(folder, folderTreeItem, i_CommitSHA1);
             }

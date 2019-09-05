@@ -107,4 +107,9 @@ public class Folder extends Node
         }
         m_Content = m_Content.substring(0, m_Content.length() - 2);
     }
+
+    public void addItemToList(Item i_ToAddItem)
+    {
+        m_Items.add(i_ToAddItem);
+    }
 }

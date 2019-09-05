@@ -328,6 +328,7 @@ public class Repository
     {
         String commitSHA1 = m_Magit.getBranches().get(i_BranchName).getCommitSHA1();
         String rootFolderSHA1 = m_Magit.getCommits().get(commitSHA1).getRootFolderSHA1();
+        Branch branchToCheckout = m_Magit.getBranches().get(i_BranchName);
         // clear repository- clear file system and clear nodes map
         workingCopyFileSystemClear();
         m_WorkingCopy.clear();
@@ -338,6 +339,8 @@ public class Repository
 
         m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
         setNodeMapsByRootFolder(m_WorkingCopy.getWorkingCopyDir(), m_WorkingCopy.getNodeMaps(), true);
+
+        m_WorkingCopy.setCommitSHA1(branchToCheckout.getCommitSHA1());
     }
 
     public void setNodeMapsByRootFolder(Path i_StartPath, NodeMaps i_NodeMapsToUpdate, boolean i_LoadToFileSystem) throws IOException
@@ -813,12 +816,17 @@ public class Repository
         Path rootFolderPath = m_WorkingCopy.getWorkingCopyDir();
         mergeFromNodeMapsRecursive(rootFolderPath, i_MergeNodeMaps);
         Folder rootFolder = i_MergeNodeMaps.getUnionNodeMaps().getFolderByPath(rootFolderPath);
+        rootFolder.sortItemList();
+        rootFolder.setContentFromItemList();
         String rootFolderSHA1 = rootFolder.SHA1();
-        updateFolderInNodeMapsAfterVisitedChilds(rootFolderPath, rootFolderSHA1, rootFolder, i_MergeNodeMaps.getUnionNodeMaps());
+        removeFromNodeMaps(rootFolderPath, i_MergeNodeMaps.getUnionNodeMaps());
+        addToNodeMaps(rootFolderPath, rootFolderSHA1, rootFolder, i_MergeNodeMaps.getUnionNodeMaps());
     }
 
     private void mergeFromNodeMapsRecursive(Path i_CurrentPath, MergeNodeMaps i_MergeNodeMaps)
     {
+        //TODO handle if item is null
+        Folder childPathFolder;
         Map<Path, String> unionSHA1ByPath = i_MergeNodeMaps.getUnionNodeMaps().getSHA1ByPath();
         NodeMaps unionNodeMaps = i_MergeNodeMaps.getUnionNodeMaps();
         // union all path from three map to one
@@ -832,7 +840,14 @@ public class Repository
             if (isPathRepresentsAFolder(childPath))
             {
                 mergeFromNodeMapsRecursive(childPath, i_MergeNodeMaps);
-                Folder childPathFolder = unionNodeMaps.getFolderByPath(i_CurrentPath);
+                if(i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath().containsKey(childPath))
+                {
+                    childPathFolder = unionNodeMaps.getFolderByPath(i_CurrentPath);
+                }
+                else
+                {
+                    childPathFolder = i_MergeNodeMaps.getTheirNodeMaps().getFolderByPath(childPath);
+                }
                 if(isFolderHasNoItems(childPathFolder))
                 {
                     currentPathFolder.removeItemFromList(toUpdateItem);
@@ -843,8 +858,17 @@ public class Repository
                     childPathFolder.sortItemList();
                     childPathFolder.setContentFromItemList();
                     String childFolderSHA1 = childPathFolder.SHA1();
-                    toUpdateItem.setSHA1(childFolderSHA1);
-                    updateFolderInNodeMapsAfterVisitedChilds(childPath, childFolderSHA1, childPathFolder, unionNodeMaps);
+                    if(toUpdateItem != null)
+                    {
+                        toUpdateItem.setSHA1(childFolderSHA1);
+                    }
+                    else
+                    {
+                        currentPathFolder.addItemToList(new Item(itemName, childFolderSHA1, "folder", EngineManager.getUserName(), new Date()));
+                    }
+
+                    removeFromNodeMaps(childPath, unionNodeMaps);
+                    addToNodeMaps(childPath, childFolderSHA1, childPathFolder, unionNodeMaps);
                 }
             }
             else
@@ -877,7 +901,14 @@ public class Repository
                         {
                             Folder fatherFolderTheir = i_MergeNodeMaps.getTheirNodeMaps().getFolderByPath(i_CurrentPath);
                             Item updatedItemTheir = fatherFolderTheir.getSpecificItem(itemName);
-                            toUpdateItem.copyItemData(updatedItemTheir);
+                            if(toUpdateItem != null)
+                            {
+                                toUpdateItem.copyItemData(updatedItemTheir);
+                            }
+                            else
+                            {
+                                currentPathFolder.addItemToList(updatedItemTheir);
+                            }
                         }
                     }
                     else
@@ -892,23 +923,13 @@ public class Repository
     }
     
 
-    private void updateFolderInNodeMapsAfterVisitedChilds(Path i_ChildPath, String i_ChildFolderSHA1, Folder i_ChildPathFolder, NodeMaps i_DestNodeMap)
-    {
-        removeFromNodeMaps(i_ChildPath, i_ChildFolderSHA1, i_DestNodeMap);
-        addToNodeMaps(i_ChildPath, i_ChildFolderSHA1, i_ChildPathFolder, i_DestNodeMap);
-    }
 
-    private void addToNodeMaps(Path i_Path, String i_SHA1, Folder i_Folder, NodeMaps i_DestNodeMap)
+    private void addToNodeMaps(Path i_Path, String i_SHA1, Node i_Node, NodeMaps i_DestNodeMap)
     {
         i_DestNodeMap.getSHA1ByPath().put(i_Path, i_SHA1);
-        i_DestNodeMap.getNodeBySHA1().put(i_SHA1, i_Folder);
+        i_DestNodeMap.getNodeBySHA1().put(i_SHA1, i_Node);
     }
 
-    private void removeFromNodeMaps(Path i_Path, String i_SHA1, NodeMaps i_DestNodeMap)
-    {
-        i_DestNodeMap.getNodeBySHA1().remove(i_SHA1);
-        i_DestNodeMap.getSHA1ByPath().remove(i_Path);
-    }
 
     private boolean isFolderHasNoItems(Folder i_ChildPathFolder)
     {
@@ -1011,9 +1032,17 @@ public class Repository
     private void unionCommitsNodeMaps(MergeNodeMaps i_MergeNodeMaps)
     {
         NodeMaps unionNodeMaps = i_MergeNodeMaps.getUnionNodeMaps();
-        unionNodeMaps.putAll(i_MergeNodeMaps.getTheirNodeMaps());
-        unionNodeMaps.putAll(i_MergeNodeMaps.getAncestorNodeMaps());
         unionNodeMaps.putAll(i_MergeNodeMaps.getOursNodeMaps());
+
+        for(Path path : i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath().keySet())
+        {
+            unionNodeMaps.putIfPathDoesntExists(path, i_MergeNodeMaps.getTheirNodeMaps());
+        }
+
+        for(Path path : i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath().keySet())
+        {
+            unionNodeMaps.putIfPathDoesntExists(path, i_MergeNodeMaps.getAncestorNodeMaps());
+        }
     }
 
     private void generateCommitsNodeMaps(MergeNodeMaps i_MergeNodeMaps, Commit i_TheirCommit) throws IOException

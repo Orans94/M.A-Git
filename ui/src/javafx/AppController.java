@@ -240,14 +240,9 @@ public class AppController
         return m_Engine.getFolderBySHA1(i_FolderSHA1);
     }
 
-    public Node getNodeBySHA1(String i_ItemSHA1)
+    public Node getLazyLoadedNodeBySHA1(String i_CommitSHA1, String i_RootFolderSHA1)
     {
-        return m_Engine.getNodeBySHA1(i_ItemSHA1);
-    }
-
-    public Folder getLazyLoadedFolderBySHA1(String i_CommitSHA1, String i_RootFolderSHA1)
-    {
-        return (Folder) m_Engine.getLazyLoadedNodeMapsByCommitSHA1(i_CommitSHA1).getNodeBySHA1().get(i_RootFolderSHA1);
+        return m_Engine.getLazyLoadedNodeMapsByCommitSHA1(i_CommitSHA1).getNodeBySHA1().get(i_RootFolderSHA1);
     }
 
     public List<Path> merge(String i_TheirBranchName) throws IOException
@@ -268,5 +263,10 @@ public class AppController
     public void clearCommitTableView()
     {
         m_CenterComponentController.clearCommitTableView();
+    }
+
+    public String getSelectedCommitFromTableView()
+    {
+        return m_CenterComponentController.getSelectedCommitFromTableView();
     }
 }

@@ -48,4 +48,14 @@ public class NodeMaps
 
         return (Folder) m_NodeBySHA1.get(currentFolderSHA1);
     }
+
+    public void putIfPathDoesntExists(Path i_Path, NodeMaps i_ToPut)
+    {
+        if(!m_SHA1ByPath.containsKey(i_Path))
+        {
+            String SHA1 = i_ToPut.getSHA1ByPath().get(i_Path);
+            m_SHA1ByPath.put(i_Path, SHA1);
+            m_NodeBySHA1.put(SHA1, i_ToPut.getNodeBySHA1().get(SHA1));
+        }
+    }
 }

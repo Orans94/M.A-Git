@@ -104,4 +104,9 @@ public class CenterController
         m_CommitsObservableList.clear();
         tableViewLoad(m_CommitsObservableList);
     }
+
+    public String getSelectedCommitFromTableView()
+    {
+       return sha1TableColumn.getCellData(commitsTableView.getSelectionModel().getSelectedIndex());
+    }
 }
