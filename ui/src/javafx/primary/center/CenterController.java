@@ -98,4 +98,10 @@ public class CenterController
             }
         });
     }
+
+    public void clearCommitTableView()
+    {
+        m_CommitsObservableList.clear();
+        tableViewLoad(m_CommitsObservableList);
+    }
 }

@@ -135,6 +135,11 @@ public class EngineManager
         FileUtilities.modifyTxtFile(Magit.getMagitDir().resolve("branches").resolve("HEAD.txt"), i_BranchName);
     }
 
+    public void createRepositoryPathDirectories(Path i_XmlRepositoryLocation) throws IOException
+    {
+        Files.createDirectories(i_XmlRepositoryLocation);
+    }
+
     public boolean isRepositoryEmpty(Path i_RepoPath) throws IOException
     {
         // this method return true if objects folder is empty and all the branches not pointing to any commit

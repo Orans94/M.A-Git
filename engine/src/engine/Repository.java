@@ -803,89 +803,133 @@ public class Repository
         generateCommitsNodeMaps(mergeNodeMaps, theirCommit);
         unionCommitsNodeMaps(mergeNodeMaps);
         mergeUnconflictedNodesAndGetConflictedNodeMaps(mergeNodeMaps);
+
         //TODO
         return null;
     }
 
     private void mergeUnconflictedNodesAndGetConflictedNodeMaps(MergeNodeMaps i_MergeNodeMaps)
     {
-          mergeFromNodeMapsRecursive(m_WorkingCopy.getWorkingCopyDir(), i_MergeNodeMaps);
-
-
-
-
-
-
-        //
-        // for each file in union ask this question:
-
-
-        // for each file in union
-        //
+        Path rootFolderPath = m_WorkingCopy.getWorkingCopyDir();
+        mergeFromNodeMapsRecursive(rootFolderPath, i_MergeNodeMaps);
+        Folder rootFolder = i_MergeNodeMaps.getUnionNodeMaps().getFolderByPath(rootFolderPath);
+        String rootFolderSHA1 = rootFolder.SHA1();
+        updateFolderInNodeMapsAfterVisitedChilds(rootFolderPath, rootFolderSHA1, rootFolder, i_MergeNodeMaps.getUnionNodeMaps());
     }
 
     private void mergeFromNodeMapsRecursive(Path i_CurrentPath, MergeNodeMaps i_MergeNodeMaps)
     {
         Map<Path, String> unionSHA1ByPath = i_MergeNodeMaps.getUnionNodeMaps().getSHA1ByPath();
+        NodeMaps unionNodeMaps = i_MergeNodeMaps.getUnionNodeMaps();
         // union all path from three map to one
-        Set<Path> childernPaths = generateSubDirectoriesPathsSet(i_CurrentPath, unionSHA1ByPath.keySet());
-        for(Path path : childernPaths)
+        Set<Path> childernPaths = generateSubNodesPathsSet(i_CurrentPath, unionSHA1ByPath.keySet());
+        Folder currentPathFolder = unionNodeMaps.getFolderByPath(i_CurrentPath);
+        
+        for(Path childPath : childernPaths)
         {
-            if (isPathRepresentsAFolder(path))
+            String itemName = childPath.getFileName().toString();
+            Item toUpdateItem =currentPathFolder.getSpecificItem(itemName);
+            if (isPathRepresentsAFolder(childPath))
             {
-                mergeFromNodeMapsRecursive(path, i_MergeNodeMaps);
-                //TODO - handle the folder
-
+                mergeFromNodeMapsRecursive(childPath, i_MergeNodeMaps);
+                Folder childPathFolder = unionNodeMaps.getFolderByPath(i_CurrentPath);
+                if(isFolderHasNoItems(childPathFolder))
+                {
+                    currentPathFolder.removeItemFromList(toUpdateItem);
+                    removeFromNodeMaps(childPath, i_MergeNodeMaps.getUnionNodeMaps());
+                }
+                else
+                {
+                    childPathFolder.sortItemList();
+                    childPathFolder.setContentFromItemList();
+                    String childFolderSHA1 = childPathFolder.SHA1();
+                    toUpdateItem.setSHA1(childFolderSHA1);
+                    updateFolderInNodeMapsAfterVisitedChilds(childPath, childFolderSHA1, childPathFolder, unionNodeMaps);
+                }
             }
             else
             {
                 //handle blob - conflict(add to list) or not conflict(solve)
-                boolean isExistInAncestor, isExistInOurs, isExistInTheir, isAncestorEqualsOurs, isAncestorEqualsTheirs
-                        , isTheirsEqualsOurs;
+                boolean isExistInAncestor, isExistInOurs, isExistInTheir, isAncestorEqualsOurs, isAncestorEqualsTheirs, isTheirsEqualsOurs;
                 String decision;
-                isExistInAncestor = isBlobExistsInAncestorNodeMap(path, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath());
-                isExistInOurs = isBlobExistsInOursNodeMap(path, i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
-                isExistInTheir =  isBlobExistsInTheirNodeMap(path, i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath());
-                isAncestorEqualsOurs = isExistInAncestor && isExistInOurs && isBlobInAncestorEqualBlobInOurs(path, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
-                isAncestorEqualsTheirs = isExistInAncestor && isExistInTheir && isBlobInAncestorEqualsBlobInTheirs(path, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath());
-                isTheirsEqualsOurs = isExistInTheir && isExistInOurs && isBlobInTheirsEqualsBlobInOurs(path, i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
+                isExistInAncestor = isBlobExistsInAncestorNodeMap(childPath, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath());
+                isExistInOurs = isBlobExistsInOursNodeMap(childPath, i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
+                isExistInTheir = isBlobExistsInTheirNodeMap(childPath, i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath());
+                isAncestorEqualsOurs = isExistInAncestor && isExistInOurs && isBlobInAncestorEqualBlobInOurs(childPath, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
+                isAncestorEqualsTheirs = isExistInAncestor && isExistInTheir && isBlobInAncestorEqualsBlobInTheirs(childPath, i_MergeNodeMaps.getAncestorNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath());
+                isTheirsEqualsOurs = isExistInTheir && isExistInOurs && isBlobInTheirsEqualsBlobInOurs(childPath, i_MergeNodeMaps.getTheirNodeMaps().getSHA1ByPath(), i_MergeNodeMaps.getOursNodeMaps().getSHA1ByPath());
                 eConflictCases conflictCases = eConflictCases.getItem(isExistInAncestor, isExistInOurs, isExistInTheir, isAncestorEqualsOurs, isAncestorEqualsTheirs, isTheirsEqualsOurs).get();
-                if(conflictCases.isConflict())
+                if (conflictCases.isConflict())
                 {
-                    addToNodeMaps(path, i_MergeNodeMaps.getUnionNodeMaps(), i_MergeNodeMaps.getConflictsNodeMaps());
-                    removeFromNodeMaps(path, i_MergeNodeMaps.getUnionNodeMaps());
+                    addToNodeMaps(childPath, i_MergeNodeMaps.getUnionNodeMaps(), i_MergeNodeMaps.getConflictsNodeMaps());
+                    removeFromNodeMaps(childPath, unionNodeMaps);
                 }
                 else // not conflict
                 {
                     decision = conflictCases.getFileVersionToTake();
-                    handleDecision(path, i_MergeNodeMaps, decision);
+                    handleDecision(childPath, i_MergeNodeMaps, decision);
+
+                    //update me as item in my father's item list
+                    if(unionSHA1ByPath.containsKey(childPath))
+                    {
+                        //not deleted
+                        if(decision.equals("their"))
+                        {
+                            Folder fatherFolderTheir = i_MergeNodeMaps.getTheirNodeMaps().getFolderByPath(i_CurrentPath);
+                            Item updatedItemTheir = fatherFolderTheir.getSpecificItem(itemName);
+                            toUpdateItem.copyItemData(updatedItemTheir);
+                        }
+                    }
+                    else
+                    {
+                        //deleted
+                        currentPathFolder.removeItemFromList(toUpdateItem);
+                    }
                 }
 
             }
         }
-        //foreach children:
-             //if i have a folder children : mergeFromNodeMapsRecursive(i_CurrentPath.resolve(item.getName()))
-            //else
-            //
+    }
+    
+
+    private void updateFolderInNodeMapsAfterVisitedChilds(Path i_ChildPath, String i_ChildFolderSHA1, Folder i_ChildPathFolder, NodeMaps i_DestNodeMap)
+    {
+        removeFromNodeMaps(i_ChildPath, i_ChildFolderSHA1, i_DestNodeMap);
+        addToNodeMaps(i_ChildPath, i_ChildFolderSHA1, i_ChildPathFolder, i_DestNodeMap);
     }
 
-    private Set<Path> generateSubDirectoriesPathsSet(Path i_CurrentPath, Set<Path> i_Paths)
+    private void addToNodeMaps(Path i_Path, String i_SHA1, Folder i_Folder, NodeMaps i_DestNodeMap)
+    {
+        i_DestNodeMap.getSHA1ByPath().put(i_Path, i_SHA1);
+        i_DestNodeMap.getNodeBySHA1().put(i_SHA1, i_Folder);
+    }
+
+    private void removeFromNodeMaps(Path i_Path, String i_SHA1, NodeMaps i_DestNodeMap)
+    {
+        i_DestNodeMap.getNodeBySHA1().remove(i_SHA1);
+        i_DestNodeMap.getSHA1ByPath().remove(i_Path);
+    }
+
+    private boolean isFolderHasNoItems(Folder i_ChildPathFolder)
+    {
+        return i_ChildPathFolder.getNumberOfItems() == 0;
+    }
+
+    private Set<Path> generateSubNodesPathsSet(Path i_CurrentPath, Set<Path> i_Paths)
     {
         Set<Path> result = new HashSet<>();
 
         // getting all sub blob and folders path
         List<Path> subNodesList = i_Paths.stream()
                 .filter(p -> p.startsWith(i_CurrentPath))
+                .filter(p-> !p.equals(i_CurrentPath))
                 .collect(Collectors.toList());
         Path subNodePath;
 
         for (Path path : subNodesList)
         {
             subNodePath = i_CurrentPath.getRoot().resolve(path.subpath(0, i_CurrentPath.getNameCount() + 1));
-            if (isPathRepresentsAFolder(subNodePath))
-            {
-                result.add(subNodePath);
-            }
+            result.add(subNodePath);
         }
 
         return result;
@@ -907,15 +951,11 @@ public class Repository
     {
         String decidedVersionSHA1 = i_DecidedVersionNodeMaps.getSHA1ByPath().get(i_Path);
 
+        removeFromNodeMaps(i_Path, i_UnionNodeMaps);
         if(i_DecidedVersionNodeMaps.getSHA1ByPath().containsKey(i_Path))
         {
             i_UnionNodeMaps.getSHA1ByPath().put(i_Path, decidedVersionSHA1);
             i_UnionNodeMaps.getNodeBySHA1().put(decidedVersionSHA1, i_DecidedVersionNodeMaps.getNodeBySHA1().get(decidedVersionSHA1));
-        }
-        else
-        {
-            i_UnionNodeMaps.getSHA1ByPath().remove(i_Path);
-            i_UnionNodeMaps.getNodeBySHA1().remove(decidedVersionSHA1);
         }
     }
 
@@ -972,8 +1012,8 @@ public class Repository
     {
         NodeMaps unionNodeMaps = i_MergeNodeMaps.getUnionNodeMaps();
         unionNodeMaps.putAll(i_MergeNodeMaps.getTheirNodeMaps());
-        unionNodeMaps.putAll(i_MergeNodeMaps.getOursNodeMaps());
         unionNodeMaps.putAll(i_MergeNodeMaps.getAncestorNodeMaps());
+        unionNodeMaps.putAll(i_MergeNodeMaps.getOursNodeMaps());
     }
 
     private void generateCommitsNodeMaps(MergeNodeMaps i_MergeNodeMaps, Commit i_TheirCommit) throws IOException

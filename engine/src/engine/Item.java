@@ -29,6 +29,11 @@ public class Item
         m_ModificationDate = DateUtils.FormatToDate(members[4]);
     }
 
+    public void setSHA1(String i_SHA1)
+    {
+        this.m_SHA1 = m_SHA1;
+    }
+
     @Override
     public String toString()
     {
@@ -52,4 +57,12 @@ public class Item
 
     public Date getModificationDate() { return m_ModificationDate; }
 
+    public void copyItemData(Item i_ItemToCopy)
+    {
+        m_Author = i_ItemToCopy.getAuthor();
+        m_ModificationDate = i_ItemToCopy.getModificationDate();
+        m_Name = i_ItemToCopy.getName();
+        m_SHA1 = i_ItemToCopy.getSHA1();
+        m_Type = i_ItemToCopy.getType();
+    }
 }

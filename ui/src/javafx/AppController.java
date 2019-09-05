@@ -254,4 +254,19 @@ public class AppController
     {
         return m_Engine.merge(i_TheirBranchName);
     }
+
+    public boolean isPathExists(Path i_XmlRepositoryLocation)
+    {
+        return m_Engine.isPathExists(i_XmlRepositoryLocation);
+    }
+
+    public void createRepositoryPathDirectories(Path i_XmlRepositoryLocation) throws IOException
+    {
+        m_Engine.createRepositoryPathDirectories(i_XmlRepositoryLocation);
+    }
+
+    public void clearCommitTableView()
+    {
+        m_CenterComponentController.clearCommitTableView();
+    }
 }

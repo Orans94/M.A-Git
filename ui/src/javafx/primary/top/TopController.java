@@ -613,4 +613,19 @@ public class TopController
     {
         return m_MainController.merge(i_TheirBranchName);
     }
+
+    public boolean isPathExists(Path i_XmlRepositoryLocation)
+    {
+        return m_MainController.isPathExists(i_XmlRepositoryLocation);
+    }
+
+    public void createRepositoryPathDirectories(Path i_XmlRepositoryLocation) throws IOException
+    {
+        m_MainController.createRepositoryPathDirectories(i_XmlRepositoryLocation);
+    }
+
+    public void clearCommitTableView()
+    {
+        m_MainController.clearCommitTableView();
+    }
 }

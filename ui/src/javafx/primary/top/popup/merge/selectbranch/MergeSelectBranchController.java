@@ -31,24 +31,13 @@ public class MergeSelectBranchController implements PopupController
         // getting their branch name
         String theirBranchName = branchNamesChoiceBox.getValue();
 
-        // getting our, their branches
-        Branch ourBranch = m_TopController.getActiveBranch();
-        Branch theirBranch = m_TopController.getBranches().get(theirBranchName);
-
-        // getting our and their actual commits
-        Commit ourCommit = m_TopController.getCommits().get(ourBranch.getCommitSHA1());
-        Commit theirCommit = m_TopController.getCommits().get(theirBranch.getCommitSHA1());
-
-        // getting ancestor commit
-        //Commit ancestorCommit = m_TopController.getCommitAncestor(ourCommit, theirCommit);
-
-
-        try{
+        try
+        {
             m_TopController.merge(theirBranchName);
         }
         catch(Exception e)
         {
-
+            e.printStackTrace();
         }
         // conflicts
         //List<Path> mergeConflictsFilesList = m_TopController.getMergeConflicts(ancestorCommit, ourCommit, theirCommit);

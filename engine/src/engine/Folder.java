@@ -4,14 +4,15 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Folder extends Node
 {
     public List<Item> getItems() { return m_Items; }
     private List<Item> m_Items;
-
     public void setItems(List<Item> i_Items) { m_Items = i_Items; }
 
     public Folder(String i_Content)
@@ -64,5 +65,46 @@ public class Folder extends Node
             String[] members = line.split(",");
             m_Items.add(new Item(members[0], members[1], members[2], members[3], DateUtils.FormatToDate(members[4])));
         }
+    }
+
+    public void removeItemFromList(Item i_ItemToDelete)
+    {
+        m_Items.remove(i_ItemToDelete);
+    }
+
+    public void sortItemList()
+    {
+        m_Items = m_Items.stream()
+                .sorted(Comparator.comparing(Item::toString))
+                .collect(Collectors.toList());
+    }
+
+    public Item getSpecificItem(String i_ItemName)
+    {
+        Item result = null;
+        for(Item item : m_Items)
+        {
+            if(item.getName().equals(i_ItemName))
+            {
+                result = item;
+            }
+        }
+
+        return result;
+    }
+
+    public int getNumberOfItems()
+    {
+        return m_Items.size();
+    }
+
+    public void setContentFromItemList()
+    {
+        m_Content = StringFinals.EMPTY_STRING;
+        for(Item item : m_Items)
+        {
+            m_Content = m_Content.concat(item.toString() + System.lineSeparator());
+        }
+        m_Content = m_Content.substring(0, m_Content.length() - 2);
     }
 }

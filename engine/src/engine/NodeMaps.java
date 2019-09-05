@@ -41,4 +41,11 @@ public class NodeMaps
         m_NodeBySHA1.putAll(i_NodeMaps.getNodeBySHA1());
         m_SHA1ByPath.putAll(i_NodeMaps.getSHA1ByPath());
     }
+
+    public Folder getFolderByPath(Path i_CurrentPath)
+    {
+        String currentFolderSHA1 = m_SHA1ByPath.get(i_CurrentPath);
+
+        return (Folder) m_NodeBySHA1.get(currentFolderSHA1);
+    }
 }

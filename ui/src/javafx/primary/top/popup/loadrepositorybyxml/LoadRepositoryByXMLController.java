@@ -72,6 +72,11 @@ public class LoadRepositoryByXMLController implements PopupController
         MagitRepository XMLRepo = m_TopController.createXMLRepository(XMLFilePath);
         m_TopController.loadXMLRepoToMagitMaps(XMLRepo);
         XMLRepositoryLocation = Paths.get(XMLRepo.getLocation());
+        if(!m_TopController.isPathExists(XMLRepositoryLocation))
+        {
+            m_TopController.createRepositoryPathDirectories(XMLRepositoryLocation);
+        }
+
         isRepositoryAlreadyExistsInPath = m_TopController.isRepository(XMLRepositoryLocation);
         String repositoryName = XMLRepo.getName();
 
@@ -84,6 +89,7 @@ public class LoadRepositoryByXMLController implements PopupController
                 {
                     m_TopController.stashRepository(XMLRepositoryLocation);
                     m_TopController.createEmptyRepository(XMLRepositoryLocation, repositoryName);
+                    m_TopController.clearCommitTableView();
                     m_TopController.addCommitsToTableView();
                     notifyRepositoryHasBeenLoaded();
                 }
@@ -91,6 +97,7 @@ public class LoadRepositoryByXMLController implements PopupController
             else
             {
                 createNewRepository(XMLRepositoryLocation, repositoryName);
+                m_TopController.clearCommitTableView();
                 m_TopController.addCommitsToTableView();
                 notifyRepositoryHasBeenCreated();
             }
@@ -104,6 +111,7 @@ public class LoadRepositoryByXMLController implements PopupController
                 {
                     m_TopController.stashRepository(XMLRepositoryLocation);
                     m_TopController.readRepositoryFromXMLFile(XMLRepo, m_TopController.getXMLMagitMaps());
+                    m_TopController.clearCommitTableView();
                     m_TopController.addCommitsToTableView();
                     notifyRepositoryHasBeenLoaded();
                 }
@@ -113,6 +121,7 @@ public class LoadRepositoryByXMLController implements PopupController
                 if (m_TopController.isDirectoryEmpty(XMLRepositoryLocation))
                 {
                     m_TopController.readRepositoryFromXMLFile(XMLRepo, m_TopController.getXMLMagitMaps());
+                    m_TopController.clearCommitTableView();
                     m_TopController.addCommitsToTableView();
                     notifyRepositoryLoadedSuccessfullyFromXML(XMLRepo.getName());
                 }
