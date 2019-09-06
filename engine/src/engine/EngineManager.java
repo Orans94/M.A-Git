@@ -286,4 +286,9 @@ public class EngineManager
     {
         return m_Repository.merge(i_TheirBranchName);
     }
+
+    public void addParentSHAToNewestCommit(String i_PointedBranch)
+    {
+        m_Repository.addParentSHAToNewestCommit(i_PointedBranch);
+    }
 }

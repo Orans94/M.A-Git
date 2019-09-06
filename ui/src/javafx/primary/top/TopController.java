@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -484,7 +483,7 @@ public class TopController
     public void createRepository(Path i_RepositoryPath, String i_RepositoryName) throws IOException
     {
         setRepositoryFullPathSplitMenuButton(i_RepositoryPath);
-        m_MainController.clearCommitTableView();
+        m_MainController.clearCommitTableViewAndTreeView();
         m_MainController.createRepository(i_RepositoryPath, i_RepositoryName);
     }
 
@@ -577,9 +576,14 @@ public class TopController
         return m_MainController.getActiveBranch();
     }
 
-    public void showCommitScene(ActionEvent event) throws IOException
+    public void showForcedCommitScene(ActionEvent event) throws IOException
     {
-        commitMenuItemAction(event);
+        Stage stage = StageUtilities.createPopupStage("Commit", COMMIT_FXML_RESOURCE, this);
+        stage.setOnCloseRequest(evt -> {
+            // prevent window from closing
+            evt.consume();
+        });
+        stage.showAndWait();
     }
 
     public boolean isBranchNameRepresentsHead(String i_BranchName)
@@ -634,14 +638,23 @@ public class TopController
 
     public void clearCommitTableView()
     {
-        m_MainController.clearCommitTableView();
+        m_MainController.clearCommitTableViewAndTreeView();
     }
 
     public void showMergeSolveConflictsScene(MergeNodeMaps i_MergeNodeMapsResult) throws IOException
     {
         Stage stage = StageUtilities.createPopupStage("Merge Conflict Solver", MERGE_SOLVE_CONFLICT_FXML_RESOURCE, this);
+        stage.setOnCloseRequest(evt -> {
+            // prevent window from closing
+            evt.consume();
+        });
         m_MergeSolveConflictComponentController.setMergeNodeMaps(i_MergeNodeMapsResult);
         m_MergeSolveConflictComponentController.updateConflictList();
         stage.showAndWait();
+    }
+
+    public void addParentSHAToNewestCommit(String i_PointedBranch)
+    {
+        m_MainController.addParentSHAToNewestCommit(i_PointedBranch);
     }
 }

@@ -260,13 +260,19 @@ public class AppController
         m_Engine.createRepositoryPathDirectories(i_XmlRepositoryLocation);
     }
 
-    public void clearCommitTableView()
+    public void clearCommitTableViewAndTreeView()
     {
         m_CenterComponentController.clearCommitTableView();
+        m_BottomComponentController.clearTreeView();
     }
 
     public String getSelectedCommitFromTableView()
     {
         return m_CenterComponentController.getSelectedCommitFromTableView();
+    }
+
+    public void addParentSHAToNewestCommit(String i_PointedBranch)
+    {
+        m_Engine.addParentSHAToNewestCommit(i_PointedBranch);
     }
 }

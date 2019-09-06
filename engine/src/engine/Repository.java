@@ -987,4 +987,12 @@ public class Repository
     {
         i_MergeNodeMaps.setOursNodeMaps(m_WorkingCopy.getNodeMaps());
     }
+
+    public void addParentSHAToNewestCommit(String i_PointedBranch)
+    {
+        Commit newestCommit = getNewestCommitByItDate();
+
+        String pointedCommitSHA1ToAdd = m_Magit.getBranches().get(i_PointedBranch).getCommitSHA1();
+        newestCommit.addParent(pointedCommitSHA1ToAdd);
+    }
 }

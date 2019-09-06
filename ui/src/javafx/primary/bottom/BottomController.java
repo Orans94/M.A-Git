@@ -215,4 +215,10 @@ public class BottomController
 
         return result;
     }
+
+    public void clearTreeView()
+    {
+        commitFileTextArea.setText(StringFinals.EMPTY_STRING);
+        commitTreeView.setRoot(null);
+    }
 }

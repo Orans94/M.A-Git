@@ -1,9 +1,7 @@
 package javafx.primary.top.popup.merge.selectbranch;
 
 import engine.Branch;
-import engine.Commit;
 import engine.MergeNodeMaps;
-import engine.NodeMaps;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,8 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 
 public class MergeSelectBranchController implements PopupController
@@ -36,11 +32,19 @@ public class MergeSelectBranchController implements PopupController
         // conflicts
         MergeNodeMaps mergeNodeMapsResult = m_TopController.merge(theirBranchName);
 
-        // solve conflicts
-        m_TopController.showMergeSolveConflictsScene(mergeNodeMapsResult);
+        // solve conflicts if exists
+        if (mergeNodeMapsResult.getConflicts().size() > 0)
+        {
+            m_TopController.showMergeSolveConflictsScene(mergeNodeMapsResult);
+        }
 
-        //TODO open commit without X and not closeable
-        m_TopController.showCommitScene(event);
+        // commit the merge
+        m_TopController.showForcedCommitScene(event);
+
+        // add the second parent to commit
+        m_TopController.addParentSHAToNewestCommit(theirBranchName);
+
+        // close stage
         StageUtilities.closeOpenSceneByActionEvent(event);
     }
 

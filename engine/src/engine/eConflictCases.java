@@ -10,12 +10,14 @@ public enum eConflictCases
     CONFLICT_2(true, true, true, true, false, false) { @Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "their"; }},
     CONFLICT_3(true, true, true, false, true, false) { @Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "ours"; }},
     CONFLICT_4(true, true, true, false, false, false) { @Override public boolean isConflict() { return true; } @Override public String getFileVersionToTake() {return StringFinals.EMPTY_STRING; }},
-    CONFLICT_5(true, true, false, false, false, false) { @Override public boolean isConflict() { return true; } @Override public String getFileVersionToTake() {return StringFinals.EMPTY_STRING; }},
-    CONFLICT_6(true, false, true, false, true, false) { @Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "ours"; }},
-    CONFLICT_7(true, false, true, false, false, false) { @Override public boolean isConflict() { return true; } @Override public String getFileVersionToTake() {return StringFinals.EMPTY_STRING; }},
-    CONFLICT_8(false, true, true, false, false, false) { @Override public boolean isConflict() { return true; } @Override public String getFileVersionToTake() {return StringFinals.EMPTY_STRING; }},
-    CONFLICT_9(false, true, false, false, false, false) { @Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "ours"; }},
-    CONFLICT_10(false, false, true, false, false, false) { @Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "their"; }};
+    CONFLICT_5(true, true, false, true, false, false) {@Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "their";}},
+    CONFLICT_6(true, true, false, false, false, false) { @Override public boolean isConflict() { return true; } @Override public String getFileVersionToTake() {return StringFinals.EMPTY_STRING; }},
+    CONFLICT_7(true, false, true, false, true, false) { @Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "ours"; }},
+    CONFLICT_8(true, false, true, false, false, false) { @Override public boolean isConflict() { return true; } @Override public String getFileVersionToTake() {return StringFinals.EMPTY_STRING; }},
+    CONFLICT_9(false, true, true, false, false, false) { @Override public boolean isConflict() { return true; } @Override public String getFileVersionToTake() {return StringFinals.EMPTY_STRING; }},
+    CONFLICT_10(true, false, false, false, false, false){ @Override public boolean isConflict() { return true; } @Override public String getFileVersionToTake() {return StringFinals.EMPTY_STRING; }},
+    CONFLICT_11(false, true, false, false, false, false) { @Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "ours"; }},
+    CONFLICT_12(false, false, true, false, false, false) { @Override public boolean isConflict() { return false; } @Override public String getFileVersionToTake() {return "their"; }};
 
     private boolean isCondition_0, isCondition_1, isCondition_2,
             isCondition_3, isCondition_4, isCondition_5;
