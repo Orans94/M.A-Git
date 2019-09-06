@@ -16,5 +16,6 @@ public class CommonResourcesPaths
     public final static String UPDATE_USERNAME_FXML_RESOURCE = "/javafx/primary/top/popup/updateusername/updateUsername.fxml";
     public final static String RESET_BRANCH_FXML_RESOURCE = "/javafx/primary/top/popup/resetbranch/resetbranch.fxml";
     public final static String MERGE_SELECT_BRANCH_FXML_RESOURCE = "/javafx/primary/top/popup/merge/selectbranch/mergeSelectBranch.fxml";
-    public final static String SOLVE_CONFLICT_BRANCH_FXML_RESOURCE = "/javafx/primary/top/popup/merge/solveconflict/merge.fxml";
+    public final static String MERGE_SOLVE_CONFLICT_FXML_RESOURCE = "/javafx/primary/top/popup/merge/solveconflict/mergeSolveConflict.fxml";
+
 }

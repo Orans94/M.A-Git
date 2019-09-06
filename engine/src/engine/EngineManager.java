@@ -282,7 +282,7 @@ public class EngineManager
         return m_LazyLoadedNodeMapsByCommitSHA1.getOrDefault(i_CommitSHA1, null);
     }
 
-    public List<Path> merge(String i_TheirBranchName) throws IOException
+    public MergeNodeMaps merge(String i_TheirBranchName) throws IOException
     {
         return m_Repository.merge(i_TheirBranchName);
     }

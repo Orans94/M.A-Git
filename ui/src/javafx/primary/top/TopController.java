@@ -15,6 +15,7 @@ import javafx.primary.top.popup.deletebranch.DeleteBranchController;
 import javafx.primary.top.popup.loadrepositorybypath.LoadRepositoryByPathController;
 import javafx.primary.top.popup.loadrepositorybyxml.LoadRepositoryByXMLController;
 import javafx.primary.top.popup.merge.selectbranch.MergeSelectBranchController;
+import javafx.primary.top.popup.merge.solveconflict.MergeSolveConflictController;
 import javafx.primary.top.popup.resetbranch.ResetBranchController;
 import javafx.primary.top.popup.showinformation.*;
 import javafx.primary.top.popup.updateusername.UpdateUsernameController;
@@ -66,6 +67,8 @@ public class TopController
     @FXML private ResetBranchController m_ResetBranchComponentController;
     @FXML private VBox m_MergeSelectBranchComponent;
     @FXML private MergeSelectBranchController m_MergeSelectBranchComponentController;
+    @FXML private SplitPane m_MergeSolveConflictComponent;
+    @FXML private MergeSolveConflictController m_MergeSolveConflictComponentController;
 
     // ------ CONTROLLERS AND COMPONENTS ------
 
@@ -184,6 +187,10 @@ public class TopController
     {
         this.m_MergeSelectBranchComponentController = (MergeSelectBranchController) m_MergeSelectBranchComponentController;
     }
+    public void setMergeSolveConflictComponent(Parent m_MergeSolveConflictComponent) { this.m_MergeSolveConflictComponent = (SplitPane) m_MergeSolveConflictComponent; }
+
+    public void setMergeSolveConflictComponentController(PopupController m_MergeSolveConflictComponentController) { this.m_MergeSolveConflictComponentController = (MergeSolveConflictController) m_MergeSolveConflictComponentController; }
+
 
     public void setMainController(AppController i_MainController)
     {
@@ -477,6 +484,7 @@ public class TopController
     public void createRepository(Path i_RepositoryPath, String i_RepositoryName) throws IOException
     {
         setRepositoryFullPathSplitMenuButton(i_RepositoryPath);
+        m_MainController.clearCommitTableView();
         m_MainController.createRepository(i_RepositoryPath, i_RepositoryName);
     }
 
@@ -609,7 +617,7 @@ public class TopController
         }
     }
 
-    public List<Path> merge(String i_TheirBranchName) throws IOException
+    public MergeNodeMaps merge(String i_TheirBranchName) throws IOException
     {
         return m_MainController.merge(i_TheirBranchName);
     }
@@ -627,5 +635,13 @@ public class TopController
     public void clearCommitTableView()
     {
         m_MainController.clearCommitTableView();
+    }
+
+    public void showMergeSolveConflictsScene(MergeNodeMaps i_MergeNodeMapsResult) throws IOException
+    {
+        Stage stage = StageUtilities.createPopupStage("Merge Conflict Solver", MERGE_SOLVE_CONFLICT_FXML_RESOURCE, this);
+        m_MergeSolveConflictComponentController.setMergeNodeMaps(i_MergeNodeMapsResult);
+        m_MergeSolveConflictComponentController.updateConflictList();
+        stage.showAndWait();
     }
 }

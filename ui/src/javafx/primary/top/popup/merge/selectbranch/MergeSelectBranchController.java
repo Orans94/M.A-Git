@@ -2,6 +2,7 @@ package javafx.primary.top.popup.merge.selectbranch;
 
 import engine.Branch;
 import engine.Commit;
+import engine.MergeNodeMaps;
 import engine.NodeMaps;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;
@@ -32,21 +33,11 @@ public class MergeSelectBranchController implements PopupController
         // getting their branch name
         String theirBranchName = branchNamesChoiceBox.getValue();
 
-        try
-        {
-            m_TopController.merge(theirBranchName);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
         // conflicts
-        List<Path> mergeConflictsFilesList = m_TopController.merge(theirBranchName);
+        MergeNodeMaps mergeNodeMapsResult = m_TopController.merge(theirBranchName);
 
-/*        for (Path conflictedFilePath : mergeConflictsFilesList)
-        {
-            // open merge solve conflict scene and solve conflict
-        }*/
+        // solve conflicts
+        m_TopController.showMergeSolveConflictsScene(mergeNodeMapsResult);
 
         //TODO open commit without X and not closeable
         m_TopController.showCommitScene(event);

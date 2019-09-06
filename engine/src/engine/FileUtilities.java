@@ -181,13 +181,4 @@ public class FileUtilities
 
     public static boolean isFolder(Path i_Path) { return FilenameUtils.getExtension(i_Path.toString()).equals("");}
 
-    public static void delete(Path i_path) throws IOException
-    {
-        Files.delete(i_path);
-    }
-
-    public static boolean isDirectoryEmptyInFileSystem(Path i_Dir)
-    {
-
-    }
 }

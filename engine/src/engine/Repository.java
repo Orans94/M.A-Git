@@ -798,7 +798,7 @@ public class Repository
     }
 
 
-    public List<Path> merge(String i_TheirBranchName) throws IOException
+    public MergeNodeMaps merge(String i_TheirBranchName) throws IOException
     {
         MergeNodeMaps mergeNodeMaps = new MergeNodeMaps();
         Branch theirBranch = m_Magit.getBranches().get(i_TheirBranchName);
@@ -807,7 +807,7 @@ public class Repository
         unionCommitsNodeMaps(mergeNodeMaps);
         mergeUnconflictedNodesAndGetConflictedNodeMaps(mergeNodeMaps);
 
-        return mergeNodeMaps.getConflicts();
+        return mergeNodeMaps;
     }
 
     private void mergeUnconflictedNodesAndGetConflictedNodeMaps(MergeNodeMaps i_MergeNodeMaps) throws IOException
@@ -860,7 +860,7 @@ public class Repository
             {
                 if(FileUtilities.getNumberOfSubNodes(dir) == 0)
                 {
-                    FileUtilities.delete(dir);
+                    FileUtilities.deleteFile(dir);
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -874,7 +874,7 @@ public class Repository
         Files.createDirectories(pathToCreate);
         if(FileUtilities.exists(i_Path))
         {
-            FileUtilities.delete(i_Path);
+            FileUtilities.deleteFile(i_Path);
         }
         if(i_ToTakeFromNodeMaps.getSHA1ByPath().containsKey(i_Path))
         { // get the file version from their maps
