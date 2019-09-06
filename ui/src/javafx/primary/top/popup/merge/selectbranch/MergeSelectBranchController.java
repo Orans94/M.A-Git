@@ -11,6 +11,7 @@ import javafx.primary.top.popup.PopupController;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class MergeSelectBranchController implements PopupController
     @Override
     public void setTopController(TopController i_TopController) { m_TopController = i_TopController; }
 
-    @FXML void startMergeButtonAction(ActionEvent event)
+    @FXML void startMergeButtonAction(ActionEvent event) throws IOException
     {
         // getting their branch name
         String theirBranchName = branchNamesChoiceBox.getValue();
@@ -40,20 +41,15 @@ public class MergeSelectBranchController implements PopupController
             e.printStackTrace();
         }
         // conflicts
-        //List<Path> mergeConflictsFilesList = m_TopController.getMergeConflicts(ancestorCommit, ourCommit, theirCommit);
-        ///////////////////////////////////////////////////////////////////
+        List<Path> mergeConflictsFilesList = m_TopController.merge(theirBranchName);
 
-        // for each file (path)
 /*        for (Path conflictedFilePath : mergeConflictsFilesList)
         {
             // open merge solve conflict scene and solve conflict
         }*/
 
-        //commit
-
-
-
-
+        //TODO open commit without X and not closeable
+        m_TopController.showCommitScene(event);
         StageUtilities.closeOpenSceneByActionEvent(event);
     }
 

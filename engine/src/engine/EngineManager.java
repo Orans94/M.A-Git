@@ -89,7 +89,7 @@ public class EngineManager
         m_Repository.loadRepository(i_RepoPath);
     }
 
-    public boolean isDirectory(Path i_DirToCheck) { return FileUtilities.isDirectory(i_DirToCheck); }
+    public boolean isDirectory(Path i_DirToCheck) { return FileUtilities.isDirectoryInFileSystem(i_DirToCheck); }
 
     public boolean isBranchNameRepresentsHead(String i_BranchName)
     {

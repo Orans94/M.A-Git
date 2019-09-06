@@ -162,7 +162,7 @@ public class FileUtilities
         return result.toString("UTF-8");
     }
 
-    public static boolean isDirectory(Path i_dirToCheck)
+    public static boolean isDirectoryInFileSystem(Path i_dirToCheck)
     {
         return Files.isDirectory(i_dirToCheck);
     }
@@ -177,5 +177,17 @@ public class FileUtilities
         {
             throw new SecurityException("read access to " + i_Path + " is denied");
         }
+    }
+
+    public static boolean isFolder(Path i_Path) { return FilenameUtils.getExtension(i_Path.toString()).equals("");}
+
+    public static void delete(Path i_path) throws IOException
+    {
+        Files.delete(i_path);
+    }
+
+    public static boolean isDirectoryEmptyInFileSystem(Path i_Dir)
+    {
+
     }
 }

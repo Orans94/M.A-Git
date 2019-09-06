@@ -1,5 +1,6 @@
 package engine;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -40,6 +41,7 @@ public enum eConflictCases
                 .filter(e -> values[5] == e.isCondition_5)
                 .findFirst();
     }
+
 
     public abstract boolean isConflict();
     public abstract String getFileVersionToTake();
