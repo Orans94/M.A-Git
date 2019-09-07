@@ -995,4 +995,14 @@ public class Repository
         String pointedCommitSHA1ToAdd = m_Magit.getBranches().get(i_PointedBranch).getCommitSHA1();
         newestCommit.addParent(pointedCommitSHA1ToAdd);
     }
+
+    public void removeEmptyDirectories() throws IOException
+    {
+        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), getRemoveEmptyDirectoriesFileVisitor());
+    }
+
+    public Path getRootFolderPath()
+    {
+        return m_WorkingCopy.getWorkingCopyDir();
+    }
 }

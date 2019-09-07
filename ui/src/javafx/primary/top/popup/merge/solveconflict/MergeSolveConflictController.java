@@ -3,7 +3,10 @@ package javafx.primary.top.popup.merge.solveconflict;
 import engine.FileUtilities;
 import engine.MergeNodeMaps;
 import engine.Node;
+import javafx.AlertFactory;
 import javafx.StageUtilities;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,6 +21,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -39,6 +43,9 @@ public class MergeSolveConflictController implements PopupController
 
     public void initialize()
     {
+        BooleanBinding isResultTextFieldEmpty = Bindings.isEmpty(resultTextArea.textProperty());
+        takeResultVersionButton.disableProperty().bind(isResultTextFieldEmpty);
+
         conflictsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         conflictsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Path>()
         {
@@ -65,14 +72,23 @@ public class MergeSolveConflictController implements PopupController
     {
         // remove the file selected in list view from fs if it exists
         Path conflictedFilePath = conflictsListView.getSelectionModel().getSelectedItem();
-        if (FileUtilities.exists(conflictedFilePath))
+        if (m_TopController.isPathExists(conflictedFilePath))
         {
-            FileUtilities.deleteFile(conflictedFilePath);
+            m_TopController.deleteFile(conflictedFilePath);
         }
 
         // create new file on fs
         String conflictedFileContent = resultTextArea.getText();
-        FileUtilities.createAndWriteTxtFile(conflictedFilePath, conflictedFileContent);
+        if(conflictedFileContent.equals(""))
+        {
+            AlertFactory.createInformationAlert("Merge", "File " +conflictedFilePath+ " has been deleted")
+            .showAndWait();
+        }
+        else
+        {
+            m_TopController.createPathToFile(conflictedFilePath);
+            m_TopController.createAndWriteTxtFile(conflictedFilePath, conflictedFileContent);
+        }
 
         // deleting the file from list view after resolving the conflict
         m_MergeNodeMapsResultFromMerge.getConflicts().remove(conflictedFilePath);
@@ -84,6 +100,7 @@ public class MergeSolveConflictController implements PopupController
         // close conflict solver if there is no more conflicts
         if (m_ConflictListObservableList.size() == 0)
         {
+            m_TopController.removeEmptyDirectories();
             StageUtilities.closeOpenSceneByActionEvent(event);
         }
     }

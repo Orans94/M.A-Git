@@ -291,4 +291,35 @@ public class EngineManager
     {
         m_Repository.addParentSHAToNewestCommit(i_PointedBranch);
     }
+
+    public void deleteFile(Path i_PathToDelete) throws IOException
+    {
+        FileUtilities.deleteFile(i_PathToDelete);
+    }
+
+    public void createPathToFile(Path i_PathToFile) throws IOException
+    {
+        Path pathToCreate = i_PathToFile.getParent();
+        Files.createDirectories(pathToCreate);
+    }
+
+    public void createAndWriteTxtFile(Path i_PathToFile, String i_Content) throws IOException
+    {
+        FileUtilities.createAndWriteTxtFile(i_PathToFile, i_Content);
+    }
+
+    public void removeEmptyDirectories() throws IOException
+    {
+        m_Repository.removeEmptyDirectories();
+    }
+
+    public Path getRootFolderPath()
+    {
+        return m_Repository.getRootFolderPath();
+    }
+
+    public int getNumberOfSubNodes(Path i_Path) throws IOException
+    {
+        return FileUtilities.getNumberOfSubNodes(i_Path);
+    }
 }

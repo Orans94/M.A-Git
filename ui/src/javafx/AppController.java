@@ -275,4 +275,34 @@ public class AppController
     {
         m_Engine.addParentSHAToNewestCommit(i_PointedBranch);
     }
+
+    public void deleteFile(Path i_PathToDelete) throws IOException
+    {
+        m_Engine.deleteFile(i_PathToDelete);
+    }
+
+    public void createPathToFile(Path i_PathToFile) throws IOException
+    {
+        m_Engine.createPathToFile(i_PathToFile);
+    }
+
+    public void createAndWriteTxtFile(Path i_PathToFile, String i_Content) throws IOException
+    {
+        m_Engine.createAndWriteTxtFile(i_PathToFile, i_Content);
+    }
+
+    public void removeEmptyDirectories() throws IOException
+    {
+        m_Engine.removeEmptyDirectories();
+    }
+
+    public Path getRootFolderPath()
+    {
+        return m_Engine.getRootFolderPath();
+    }
+
+    public int getNumberOfSubNodes(Path i_Path) throws IOException
+    {
+        return m_Engine.getNumberOfSubNodes(i_Path);
+    }
 }
