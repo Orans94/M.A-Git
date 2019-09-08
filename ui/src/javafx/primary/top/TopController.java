@@ -318,6 +318,11 @@ public class TopController
             AlertFactory.createErrorAlert("Show commit history", "Repository have to be loaded or initialized before making this operation")
                     .showAndWait();
         }
+        else if(!isFileSystemDirty(getFileSystemStatus()))
+        {
+            AlertFactory.createInformationAlert("Show status", "WC status is clean")
+            .showAndWait();
+        }
         else
         {
             Stage stage = StageUtilities.createPopupStage("Show status", SHOW_INFORMATION_FXML_RESOURCE, this);
@@ -613,6 +618,11 @@ public class TopController
             AlertFactory.createErrorAlert("Merge", "Repository have to be loaded or initialized before making this operation")
                     .showAndWait();
         }
+        else if(isFileSystemDirty(getFileSystemStatus()))
+        {
+            AlertFactory.createInformationAlert("Merge", "WC status is dirty, merge is not allowed")
+                    .showAndWait();
+        }
         else
         {
             Stage stage = StageUtilities.createPopupStage("Merge", MERGE_SELECT_BRANCH_FXML_RESOURCE, this);
@@ -686,5 +696,20 @@ public class TopController
     public int getNumberOfSubNodes(Path i_Path) throws IOException
     {
         return m_MainController.getNumberOfSubNodes(i_Path);
+    }
+
+    public void setActiveBranchPointedCommit(String i_BranchNameToCopyPointedCommit) throws IOException
+    {
+        m_MainController.setActiveBranchPointedCommit(i_BranchNameToCopyPointedCommit);
+    }
+
+    public boolean isFastForwardMerge(String i_TheirBranchName)
+    {
+        return m_MainController.isFastForwardMerge(i_TheirBranchName);
+    }
+
+    public boolean isOursContainsTheirs(String i_TheirsBranchName)
+    {
+        return m_MainController.isOursContainsTheir(i_TheirsBranchName);
     }
 }

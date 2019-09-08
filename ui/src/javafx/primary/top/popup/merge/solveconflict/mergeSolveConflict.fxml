@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="701.0" prefWidth="1114.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="javafx.primary.top.popup.merge.solveconflict.MergeSolveConflictController">
+<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="701.0" prefWidth="1114.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.popup.merge.solveconflict.MergeSolveConflictController">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
@@ -42,7 +43,10 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Region prefHeight="82.0" prefWidth="378.0" />
-                        <Label text="Result" />
+                        <Label text="Result">
+                           <HBox.margin>
+                              <Insets top="50.0" />
+                           </HBox.margin></Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="308.0" prefWidth="1220.0">
@@ -50,7 +54,16 @@
                         <Region prefHeight="307.0" prefWidth="230.0" />
                         <TextArea fx:id="resultTextArea" prefHeight="263.0" prefWidth="518.0" />
                         <Region prefHeight="258.0" prefWidth="41.0" />
-                        <Button fx:id="takeResultVersionButton" mnemonicParsing="false" onAction="#takeResultVersionButtonAction" text="Take result version" />
+                        <VBox>
+                           <children>
+                              <Button fx:id="takeResultVersionButton" mnemonicParsing="false" onAction="#takeResultVersionButtonAction" text="Take result version" />
+                              <Button fx:id="deleteFileButton" mnemonicParsing="false" onAction="#deleteFileButtonAction" prefHeight="25.0" prefWidth="85.0" text="Delete file">
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
                </children>

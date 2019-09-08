@@ -1005,4 +1005,35 @@ public class Repository
     {
         return m_WorkingCopy.getWorkingCopyDir();
     }
+
+    public void setActiveBranchPointedCommit(String i_BranchNameToCopyPointedCommit) throws IOException
+    {
+        Branch branchToCopy = m_Magit.getBranches().get(i_BranchNameToCopyPointedCommit);
+        Branch activeBranch = m_Magit.getHead().getActiveBranch();
+        activeBranch.setCommitSHA1(branchToCopy.getCommitSHA1());
+        Path pathToActiveBranch = Magit.getMagitDir().resolve("branches").resolve(activeBranch.getName()+ ".txt");
+        FileUtilities.modifyTxtFile(pathToActiveBranch, activeBranch.getCommitSHA1());
+    }
+
+    public boolean isFastForwardMerge(String i_TheirBranchName)
+    {
+        String ourCommitSHA1 = m_Magit.getHead().getActiveBranch().getCommitSHA1();
+        String theirCommitSHA1 = m_Magit.getBranches().get(i_TheirBranchName).getCommitSHA1();
+
+        AncestorFinder finder = new AncestorFinder(SHA1 -> m_Magit.getCommits().get(SHA1));
+        String ancestorSHA1 = finder.traceAncestor(ourCommitSHA1, theirCommitSHA1);
+
+        return ancestorSHA1.equals(ourCommitSHA1) || ancestorSHA1.equals(theirCommitSHA1);
+    }
+
+    public boolean isOursContainsTheir(String i_TheirBranchName)
+    {
+        String ourCommitSHA1 = m_Magit.getHead().getActiveBranch().getCommitSHA1();
+        String theirCommitSHA1 = m_Magit.getBranches().get(i_TheirBranchName).getCommitSHA1();
+
+        AncestorFinder finder = new AncestorFinder(SHA1 -> m_Magit.getCommits().get(SHA1));
+        String ancestorSHA1 = finder.traceAncestor(ourCommitSHA1, theirCommitSHA1);
+
+        return ancestorSHA1.equals(ourCommitSHA1);
+    }
 }

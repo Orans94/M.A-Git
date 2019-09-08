@@ -305,4 +305,19 @@ public class AppController
     {
         return m_Engine.getNumberOfSubNodes(i_Path);
     }
+
+    public void setActiveBranchPointedCommit(String i_BranchNameToCopyPointedCommit) throws IOException
+    {
+        m_Engine.setActiveBranchPointedCommit(i_BranchNameToCopyPointedCommit);
+    }
+
+    public boolean isFastForwardMerge(String i_TheirBranchName)
+    {
+        return m_Engine.isFastForwardMerge(i_TheirBranchName);
+    }
+
+    public boolean isOursContainsTheir(String i_TheirBranchName)
+    {
+        return m_Engine.isOursContainsTheir(i_TheirBranchName);
+    }
 }

@@ -322,4 +322,19 @@ public class EngineManager
     {
         return FileUtilities.getNumberOfSubNodes(i_Path);
     }
+
+    public void setActiveBranchPointedCommit(String i_BranchNameToCopyPointedCommit) throws IOException
+    {
+        m_Repository.setActiveBranchPointedCommit(i_BranchNameToCopyPointedCommit);
+    }
+
+    public boolean isFastForwardMerge(String i_TheirBranchName)
+    {
+        return m_Repository.isFastForwardMerge(i_TheirBranchName);
+    }
+
+    public boolean isOursContainsTheir(String i_TheirBranchName)
+    {
+        return m_Repository.isOursContainsTheir(i_TheirBranchName);
+    }
 }

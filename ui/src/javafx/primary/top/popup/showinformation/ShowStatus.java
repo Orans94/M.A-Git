@@ -20,19 +20,9 @@ public class ShowStatus implements Showable
     {
         String result = "";
 
-        if (m_CurrentOpenChanges.isFileSystemClean())
-        {
-            AlertFactory.createInformationAlert("Show status", "WC is clean")
-                    .showAndWait();
-            //TODO close scene
-            // result = null
-        }
-        else
-        {
-            result = result.concat(getList("Deleted", m_CurrentOpenChanges.getDeletedNodes()) + System.lineSeparator());
-            result = result.concat(getList("Modified", m_CurrentOpenChanges.getModifiedNodes()) + System.lineSeparator());
-            result = result.concat(getList("New", m_CurrentOpenChanges.getNewNodes()) + System.lineSeparator());
-        }
+        result = result.concat(getList("Deleted", m_CurrentOpenChanges.getDeletedNodes()) + System.lineSeparator());
+        result = result.concat(getList("Modified", m_CurrentOpenChanges.getModifiedNodes()) + System.lineSeparator());
+        result = result.concat(getList("New", m_CurrentOpenChanges.getNewNodes()) + System.lineSeparator());
 
         return result;
     }

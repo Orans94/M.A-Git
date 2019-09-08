@@ -32,37 +32,54 @@ public class MergeSelectBranchController implements PopupController
         // getting their branch name
         String theirBranchName = branchNamesChoiceBox.getValue();
 
-        // conflicts
-        MergeNodeMaps mergeNodeMapsResult = m_TopController.merge(theirBranchName);
-
-        // solve conflicts if exists
-        if (mergeNodeMapsResult.getConflicts().size() > 0)
+        // merge process
+        if(m_TopController.isFastForwardMerge(theirBranchName))
         {
-            m_TopController.showMergeSolveConflictsScene(mergeNodeMapsResult);
-        }
-
-        // commit the merge if wc is dirty and file system is not empty
-        Path rootFolderPath = m_TopController.getRootFolderPath();
-        if(m_TopController.getNumberOfSubNodes(rootFolderPath) == 1)
-        {
-            // only .magit folder
-            //TODO
-            AlertFactory.createInformationAlert("Merge", "The WC is empty, nothing to commit")
-            .showAndWait();
+            if(m_TopController.isOursContainsTheirs(theirBranchName))
+            {
+                AlertFactory.createInformationAlert("Merge", "Fast forward merge, nothing to merge")
+                .showAndWait();
+            }
+            else
+            { // their contains ours
+                m_TopController.setActiveBranchPointedCommit(theirBranchName);
+                AlertFactory.createInformationAlert("Merge", "Fast forward merge, active branch points to " + theirBranchName + "pointed commit")
+                        .showAndWait();
+            }
         }
         else
         {
-            OpenChanges openChanges = m_TopController.getFileSystemStatus();
-            if (m_TopController.isFileSystemDirty(openChanges))
+            MergeNodeMaps mergeNodeMapsResult = m_TopController.merge(theirBranchName);
+
+            // solve conflicts if exists
+            if (mergeNodeMapsResult.getConflicts().size() > 0)
             {
-                m_TopController.showForcedCommitScene(event);
-                // add the second parent to commit
-                m_TopController.addParentSHAToNewestCommit(theirBranchName);
+                m_TopController.showMergeSolveConflictsScene(mergeNodeMapsResult);
+            }
+
+            // commit the merge if wc is dirty and file system is not empty
+            Path rootFolderPath = m_TopController.getRootFolderPath();
+            if (m_TopController.getNumberOfSubNodes(rootFolderPath) == 1)
+            {
+                // only .magit folder
+                //TODO
+                AlertFactory.createInformationAlert("Merge", "The WC is empty, nothing to commit")
+                        .showAndWait();
             }
             else
             {
-                AlertFactory.createInformationAlert("Merge", "The WC status is clean, nothing to commit")
-                .showAndWait();
+                OpenChanges openChanges = m_TopController.getFileSystemStatus();
+                if (m_TopController.isFileSystemDirty(openChanges))
+                {
+                    m_TopController.showForcedCommitScene(event);
+                    // add the second parent to commit
+                    m_TopController.addParentSHAToNewestCommit(theirBranchName);
+                }
+                else
+                {
+                    AlertFactory.createInformationAlert("Merge", "The WC status is clean, nothing to commit")
+                            .showAndWait();
+                }
             }
         }
 
