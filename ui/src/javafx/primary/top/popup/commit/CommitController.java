@@ -39,6 +39,7 @@ public class CommitController implements PopupController
                 {
                     AlertFactory.createInformationAlert("Commit", "Commited successfully").showAndWait();
                     m_TopController.addNewestCommitToTableView();
+                    m_TopController.updateCommitTree();
                 }
                 else
                 {

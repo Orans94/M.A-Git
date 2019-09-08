@@ -46,6 +46,7 @@ public class MergeSolveConflictController implements PopupController
         BooleanBinding isResultTextFieldEmpty = Bindings.isEmpty(resultTextArea.textProperty());
         takeResultVersionButton.disableProperty().bind(isResultTextFieldEmpty);
 
+
         conflictsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         conflictsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Path>()
         {

@@ -337,4 +337,24 @@ public class EngineManager
     {
         return m_Repository.isOursContainsTheir(i_TheirBranchName);
     }
+
+    public List<Commit> getOrderedCommitsByDate()
+    {
+        return m_Repository.getOrderedCommitsByDate();
+    }
+
+    public boolean isCommitFather(String i_FatherSHA1, String i_ChildSHA1)
+    {
+        return m_Repository.isCommitFather(i_FatherSHA1, i_ChildSHA1);
+    }
+
+    public List<Commit> getAllCommitsWithTwoParents()
+    {
+        return m_Repository.getAllCommitsWithTwoParents();
+    }
+
+    public Commit getCommit(String i_CommitSHA1)
+    {
+        return m_Repository.getCommit(i_CommitSHA1);
+    }
 }

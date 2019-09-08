@@ -1036,4 +1036,40 @@ public class Repository
 
         return ancestorSHA1.equals(ourCommitSHA1);
     }
+
+    public List<Commit> getOrderedCommitsByDate()
+    {
+        return m_Magit.getCommits().values()
+                .stream()
+                .sorted(Comparator.comparing(Commit::getCommitDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public boolean isCommitFather(String i_FatherSHA1, String i_ChildSHA1)
+    {
+        boolean isFather;
+
+        List<String> parentsSHA1 = m_Magit.getCommits().get(i_ChildSHA1).getParentsSHA1();
+        for(String parent : parentsSHA1)
+        {
+            if(parent.equals(i_FatherSHA1))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public List<Commit> getAllCommitsWithTwoParents()
+    {
+        return m_Magit.getCommits().values().stream()
+                .filter(c->c.getParentsSHA1().size() == 2)
+                .collect(Collectors.toList());
+    }
+
+    public Commit getCommit(String i_CommitSHA1)
+    {
+        return m_Magit.getCommits().get(i_CommitSHA1);
+    }
 }

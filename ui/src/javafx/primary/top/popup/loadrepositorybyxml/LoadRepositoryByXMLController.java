@@ -91,6 +91,7 @@ public class LoadRepositoryByXMLController implements PopupController
                     m_TopController.createEmptyRepository(XMLRepositoryLocation, repositoryName);
                     m_TopController.clearCommitTableView();
                     m_TopController.addCommitsToTableView();
+                    m_TopController.updateCommitTree();
                     notifyRepositoryHasBeenLoaded();
                 }
             }
@@ -99,6 +100,7 @@ public class LoadRepositoryByXMLController implements PopupController
                 createNewRepository(XMLRepositoryLocation, repositoryName);
                 m_TopController.clearCommitTableView();
                 m_TopController.addCommitsToTableView();
+                m_TopController.updateCommitTree();
                 notifyRepositoryHasBeenCreated();
             }
         }
@@ -113,6 +115,7 @@ public class LoadRepositoryByXMLController implements PopupController
                     m_TopController.readRepositoryFromXMLFile(XMLRepo, m_TopController.getXMLMagitMaps());
                     m_TopController.clearCommitTableView();
                     m_TopController.addCommitsToTableView();
+                    m_TopController.updateCommitTree();
                     notifyRepositoryHasBeenLoaded();
                 }
             }
@@ -123,6 +126,7 @@ public class LoadRepositoryByXMLController implements PopupController
                     m_TopController.readRepositoryFromXMLFile(XMLRepo, m_TopController.getXMLMagitMaps());
                     m_TopController.clearCommitTableView();
                     m_TopController.addCommitsToTableView();
+                    m_TopController.updateCommitTree();
                     notifyRepositoryLoadedSuccessfullyFromXML(XMLRepo.getName());
                 }
                 else

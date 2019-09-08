@@ -712,4 +712,9 @@ public class TopController
     {
         return m_MainController.isOursContainsTheir(i_TheirsBranchName);
     }
+
+    public void updateCommitTree()
+    {
+        m_MainController.updateCommitTree();
+    }
 }

@@ -5,6 +5,7 @@ import javafx.primary.bottom.BottomController;
 import javafx.primary.center.CenterController;
 import javafx.fxml.FXML;
 import javafx.primary.left.LeftController;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.primary.top.TopController;
@@ -25,7 +26,7 @@ public class AppController
 
     @FXML private VBox m_TopComponent;
     @FXML private TopController m_TopComponentController;
-    @FXML private VBox m_LeftComponent;
+    @FXML private ScrollPane m_LeftComponent;
     @FXML private LeftController m_LeftComponentController;
     @FXML private BorderPane m_CenterComponent;
     @FXML private CenterController m_CenterComponentController;
@@ -319,5 +320,30 @@ public class AppController
     public boolean isOursContainsTheir(String i_TheirBranchName)
     {
         return m_Engine.isOursContainsTheir(i_TheirBranchName);
+    }
+
+    public List<Commit> getOrderedCommitsByDate()
+    {
+        return m_Engine.getOrderedCommitsByDate();
+    }
+
+    public boolean isCommitFather(String i_FatherSHA1, String i_ChildSHA1)
+    {
+        return m_Engine.isCommitFather(i_FatherSHA1, i_ChildSHA1);
+    }
+
+    public List<Commit> getAllCommitsWithTwoParents()
+    {
+        return m_Engine.getAllCommitsWithTwoParents();
+    }
+
+    public Commit getCommit(String i_CommitSHA1)
+    {
+        return m_Engine.getCommit(i_CommitSHA1);
+    }
+
+    public void updateCommitTree()
+    {
+        m_LeftComponentController.updateCommitTree();
     }
 }
