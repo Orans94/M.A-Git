@@ -37,6 +37,7 @@ public class MergeSolveConflictController implements PopupController
     @FXML private TextArea theirTextArea;
     @FXML private TextArea resultTextArea;
     @FXML private Button takeResultVersionButton;
+    @FXML private Button deleteFileButton;
 
     @Override
     public void setTopController(TopController i_TopController) { m_TopController = i_TopController; }
@@ -46,7 +47,7 @@ public class MergeSolveConflictController implements PopupController
         BooleanBinding isResultTextFieldEmpty = Bindings.isEmpty(resultTextArea.textProperty());
         takeResultVersionButton.disableProperty().bind(isResultTextFieldEmpty);
 
-
+        deleteFileButton.disableProperty().bind(conflictsListView.getSelectionModel().selectedItemProperty().isNull());
         conflictsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         conflictsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Path>()
         {
@@ -61,6 +62,7 @@ public class MergeSolveConflictController implements PopupController
                 String oursBlobContent = getBlobContent(m_MergeNodeMapsResultFromMerge.getOursNodeMaps().getNodeBySHA1(), oursBlobSHA1);
                 String theirBlobContent = getBlobContent(m_MergeNodeMapsResultFromMerge.getTheirNodeMaps().getNodeBySHA1(), theirBlobSHA1);;
 
+                resultTextArea.clear();
                 ancestorTextArea.setText(ancestorBlobContent);
                 ourTextArea.setText(oursBlobContent);
                 theirTextArea.setText(theirBlobContent);
@@ -80,16 +82,9 @@ public class MergeSolveConflictController implements PopupController
 
         // create new file on fs
         String conflictedFileContent = resultTextArea.getText();
-        if(conflictedFileContent.equals(""))
-        {
-            AlertFactory.createInformationAlert("Merge", "File " +conflictedFilePath+ " has been deleted")
-            .showAndWait();
-        }
-        else
-        {
-            m_TopController.createPathToFile(conflictedFilePath);
-            m_TopController.createAndWriteTxtFile(conflictedFilePath, conflictedFileContent);
-        }
+        m_TopController.createPathToFile(conflictedFilePath);
+        m_TopController.createAndWriteTxtFile(conflictedFilePath, conflictedFileContent);
+
 
         // deleting the file from list view after resolving the conflict
         m_MergeNodeMapsResultFromMerge.getConflicts().remove(conflictedFilePath);
@@ -140,5 +135,28 @@ public class MergeSolveConflictController implements PopupController
         }
 
         return result;
+    }
+
+    public void deleteFileButtonAction(ActionEvent actionEvent) throws IOException
+    {
+        Path conflictedFilePath = conflictsListView.getSelectionModel().getSelectedItem();
+        if (m_TopController.isPathExists(conflictedFilePath))
+        {
+            m_TopController.deleteFile(conflictedFilePath);
+        }
+
+        // deleting the file from list view after resolving the conflict
+        m_MergeNodeMapsResultFromMerge.getConflicts().remove(conflictedFilePath);
+        updateConflictList();
+
+        // clean ancestor, ours, their and result text areas
+        clearAllTextAreas();
+
+        // close conflict solver if there is no more conflicts
+        if (m_ConflictListObservableList.size() == 0)
+        {
+            m_TopController.removeEmptyDirectories();
+            StageUtilities.closeOpenSceneByActionEvent(actionEvent);
+        }
     }
 }
