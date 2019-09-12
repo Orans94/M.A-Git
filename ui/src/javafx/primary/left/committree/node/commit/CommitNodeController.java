@@ -1,4 +1,4 @@
-package javafx.primary.left.committree.node;
+package javafx.primary.left.committree.node.commit;
 
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;

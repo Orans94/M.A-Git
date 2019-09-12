@@ -357,4 +357,9 @@ public class EngineManager
     {
         return m_Repository.getCommit(i_CommitSHA1);
     }
+
+    public OpenChanges getDelta(Commit i_FirstCommit, Commit i_SecondCommit) throws IOException
+    {
+        return m_Repository.delta(i_FirstCommit, i_SecondCommit);
+    }
 }

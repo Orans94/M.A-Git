@@ -1,6 +1,7 @@
 package javafx.primary.left;
 
 import com.fxgraph.graph.PannableCanvas;
+import engine.Branch;
 import engine.Commit;
 import javafx.AppController;
 import javafx.fxml.FXML;
@@ -49,5 +50,10 @@ public class LeftController
     public void commitNodeTreeSelected(String i_CommitSHA1)
     {
         m_MainController.commitNodeTreeSelected(i_CommitSHA1);
+    }
+
+    public List<Branch> getContainedBranches(String i_CommitSHA1)
+    {
+        return m_MainController.getContainedBranches(i_CommitSHA1);
     }
 }

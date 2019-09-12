@@ -1,4 +1,4 @@
-package javafx.primary.left.committree.node;
+package javafx.primary.left.committree.node.commit;
 
 import com.fxgraph.cells.AbstractCell;
 import com.fxgraph.graph.Graph;

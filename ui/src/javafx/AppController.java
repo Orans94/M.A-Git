@@ -351,4 +351,9 @@ public class AppController
     {
         m_CenterComponentController.commitNodeTreeSelected(i_CommitSHA1);
     }
+
+    public OpenChanges getDelta(Commit i_FirstCommit, Commit i_SecondCommit) throws IOException
+    {
+        return m_Engine.getDelta(i_FirstCommit, i_SecondCommit);
+    }
 }

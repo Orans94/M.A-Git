@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,7 @@ public class BottomController
     private Image folderIcon = new Image(getClass().getResourceAsStream("/javafx/primary/bottom/icons/folderIcon.png"));
     private Image blobIcon = new Image(getClass().getResourceAsStream("/javafx/primary/bottom/icons/blobIcon.png"));
     private Map<TreeItem<String>, Folder> m_FolderByTreeItem = new HashMap<>();
-
+    @FXML private TextArea diffTextArea;
     @FXML private TabPane bottomTabPane;
     @FXML private Tab commitTab;
     @FXML private Text authorText;
@@ -93,10 +95,50 @@ public class BottomController
     {
         commitFileTextArea.clear();
     }
-    public void setBottomTabsDetails(Commit i_NewValue, String i_CommitSHA1)
+    public void setBottomTabsDetails(Commit i_NewValue, String i_CommitSHA1) throws IOException
     {
         setCommitTabDetails(i_NewValue, i_CommitSHA1);
         setFileTreeTabDetails(i_NewValue, i_CommitSHA1);
+        setDiffTabDetails(i_NewValue, i_CommitSHA1);
+    }
+
+    private void setDiffTabDetails(Commit i_NewValue, String i_CommitSHA1) throws IOException
+    {
+        String diffContent = generateDiffContent(i_NewValue, i_CommitSHA1);
+        diffTextArea.setText(diffContent);
+    }
+
+    private String generateDiffContent(Commit i_NewValue, String i_CommitSHA1) throws IOException
+    {
+        String result = "";
+        int counter = 1;
+        OpenChanges openChanges;
+        Commit parentCommit;
+        for(String parentSHA1 : i_NewValue.getParentsSHA1())
+        {
+            parentCommit = m_MainController.getCommit(parentSHA1);
+            openChanges = m_MainController.getDelta(i_NewValue, parentCommit);
+            result = result.concat("***Delta with parent no." + counter + System.lineSeparator());
+            result = result.concat(getList("Deleted", openChanges.getDeletedNodes()) + System.lineSeparator());
+            result = result.concat(getList("Modified", openChanges.getModifiedNodes()) + System.lineSeparator());
+            result = result.concat(getList("New", openChanges.getNewNodes()) + System.lineSeparator());
+            counter++;
+        }
+
+        return result;
+    }
+
+    public String getList(String i_Status, List<Path> i_OpenChangesList)
+    {
+        //get an openchanges list with its status
+        String result = "";
+
+        for (Path path : i_OpenChangesList)
+        {
+            result = result.concat(i_Status + ": " + path + System.lineSeparator());
+        }
+
+        return result;
     }
 
     private void setFileTreeTabDetails(Commit i_NewValue, String i_CommitSHA1)
