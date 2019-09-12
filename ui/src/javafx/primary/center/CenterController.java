@@ -112,4 +112,9 @@ public class CenterController
     {
        return sha1TableColumn.getCellData(commitsTableView.getSelectionModel().getSelectedIndex());
     }
+
+    public void commitNodeTreeSelected(String i_CommitSHA1)
+    {
+        commitsTableView.getSelectionModel().select(m_MainController.getCommit(i_CommitSHA1));
+    }
 }

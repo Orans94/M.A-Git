@@ -2,7 +2,6 @@ package javafx.primary.top.popup.merge.selectbranch;
 
 import engine.Branch;
 import engine.MergeNodeMaps;
-import engine.OpenChanges;
 import javafx.AlertFactory;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;
@@ -13,7 +12,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Map;
 
 public class MergeSelectBranchController implements PopupController
@@ -57,30 +55,9 @@ public class MergeSelectBranchController implements PopupController
                 m_TopController.showMergeSolveConflictsScene(mergeNodeMapsResult);
             }
 
-            // commit the merge if wc is dirty and file system is not empty
-            Path rootFolderPath = m_TopController.getRootFolderPath();
-            if (m_TopController.getNumberOfSubNodes(rootFolderPath) == 1)
-            {
-                // only .magit folder
-                //TODO
-                AlertFactory.createInformationAlert("Merge", "The WC is empty, nothing to commit")
-                        .showAndWait();
-            }
-            else
-            {
-                OpenChanges openChanges = m_TopController.getFileSystemStatus();
-                if (m_TopController.isFileSystemDirty(openChanges))
-                {
-                    m_TopController.showForcedCommitScene(event);
-                    // add the second parent to commit
-                    m_TopController.addParentSHAToNewestCommit(theirBranchName);
-                }
-                else
-                {
-                    AlertFactory.createInformationAlert("Merge", "The WC status is clean, nothing to commit")
-                            .showAndWait();
-                }
-            }
+            // commit the merge
+            String theirParentCommitSHA1 = m_TopController.getPointedCommitSHA1(theirBranchName);
+            m_TopController.showForcedCommitScene(event, theirParentCommitSHA1);
         }
 
         // close stage

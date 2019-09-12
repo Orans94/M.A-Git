@@ -52,7 +52,7 @@ public class AppController
 
     public void createNewBranch(String i_BranchName) throws IOException { m_Engine.createNewBranch(i_BranchName); }
 
-    public boolean commit(String i_Message) throws IOException { return m_Engine.commit(i_Message); }
+    public boolean commit(String i_Message, String i_SecondParentSHA1) throws IOException { return m_Engine.commit(i_Message, i_SecondParentSHA1); }
 
     public void checkout(String i_BranchName) throws IOException { m_Engine.checkout(i_BranchName); }
 
@@ -272,9 +272,9 @@ public class AppController
         return m_CenterComponentController.getSelectedCommitFromTableView();
     }
 
-    public void addParentSHAToNewestCommit(String i_PointedBranch)
+    public String getPointedCommitSHA1(String i_PointedBranch)
     {
-        m_Engine.addParentSHAToNewestCommit(i_PointedBranch);
+        return m_Engine.getPointedCommitSHA1(i_PointedBranch);
     }
 
     public void deleteFile(Path i_PathToDelete) throws IOException
@@ -345,5 +345,10 @@ public class AppController
     public void updateCommitTree()
     {
         m_LeftComponentController.updateCommitTree();
+    }
+
+    public void commitNodeTreeSelected(String i_CommitSHA1)
+    {
+        m_CenterComponentController.commitNodeTreeSelected(i_CommitSHA1);
     }
 }

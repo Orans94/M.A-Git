@@ -418,7 +418,7 @@ public class UIManager
             if (!m_Engine.isRootFolderEmpty())
             {
                 String commitMessage = requestCommitMessage();
-                isWCDirty = m_Engine.commit(commitMessage);
+                isWCDirty = m_Engine.commit(commitMessage, null);
                 if (isWCDirty)
                 {
                     System.out.println("Committed successfully");

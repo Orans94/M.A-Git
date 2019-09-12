@@ -52,7 +52,7 @@ public class CheckoutController implements PopupController
                 .showAndWait().get().getText().equals("Yes");
                 if (toCommit)
                 {
-                    m_TopController.showForcedCommitScene(event);
+                    m_TopController.showForcedCommitScene(event, null);
                 }
             }
 

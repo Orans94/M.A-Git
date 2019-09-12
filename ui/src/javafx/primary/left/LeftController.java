@@ -45,4 +45,9 @@ public class LeftController
     {
         m_CommitTreeManager.start(treeSurfaceScrollPane);
     }
+
+    public void commitNodeTreeSelected(String i_CommitSHA1)
+    {
+        m_MainController.commitNodeTreeSelected(i_CommitSHA1);
+    }
 }

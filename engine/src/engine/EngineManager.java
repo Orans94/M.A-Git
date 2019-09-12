@@ -37,9 +37,9 @@ public class EngineManager
 
     public void createRepository(Path i_RepPath, String i_Name) throws IOException { m_Repository = new Repository(i_RepPath, i_Name); }
 
-    public boolean commit(String i_CommitMessage) throws IOException
+    public boolean commit(String i_CommitMessage, String i_SecondParentSHA1) throws IOException
     {
-        return m_Repository.commit(i_CommitMessage, true) != null;
+        return m_Repository.commit(i_CommitMessage, true, i_SecondParentSHA1) != null;
     }
 
     public boolean isPathExists(Path i_Path)
@@ -287,9 +287,9 @@ public class EngineManager
         return m_Repository.merge(i_TheirBranchName);
     }
 
-    public void addParentSHAToNewestCommit(String i_PointedBranch)
+    public String getPointedCommitSHA1(String i_PointedBranch)
     {
-        m_Repository.addParentSHAToNewestCommit(i_PointedBranch);
+        return m_Repository.getPointedCommitSHA1(i_PointedBranch);
     }
 
     public void deleteFile(Path i_PathToDelete) throws IOException

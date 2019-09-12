@@ -145,8 +145,15 @@ public class Repository
         }
     }
 
-    public Commit commit(String i_CommitMessage, boolean i_SaveToFileSystem) throws IOException
+    public Commit commit(String i_CommitMessage, boolean i_SaveToFileSystem, String i_SecondParentSHA1) throws IOException
     {
+        List<String> parents = new LinkedList<>();
+        parents.add(m_WorkingCopy.getCommitSHA1());
+        if(i_SecondParentSHA1 != null)
+        {
+            parents.add(i_SecondParentSHA1);
+        }
+
         NodeMaps tempNodeMaps = new NodeMaps(m_WorkingCopy.getNodeMaps());
         WalkFileSystemResult result = new WalkFileSystemResult();
         Commit commit = null;
@@ -162,15 +169,15 @@ public class Repository
         String rootFolderSha1 = getRootFolderSHA1();
         m_ChildrenInformation.clear();
         boolean isWCDirty = isWCDirty(rootFolderSha1);
-        if (isWCDirty)
+        if (isWCDirty || i_SecondParentSHA1 != null)
         {
             if (i_SaveToFileSystem)
             {
-                commit = manageDirtyWC(i_CommitMessage, rootFolderSha1);
+                commit = manageDirtyWC(i_CommitMessage, rootFolderSha1, i_SecondParentSHA1);
             }
             else
             {
-                commit = m_Magit.createCommit(rootFolderSha1, m_WorkingCopy.getCommitSHA1(), "");
+                commit = m_Magit.createCommit(rootFolderSha1, parents, "");
             }
         }
 
@@ -184,11 +191,16 @@ public class Repository
         addDeletedNodesToDeletedList(i_TempNodeMaps, i_WalkFileSystemResult);
     }
 
-    private Commit manageDirtyWC(String i_CommitMessage, String i_RootFolderSha1) throws IOException
+    private Commit manageDirtyWC(String i_CommitMessage, String i_RootFolderSha1, String i_SecondParentSHA1) throws IOException
     {
-        String commitSHA1 = m_Magit.handleNewCommit(i_RootFolderSha1
-                , m_Magit.getHead().getActiveBranch().getCommitSHA1()
-                , i_CommitMessage);
+        List<String> parents = new LinkedList<>();
+        parents.add(m_Magit.getHead().getActiveBranch().getCommitSHA1());
+        if(i_SecondParentSHA1 != null)
+        {
+            parents.add(i_SecondParentSHA1);
+        }
+
+        String commitSHA1 = m_Magit.handleNewCommit(i_RootFolderSha1, parents, i_CommitMessage);
         m_WorkingCopy.setCommitSHA1(commitSHA1);
 
         return m_Magit.getCommits().get(commitSHA1);
@@ -556,7 +568,7 @@ public class Repository
         }
         else
         {
-            Commit fileSystemFictiveCommit = commit("", false);
+            Commit fileSystemFictiveCommit = commit("", false, null);
             if (fileSystemFictiveCommit == null)
             {// wc is clean
                 return new OpenChanges();
@@ -988,12 +1000,9 @@ public class Repository
         i_MergeNodeMaps.setOursNodeMaps(m_WorkingCopy.getNodeMaps());
     }
 
-    public void addParentSHAToNewestCommit(String i_PointedBranch)
+    public String getPointedCommitSHA1(String i_PointedBranch)
     {
-        Commit newestCommit = getNewestCommitByItDate();
-
-        String pointedCommitSHA1ToAdd = m_Magit.getBranches().get(i_PointedBranch).getCommitSHA1();
-        newestCommit.addParent(pointedCommitSHA1ToAdd);
+        return m_Magit.getBranches().get(i_PointedBranch).getCommitSHA1();
     }
 
     public void removeEmptyDirectories() throws IOException

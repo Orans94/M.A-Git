@@ -21,7 +21,7 @@ public class CommitTreeManager
     private Graph m_TreeGraph;
     private LeftController m_LeftController;
     private Map<Commit, CommitNode> m_CommitNodeByCommit;
-    Map<CommitNode, Commit> m_CommitByCommitNode;
+    private Map<CommitNode, Commit> m_CommitByCommitNode;
     private List<Edge> m_GraphEdges;
     
     public CommitTreeManager(LeftController i_LeftController)
@@ -96,7 +96,7 @@ public class CommitTreeManager
         int startY = 45;
         int childXPosition;
         final int COMMIT_TABLE_VIEW_ROW_SIZE = 29;
-        final int X_DIFF_BETWEEN_COMMITSNODES = 30;
+        final int X_DIFF_BETWEEN_COMMITSNODES = 50;
 
         orderedCommitsNodeByDate = createCommitNodeList(orderedCommitsByDate);
         Model graphModel = m_TreeGraph.getModel();
@@ -105,6 +105,7 @@ public class CommitTreeManager
         {
             isFatherFound = false;
             graphModel.addCell(currentCommit);
+            currentCommit.setCommitTreeManager(this);
 
             // check if commit is father of commit from the openCommits- if it is delete from openCommit
             //add edges if needed
@@ -151,6 +152,8 @@ public class CommitTreeManager
         
         addSecondParentEdgesToGraph(edgesFromCommit);
     }
+
+
 
     private void addToEdgesFromCommitMap(Map<Commit, List<Commit>> i_EdgesFromCommit, CommitNode i_ChildCommitNode, CommitNode i_ParentCommitNode)
     {
@@ -207,5 +210,10 @@ public class CommitTreeManager
                 }
             }
         }
+    }
+
+    public void commitNodeTreeSelected(String i_CommitSHA1)
+    {
+        m_LeftController.commitNodeTreeSelected(i_CommitSHA1);
     }
 }

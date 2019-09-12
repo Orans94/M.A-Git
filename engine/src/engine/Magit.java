@@ -49,9 +49,9 @@ public class Magit
 
     public void setHead(Head i_Head) { this.m_Head = i_Head; }
 
-    public String handleNewCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage) throws IOException
+    public String handleNewCommit(String i_RootFolderSha1, List<String> i_ParentsSHA1, String i_CommitMessage) throws IOException
     {
-        Commit commit = createCommit(i_RootFolderSha1, i_ParentSHA1, i_CommitMessage);
+        Commit commit = createCommit(i_RootFolderSha1, i_ParentsSHA1, i_CommitMessage);
         String commitSHA1 = commit.getSHA1();
         m_Commits.put(commitSHA1, commit);
         setActiveBranchToNewCommit(commitSHA1);
@@ -68,9 +68,9 @@ public class Magit
         FileUtilities.modifyTxtFile(m_MagitDir.resolve("branches").resolve(m_Head.getActiveBranch().getName() + ".txt"), i_CommitSHA1);
     }
 
-    public Commit createCommit(String i_RootFolderSha1, String i_ParentSHA1, String i_CommitMessage)
+    public Commit createCommit(String i_RootFolderSha1, List<String> i_ParentsSHA1, String i_CommitMessage)
     {
-        return new Commit(i_RootFolderSha1,i_ParentSHA1,i_CommitMessage);
+        return new Commit(i_RootFolderSha1,i_ParentsSHA1,i_CommitMessage, new Date(), EngineManager.getUserName());
     }
 
     public void clear()

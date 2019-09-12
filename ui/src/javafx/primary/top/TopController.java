@@ -371,9 +371,9 @@ public class TopController
         m_MainController.createNewBranch(i_BranchName);
     }
 
-    public boolean commit(String i_Message) throws IOException
+    public boolean commit(String i_Message, String i_SecondParentSHA1) throws IOException
     {
-        return m_MainController.commit(i_Message);
+        return m_MainController.commit(i_Message, i_SecondParentSHA1);
     }
 
     public void checkout(String i_BranchName) throws IOException
@@ -581,13 +581,14 @@ public class TopController
         return m_MainController.getActiveBranch();
     }
 
-    public void showForcedCommitScene(ActionEvent event) throws IOException
+    public void showForcedCommitScene(ActionEvent event, String i_SecondParentSHA1) throws IOException
     {
         Stage stage = StageUtilities.createPopupStage("Commit", COMMIT_FXML_RESOURCE, this);
         stage.setOnCloseRequest(evt -> {
             // prevent window from closing
             evt.consume();
         });
+        m_CommitComponentController.setSecondParentSHA1(i_SecondParentSHA1);
         stage.showAndWait();
     }
 
@@ -663,9 +664,9 @@ public class TopController
         stage.showAndWait();
     }
 
-    public void addParentSHAToNewestCommit(String i_PointedBranch)
+    public String getPointedCommitSHA1(String i_PointedBranch)
     {
-        m_MainController.addParentSHAToNewestCommit(i_PointedBranch);
+        return m_MainController.getPointedCommitSHA1(i_PointedBranch);
     }
 
     public void deleteFile(Path i_PathToDelete) throws IOException
