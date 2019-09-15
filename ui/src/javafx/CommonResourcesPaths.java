@@ -15,6 +15,7 @@ public class CommonResourcesPaths
     public final static String RESET_BRANCH_FXML_RESOURCE = "/javafx/primary/top/popup/resetbranch/resetbranch.fxml";
     public final static String MERGE_SELECT_BRANCH_FXML_RESOURCE = "/javafx/primary/top/popup/merge/selectbranch/mergeSelectBranch.fxml";
     public final static String MERGE_SOLVE_CONFLICT_FXML_RESOURCE = "/javafx/primary/top/popup/merge/solveconflict/mergeSolveConflict.fxml";
+    public final static String CLONE_REPOSITORY_FMXL_RESOURCE = "/javafx/primary/top/popup/clone/cloneRepository.fxml";
     public final static String COMMIT_NODE_GRAPH_FXML_RESOURCE = "/javafx/primary/left/committree/node/commit/commitNode.fxml";
     public final static String BRANCH_NODE_GRAPH_FMXL_RESOURCE = "/javafx/primary/left/committree/node/branch/branchNode.fxml";
 }

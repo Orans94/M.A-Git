@@ -72,6 +72,7 @@ public class LoadRepositoryByPathController implements PopupController
             }
             m_TopController.clearCommitTableView();
             m_TopController.addCommitsToTableView();
+            m_TopController.updateCommitTree();
             StageUtilities.closeOpenSceneByActionEvent(event);
         }
         else

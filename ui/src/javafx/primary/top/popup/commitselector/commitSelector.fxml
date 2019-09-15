@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fx:id="resetBranchComponent" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="644.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.popup.resetbranch.ResetBranchController">
+<ScrollPane fx:id="resetBranchComponent" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="644.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.popup.commitselector.CommitSelectorController">
    <content>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="421.0" prefWidth="642.0">
          <children>
@@ -37,7 +37,7 @@
             <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
                <children>
                   <Region prefHeight="53.0" prefWidth="533.0" />
-                  <Button fx:id="resetBranchButton" mnemonicParsing="false" onAction="#resetBranchButtonAction" prefHeight="31.0" prefWidth="112.0" text="Reset branch">
+                  <Button fx:id="selectButton" mnemonicParsing="false" onAction="#selectButtonAction" prefHeight="31.0" prefWidth="174.0" text="Select commit">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

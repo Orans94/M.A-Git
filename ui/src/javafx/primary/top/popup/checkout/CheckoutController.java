@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
 import javafx.primary.top.popup.PopupController;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 
@@ -43,26 +44,48 @@ public class CheckoutController implements PopupController
     @FXML void checkoutAction(ActionEvent event) throws IOException
     {
         String branchName = branchNamesChoiceBox.getValue();
-        if (!m_TopController.isBranchPointedCommitSHA1Empty(branchName))
+        if(!m_TopController.isRBBranch(branchName))
         {
-            OpenChanges openChanges = m_TopController.getFileSystemStatus();
-            if (m_TopController.isFileSystemDirty(openChanges))
+            if (!m_TopController.isBranchPointedCommitSHA1Empty(branchName))
             {
-                boolean toCommit = AlertFactory.createYesNoAlert("Checkout", "WC status is dirty, would you like to commit before checkout?")
-                .showAndWait().get().getText().equals("Yes");
-                if (toCommit)
-                {
-                    m_TopController.showForcedCommitScene(event, null);
-                }
-            }
 
-            m_TopController.checkout(branchName);
-            AlertFactory.createInformationAlert("Checkout", "Checkout made successfully").showAndWait();
+                OpenChanges openChanges = m_TopController.getFileSystemStatus();
+                if (m_TopController.isFileSystemDirty(openChanges))
+                {
+                    boolean toCommit = AlertFactory.createYesNoAlert("Checkout", "WC status is dirty, would you like to commit before checkout?")
+                            .showAndWait().get().getText().equals("Yes");
+                    if (toCommit)
+                    {
+                        m_TopController.showForcedCommitScene(event, null);
+                    }
+                }
+
+                m_TopController.checkout(branchName);
+                m_TopController.updateCommitTree();
+                AlertFactory.createInformationAlert("Checkout", "Checkout made successfully").showAndWait();
+            }
+            else
+            {
+                String message = "Branch " + branchName + " is not pointing on a commit, the system did not checked out";
+                AlertFactory.createErrorAlert("Checkout", message).showAndWait();
+            }
         }
         else
         {
-            String message = "Branch " + branchName + " is not pointing on a commit, the system did not checked out";
-            AlertFactory.createErrorAlert("Checkout", message).showAndWait();
+            String message = "Cannot checkout to remote branch." + System.lineSeparator()
+            + "Would you like to create a new remote tracking branch and checkout to him?";
+            boolean toCreateRTB = AlertFactory.createYesNoAlert("Clone repository", message)
+                    .showAndWait().get().getText().equals("Yes");;
+            if(toCreateRTB)
+            {
+                String RTBBranchName = m_TopController.createNewRTB(branchName);
+                m_TopController.checkout(RTBBranchName);
+            }
+            else
+            {
+                AlertFactory.createInformationAlert("Clone repository", "The system did not checked out")
+                        .showAndWait();
+            }
         }
         StageUtilities.closeOpenSceneByActionEvent(event);
     }

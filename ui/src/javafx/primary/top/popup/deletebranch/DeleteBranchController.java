@@ -35,6 +35,7 @@ public class DeleteBranchController implements PopupController
             AlertFactory.createInformationAlert("Delete branch", "Branch " + branchName + " deleted successfully")
                     .showAndWait();
             m_TopController.deleteBranch(branchName);
+            m_TopController.updateCommitTree();
         }
         StageUtilities.closeOpenSceneByActionEvent(event);
     }

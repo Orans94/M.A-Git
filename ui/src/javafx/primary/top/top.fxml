@@ -22,7 +22,7 @@
               <MenuItem fx:id="createNewRepositoryMenuItem" mnemonicParsing="false" onAction="#createNewRepositoryMenuItemAction" text="Create new repository" />
                   <MenuItem fx:id="loadRepositoryByPathMenuItem" mnemonicParsing="false" onAction="#loadRepositoryByPathMenuItemAction" text="Load repository by path" />
                   <MenuItem fx:id="loadRepositoryFromXMLMenuItem" mnemonicParsing="false" onAction="#loadRepositoryByXMLMenuItemAction" text="Load repository by XML file" />
-                  <MenuItem fx:id="cloneRepositoryMenuItem" mnemonicParsing="false" text="Clone repository" />
+                  <MenuItem fx:id="cloneRepositoryMenuItem" mnemonicParsing="false" onAction="#cloneRepositoryMenuItemAction" text="Clone repository" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="View">
@@ -39,7 +39,8 @@
           <Menu mnemonicParsing="false" text="Commands">
             <items>
               <MenuItem fx:id="commitMenuItem" mnemonicParsing="false" onAction="#commitMenuItemAction" text="Commit" />
-                  <MenuItem fx:id="pullMenuItem" mnemonicParsing="false" text="Pull / Fetch" />
+                  <MenuItem fx:id="pullMenuItem" mnemonicParsing="false" text="Pull" />
+                  <MenuItem fx:id="fetchMenuItem" mnemonicParsing="false" onAction="#fetchMenuItemAction" text="Fetch" />
                   <MenuItem fx:id="pushMenuItem" mnemonicParsing="false" text="Push" />
                   <MenuItem fx:id="createNewBranchMenuItem" mnemonicParsing="false" onAction="#createBranchMenuItemAction" text="Create new branch" />
                   <MenuItem fx:id="deleteBranchMenuItem" mnemonicParsing="false" onAction="#deleteBranchMenuItemAction" text="Delete Branch" />

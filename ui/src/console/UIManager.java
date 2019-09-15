@@ -467,7 +467,7 @@ public class UIManager
                 }
                 else
                 {
-                    m_Engine.createNewBranch(branchName);
+                    m_Engine.createNewBranch(branchName, null); // TODO we didnt have this feautre for console version
                     System.out.println("Branch " + branchName + " created successfully");
                     toCheckout = doesUserWantToCheckoutAfterCreatingNewBranch();
                     if (toCheckout)

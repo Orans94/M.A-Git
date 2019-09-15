@@ -21,17 +21,21 @@ import static javafx.CommonResourcesPaths.COMMIT_NODE_GRAPH_FXML_RESOURCE;
 
 public class BranchNode extends AbstractCell
 {
-    public BranchNode(String i_BranchName) { this.m_BranchName = i_BranchName; }
-
     private String m_BranchName;
+
     private BranchNodeController m_BranchNodeController;
     private CommitTreeManager m_CommitTreeManager;
-
+    public BranchNode(String i_BranchName, boolean i_IsHead)
+    {
+        m_BranchName = i_IsHead ? i_BranchName + " (HEAD)" : i_BranchName;
+    }
 
     public BranchNodeController getBranchNodeController()
     {
         return m_BranchNodeController;
     }
+
+    public String getBranchName() { return m_BranchName; }
 
     @Override
     public Region getGraphic(Graph graph)

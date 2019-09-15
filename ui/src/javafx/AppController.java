@@ -6,6 +6,7 @@ import javafx.primary.center.CenterController;
 import javafx.fxml.FXML;
 import javafx.primary.left.LeftController;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.primary.top.TopController;
@@ -15,6 +16,7 @@ import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +52,7 @@ public class AppController
         }
     }
 
-    public void createNewBranch(String i_BranchName) throws IOException { m_Engine.createNewBranch(i_BranchName); }
+    public void createNewBranch(String i_BranchName, String i_CommitSHA1) throws IOException { m_Engine.createNewBranch(i_BranchName, i_CommitSHA1); }
 
     public boolean commit(String i_Message, String i_SecondParentSHA1) throws IOException { return m_Engine.commit(i_Message, i_SecondParentSHA1); }
 
@@ -355,5 +357,35 @@ public class AppController
     public OpenChanges getDelta(Commit i_FirstCommit, Commit i_SecondCommit) throws IOException
     {
         return m_Engine.getDelta(i_FirstCommit, i_SecondCommit);
+    }
+
+    public void cloneRepository(Path i_SourceDirectoryTextField, Path i_DestinationDirectoryTextField, String i_RepositoryNameTextField) throws IOException, ParseException
+    {
+        m_Engine.cloneRepository(i_SourceDirectoryTextField, i_DestinationDirectoryTextField, i_RepositoryNameTextField);
+    }
+
+    public boolean isRBBranch(String i_BranchName)
+    {
+        return m_Engine.isRBBranch(i_BranchName);
+    }
+
+    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    {
+        return m_Engine.createNewRTB(i_RemoteBranchName);
+    }
+
+    public boolean isRRExists()
+    {
+        return m_Engine.isRRExists();
+    }
+
+    public void fetch() throws IOException, ParseException
+    {
+        m_Engine.fetch();
+    }
+
+    public boolean isSourceRepresentsMAGitRepository(String i_PathToCheck)
+    {
+        return m_Engine.isRepository(Paths.get(i_PathToCheck));
     }
 }

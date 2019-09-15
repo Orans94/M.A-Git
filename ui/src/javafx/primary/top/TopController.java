@@ -8,6 +8,7 @@ import javafx.StageUtilities;
 import javafx.fxml.FXML;
 import javafx.primary.top.popup.PopupController;
 import javafx.primary.top.popup.checkout.CheckoutController;
+import javafx.primary.top.popup.clone.CloneRepositoryController;
 import javafx.primary.top.popup.commit.CommitController;
 import javafx.primary.top.popup.createnewbranch.CreateNewBranchController;
 import javafx.primary.top.popup.createnewrepository.CreateNewRepositoryController;
@@ -68,9 +69,12 @@ public class TopController
     @FXML private MergeSelectBranchController m_MergeSelectBranchComponentController;
     @FXML private SplitPane m_MergeSolveConflictComponent;
     @FXML private MergeSolveConflictController m_MergeSolveConflictComponentController;
+    @FXML private VBox m_CloneRepositoryComponent;
+    @FXML private CloneRepositoryController m_CloneRepositoryComponentController;
 
     // ------ CONTROLLERS AND COMPONENTS ------
 
+    @FXML private MenuItem fetchMenuItem;
     @FXML private MenuItem createNewRepositoryMenuItem;
     @FXML private MenuItem loadRepositoryByPathMenuItem;
     @FXML private MenuItem loadRepositoryFromXMLMenuItem;
@@ -121,75 +125,42 @@ public class TopController
 
     public void setCreateNewRepositoryComponent(Parent i_CreateNewRepositoryComponent) { this.m_CreateNewRepositoryComponent = (VBox) i_CreateNewRepositoryComponent; }
 
-    public void setCreateNewRepositoryComponentController(PopupController i_CreateNewRepositoryComponentController)
-    {
-        this.m_CreateNewRepositoryComponentController = (CreateNewRepositoryController) i_CreateNewRepositoryComponentController;
-    }
+    public void setCreateNewRepositoryComponentController(PopupController i_CreateNewRepositoryComponentController) { this.m_CreateNewRepositoryComponentController = (CreateNewRepositoryController) i_CreateNewRepositoryComponentController; }
 
-    public void setCreateNewBranchComponent(Parent i_CreateNewBranchComponent)
-    {
-        this.m_CreateNewBranchComponent = (VBox) i_CreateNewBranchComponent;
-    }
+    public void setCreateNewBranchComponent(Parent i_CreateNewBranchComponent) { this.m_CreateNewBranchComponent = (VBox) i_CreateNewBranchComponent; }
 
-    public void setCreateNewBranchComponentController(PopupController i_CreateNewBranchComponentController)
-    {
-        this.m_CreateNewBranchComponentController = (CreateNewBranchController) i_CreateNewBranchComponentController;
-    }
+    public void setCreateNewBranchComponentController(PopupController i_CreateNewBranchComponentController) { this.m_CreateNewBranchComponentController = (CreateNewBranchController) i_CreateNewBranchComponentController; }
 
-    public void setDeleteBranchComponent(Parent i_DeleteBranchComponent)
-    {
-        this.m_DeleteBranchComponent = (VBox) i_DeleteBranchComponent;
-    }
+    public void setDeleteBranchComponent(Parent i_DeleteBranchComponent) { this.m_DeleteBranchComponent = (VBox) i_DeleteBranchComponent; }
 
-    public void setDeleteBranchComponentController(PopupController i_DeleteBranchComponentController)
-    {
-        this.m_DeleteBranchComponentController = (DeleteBranchController) i_DeleteBranchComponentController;
-    }
+    public void setDeleteBranchComponentController(PopupController i_DeleteBranchComponentController) { this.m_DeleteBranchComponentController = (DeleteBranchController) i_DeleteBranchComponentController; }
 
-    public void setCheckoutComponent(Parent i_CheckoutComponent)
-    {
-        this.m_CheckoutComponent = (VBox) i_CheckoutComponent;
-    }
+    public void setCheckoutComponent(Parent i_CheckoutComponent) { this.m_CheckoutComponent = (VBox) i_CheckoutComponent; }
 
-    public void setCheckoutComponentController(PopupController i_CheckoutComponentController)
-    {
-        this.m_CheckoutComponentController = (CheckoutController) i_CheckoutComponentController;
-    }
+    public void setCheckoutComponentController(PopupController i_CheckoutComponentController) { this.m_CheckoutComponentController = (CheckoutController) i_CheckoutComponentController; }
 
     public void setCommitComponent(Parent i_CommitComponent)
     {
         this.m_CommitComponent = (VBox) i_CommitComponent;
     }
 
-    public void setCommitComponentController(PopupController i_CommitComponentController)
-    {
-        this.m_CommitComponentController = (CommitController) i_CommitComponentController;
-    }
+    public void setCommitComponentController(PopupController i_CommitComponentController) { this.m_CommitComponentController = (CommitController) i_CommitComponentController; }
 
-    public void setResetBranchComponent(Parent i_ResetBranchComponent)
-    {
-        this.m_ResetBranchComponent = (ScrollPane) i_ResetBranchComponent;
-    }
+    public void setResetBranchComponent(Parent i_ResetBranchComponent) { this.m_ResetBranchComponent = (ScrollPane) i_ResetBranchComponent; }
 
-    public void setResetBranchComponentController(PopupController i_ResetBranchComponentController)
-    {
-        this.m_ResetBranchComponentController = (ResetBranchController) i_ResetBranchComponentController;
-    }
+    public void setResetBranchComponentController(PopupController i_ResetBranchComponentController) { this.m_ResetBranchComponentController = (ResetBranchController) i_ResetBranchComponentController; }
 
+    public void setMergeSelectBranchComponent(Parent m_MergeSelectBranchComponent) { this.m_MergeSelectBranchComponent = (VBox) m_MergeSelectBranchComponent; }
 
-    public void setMergeSelectBranchComponent(Parent m_MergeSelectBranchComponent)
-    {
-        this.m_MergeSelectBranchComponent = (VBox) m_MergeSelectBranchComponent;
-    }
+    public void setMergeSelectBranchComponentController(PopupController m_MergeSelectBranchComponentController) { this.m_MergeSelectBranchComponentController = (MergeSelectBranchController) m_MergeSelectBranchComponentController; }
 
-    public void setMergeSelectBranchComponentController(PopupController m_MergeSelectBranchComponentController)
-    {
-        this.m_MergeSelectBranchComponentController = (MergeSelectBranchController) m_MergeSelectBranchComponentController;
-    }
     public void setMergeSolveConflictComponent(Parent m_MergeSolveConflictComponent) { this.m_MergeSolveConflictComponent = (SplitPane) m_MergeSolveConflictComponent; }
 
     public void setMergeSolveConflictComponentController(PopupController m_MergeSolveConflictComponentController) { this.m_MergeSolveConflictComponentController = (MergeSolveConflictController) m_MergeSolveConflictComponentController; }
 
+    public void setCloneRepositoryComponent(Parent i_CloneRepositoryComponent) { this.m_CloneRepositoryComponent =(VBox) i_CloneRepositoryComponent; }
+
+    public void setCloneRepositoryComponentController(PopupController i_CloneRepositoryComponentController) { this.m_CloneRepositoryComponentController = (CloneRepositoryController) i_CloneRepositoryComponentController; }
 
     public void setMainController(AppController i_MainController)
     {
@@ -204,10 +175,26 @@ public class TopController
     }
 
     @FXML
+    void cloneRepositoryMenuItemAction(ActionEvent event) throws IOException
+    {
+        Stage stage = StageUtilities.createPopupStage("Clone repository", CLONE_REPOSITORY_FMXL_RESOURCE, this);
+        stage.showAndWait();
+    }
+
+    @FXML
     void createBranchMenuItemAction(ActionEvent event) throws IOException
     {
-        Stage stage = StageUtilities.createPopupStage("Create new branch", CREATE_NEW_BRANCH_FXML_RESOURCE, this);
-        stage.showAndWait();
+        if(isRepositoryNull())
+        {
+            AlertFactory.createErrorAlert("Create new branch", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
+        }
+        else
+        {
+            Stage stage = StageUtilities.createPopupStage("Create new branch", CREATE_NEW_BRANCH_FXML_RESOURCE, this);
+            m_CreateNewBranchComponentController.bindCommitsToTableView();
+            stage.showAndWait();
+        }
     }
 
     @FXML
@@ -253,6 +240,28 @@ public class TopController
             Stage stage = StageUtilities.createPopupStage("Delete Branch", DELETE_BRANCH_FXML_RESOURCE, this);
             m_DeleteBranchComponentController.bindBranchesToChoiceBox(event);
             stage.showAndWait();
+        }
+    }
+
+    @FXML
+    void fetchMenuItemAction(ActionEvent event) throws IOException, ParseException
+    {
+        if(!isRepositoryNull())
+        {
+            if (m_MainController.isRRExists())
+            {
+                m_MainController.fetch();
+                AlertFactory.createInformationAlert("Fetch", "Fetch has been done successfully").showAndWait();
+            }
+            else
+            {
+                AlertFactory.createErrorAlert("Fetch", "There is no remote repository. The system did not fetch");
+            }
+        }
+        else
+        {
+            AlertFactory.createErrorAlert("Fetch", "Repository have to be loaded or initialized before making this operation")
+                    .showAndWait();
         }
     }
 
@@ -366,9 +375,9 @@ public class TopController
         stage.showAndWait();
     }
 
-    public void createNewBranch(String i_BranchName) throws IOException
+    public void createNewBranch(String i_BranchName, String i_CommitSHA1) throws IOException
     {
-        m_MainController.createNewBranch(i_BranchName);
+        m_MainController.createNewBranch(i_BranchName, i_CommitSHA1);
     }
 
     public boolean commit(String i_Message, String i_SecondParentSHA1) throws IOException
@@ -717,5 +726,25 @@ public class TopController
     public void updateCommitTree()
     {
         m_MainController.updateCommitTree();
+    }
+
+    public void cloneRepository(Path i_SourceDirectoryTextField, Path i_DestinationDirectoryTextField, String i_RepositoryNameTextField) throws IOException, ParseException
+    {
+        m_MainController.cloneRepository(i_SourceDirectoryTextField, i_DestinationDirectoryTextField, i_RepositoryNameTextField);
+    }
+
+    public boolean isRBBranch(String i_BranchName)
+    {
+        return m_MainController.isRBBranch(i_BranchName);
+    }
+
+    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    {
+        return m_MainController.createNewRTB(i_RemoteBranchName);
+    }
+
+    public boolean isSourceRepresentsMAGitRepository(String i_PathToCheck)
+    {
+        return m_MainController.isSourceRepresentsMAGitRepository(i_PathToCheck);
     }
 }

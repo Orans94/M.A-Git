@@ -80,8 +80,8 @@ public class Magit
     }
 
     public void load(Path i_repPath) throws IOException, ParseException {
-        m_MagitDir = i_repPath.resolve(".magit");
-        loadBranches();
+        //m_MagitDir = i_repPath.resolve(".magit");
+        loadBranches(Magit.getMagitDir().resolve("branches"));
         loadHead();
         loadCommits();
     }
@@ -141,10 +141,10 @@ public class Magit
         m_Commits.put(i_CommitSHA1, newCommit);
     }
 
-    public void loadBranches() throws IOException
+    public void loadBranches(Path i_LoadFromPath) throws IOException
     {
         String branchName;
-        List<Path> branches = Files.walk(m_MagitDir.resolve("branches"), 1)
+        List<Path> branches = Files.walk(i_LoadFromPath, 1)
                 .filter(d->!d.toFile().isDirectory())
                 .filter(d-> !d.toFile().getName().equals("HEAD.txt"))
                 .collect(Collectors.toList());
@@ -187,7 +187,7 @@ public class Magit
         m_Branches.put(newBranchName, branch);
     }
 
-    public void setIsRemote(String i_BranchName, boolean i_IsRemote)
+    public void setIsRemoteBranch(String i_BranchName, boolean i_IsRemote)
     {
         m_Branches.get(i_BranchName).setIsRemote(i_IsRemote);
     }
@@ -196,5 +196,33 @@ public class Magit
     {
         m_Head.getActiveBranch().setIsTracking(true);
         m_Head.getActiveBranch().setTrackingAfter(i_TrackingBranchName);
+    }
+
+    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    {
+        String trackingBranchName = getTrackingBranchName(i_RemoteBranchName);
+        String commitSHA1 = m_Branches.get(i_RemoteBranchName).getCommitSHA1();
+        Branch trackingBranch = new Branch(trackingBranchName, commitSHA1);
+        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(trackingBranchName + ".txt"), commitSHA1);
+        m_Branches.put(trackingBranchName, trackingBranch);
+
+        return trackingBranchName;
+    }
+
+    private String getTrackingBranchName(String i_RemoteBranchName)
+    {
+        // this method gets a remote branch name and return the tracking branch name
+        return Paths.get(i_RemoteBranchName).getFileName().toString();
+    }
+
+    public void deleteRemoteBranchesFromBranchesMap()
+    {
+        List<Branch> remoteBranches = m_Branches.values().stream()
+                .filter(branch -> branch.getName().contains("\\"))
+                .collect(Collectors.toList());
+        for(Branch branch : remoteBranches)
+        {
+            m_Branches.remove(branch.getName());
+        }
     }
 }

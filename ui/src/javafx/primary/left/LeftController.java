@@ -1,6 +1,5 @@
 package javafx.primary.left;
 
-import com.fxgraph.graph.PannableCanvas;
 import engine.Branch;
 import engine.Commit;
 import javafx.AppController;
@@ -44,7 +43,7 @@ public class LeftController
 
     public void updateCommitTree()
     {
-        m_CommitTreeManager.start(treeSurfaceScrollPane);
+        m_CommitTreeManager.update(treeSurfaceScrollPane);
     }
 
     public void commitNodeTreeSelected(String i_CommitSHA1)
@@ -55,5 +54,10 @@ public class LeftController
     public List<Branch> getContainedBranches(String i_CommitSHA1)
     {
         return m_MainController.getContainedBranches(i_CommitSHA1);
+    }
+
+    public Branch getActiveBranch()
+    {
+        return m_MainController.getActiveBranch();
     }
 }

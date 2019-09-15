@@ -54,9 +54,9 @@ public class EngineManager
 
     public boolean isBranchExists(String i_BranchName) { return m_Repository.getMagit().getBranches().containsKey(i_BranchName); }
 
-    public void createNewBranch(String i_BranchName) throws IOException
+    public void createNewBranch(String i_BranchName, String i_CommitSHA1) throws IOException
     {
-        m_Repository.createNewBranch(i_BranchName);
+        m_Repository.createNewBranch(i_BranchName, i_CommitSHA1);
     }
 
     public boolean isBranchNameEqualsHead(String i_BranchName)
@@ -170,7 +170,7 @@ public class EngineManager
     {
         m_Repository = new Repository(i_RepoPath);
         m_Repository.loadNameFromFile();
-        m_Repository.getMagit().loadBranches();
+        m_Repository.getMagit().loadBranches(Magit.getMagitDir().resolve("branches"));
         m_Repository.getMagit().loadHead();
     }
 
@@ -363,8 +363,32 @@ public class EngineManager
         return m_Repository.delta(i_FirstCommit, i_SecondCommit);
     }
 
-    public Repository cloneRepository(Path i_Source, Path i_Destination, String i_Name) throws IOException
+    public void cloneRepository(Path i_Source, Path i_Destination, String i_Name) throws IOException, ParseException
     {
-        return new Repository(i_Source, i_Destination, i_Name);
+        m_Repository = new Repository(i_Source, i_Destination, i_Name);
+        m_Repository.moveBranchesToRemoteBranchesDirectory();
+        m_Repository.fixBranchesNames();
+        m_Repository.deleteRepositoryNameFile();
+        m_Repository.createRepositoryNameFile();
+    }
+
+    public boolean isRBBranch(String i_BranchName)
+    {
+        return m_Repository.isRBBranch(i_BranchName);
+    }
+
+    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    {
+        return m_Repository.createNewRTB(i_RemoteBranchName);
+    }
+
+    public void fetch() throws IOException, ParseException
+    {
+        m_Repository.fetch();
+    }
+
+    public boolean isRRExists()
+    {
+        return m_Repository.isRRExists();
     }
 }

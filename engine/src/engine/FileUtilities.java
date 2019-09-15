@@ -193,4 +193,14 @@ public class FileUtilities
     {
         return new String(Files.readAllBytes(i_RRNameFilePath));
     }
+
+    public static void moveFile(Path i_Path, Path i_Dest) throws IOException
+    {
+        Files.move(i_Path, i_Dest.resolve(i_Path.getFileName()));
+    }
+
+    public static void cleanDirectory(Path i_Destination) throws IOException
+    {
+        FileUtils.cleanDirectory(new File(i_Destination.toString()));
+    }
 }

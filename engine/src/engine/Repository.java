@@ -35,7 +35,8 @@ public class Repository
     public Repository(Path i_Source, Path i_Dest, String i_Name) throws IOException, ParseException
     {
         // clone c'tor
-        FileUtilities.copyDirectory(i_Source, i_Dest);
+        //createRepositoryDirectories(i_Dest);
+        copyRemoteBranchesFromRRToLRFileSystem(i_Source, i_Dest);
         m_Name = i_Name;
         m_WorkingCopy = new WC(i_Dest);
         m_Magit = new Magit(i_Dest.resolve(".magit"));
@@ -43,10 +44,6 @@ public class Repository
         m_Magit.load(Magit.getMagitDir());
         String activeBranchRemoteName = getRemoteActiveBranchName();
         m_Magit.setRTBForHeadBranch(activeBranchRemoteName);
-        moveBranchesToRemoteBranchesDirectory();
-        fixBranchesNames();
-        deleteRepositoryNameFile();
-        createRepositoryNameFile();
     }
 
     private String getRemoteActiveBranchName() throws IOException
@@ -55,7 +52,7 @@ public class Repository
         return new String(Files.readAllBytes(headRemotePath));
     }
 
-    private void deleteRepositoryNameFile() throws IOException
+    public void deleteRepositoryNameFile() throws IOException
     {
         Path repositoryNameFilePath = Magit.getMagitDir().resolve("RepositoryName.txt");
         if(FileUtilities.exists(repositoryNameFilePath))
@@ -64,29 +61,24 @@ public class Repository
         }
     }
 
-    private void fixBranchesNames() throws IOException
+    public void fixBranchesNames() throws IOException
     {
         String RRName = getRemoteRepositoryName();
         Path destination = Magit.getMagitDir().resolve("branches").resolve(RRName);
         String branchName;
-        try (Stream<Path> walk = Files.walk(Paths.get(m_WorkingCopy.getWorkingCopyDir().toString())))
+        try (Stream<Path> walk = Files.walk(destination))
         {
             List<Path> result = walk.filter(Files::isRegularFile).collect(Collectors.toList());
             for(Path path : result)
             {
                 branchName = FilenameUtils.removeExtension(path.toFile().getName());
-                m_Magit.setIsRemote(branchName, true);
+                m_Magit.setIsRemoteBranch(branchName, true);
                 m_Magit.changeBranchName(RRName, branchName);
             }
         }
-        catch (IOException e)
-        {
-            //TODO
-            e.printStackTrace();
-        }
     }
 
-    private void moveBranchesToRemoteBranchesDirectory() throws IOException
+    public void moveBranchesToRemoteBranchesDirectory() throws IOException
     {
         String RRName = getRemoteRepositoryName();
         Path destination = Magit.getMagitDir().resolve("branches").resolve(RRName);
@@ -96,13 +88,8 @@ public class Repository
             List<Path> result = walk.filter(Files::isRegularFile).collect(Collectors.toList());
             for(Path path : result)
             {
-                Files.move(path, destination.resolve(path.getFileName()));
+                FileUtilities.moveFile(path, destination.resolve(path.getFileName()));
             }
-        }
-        catch (IOException e)
-        {
-            //TODO
-            e.printStackTrace();
         }
     }
 
@@ -117,7 +104,7 @@ public class Repository
         return FileUtilities.getFileContent(RRNameFile);
     }
 
-    private void createRepositoryNameFile() throws IOException
+    public void createRepositoryNameFile() throws IOException
     {
         FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve(REPOSITORY_NAME_FILE), m_Name);
     }
@@ -152,11 +139,13 @@ public class Repository
         m_Name = null;
     }
 
+    public Path getRemoteRepositoryPath() { return m_RemoteRepositoryPath; }
+
     private void createRepositoryDirectories(Path i_RepPath) throws IOException
     {
-        Files.createDirectory(i_RepPath.resolve(".magit"));
-        Files.createDirectory(i_RepPath.resolve(".magit").resolve("branches"));
-        Files.createDirectory(i_RepPath.resolve(".magit").resolve("objects"));
+        Files.createDirectories(i_RepPath.resolve(".magit"));
+        Files.createDirectories(i_RepPath.resolve(".magit").resolve("branches"));
+        Files.createDirectories(i_RepPath.resolve(".magit").resolve("objects"));
     }
 
     public String getName()
@@ -415,10 +404,10 @@ public class Repository
         }
     }
 
-    public void createNewBranch(String i_BranchName) throws IOException
+    public void createNewBranch(String i_BranchName, String i_CommitSHA1) throws IOException
     {
         Branch activeBranch = m_Magit.getHead().getActiveBranch();
-        Branch newBranch = new Branch(i_BranchName, activeBranch.getCommitSHA1());
+        Branch newBranch = new Branch(i_BranchName, i_CommitSHA1);
         FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_BranchName + ".txt"), activeBranch.getCommitSHA1());
         m_Magit.getBranches().put(i_BranchName, newBranch);
     }
@@ -1167,5 +1156,49 @@ public class Repository
     public Commit getCommit(String i_CommitSHA1)
     {
         return m_Magit.getCommits().get(i_CommitSHA1);
+    }
+
+    public boolean isRBBranch(String i_BranchName)
+    {
+        return m_Magit.getBranches().get(i_BranchName).getIsRemote();
+    }
+
+    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    {
+        return m_Magit.createNewRTB(i_RemoteBranchName);
+    }
+
+    public void fetch() throws IOException, ParseException
+    {
+        // ASSUMPTION: before we invoke this method, we checked if LR has a RR
+        String remoteRepositoryName = getRemoteRepositoryName();
+        Path remoteBranchesDirPath = Magit.getMagitDir().resolve("branches").resolve(remoteRepositoryName);
+        deleteRemoteBranchesFromFileSystem(remoteBranchesDirPath);
+        m_Magit.deleteRemoteBranchesFromBranchesMap();
+        copyRemoteBranchesFromRRToLRFileSystem(m_RemoteRepositoryPath.resolve("branches"), remoteBranchesDirPath);
+        m_Magit.loadBranches(remoteBranchesDirPath);
+        fixBranchesNames();
+        copyAllObjectsFromRRToLRFileSystem(m_RemoteRepositoryPath.resolve("objects"), Magit.getMagitDir().resolve("objects"));
+        m_Magit.loadCommits();
+    }
+
+    private void deleteRemoteBranchesFromFileSystem(Path i_RemoteBranchesDirPath) throws IOException
+    {
+        FileUtilities.cleanDirectory(i_RemoteBranchesDirPath);
+    }
+
+    private void copyAllObjectsFromRRToLRFileSystem(Path i_RRObjects, Path i_LRObjects) throws IOException
+    {
+        FileUtilities.copyDirectory(i_RRObjects, i_LRObjects);
+    }
+
+    private void copyRemoteBranchesFromRRToLRFileSystem(Path i_Source, Path i_Dest) throws IOException
+    {
+        FileUtilities.copyDirectory(i_Source, i_Dest);
+    }
+
+    public boolean isRRExists()
+    {
+        return m_RemoteRepositoryPath != null;
     }
 }

@@ -33,29 +33,11 @@ public class CommitTreeManager
         m_CommitByCommitNode = new HashMap<>();
     }
 
-    public void start(ScrollPane i_PaneToDraw)
+    public void update(ScrollPane i_PaneToDraw)
     {
         m_TreeGraph = new Graph();
         i_PaneToDraw.setContent(m_TreeGraph.getCanvas());
         buildCommitTree(m_TreeGraph);
-
-/*
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        URL url = getClass().getResource("main.fxml");
-        fxmlLoader.setLocation(url);
-        GridPane root = fxmlLoader.load(url.openStream());
-
-        final Scene scene = new Scene(root, 700, 400);
-
-        ScrollPane scrollPane = (ScrollPane) scene.lookup("#scrollpaneContainer");
-        PannableCanvas canvas = tree.getCanvas();
-        //canvas.setPrefWidth(100);
-        //canvas.setPrefHeight(100);
-        scrollPane.setContent(canvas);
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
-*/
 
         Platform.runLater(() -> {
             m_TreeGraph.getUseViewportGestures().set(false);
@@ -103,10 +85,10 @@ public class CommitTreeManager
             // create BranchNode from every Branch, add it to graph and reallocate it
             for (Branch branch : pointingBranches)
             {
-                branchesNames = branchesNames.concat(branch.getName() + ", ");
-                // add branch to graph
-                currentBranchNode = new BranchNode(branch.getName());
+                currentBranchNode = new BranchNode(branch.getName(), isBranchRepresentHead(branch));
+                branchesNames = branchesNames.concat(currentBranchNode.getBranchName() + ", ");
 
+                // add branch to graph
                 graphModel.addCell(currentBranchNode);
                 currentBranchNode.setCommitTreeManager(this);
 
@@ -124,6 +106,12 @@ public class CommitTreeManager
                 currentBranchNode.getBranchNodeController().getBranchesNamesLabel().setText(branchesNames);
             }
         }
+    }
+
+    private boolean isBranchRepresentHead(Branch i_Branch)
+    {
+        // this method checking if branch represent head by name equality and not by same objects
+        return i_Branch.getName().equals(m_LeftController.getActiveBranch().getName());
     }
 
 

@@ -93,6 +93,7 @@ public class CreateNewRepositoryController implements PopupController
         AlertFactory.createInformationAlert("Create new repository", "A new repository has been initialized!")
                 .showAndWait();
         m_TopController.createNewRepository(i_UserInputPath, i_UserInputRepoName);
+        m_TopController.clearCommitTableView();
     }
 
 }
