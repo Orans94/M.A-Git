@@ -362,4 +362,9 @@ public class EngineManager
     {
         return m_Repository.delta(i_FirstCommit, i_SecondCommit);
     }
+
+    public Repository cloneRepository(Path i_Source, Path i_Destination, String i_Name) throws IOException
+    {
+        return new Repository(i_Source, i_Destination, i_Name);
+    }
 }

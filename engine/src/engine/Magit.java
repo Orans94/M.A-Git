@@ -93,7 +93,7 @@ public class Magit
         m_Head.setActiveBranch(m_Branches.get(headContent));
     }
 
-    private void loadCommits() throws IOException, ParseException { // assuming branches is already loaded to m.a git system
+    public void loadCommits() throws IOException, ParseException { // assuming branches is already loaded to m.a git system
         Commit newCommit;
         Branch currentBranch;
         String commitSHA1, parentCommitSHA1, commitContent, rootFolderSHA1, commitMessage, commitAuthor;
@@ -176,5 +176,25 @@ public class Magit
         }
 
         return containedBranches;
+    }
+
+    public void changeBranchName(String i_RRName, String i_BranchName)
+    {
+        String newBranchName = i_RRName+ "\\" +i_BranchName;
+        Branch branch = m_Branches.get(i_BranchName);
+        branch.setName(newBranchName);
+        m_Branches.remove(i_BranchName);
+        m_Branches.put(newBranchName, branch);
+    }
+
+    public void setIsRemote(String i_BranchName, boolean i_IsRemote)
+    {
+        m_Branches.get(i_BranchName).setIsRemote(i_IsRemote);
+    }
+
+    public void setRTBForHeadBranch(String i_TrackingBranchName)
+    {
+        m_Head.getActiveBranch().setIsTracking(true);
+        m_Head.getActiveBranch().setTrackingAfter(i_TrackingBranchName);
     }
 }

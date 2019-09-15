@@ -1,5 +1,6 @@
 package engine;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
@@ -181,4 +182,15 @@ public class FileUtilities
 
     public static boolean isFolder(Path i_Path) { return FilenameUtils.getExtension(i_Path.toString()).equals("");}
 
+    public static void copyDirectory(Path i_Source, Path i_Destination) throws IOException
+    {
+        File sourceFile = new File(i_Source.toString());
+        File destinationFile = new File(i_Destination.toString());
+        FileUtils.copyDirectory(sourceFile, destinationFile);
+    }
+
+    public static String getFileContent(Path i_RRNameFilePath) throws IOException
+    {
+        return new String(Files.readAllBytes(i_RRNameFilePath));
+    }
 }
