@@ -2,6 +2,7 @@ package javafx.primary.top.popup.clone;
 
 import javafx.AlertFactory;
 import javafx.BrowseManager;
+import javafx.StageUtilities;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
@@ -68,11 +69,15 @@ public class CloneRepositoryController implements PopupController
         {
             m_TopController.cloneRepository(Paths.get(sourceDirectoryTextField.getText())
                     , Paths.get(destinationDirectoryTextField.getText()), repositoryNameTextField.getText());
+            AlertFactory.createInformationAlert("Clone repository", "The repository has been cloned successfully")
+                    .showAndWait();
         }
         else
         {
             AlertFactory.createErrorAlert("Clone repository", "The source directory is not a M.A Git repository")
             .showAndWait();
         }
+
+        StageUtilities.closeOpenSceneByActionEvent(event);
     }
 }

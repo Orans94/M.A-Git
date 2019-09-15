@@ -369,9 +369,9 @@ public class AppController
         return m_Engine.isRBBranch(i_BranchName);
     }
 
-    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    public void createNewRTB(String i_RemoteBranchName) throws IOException
     {
-        return m_Engine.createNewRTB(i_RemoteBranchName);
+        m_Engine.createNewRTB(i_RemoteBranchName);
     }
 
     public boolean isRRExists()
@@ -387,5 +387,10 @@ public class AppController
     public boolean isSourceRepresentsMAGitRepository(String i_PathToCheck)
     {
         return m_Engine.isRepository(Paths.get(i_PathToCheck));
+    }
+
+    public String getRTBNameFromCommitSHA1(String i_CommitSHA1Selected)
+    {
+        return m_Engine.getRTBNameFromCommitSHA1(i_CommitSHA1Selected);
     }
 }

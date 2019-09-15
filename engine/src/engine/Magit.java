@@ -192,21 +192,15 @@ public class Magit
         m_Branches.get(i_BranchName).setIsRemote(i_IsRemote);
     }
 
-    public void setRTBForHeadBranch(String i_TrackingBranchName)
+    public void createNewRTB(String i_RemoteRepositoryName, String i_RemoteBranchName) throws IOException
     {
-        m_Head.getActiveBranch().setIsTracking(true);
-        m_Head.getActiveBranch().setTrackingAfter(i_TrackingBranchName);
-    }
-
-    public String createNewRTB(String i_RemoteBranchName) throws IOException
-    {
-        String trackingBranchName = getTrackingBranchName(i_RemoteBranchName);
-        String commitSHA1 = m_Branches.get(i_RemoteBranchName).getCommitSHA1();
-        Branch trackingBranch = new Branch(trackingBranchName, commitSHA1);
-        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(trackingBranchName + ".txt"), commitSHA1);
-        m_Branches.put(trackingBranchName, trackingBranch);
-
-        return trackingBranchName;
+        String remoteBranchName = i_RemoteRepositoryName +"\\"+i_RemoteBranchName;
+        String commitSHA1 = m_Branches.get(remoteBranchName).getCommitSHA1();
+        Branch trackingBranch = new Branch(i_RemoteBranchName, commitSHA1);
+        trackingBranch.setIsTracking(true);
+        trackingBranch.setTrackingAfter(i_RemoteBranchName);
+        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_RemoteBranchName + ".txt"), commitSHA1);
+        m_Branches.put(i_RemoteBranchName, trackingBranch);
     }
 
     private String getTrackingBranchName(String i_RemoteBranchName)

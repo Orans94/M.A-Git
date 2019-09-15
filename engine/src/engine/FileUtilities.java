@@ -196,7 +196,7 @@ public class FileUtilities
 
     public static void moveFile(Path i_Path, Path i_Dest) throws IOException
     {
-        Files.move(i_Path, i_Dest.resolve(i_Path.getFileName()));
+        Files.move(i_Path, i_Dest);
     }
 
     public static void cleanDirectory(Path i_Destination) throws IOException

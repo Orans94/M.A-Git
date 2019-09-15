@@ -738,13 +738,18 @@ public class TopController
         return m_MainController.isRBBranch(i_BranchName);
     }
 
-    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    public void createNewRTB(String i_RemoteBranchName) throws IOException
     {
-        return m_MainController.createNewRTB(i_RemoteBranchName);
+        m_MainController.createNewRTB(i_RemoteBranchName);
     }
 
     public boolean isSourceRepresentsMAGitRepository(String i_PathToCheck)
     {
         return m_MainController.isSourceRepresentsMAGitRepository(i_PathToCheck);
+    }
+
+    public String getRTBNameFromCommitSHA1(String i_CommitSHA1Selected)
+    {
+        return m_MainController.getRTBNameFromCommitSHA1(i_CommitSHA1Selected);
     }
 }

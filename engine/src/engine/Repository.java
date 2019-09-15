@@ -38,12 +38,16 @@ public class Repository
         //createRepositoryDirectories(i_Dest);
         copyRemoteBranchesFromRRToLRFileSystem(i_Source, i_Dest);
         m_Name = i_Name;
-        m_WorkingCopy = new WC(i_Dest);
-        m_Magit = new Magit(i_Dest.resolve(".magit"));
         m_RemoteRepositoryPath = i_Source;
+        m_WorkingCopy = new WC(i_Dest);
+        m_Magit = new Magit();
+        Magit.setMagitDir(i_Dest.resolve(".magit"));
         m_Magit.load(Magit.getMagitDir());
+        moveBranchesToRemoteBranchesDirectory();
+        fixBranchesNames();
         String activeBranchRemoteName = getRemoteActiveBranchName();
-        m_Magit.setRTBForHeadBranch(activeBranchRemoteName);
+        String remoteRepositoryName = getRemoteRepositoryName();
+        m_Magit.createNewRTB(remoteRepositoryName, activeBranchRemoteName);
     }
 
     private String getRemoteActiveBranchName() throws IOException
@@ -83,12 +87,15 @@ public class Repository
         String RRName = getRemoteRepositoryName();
         Path destination = Magit.getMagitDir().resolve("branches").resolve(RRName);
         createRemoteBranchesDirectory(RRName);
-        try (Stream<Path> walk = Files.walk(Paths.get(m_WorkingCopy.getWorkingCopyDir().toString())))
+        try (Stream<Path> walk = Files.walk(Magit.getMagitDir().resolve("branches")))
         {
             List<Path> result = walk.filter(Files::isRegularFile).collect(Collectors.toList());
             for(Path path : result)
             {
-                FileUtilities.moveFile(path, destination.resolve(path.getFileName()));
+                if(!path.getFileName().toString().equals("HEAD.txt"))
+                {
+                    FileUtilities.moveFile(path, destination.resolve(path.getFileName()));
+                }
             }
         }
     }
@@ -1163,9 +1170,9 @@ public class Repository
         return m_Magit.getBranches().get(i_BranchName).getIsRemote();
     }
 
-    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    public void createNewRTB(String i_RemoteBranchName) throws IOException
     {
-        return m_Magit.createNewRTB(i_RemoteBranchName);
+        m_Magit.createNewRTB(getRemoteRepositoryName(),i_RemoteBranchName);
     }
 
     public void fetch() throws IOException, ParseException
@@ -1200,5 +1207,21 @@ public class Repository
     public boolean isRRExists()
     {
         return m_RemoteRepositoryPath != null;
+    }
+
+    public String getRTBNameFromCommitSHA1(String i_commitSHA1Selected)
+    {
+        String rtbName = null;
+
+        for (Branch branch : m_Magit.getBranches().values())
+        {
+            if (branch.getIsTracking())
+            {
+                rtbName = branch.getName();
+                break;
+            }
+        }
+
+        return rtbName;
     }
 }

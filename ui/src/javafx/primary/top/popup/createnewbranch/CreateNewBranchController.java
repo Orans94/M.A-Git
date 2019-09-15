@@ -88,32 +88,55 @@ public class CreateNewBranchController implements PopupController
                 }
                 else
                 {
-                    m_TopController.createNewBranch(branchName, commitSHA1Selected);
-                    boolean toCheckout = checkoutAfterCreateCheckbox.isSelected();
-                    if (toCheckout)
+                    String rtbName = m_TopController.getRTBNameFromCommitSHA1(commitSHA1Selected);
+
+                    if (rtbName != null)
                     {
-                        OpenChanges openChanges = m_TopController.getFileSystemStatus();
-                        if (m_TopController.isFileSystemDirty(openChanges))
+                        // the selected commit is pointed by RTB
+                        String messageRTBIssue = "The commit you choose recognized as a commit that pointed by RTB." + System.lineSeparator() +
+                                "Would you like to create the new branch as an RTB?" + System.lineSeparator() +
+                                "*Note: if you chose to create it as RTB, the branch name will be the same as the RB.";
+                        boolean createBranchAsRTB = AlertFactory.createYesNoAlert("Create new branch", messageRTBIssue)
+                                .showAndWait().get().getText().equals("Yes");
+
+                        if (createBranchAsRTB)
                         {
-                            // Create new branch , WC dirty - didnt checkout
-                            AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully"
-                            +System.lineSeparator()+"The WC status is dirty, the system did not checked out")
-                                    .showAndWait();
+                            m_TopController.createNewRTB(rtbName);
                         }
                         else
                         {
-                            // Crate new branch and Checkout
-                            m_TopController.setActiveBranchName(branchName);
-                            AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully"
-                                    +System.lineSeparator()+ "Checkout to branch " + branchName + " has been made successfully")
-                                    .showAndWait();
+                            m_TopController.createNewBranch(branchName, commitSHA1Selected);
                         }
                     }
                     else
                     {
-                        // create new branch
-                        AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully")
-                                .showAndWait();
+                        m_TopController.createNewBranch(branchName, commitSHA1Selected);
+                        boolean toCheckout = checkoutAfterCreateCheckbox.isSelected();
+                        if (toCheckout)
+                        {
+                            OpenChanges openChanges = m_TopController.getFileSystemStatus();
+                            if (m_TopController.isFileSystemDirty(openChanges))
+                            {
+                                // Create new branch , WC dirty - didnt checkout
+                                AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully"
+                                        + System.lineSeparator() + "The WC status is dirty, the system did not checked out")
+                                        .showAndWait();
+                            }
+                            else
+                            {
+                                // Crate new branch and Checkout
+                                m_TopController.setActiveBranchName(branchName);
+                                AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully"
+                                        + System.lineSeparator() + "Checkout to branch " + branchName + " has been made successfully")
+                                        .showAndWait();
+                            }
+                        }
+                        else
+                        {
+                            // create new branch
+                            AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully")
+                                    .showAndWait();
+                        }
                     }
                     m_TopController.updateCommitTree();
                 }

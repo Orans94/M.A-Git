@@ -78,8 +78,8 @@ public class CheckoutController implements PopupController
                     .showAndWait().get().getText().equals("Yes");;
             if(toCreateRTB)
             {
-                String RTBBranchName = m_TopController.createNewRTB(branchName);
-                m_TopController.checkout(RTBBranchName);
+                m_TopController.createNewRTB(branchName);
+                m_TopController.checkout(branchName);
             }
             else
             {

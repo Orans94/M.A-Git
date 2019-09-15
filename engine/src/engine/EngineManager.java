@@ -366,8 +366,6 @@ public class EngineManager
     public void cloneRepository(Path i_Source, Path i_Destination, String i_Name) throws IOException, ParseException
     {
         m_Repository = new Repository(i_Source, i_Destination, i_Name);
-        m_Repository.moveBranchesToRemoteBranchesDirectory();
-        m_Repository.fixBranchesNames();
         m_Repository.deleteRepositoryNameFile();
         m_Repository.createRepositoryNameFile();
     }
@@ -377,9 +375,9 @@ public class EngineManager
         return m_Repository.isRBBranch(i_BranchName);
     }
 
-    public String createNewRTB(String i_RemoteBranchName) throws IOException
+    public void createNewRTB(String i_RemoteBranchName) throws IOException
     {
-        return m_Repository.createNewRTB(i_RemoteBranchName);
+        m_Repository.createNewRTB(i_RemoteBranchName);
     }
 
     public void fetch() throws IOException, ParseException
@@ -390,5 +388,10 @@ public class EngineManager
     public boolean isRRExists()
     {
         return m_Repository.isRRExists();
+    }
+
+    public String getRTBNameFromCommitSHA1(String i_CommitSHA1Selected)
+    {
+        return m_Repository.getRTBNameFromCommitSHA1(i_CommitSHA1Selected);
     }
 }
