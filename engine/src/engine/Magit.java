@@ -81,7 +81,7 @@ public class Magit
 
     public void load(Path i_repPath) throws IOException, ParseException {
         //m_MagitDir = i_repPath.resolve(".magit");
-        loadBranches(Magit.getMagitDir().resolve("branches"));
+        loadBranches(Magit.getMagitDir().resolve("branches"), null);
         loadHead();
         loadCommits();
     }
@@ -141,17 +141,25 @@ public class Magit
         m_Commits.put(i_CommitSHA1, newCommit);
     }
 
-    public void loadBranches(Path i_LoadFromPath) throws IOException
+    public void loadBranches(Path i_LoadFromPath, String i_RemoteRepositoryName) throws IOException
     {
-        String branchName;
+        // this method is loading branches from the given path.
+        // if remote repository name is null - it does not act as loading remote branches.
+        // if remote branch is not null - its acting like loading remote branches.
+        List<Path> remoteBranches;
+        String branchName, newBranchName, remoteRepositoryName, branchContent;
         List<Path> branches = Files.walk(i_LoadFromPath, 1)
-                .filter(d->!d.toFile().isDirectory())
+                .filter(d-> !d.toFile().isDirectory())
                 .filter(d-> !d.toFile().getName().equals("HEAD.txt"))
                 .collect(Collectors.toList());
         for(Path path : branches)
         {
             branchName = FilenameUtils.removeExtension(path.toFile().getName());
-            String branchContent = new String(Files.readAllBytes(path));
+            if(i_RemoteRepositoryName != null)
+            {
+                branchName = i_RemoteRepositoryName + "\\" + FilenameUtils.removeExtension(path.toFile().getName());
+            }
+            branchContent = new String(Files.readAllBytes(path));
             m_Branches.put(branchName, new Branch(branchName, branchContent));
         }
     }
@@ -165,6 +173,7 @@ public class Magit
 
     public List<Branch> getContainedBranches(String i_CommitSHA1)
     {
+        // this method return a list of all branches pointed to i_CommitSHA1.
         List<Branch> containedBranches = new LinkedList<>();
 
         for(Branch branch : m_Branches.values())
@@ -203,7 +212,7 @@ public class Magit
         m_Branches.put(i_RemoteBranchName, trackingBranch);
     }
 
-    private String getTrackingBranchName(String i_RemoteBranchName)
+    public String getTrackingBranchName(String i_RemoteBranchName)
     {
         // this method gets a remote branch name and return the tracking branch name
         return Paths.get(i_RemoteBranchName).getFileName().toString();
@@ -217,6 +226,16 @@ public class Magit
         for(Branch branch : remoteBranches)
         {
             m_Branches.remove(branch.getName());
+        }
+    }
+
+    public void setActiveBranch(String i_BranchNameToSet, boolean i_SetOnFileSystem) throws IOException
+    {
+        m_Head.setActiveBranch(getBranches().get(i_BranchNameToSet));
+
+        if (i_SetOnFileSystem)
+        {
+            FileUtilities.modifyTxtFile(getMagitDir().resolve("branches").resolve("HEAD.txt"), i_BranchNameToSet);
         }
     }
 }

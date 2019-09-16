@@ -62,4 +62,14 @@ public class XMLManager
     {
         return m_XMLValidator.areBranchesReferencesAreValid(magitBranches, magitCommits);
     }
+
+    public boolean isMagitRemoteReferenceValid(MagitRepository i_XmlRepo)
+    {
+        return m_XMLValidator.isMagitReferenceValid(i_XmlRepo);
+    }
+
+    public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)
+    {
+        return m_XMLValidator.areBranchesTrackingAfterAreValid(i_MagitBranches);
+    }
 }

@@ -34,12 +34,18 @@ public class BottomController
     @FXML private TreeView<String> commitTreeView;
     @FXML private TextArea commitFileTextArea;
 
+    @FXML private ProgressBar progressBar;
+
 
     @FXML
     public void initialize()
     {
         bindSelectedFileToTextArea();
     }
+
+    public ProgressBar getProgressBar() { return progressBar; }
+
+    public void setProgressBar(ProgressBar progressBar) { this.progressBar = progressBar; }
 
     private void bindSelectedFileToTextArea()
     {

@@ -65,19 +65,55 @@ public class CloneRepositoryController implements PopupController
     @FXML
     void cloneButtonAction(ActionEvent event) throws IOException, ParseException
     {
-        if(m_TopController.isSourceRepresentsMAGitRepository(sourceDirectoryTextField.getText()))
+        //TODO - check flow after aviad answer on the forum
+        if(!m_TopController.isPathRepresentsMAGitRepository(destinationDirectoryTextField.getText()))
         {
-            m_TopController.cloneRepository(Paths.get(sourceDirectoryTextField.getText())
-                    , Paths.get(destinationDirectoryTextField.getText()), repositoryNameTextField.getText());
-            AlertFactory.createInformationAlert("Clone repository", "The repository has been cloned successfully")
-                    .showAndWait();
+            if (m_TopController.isPathRepresentsMAGitRepository(sourceDirectoryTextField.getText()))
+            {
+                cloneRepository();
+            }
+            else
+            {
+                AlertFactory.createErrorAlert("Clone repository", "The source directory is not a M.A Git repository")
+                        .showAndWait();
+            }
         }
         else
         {
-            AlertFactory.createErrorAlert("Clone repository", "The source directory is not a M.A Git repository")
-            .showAndWait();
+            if (m_TopController.isPathRepresentsMAGitRepository(sourceDirectoryTextField.getText()))
+            {
+                String message = "The destination directory is already a M.A Git repository."
+                        + System.lineSeparator() + "Would you like to stash the existing repository?";
+                boolean toStash = AlertFactory.createYesNoAlert("Clone repository", message)
+                        .showAndWait().get().getText().equals("Yes");
+                if (toStash)
+                {
+                    m_TopController.stashDirectory(Paths.get(destinationDirectoryTextField.getText()));
+                    cloneRepository();
+                }
+                else
+                {
+                    AlertFactory.createInformationAlert("Clone repository", "The clone operation has been cancelled")
+                            .showAndWait();
+                }
+            }
+            else
+            {
+                AlertFactory.createErrorAlert("Clone repository", "The source directory is not a M.A Git repository")
+                        .showAndWait();
+            }
         }
-
         StageUtilities.closeOpenSceneByActionEvent(event);
+    }
+
+    private void cloneRepository() throws IOException, ParseException
+    {
+        m_TopController.cloneRepository(Paths.get(sourceDirectoryTextField.getText())
+                , Paths.get(destinationDirectoryTextField.getText()), repositoryNameTextField.getText());
+        AlertFactory.createInformationAlert("Clone repository", "The repository has been cloned successfully")
+                .showAndWait();
+        m_TopController.clearCommitTableViewAndTreeView();
+        m_TopController.addCommitsToTableView();
+        m_TopController.updateCommitTree();
     }
 }

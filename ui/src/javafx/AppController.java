@@ -5,8 +5,8 @@ import javafx.primary.bottom.BottomController;
 import javafx.primary.center.CenterController;
 import javafx.fxml.FXML;
 import javafx.primary.left.LeftController;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.primary.top.TopController;
@@ -359,9 +359,9 @@ public class AppController
         return m_Engine.getDelta(i_FirstCommit, i_SecondCommit);
     }
 
-    public void cloneRepository(Path i_SourceDirectoryTextField, Path i_DestinationDirectoryTextField, String i_RepositoryNameTextField) throws IOException, ParseException
+    public void cloneRepository(Path i_SourceDirectory, Path i_DestinationDirectory, String i_RepositoryName) throws IOException, ParseException
     {
-        m_Engine.cloneRepository(i_SourceDirectoryTextField, i_DestinationDirectoryTextField, i_RepositoryNameTextField);
+        m_Engine.cloneRepository(i_SourceDirectory, i_DestinationDirectory, i_RepositoryName);
     }
 
     public boolean isRBBranch(String i_BranchName)
@@ -384,13 +384,38 @@ public class AppController
         m_Engine.fetch();
     }
 
-    public boolean isSourceRepresentsMAGitRepository(String i_PathToCheck)
+    public boolean isPathRepresentsMAGitRepository(String i_PathToCheck)
     {
         return m_Engine.isRepository(Paths.get(i_PathToCheck));
     }
 
-    public String getRTBNameFromCommitSHA1(String i_CommitSHA1Selected)
+    public String getRBNameFromCommitSHA1(String i_CommitSHA1Selected)
     {
-        return m_Engine.getRTBNameFromCommitSHA1(i_CommitSHA1Selected);
+        return m_Engine.getRBNameFromCommitSHA1(i_CommitSHA1Selected);
+    }
+
+    public String getTrackingBranchName(String i_RbName)
+    {
+        return m_Engine.getTrackingBranchName(i_RbName);
+    }
+
+    public void stashDirectory(Path i_Path) throws IOException
+    {
+        m_Engine.stashDirectory(i_Path);
+    }
+
+    public ProgressBar getProgressBar()
+    {
+        return m_BottomComponentController.getProgressBar();
+    }
+
+    public boolean isMagitRemoteReferenceValid(MagitRepository i_XmlRepo)
+    {
+        return m_Engine.isMagitRemoteReferenceValid(i_XmlRepo);
+    }
+
+    public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)
+    {
+        return m_Engine.areBranchesTrackingAfterAreValid(i_MagitBranches);
     }
 }

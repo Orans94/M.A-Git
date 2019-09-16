@@ -18,7 +18,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -88,55 +87,34 @@ public class CreateNewBranchController implements PopupController
                 }
                 else
                 {
-                    String rtbName = m_TopController.getRTBNameFromCommitSHA1(commitSHA1Selected);
+                    String rbName = m_TopController.getRBNameFromCommitSHA1(commitSHA1Selected);
 
-                    if (rtbName != null)
+                    if (rbName != null)
                     {
-                        // the selected commit is pointed by RTB
-                        String messageRTBIssue = "The commit you choose recognized as a commit that pointed by RTB." + System.lineSeparator() +
+                        // the selected commit is pointed by RB
+                        String messageRTBIssue = "The commit you choose recognized as a commit that pointed by RB." + System.lineSeparator() +
                                 "Would you like to create the new branch as an RTB?" + System.lineSeparator() +
                                 "*Note: if you chose to create it as RTB, the branch name will be the same as the RB.";
                         boolean createBranchAsRTB = AlertFactory.createYesNoAlert("Create new branch", messageRTBIssue)
                                 .showAndWait().get().getText().equals("Yes");
-
+                        String createdBranchName;
                         if (createBranchAsRTB)
                         {
-                            m_TopController.createNewRTB(rtbName);
+                            rbName = m_TopController.getTrackingBranchName(rbName);
+                            createdBranchName = rbName;
+                            m_TopController.createNewRTB(rbName);
                         }
                         else
                         {
+                            createdBranchName = branchName;
                             m_TopController.createNewBranch(branchName, commitSHA1Selected);
                         }
+                        handleCheckoutUserDecision(createdBranchName);
                     }
                     else
                     {
                         m_TopController.createNewBranch(branchName, commitSHA1Selected);
-                        boolean toCheckout = checkoutAfterCreateCheckbox.isSelected();
-                        if (toCheckout)
-                        {
-                            OpenChanges openChanges = m_TopController.getFileSystemStatus();
-                            if (m_TopController.isFileSystemDirty(openChanges))
-                            {
-                                // Create new branch , WC dirty - didnt checkout
-                                AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully"
-                                        + System.lineSeparator() + "The WC status is dirty, the system did not checked out")
-                                        .showAndWait();
-                            }
-                            else
-                            {
-                                // Crate new branch and Checkout
-                                m_TopController.setActiveBranchName(branchName);
-                                AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully"
-                                        + System.lineSeparator() + "Checkout to branch " + branchName + " has been made successfully")
-                                        .showAndWait();
-                            }
-                        }
-                        else
-                        {
-                            // create new branch
-                            AlertFactory.createInformationAlert("Create New Branch", "Branch " + branchName + " created successfully")
-                                    .showAndWait();
-                        }
+                        handleCheckoutUserDecision(branchName);
                     }
                     m_TopController.updateCommitTree();
                 }
@@ -144,6 +122,35 @@ public class CreateNewBranchController implements PopupController
         }
 
         StageUtilities.closeOpenSceneByActionEvent(event);
+    }
+
+    private void handleCheckoutUserDecision(String i_BranchName) throws IOException
+    {
+        boolean toCheckout = checkoutAfterCreateCheckbox.isSelected();
+        if (toCheckout)
+        {
+            OpenChanges openChanges = m_TopController.getFileSystemStatus();
+            if (m_TopController.isFileSystemDirty(openChanges))
+            {
+                // WC dirty - didnt checkout
+                AlertFactory.createInformationAlert("Create New Branch", "Branch " + i_BranchName + " created successfully"
+                        + System.lineSeparator() + "The WC status is dirty, the system did not checked out")
+                        .showAndWait();
+            }
+            else
+            {
+                // WC clean - we can checkout
+                m_TopController.setActiveBranchName(i_BranchName);
+                AlertFactory.createInformationAlert("Create New Branch", "Branch " + i_BranchName + " created successfully"
+                        + System.lineSeparator() + "Checkout to branch " + i_BranchName + " has been made successfully")
+                        .showAndWait();
+            }
+        }
+        else
+        {
+            AlertFactory.createInformationAlert("Create New Branch", "Branch " + i_BranchName + " created successfully")
+                    .showAndWait();
+        }
     }
 
 
@@ -173,4 +180,5 @@ public class CreateNewBranchController implements PopupController
         Map<String, Commit> commits = m_TopController.getCommits();
         addAllCommitsToTableView(commits);
     }
+
 }

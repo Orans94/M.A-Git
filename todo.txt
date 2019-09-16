@@ -1,1 +1,9 @@
-1. read create new branch requirement and act propaly
+TODO
+1. add tasks.
+2. fix load by xml(branches - is remote , tracking...)
+3. check tree all cases..
+4. wait for aviad answer about remote reference issue
+
+
+BUG:
+when cloning

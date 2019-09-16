@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 public class Repository
 {
+    public static final String REPOSITORY_REMOTE_FILE = "Remote.txt";
     public static final String REPOSITORY_NAME_FILE = "RepositoryName.txt";
     private WC m_WorkingCopy;
     private Magit m_Magit;
@@ -30,6 +31,7 @@ public class Repository
         m_WorkingCopy = new WC(i_RepPath);
         m_Magit = new Magit(i_RepPath.resolve(".magit"));
         createRepositoryNameFile();
+        writeRemoteRepositoryPathToFileSystem();
     }
 
     public Repository(Path i_Source, Path i_Dest, String i_Name) throws IOException, ParseException
@@ -38,16 +40,24 @@ public class Repository
         //createRepositoryDirectories(i_Dest);
         copyRemoteBranchesFromRRToLRFileSystem(i_Source, i_Dest);
         m_Name = i_Name;
-        m_RemoteRepositoryPath = i_Source;
         m_WorkingCopy = new WC(i_Dest);
         m_Magit = new Magit();
         Magit.setMagitDir(i_Dest.resolve(".magit"));
+        m_RemoteRepositoryPath = i_Source;
+        writeRemoteRepositoryPathToFileSystem();
         m_Magit.load(Magit.getMagitDir());
         moveBranchesToRemoteBranchesDirectory();
         fixBranchesNames();
         String activeBranchRemoteName = getRemoteActiveBranchName();
         String remoteRepositoryName = getRemoteRepositoryName();
         m_Magit.createNewRTB(remoteRepositoryName, activeBranchRemoteName);
+        m_Magit.setActiveBranch(activeBranchRemoteName, true);
+    }
+
+    public void writeRemoteRepositoryPathToFileSystem() throws IOException
+    {
+        String fileContent = m_RemoteRepositoryPath == null ? StringFinals.EMPTY_STRING : m_RemoteRepositoryPath.toString();
+        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("Remote.txt"), fileContent);
     }
 
     private String getRemoteActiveBranchName() throws IOException
@@ -413,9 +423,8 @@ public class Repository
 
     public void createNewBranch(String i_BranchName, String i_CommitSHA1) throws IOException
     {
-        Branch activeBranch = m_Magit.getHead().getActiveBranch();
         Branch newBranch = new Branch(i_BranchName, i_CommitSHA1);
-        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_BranchName + ".txt"), activeBranch.getCommitSHA1());
+        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_BranchName + ".txt"), i_CommitSHA1);
         m_Magit.getBranches().put(i_BranchName, newBranch);
     }
 
@@ -558,12 +567,31 @@ public class Repository
     public void loadRepository(Path i_RepPath) throws IOException, ParseException {
         clear();
         loadNameFromFile();
+        loadRemoteFromFile();
         m_WorkingCopy.setWorkingCopyDir(i_RepPath);
         m_Magit.load(i_RepPath);
+        loadRemoteBranches();
         m_WorkingCopy.setCommitSHA1(m_Magit.getHead().getActiveBranch().getCommitSHA1());
         String rootFolderSHA1 = m_Magit.getCommits().get(m_Magit.getHead().getActiveBranch().getCommitSHA1()).getRootFolderSHA1();
         m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
         setNodeMapsByRootFolder(i_RepPath, m_WorkingCopy.getNodeMaps(), false);
+    }
+
+    private void loadRemoteBranches() throws IOException
+    {
+        List<Path> remoteBranches = Files.walk(Magit.getMagitDir().resolve("branches"), 1)
+                .filter(d-> d.toFile().isDirectory())
+                .collect(Collectors.toList());
+        for(Path path : remoteBranches)
+        {
+            m_Magit.loadBranches(path, getRemoteRepositoryName());
+        }
+    }
+
+    private void loadRemoteFromFile() throws IOException
+    {
+        Path remoteFilePath = Magit.getMagitDir().resolve(REPOSITORY_REMOTE_FILE);
+        m_RemoteRepositoryPath = Paths.get(new String(Files.readAllBytes(remoteFilePath)));
     }
 
     public OpenChanges delta(Commit i_FirstCommit, Commit i_SecondCommit) throws IOException
@@ -672,7 +700,17 @@ public class Repository
     public void loadXMLRepoToSystem(MagitRepository i_XmlRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException {
         Path XMLRepositoryPath = Paths.get(i_XmlRepository.getLocation());
         createRepositoryDirectories(XMLRepositoryPath);
+        if(i_XmlRepository.getMagitRemoteReference() == null || i_XmlRepository.getMagitRemoteReference().getLocation() == null)
+        {
+            m_RemoteRepositoryPath = null;
+        }
+        else
+        {
+            m_RemoteRepositoryPath = Paths.get(i_XmlRepository.getMagitRemoteReference().getLocation());
+        }
+
         m_Name = i_XmlRepository.getName();
+        writeRemoteRepositoryPathToFileSystem();
         createRepositoryNameFile();
         writeXMLObjectsToFileSystemAtObjectsDir(i_XmlRepository, i_XMLMagitMaps);
         loadHead(i_XmlRepository);
@@ -697,10 +735,26 @@ public class Repository
 
     private void writeBranchesToFileSystem() throws IOException
     {
+        String fileName, fileContent;
         Path destination = Magit.getMagitDir().resolve("branches");
         for (Map.Entry<String, Branch> entry : m_Magit.getBranches().entrySet())
         {
-            FileUtilities.createAndWriteTxtFile(destination.resolve(entry.getKey() + ".txt"), entry.getValue().getCommitSHA1());
+            fileContent = entry.getValue().getCommitSHA1();
+            if(entry.getKey().contains("\\"))
+            {
+                fileName = Paths.get(entry.getKey()).getFileName().toString();
+                if(!FileUtilities.exists(destination.resolve(getRemoteRepositoryName())))
+                {
+                    Files.createDirectories(destination.resolve(getRemoteRepositoryName()));
+                }
+
+                FileUtilities.createAndWriteTxtFile(destination.resolve(getRemoteRepositoryName()).resolve(fileName + ".txt"), fileContent);
+            }
+            else
+            {
+                fileName = entry.getKey();
+                FileUtilities.createAndWriteTxtFile(destination.resolve(fileName + ".txt"), fileContent);
+            }
         }
     }
 
@@ -772,7 +826,15 @@ public class Repository
             {
                 branchContent = i_CommitSHA1ByID.get(Integer.parseInt(XMLBranch.getPointedCommit().getId()));
             }
-            m_Magit.getBranches().put(branchName, new Branch(branchName, branchContent));
+
+            Branch branch = new Branch(branchName, branchContent);
+            branch.setIsRemote(XMLBranch.isIsRemote());
+            if(XMLBranch.isTracking())
+            {
+                branch.setIsTracking(true);
+                branch.setTrackingAfter(XMLBranch.getTrackingAfter());
+            }
+            m_Magit.getBranches().put(branchName, branch);
         }
     }
 
@@ -1182,11 +1244,16 @@ public class Repository
         Path remoteBranchesDirPath = Magit.getMagitDir().resolve("branches").resolve(remoteRepositoryName);
         deleteRemoteBranchesFromFileSystem(remoteBranchesDirPath);
         m_Magit.deleteRemoteBranchesFromBranchesMap();
-        copyRemoteBranchesFromRRToLRFileSystem(m_RemoteRepositoryPath.resolve("branches"), remoteBranchesDirPath);
-        m_Magit.loadBranches(remoteBranchesDirPath);
-        fixBranchesNames();
-        copyAllObjectsFromRRToLRFileSystem(m_RemoteRepositoryPath.resolve("objects"), Magit.getMagitDir().resolve("objects"));
+        copyRemoteBranchesFromRRToLRFileSystem(m_RemoteRepositoryPath.resolve(".magit").resolve("branches"), remoteBranchesDirPath);
+        removeHeadFromRemoteBranchesDirectory(remoteBranchesDirPath);
+        m_Magit.loadBranches(remoteBranchesDirPath, remoteRepositoryName);
+        copyAllObjectsFromRRToLRFileSystem(m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), Magit.getMagitDir().resolve("objects"));
         m_Magit.loadCommits();
+    }
+
+    private void removeHeadFromRemoteBranchesDirectory(Path i_RemoteBranchesDirectoryPath) throws IOException
+    {
+        FileUtilities.deleteFile(i_RemoteBranchesDirectoryPath.resolve("HEAD.txt"));
     }
 
     private void deleteRemoteBranchesFromFileSystem(Path i_RemoteBranchesDirPath) throws IOException
@@ -1209,19 +1276,19 @@ public class Repository
         return m_RemoteRepositoryPath != null;
     }
 
-    public String getRTBNameFromCommitSHA1(String i_commitSHA1Selected)
+    public String getRBNameFromCommitSHA1(String i_CommitSHA1Selected)
     {
-        String rtbName = null;
-
-        for (Branch branch : m_Magit.getBranches().values())
+        String rbName = null;
+        List<Branch> pointingBranches = m_Magit.getContainedBranches(i_CommitSHA1Selected);
+        for (Branch branch : pointingBranches)
         {
-            if (branch.getIsTracking())
+            if (branch.getIsRemote())
             {
-                rtbName = branch.getName();
+                rbName = branch.getName();
                 break;
             }
         }
 
-        return rtbName;
+        return rbName;
     }
 }

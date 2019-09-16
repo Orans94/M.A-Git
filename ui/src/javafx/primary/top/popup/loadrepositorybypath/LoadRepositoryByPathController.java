@@ -70,7 +70,7 @@ public class LoadRepositoryByPathController implements PopupController
                 m_TopController.loadRepositoryByPath(userInputPath);
                 notifyRepositoryHasBeenLoaded();
             }
-            m_TopController.clearCommitTableView();
+            m_TopController.clearCommitTableViewAndTreeView();
             m_TopController.addCommitsToTableView();
             m_TopController.updateCommitTree();
             StageUtilities.closeOpenSceneByActionEvent(event);

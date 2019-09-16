@@ -1,0 +1,7 @@
+1. Clone - when we clone a repository and the user decided to stash the existing repository, we also stash the WC.
+           Which means that at the end of the clone process the source and the destination directories will be exactly the same.
+
+
+ Note:
+ loading from xml- when loading repo from xml, the location doesn't our system create it whole location but if the xml loading opreation
+ canceled the new path will still be existing in the fs.

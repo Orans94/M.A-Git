@@ -4,6 +4,7 @@ import mypackage.*;
 import org.apache.commons.io.FilenameUtils;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -196,5 +197,50 @@ public class XMLValidator
         isMagitCommitsAreNull = i_XMLRepo.getMagitCommits().getMagitSingleCommit().size() == 0;
 
         return isMagitBlobsAreNull && isMagitFoldersAreNull && isMagitCommitsAreNull;
+    }
+
+    public boolean isMagitReferenceValid(MagitRepository i_XmlRepo)
+    {
+        // this method return true if and only if getMagitRemoteReference.getLocation is a Magit repository
+        if(i_XmlRepo.getMagitRemoteReference() != null)
+        {
+            if (i_XmlRepo.getMagitRemoteReference().getLocation() == null)
+            {
+                return false;
+            }
+
+            return FileUtilities.exists(Paths.get(i_XmlRepo.getMagitRemoteReference().getLocation()).resolve(".magit"));
+        }
+
+        return true;
+    }
+
+    public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)
+    {
+        for(MagitSingleBranch branch : i_MagitBranches.getMagitSingleBranch())
+        {
+            if(branch.isTracking())
+            {
+                if(!isBranchARemoteBranch(i_MagitBranches, branch.getTrackingAfter()))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isBranchARemoteBranch(MagitBranches i_MagitBranches, String i_BranchToCheck)
+    {
+        for(MagitSingleBranch branch : i_MagitBranches.getMagitSingleBranch())
+        {
+            if(branch.getName().equals(i_BranchToCheck))
+            {
+                return branch.isIsRemote();
+            }
+        }
+
+        return true;
     }
 }

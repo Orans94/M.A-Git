@@ -169,8 +169,9 @@ public class EngineManager
     public void loadEmptyRepository(Path i_RepoPath) throws IOException
     {
         m_Repository = new Repository(i_RepoPath);
+        m_Repository.writeRemoteRepositoryPathToFileSystem();
         m_Repository.loadNameFromFile();
-        m_Repository.getMagit().loadBranches(Magit.getMagitDir().resolve("branches"));
+        m_Repository.getMagit().loadBranches(Magit.getMagitDir().resolve("branches"), null);
         m_Repository.getMagit().loadHead();
     }
 
@@ -390,8 +391,28 @@ public class EngineManager
         return m_Repository.isRRExists();
     }
 
-    public String getRTBNameFromCommitSHA1(String i_CommitSHA1Selected)
+    public String getRBNameFromCommitSHA1(String i_CommitSHA1Selected)
     {
-        return m_Repository.getRTBNameFromCommitSHA1(i_CommitSHA1Selected);
+        return m_Repository.getRBNameFromCommitSHA1(i_CommitSHA1Selected);
+    }
+
+    public String getTrackingBranchName(String i_RbName)
+    {
+        return m_Repository.getMagit().getTrackingBranchName(i_RbName);
+    }
+
+    public void stashDirectory(Path i_Path) throws IOException
+    {
+        FileUtilities.cleanDirectory(i_Path);
+    }
+
+    public boolean isMagitRemoteReferenceValid(MagitRepository i_XmlRepo)
+    {
+        return m_XMLManager.isMagitRemoteReferenceValid(i_XmlRepo);
+    }
+
+    public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)
+    {
+        return m_XMLManager.areBranchesTrackingAfterAreValid(i_MagitBranches);
     }
 }

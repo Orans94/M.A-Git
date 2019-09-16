@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
@@ -152,9 +153,9 @@
     </center>
     <bottom>
         <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="29.0" prefHeight="29.0" prefWidth="810.0" BorderPane.alignment="CENTER">
-            <children>
-                <Label text="Task Process" />
-            </children>
+         <children>
+            <ProgressBar fx:id="progressBar" prefHeight="23.0" prefWidth="237.0" progress="0.0" visible="false" />
+         </children>
         </HBox>
     </bottom>
 </BorderPane>

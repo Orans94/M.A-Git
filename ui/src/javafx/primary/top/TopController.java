@@ -411,7 +411,7 @@ public class TopController
         m_MainController.createNewRepository(i_UserInputPath, i_UserInputRepoName);
     }
 
-    private void setRepositoryFullPathSplitMenuButton(Path i_UserInputPath)
+    public void setRepositoryFullPathSplitMenuButton(Path i_UserInputPath)
     {
         repositoryFullPathSplitMenuButton.setText(i_UserInputPath.toString());
     }
@@ -490,14 +490,11 @@ public class TopController
 
     public void createEmptyRepository(Path i_XMLRepositoryLocation, String i_RepositoryName) throws IOException
     {
-        setRepositoryFullPathSplitMenuButton(i_XMLRepositoryLocation);
         m_MainController.createEmptyRepository(i_XMLRepositoryLocation, i_RepositoryName);
     }
 
     public void createRepository(Path i_RepositoryPath, String i_RepositoryName) throws IOException
     {
-        setRepositoryFullPathSplitMenuButton(i_RepositoryPath);
-        m_MainController.clearCommitTableViewAndTreeView();
         m_MainController.createRepository(i_RepositoryPath, i_RepositoryName);
     }
 
@@ -533,7 +530,6 @@ public class TopController
 
     public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException
     {
-        setRepositoryFullPathSplitMenuButton(Paths.get(i_XMLRepository.getLocation()));
         m_MainController.readRepositoryFromXMLFile(i_XMLRepository, i_XMLMagitMaps);
     }
 
@@ -656,7 +652,7 @@ public class TopController
         m_MainController.createRepositoryPathDirectories(i_XmlRepositoryLocation);
     }
 
-    public void clearCommitTableView()
+    public void clearCommitTableViewAndTreeView()
     {
         m_MainController.clearCommitTableViewAndTreeView();
     }
@@ -728,9 +724,10 @@ public class TopController
         m_MainController.updateCommitTree();
     }
 
-    public void cloneRepository(Path i_SourceDirectoryTextField, Path i_DestinationDirectoryTextField, String i_RepositoryNameTextField) throws IOException, ParseException
+    public void cloneRepository(Path i_SourceDirectory, Path i_DestinationDirectory, String i_RepositoryName) throws IOException, ParseException
     {
-        m_MainController.cloneRepository(i_SourceDirectoryTextField, i_DestinationDirectoryTextField, i_RepositoryNameTextField);
+        setRepositoryFullPathSplitMenuButton(i_DestinationDirectory);
+        m_MainController.cloneRepository(i_SourceDirectory, i_DestinationDirectory, i_RepositoryName);
     }
 
     public boolean isRBBranch(String i_BranchName)
@@ -743,13 +740,38 @@ public class TopController
         m_MainController.createNewRTB(i_RemoteBranchName);
     }
 
-    public boolean isSourceRepresentsMAGitRepository(String i_PathToCheck)
+    public boolean isPathRepresentsMAGitRepository(String i_PathToCheck)
     {
-        return m_MainController.isSourceRepresentsMAGitRepository(i_PathToCheck);
+        return m_MainController.isPathRepresentsMAGitRepository(i_PathToCheck);
     }
 
-    public String getRTBNameFromCommitSHA1(String i_CommitSHA1Selected)
+    public String getRBNameFromCommitSHA1(String i_CommitSHA1Selected)
     {
-        return m_MainController.getRTBNameFromCommitSHA1(i_CommitSHA1Selected);
+        return m_MainController.getRBNameFromCommitSHA1(i_CommitSHA1Selected);
+    }
+
+    public String getTrackingBranchName(String i_RbName)
+    {
+        return m_MainController.getTrackingBranchName(i_RbName);
+    }
+
+    public void stashDirectory(Path i_Path) throws IOException
+    {
+        m_MainController.stashDirectory(i_Path);
+    }
+
+    public ProgressBar getProgressBar()
+    {
+        return m_MainController.getProgressBar();
+    }
+
+    public boolean isMagitRemoteReferenceValid(MagitRepository i_XmlRepo)
+    {
+        return m_MainController.isMagitRemoteReferenceValid(i_XmlRepo);
+    }
+
+    public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)
+    {
+        return m_MainController.areBranchesTrackingAfterAreValid(i_MagitBranches);
     }
 }
