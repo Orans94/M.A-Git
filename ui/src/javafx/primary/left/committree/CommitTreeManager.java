@@ -16,13 +16,11 @@ import java.util.List;
 
 public class CommitTreeManager
 {
-    //TODO clear maps every time we finish
     private Graph m_TreeGraph;
     private LeftController m_LeftController;
     private Map<Commit, CommitNode> m_CommitNodeByCommit;
     private Map<CommitNode, Commit> m_CommitByCommitNode;
     private List<Edge> m_GraphEdges;
-    private Map <CommitNode, List<Branch>> m_PointingBranchesByCommitNode;
 
     public CommitTreeManager(LeftController i_LeftController)
     {
@@ -35,6 +33,7 @@ public class CommitTreeManager
 
     public void update(ScrollPane i_PaneToDraw)
     {
+        clearMaps();
         m_TreeGraph = new Graph();
         i_PaneToDraw.setContent(m_TreeGraph.getCanvas());
         buildCommitTree(m_TreeGraph);
@@ -44,6 +43,13 @@ public class CommitTreeManager
             m_TreeGraph.getUseNodeGestures().set(false);
         });
 
+    }
+
+    private void clearMaps()
+    {
+        m_CommitByCommitNode.clear();
+        m_CommitNodeByCommit.clear();
+        m_GraphEdges.clear();
     }
 
     public Graph getTreeGraph() { return m_TreeGraph; }

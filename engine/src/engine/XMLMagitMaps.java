@@ -18,4 +18,11 @@ public class XMLMagitMaps
     public Map<String, MagitSingleCommit> getMagitSingleCommitByID() { return m_MagitSingleCommitByID; }
 
     public Map<String, MagitBlob> getMagitSingleBlobByID(){ return m_MagitSingleBlobByID; }
+
+    public void clear()
+    {
+        m_MagitSingleBlobByID.clear();
+        m_MagitSingleCommitByID.clear();
+        m_MagitSingleFolderByID.clear();
+    }
 }

@@ -65,8 +65,6 @@ public class LoadRepositoryByXMLController implements PopupController
     @FXML
     void loadButtonAction(ActionEvent event) throws IOException, JAXBException, ParseException
     {
-        //TODO when creating repository from XML we assumed that the directory already exists
-        //TODO ask aviad if thats ok or we should create the directory if it doesnt exists(C:/repo1)
         Path XMLFilePath;
         Path XMLRepositoryLocation;
         boolean isRepositoryAlreadyExistsInPath, toStash;
@@ -160,11 +158,9 @@ public class LoadRepositoryByXMLController implements PopupController
         pb.progressProperty().bind(i_Task.progressProperty());
     }
 
-    private void updateCommitsUI()
+    private void updateUIComponents()
     {
-        m_TopController.clearCommitTableViewAndTreeView();
-        m_TopController.addCommitsToTableView();
-        m_TopController.updateCommitTree();
+        m_TopController.updateUIComponents();
     }
 
     private void createNewRepository(Path i_RepositoryPath, String i_RepositoryName) throws IOException
@@ -350,7 +346,7 @@ public class LoadRepositoryByXMLController implements PopupController
     }
     private void updateUIComponents(Path i_XMLRepositoryLocation)
     {
-        updateCommitsUI();
+        updateUIComponents();
         updateRepositoryFullPathSplitMenuButtonUI(i_XMLRepositoryLocation);
 
     }

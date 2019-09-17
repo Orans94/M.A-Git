@@ -37,13 +37,15 @@ public class Repository
     public Repository(Path i_Source, Path i_Dest, String i_Name) throws IOException, ParseException
     {
         // clone c'tor
-        //createRepositoryDirectories(i_Dest);
-        copyRemoteBranchesFromRRToLRFileSystem(i_Source, i_Dest);
+        Path destMagitPath = i_Dest.resolve(".magit");
+        createRepositoryDirectories(i_Dest);
+        FileUtilities.copyDirectory(i_Source.resolve(".magit"), destMagitPath);
         m_Name = i_Name;
         m_WorkingCopy = new WC(i_Dest);
         m_Magit = new Magit();
-        Magit.setMagitDir(i_Dest.resolve(".magit"));
+        Magit.setMagitDir(destMagitPath);
         m_RemoteRepositoryPath = i_Source;
+        FileUtilities.deleteFile(destMagitPath.resolve(REPOSITORY_REMOTE_FILE));
         writeRemoteRepositoryPathToFileSystem();
         m_Magit.load(Magit.getMagitDir());
         moveBranchesToRemoteBranchesDirectory();
@@ -117,8 +119,15 @@ public class Repository
 
     private String getRemoteRepositoryName() throws IOException
     {
-        Path RRNameFile = m_RemoteRepositoryPath.resolve(".magit").resolve("RepositoryName.txt");
-        return FileUtilities.getFileContent(RRNameFile);
+        if(m_RemoteRepositoryPath != null && !m_RemoteRepositoryPath.toString().equals(""))
+        {
+            Path RRNameFile = m_RemoteRepositoryPath.resolve(".magit").resolve(REPOSITORY_NAME_FILE);
+            return FileUtilities.getFileContent(RRNameFile);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void createRepositoryNameFile() throws IOException
@@ -580,6 +589,7 @@ public class Repository
     private void loadRemoteBranches() throws IOException
     {
         List<Path> remoteBranches = Files.walk(Magit.getMagitDir().resolve("branches"), 1)
+                .filter(d->!d.equals(Magit.getMagitDir().resolve("branches")))
                 .filter(d-> d.toFile().isDirectory())
                 .collect(Collectors.toList());
         for(Path path : remoteBranches)
@@ -1244,10 +1254,10 @@ public class Repository
         Path remoteBranchesDirPath = Magit.getMagitDir().resolve("branches").resolve(remoteRepositoryName);
         deleteRemoteBranchesFromFileSystem(remoteBranchesDirPath);
         m_Magit.deleteRemoteBranchesFromBranchesMap();
-        copyRemoteBranchesFromRRToLRFileSystem(m_RemoteRepositoryPath.resolve(".magit").resolve("branches"), remoteBranchesDirPath);
+        FileUtilities.copyDirectory(m_RemoteRepositoryPath.resolve(".magit").resolve("branches"), remoteBranchesDirPath);
         removeHeadFromRemoteBranchesDirectory(remoteBranchesDirPath);
         m_Magit.loadBranches(remoteBranchesDirPath, remoteRepositoryName);
-        copyAllObjectsFromRRToLRFileSystem(m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), Magit.getMagitDir().resolve("objects"));
+        FileUtilities.copyDirectory(m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), Magit.getMagitDir().resolve("objects"));
         m_Magit.loadCommits();
     }
 
@@ -1259,16 +1269,6 @@ public class Repository
     private void deleteRemoteBranchesFromFileSystem(Path i_RemoteBranchesDirPath) throws IOException
     {
         FileUtilities.cleanDirectory(i_RemoteBranchesDirPath);
-    }
-
-    private void copyAllObjectsFromRRToLRFileSystem(Path i_RRObjects, Path i_LRObjects) throws IOException
-    {
-        FileUtilities.copyDirectory(i_RRObjects, i_LRObjects);
-    }
-
-    private void copyRemoteBranchesFromRRToLRFileSystem(Path i_Source, Path i_Dest) throws IOException
-    {
-        FileUtilities.copyDirectory(i_Source, i_Dest);
     }
 
     public boolean isRRExists()

@@ -1,5 +1,6 @@
 package javafx.primary.include;
 
+import javafx.AppController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,7 +32,8 @@ public class Main extends Application
         URL url = getClass().getResource(APP_FXML_INCLUDE_RESOURCE);
         fxmlLoader.setLocation(url);
         Parent root = fxmlLoader.load(url.openStream());
-
+        AppController appController = fxmlLoader.getController();
+        appController.setPrimaryStage(primaryStage);
 
         Scene scene = new Scene(root,1800,800 );
         primaryStage.setScene(scene);

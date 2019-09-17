@@ -369,6 +369,7 @@ public class EngineManager
         m_Repository = new Repository(i_Source, i_Destination, i_Name);
         m_Repository.deleteRepositoryNameFile();
         m_Repository.createRepositoryNameFile();
+        m_Repository.checkout(m_Repository.getMagit().getHead().getActiveBranch().getName());
     }
 
     public boolean isRBBranch(String i_BranchName)

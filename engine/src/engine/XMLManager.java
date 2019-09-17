@@ -11,6 +11,7 @@ public class XMLManager
 
     public void loadXMLRepoToMagitMaps(MagitRepository i_XMLRepository)
     {
+        m_XMLMagitMaps.clear();
         for(MagitSingleCommit commit : i_XMLRepository.getMagitCommits().getMagitSingleCommit())
         {
             m_XMLMagitMaps.getMagitSingleCommitByID().put(commit.getId(), commit);

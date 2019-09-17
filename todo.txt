@@ -1,8 +1,16 @@
 TODO
-1. add tasks.
-2. fix load by xml(branches - is remote , tracking...)
-3. check tree all cases..
-4. wait for aviad answer about remote reference issue
+- display repository name
+- check create new branch feature
+- check delete branch can't delete head branch
+- check reset branch feature
+- add rb sign to commit tree
+- prohibit commit stage if WC is clean
+
+
+
+for readme file:
+- if a commit got two parents we displayed both of the deltas
+
 
 
 BUG:

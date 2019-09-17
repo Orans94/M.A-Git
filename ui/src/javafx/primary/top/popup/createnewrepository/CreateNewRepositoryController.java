@@ -25,7 +25,7 @@ public class CreateNewRepositoryController implements PopupController
     @FXML private Button browseButton;
     @FXML private TextField repositoryNameTextField;
     @FXML private Button createButton;
-
+    @FXML private TextField subdirectoryTextField;
 
     public void setTopController(TopController i_TopController){ m_TopController = i_TopController; }
 
@@ -33,7 +33,8 @@ public class CreateNewRepositoryController implements PopupController
     public void initialize()
     {
         // binding Create button to directory text field
-        BooleanBinding isTextFieldEmpty = Bindings.isEmpty(directoryTextField.textProperty());
+        BooleanBinding isTextFieldEmpty = Bindings.or(Bindings.isEmpty(directoryTextField.textProperty()),
+                Bindings.isEmpty(subdirectoryTextField.textProperty()));
         createButton.disableProperty().bind(isTextFieldEmpty);
     }
 
@@ -57,42 +58,28 @@ public class CreateNewRepositoryController implements PopupController
         String userInputRepoName = repositoryNameTextField.getText();
         Path userInputPath;
 
-        userInputPath = Paths.get(directoryTextField.getText());
+        userInputPath = Paths.get(directoryTextField.getText()).resolve(subdirectoryTextField.getText());
         // check if the path is already a repository
-        if (m_TopController.isRepository(userInputPath))
+        if (m_TopController.isPathExists(userInputPath))
         {
-            // stash and initialize new repository if user wants to
-            handleStashAndCreateNewRepository(userInputPath, userInputRepoName);
+            AlertFactory.createErrorAlert("Create new repository", "The subdirectory already exists, please enter a name of non existing directory")
+                    .showAndWait();
         }
         else
         {
             // the path isn't repository, init this path and inform user
             createNewRepository(userInputPath, userInputRepoName);
-        }
-
-        // close the dialog.
-        StageUtilities.closeOpenSceneByActionEvent(event);
-    }
-
-    private void handleStashAndCreateNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException
-    {
-        // ask user if he want to stash the existing repository
-        Alert alert = AlertFactory.createYesNoAlert("Create new repository", "Would you like to stash the existing repository?");
-        boolean isUserWantToStash = alert.showAndWait().get().getText().equals("Yes");
-
-        if (isUserWantToStash)
-        {
-            m_TopController.stashRepository(i_UserInputPath);
-            createNewRepository(i_UserInputPath, i_UserInputRepoName);
+            // close the dialog.
+            StageUtilities.closeOpenSceneByActionEvent(event);
         }
     }
 
     private void createNewRepository(Path i_UserInputPath, String i_UserInputRepoName) throws IOException
     {
         // ask user if he want to stash the existing repository
+        m_TopController.createNewRepository(i_UserInputPath, i_UserInputRepoName);
         AlertFactory.createInformationAlert("Create new repository", "A new repository has been initialized!")
                 .showAndWait();
-        m_TopController.createNewRepository(i_UserInputPath, i_UserInputRepoName);
         m_TopController.clearCommitTableViewAndTreeView();
     }
 

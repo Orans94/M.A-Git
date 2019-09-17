@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="283.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.popup.clone.CloneRepositoryController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
@@ -54,6 +53,21 @@
             </Button>
          </children>
       </HBox>
+      <HBox layoutX="10.0" layoutY="166.0" prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label text="Subdirectory to create">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Label>
+            <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="54.0" />
+            <TextField fx:id="subdirectoryNameTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <Label text="Repository Name">
@@ -67,11 +81,6 @@
                   <Insets bottom="5.0" left="5.0" right="10.0" top="10.0" />
                </HBox.margin>
             </TextField>
-         </children>
-      </HBox>
-      <HBox prefHeight="71.0" prefWidth="600.0">
-         <children>
-            <Region prefHeight="58.0" prefWidth="457.0" />
             <Button fx:id="cloneButton" mnemonicParsing="false" onAction="#cloneButtonAction" text="Clone">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="10.0" top="10.0" />

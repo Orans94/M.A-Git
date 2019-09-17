@@ -204,15 +204,21 @@ public class XMLValidator
         // this method return true if and only if getMagitRemoteReference.getLocation is a Magit repository
         if(i_XmlRepo.getMagitRemoteReference() != null)
         {
-            if (i_XmlRepo.getMagitRemoteReference().getLocation() == null)
+            // the element is appearing in xml
+            if(i_XmlRepo.getMagitRemoteReference().getLocation() == null)
             {
-                return false;
+                return true;
             }
-
-            return FileUtilities.exists(Paths.get(i_XmlRepo.getMagitRemoteReference().getLocation()).resolve(".magit"));
+            else
+            {
+                return FileUtilities.exists(Paths.get(i_XmlRepo.getMagitRemoteReference().getLocation()).resolve(".magit"));
+            }
         }
-
-        return true;
+        else
+        {
+            // the element isn't appearing in xml
+            return true;
+        }
     }
 
     public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)

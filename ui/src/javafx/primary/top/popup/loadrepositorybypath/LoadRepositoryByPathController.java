@@ -56,8 +56,6 @@ public class LoadRepositoryByPathController implements PopupController
         Path userInputPath;
 
         userInputPath = Paths.get(directoryTextField.getText());
-
-
         if (m_TopController.isRepository(userInputPath))
         {
             if (m_TopController.isRepositoryEmpty(userInputPath))
@@ -70,15 +68,20 @@ public class LoadRepositoryByPathController implements PopupController
                 m_TopController.loadRepositoryByPath(userInputPath);
                 notifyRepositoryHasBeenLoaded();
             }
-            m_TopController.clearCommitTableViewAndTreeView();
-            m_TopController.addCommitsToTableView();
-            m_TopController.updateCommitTree();
+            updateUIComponents(userInputPath);
+
             StageUtilities.closeOpenSceneByActionEvent(event);
         }
         else
         {
             notifyThePathIsntRepository(userInputPath);
         }
+    }
+
+    private void updateUIComponents(Path i_RepositoryPath)
+    {
+        m_TopController.updateUIComponents();
+        m_TopController.setRepositoryFullPathSplitMenuButton(i_RepositoryPath);
     }
 
     private void notifyThePathIsntRepository(Path i_UserInputPath)

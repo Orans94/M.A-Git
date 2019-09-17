@@ -463,13 +463,11 @@ public class TopController
 
     public void loadEmptyRepository(Path i_UserInputPath) throws IOException
     {
-        setRepositoryFullPathSplitMenuButton(i_UserInputPath);
         m_MainController.loadEmptyRepository(i_UserInputPath);
     }
 
     public void loadRepositoryByPath(Path i_UserInputPath) throws IOException, ParseException
     {
-        setRepositoryFullPathSplitMenuButton(i_UserInputPath);
         m_MainController.loadRepositoryByPath(i_UserInputPath);
     }
 
@@ -773,5 +771,18 @@ public class TopController
     public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)
     {
         return m_MainController.areBranchesTrackingAfterAreValid(i_MagitBranches);
+    }
+
+    public void updatePrimaryStageTitle()
+    {
+        m_MainController.updatePrimaryStageTitle();
+    }
+
+    public void updateUIComponents()
+    {
+        clearCommitTableViewAndTreeView();
+        addCommitsToTableView();
+        updateCommitTree();
+        updatePrimaryStageTitle();
     }
 }

@@ -7,9 +7,11 @@ import javafx.fxml.FXML;
 import javafx.primary.left.LeftController;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.primary.top.TopController;
+import javafx.stage.Stage;
 import mypackage.*;
 
 import javax.xml.bind.JAXBException;
@@ -24,6 +26,9 @@ import java.util.SortedSet;
 
 public class AppController
 {
+    private Stage m_PrimaryStage;
+    @FXML private TextField m_RepositoryNameTitleTextField;
+    private final String MAGIT_TITLE = "M.A Git - ";
     // ------ CONTROLLERS AND COMPONENTS ------
 
     @FXML private VBox m_TopComponent;
@@ -50,6 +55,9 @@ public class AppController
             m_LeftComponentController.setMainController(this);
             m_TopComponentController.setMainController(this);
         }
+
+        m_RepositoryNameTitleTextField = new TextField();
+        m_RepositoryNameTitleTextField.textProperty().addListener((obs, oldTitle, newTitle) -> updateTitle(MAGIT_TITLE + newTitle));
     }
 
     public void createNewBranch(String i_BranchName, String i_CommitSHA1) throws IOException { m_Engine.createNewBranch(i_BranchName, i_CommitSHA1); }
@@ -80,6 +88,8 @@ public class AppController
     public OpenChanges getFileSystemStatus() throws IOException { return m_Engine.getFileSystemStatus(); }
 
     public boolean isFileSystemDirty(OpenChanges i_OpenChanges) { return m_Engine.isFileSystemDirty(i_OpenChanges); }
+
+    public void setPrimaryStage(Stage i_PrimaryStage) { this.m_PrimaryStage = i_PrimaryStage; }
 
     public void setActiveBranchName(String i_BranchName) throws IOException
     {
@@ -417,5 +427,22 @@ public class AppController
     public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)
     {
         return m_Engine.areBranchesTrackingAfterAreValid(i_MagitBranches);
+    }
+
+    private void updateTitle(String i_Title)
+    {
+        if (m_PrimaryStage != null)
+        {
+            m_PrimaryStage.setTitle(i_Title);
+        }
+        else
+        {
+            System.out.println("Warning: null stage");
+        }
+    }
+
+    public void updatePrimaryStageTitle()
+    {
+        m_RepositoryNameTitleTextField.setText(m_Engine.getRepositoryName());
     }
 }

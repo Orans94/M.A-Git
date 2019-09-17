@@ -8,16 +8,16 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="createNewRepositoryComponent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="730.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.popup.createnewrepository.CreateNewRepositoryController">
+<VBox fx:id="createNewRepositoryComponent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="167.0" prefWidth="730.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.top.popup.createnewrepository.CreateNewRepositoryController">
    <children>
       <HBox prefHeight="58.0" prefWidth="698.0">
          <children>
-            <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="91.0" text="Directory" HBox.hgrow="NEVER">
+            <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="91.0" text="Directory:" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>
             </Label>
-            <Region prefHeight="54.0" prefWidth="51.0" />
+            <Region prefHeight="47.0" prefWidth="113.0" />
             <TextField fx:id="directoryTextField" alignment="TOP_LEFT" editable="false" prefHeight="31.0" prefWidth="477.0">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
@@ -33,23 +33,38 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </HBox>
-      <HBox prefHeight="75.0" prefWidth="730.0">
+      <HBox layoutX="15.0" layoutY="15.0" prefHeight="58.0" prefWidth="698.0">
          <children>
-            <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="122.0" text="Repository name" HBox.hgrow="NEVER">
+            <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="155.0" text="Subdirectory to create:" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="repositoryNameTextField" alignment="TOP_LEFT" prefHeight="31.0" prefWidth="320.0">
+            <Region prefHeight="47.0" prefWidth="0.0" />
+            <TextField fx:id="subdirectoryTextField" alignment="TOP_LEFT" prefHeight="31.0" prefWidth="452.0">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>
             </TextField>
-            <Region prefHeight="54.0" prefWidth="133.0">
+         </children>
+      </HBox>
+      <HBox prefHeight="75.0" prefWidth="730.0">
+         <children>
+            <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="164.0" text="Repository name:" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />
+               </HBox.margin>
+            </Label>
+            <Region prefHeight="49.0" prefWidth="21.0">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>
             </Region>
+            <TextField fx:id="repositoryNameTextField" alignment="TOP_LEFT" prefHeight="31.0" prefWidth="465.0">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+               </HBox.margin>
+            </TextField>
             <Button fx:id="createButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#createButtonAction" prefHeight="9.0" prefWidth="110.0" text="Create">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />

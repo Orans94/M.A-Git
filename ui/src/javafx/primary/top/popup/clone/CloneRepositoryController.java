@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 
@@ -24,13 +25,14 @@ public class CloneRepositoryController implements PopupController
     @FXML private TextField destinationDirectoryTextField;
     @FXML private TextField repositoryNameTextField;
     @FXML private Button cloneButton;
+    @FXML private TextField subdirectoryNameTextField;
     private TopController m_TopController;
 
     @FXML
     public void initialize()
     {
-        BooleanBinding isTextFieldEmpty = Bindings.or(Bindings.isEmpty(sourceDirectoryTextField.textProperty())
-                , Bindings.isEmpty(destinationDirectoryTextField.textProperty()));
+        BooleanBinding isTextFieldEmpty =Bindings.or(Bindings.or(Bindings.isEmpty(sourceDirectoryTextField.textProperty())
+                , Bindings.isEmpty(destinationDirectoryTextField.textProperty())), subdirectoryNameTextField.textProperty().isEmpty());
         cloneButton.disableProperty().bind(isTextFieldEmpty);
     }
 
@@ -65,8 +67,9 @@ public class CloneRepositoryController implements PopupController
     @FXML
     void cloneButtonAction(ActionEvent event) throws IOException, ParseException
     {
-        //TODO - check flow after aviad answer on the forum
-        if(!m_TopController.isPathRepresentsMAGitRepository(destinationDirectoryTextField.getText()))
+        Path destination = Paths.get(destinationDirectoryTextField.getText()).resolve(subdirectoryNameTextField.getText());
+
+        if(!m_TopController.isPathExists(destination))
         {
             if (m_TopController.isPathRepresentsMAGitRepository(sourceDirectoryTextField.getText()))
             {
@@ -77,39 +80,20 @@ public class CloneRepositoryController implements PopupController
                 AlertFactory.createErrorAlert("Clone repository", "The source directory is not a M.A Git repository")
                         .showAndWait();
             }
+            StageUtilities.closeOpenSceneByActionEvent(event);
         }
         else
         {
-            if (m_TopController.isPathRepresentsMAGitRepository(sourceDirectoryTextField.getText()))
-            {
-                String message = "The destination directory is already a M.A Git repository."
-                        + System.lineSeparator() + "Would you like to stash the existing repository?";
-                boolean toStash = AlertFactory.createYesNoAlert("Clone repository", message)
-                        .showAndWait().get().getText().equals("Yes");
-                if (toStash)
-                {
-                    m_TopController.stashDirectory(Paths.get(destinationDirectoryTextField.getText()));
-                    cloneRepository();
-                }
-                else
-                {
-                    AlertFactory.createInformationAlert("Clone repository", "The clone operation has been cancelled")
-                            .showAndWait();
-                }
-            }
-            else
-            {
-                AlertFactory.createErrorAlert("Clone repository", "The source directory is not a M.A Git repository")
-                        .showAndWait();
-            }
+            AlertFactory.createErrorAlert("Clone repository", "The subdirectory already exists, please enter a name of non existing directory")
+                    .showAndWait();
         }
-        StageUtilities.closeOpenSceneByActionEvent(event);
     }
 
     private void cloneRepository() throws IOException, ParseException
     {
-        m_TopController.cloneRepository(Paths.get(sourceDirectoryTextField.getText())
-                , Paths.get(destinationDirectoryTextField.getText()), repositoryNameTextField.getText());
+        Path destination = Paths.get(destinationDirectoryTextField.getText()).resolve(subdirectoryNameTextField.getText());
+
+        m_TopController.cloneRepository(Paths.get(sourceDirectoryTextField.getText()), destination, repositoryNameTextField.getText());
         AlertFactory.createInformationAlert("Clone repository", "The repository has been cloned successfully")
                 .showAndWait();
         m_TopController.clearCommitTableViewAndTreeView();
