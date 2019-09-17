@@ -71,7 +71,7 @@ public class Repository
     public void deleteRepositoryNameFile() throws IOException
     {
         Path repositoryNameFilePath = Magit.getMagitDir().resolve("RepositoryName.txt");
-        if(FileUtilities.exists(repositoryNameFilePath))
+        if(FileUtilities.isExists(repositoryNameFilePath))
         {
             FileUtilities.deleteFile(repositoryNameFilePath);
         }
@@ -149,7 +149,7 @@ public class Repository
         // this method is reading the repository name file and updating m_Name
         String repositoryName = "";
         Path fileNamePath = m_WorkingCopy.getWorkingCopyDir().resolve(".magit").resolve(REPOSITORY_NAME_FILE);
-        if (FileUtilities.exists(fileNamePath))
+        if (FileUtilities.isExists(fileNamePath))
         {
             repositoryName = new String(Files.readAllBytes(fileNamePath));
         }
@@ -578,8 +578,8 @@ public class Repository
         loadNameFromFile();
         loadRemoteFromFile();
         m_WorkingCopy.setWorkingCopyDir(i_RepPath);
-        m_Magit.load(i_RepPath);
         loadRemoteBranches();
+        m_Magit.load(i_RepPath);
         m_WorkingCopy.setCommitSHA1(m_Magit.getHead().getActiveBranch().getCommitSHA1());
         String rootFolderSHA1 = m_Magit.getCommits().get(m_Magit.getHead().getActiveBranch().getCommitSHA1()).getRootFolderSHA1();
         m_WorkingCopy.getNodeMaps().getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
@@ -753,7 +753,7 @@ public class Repository
             if(entry.getKey().contains("\\"))
             {
                 fileName = Paths.get(entry.getKey()).getFileName().toString();
-                if(!FileUtilities.exists(destination.resolve(getRemoteRepositoryName())))
+                if(!FileUtilities.isExists(destination.resolve(getRemoteRepositoryName())))
                 {
                     Files.createDirectories(destination.resolve(getRemoteRepositoryName()));
                 }
@@ -1039,7 +1039,7 @@ public class Repository
     {
         Path pathToCreate = i_Path.getParent();
         Files.createDirectories(pathToCreate);
-        if(FileUtilities.exists(i_Path))
+        if(FileUtilities.isExists(i_Path))
         {
             FileUtilities.deleteFile(i_Path);
         }
@@ -1252,23 +1252,10 @@ public class Repository
         // ASSUMPTION: before we invoke this method, we checked if LR has a RR
         String remoteRepositoryName = getRemoteRepositoryName();
         Path remoteBranchesDirPath = Magit.getMagitDir().resolve("branches").resolve(remoteRepositoryName);
-        deleteRemoteBranchesFromFileSystem(remoteBranchesDirPath);
-        m_Magit.deleteRemoteBranchesFromBranchesMap();
-        FileUtilities.copyDirectory(m_RemoteRepositoryPath.resolve(".magit").resolve("branches"), remoteBranchesDirPath);
-        removeHeadFromRemoteBranchesDirectory(remoteBranchesDirPath);
+        FileUtilities.copyDirectoryContent(m_RemoteRepositoryPath.resolve(".magit").resolve("branches"), remoteBranchesDirPath);
         m_Magit.loadBranches(remoteBranchesDirPath, remoteRepositoryName);
-        FileUtilities.copyDirectory(m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), Magit.getMagitDir().resolve("objects"));
+        FileUtilities.copyDirectoryContent(m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), Magit.getMagitDir().resolve("objects"));
         m_Magit.loadCommits();
-    }
-
-    private void removeHeadFromRemoteBranchesDirectory(Path i_RemoteBranchesDirectoryPath) throws IOException
-    {
-        FileUtilities.deleteFile(i_RemoteBranchesDirectoryPath.resolve("HEAD.txt"));
-    }
-
-    private void deleteRemoteBranchesFromFileSystem(Path i_RemoteBranchesDirPath) throws IOException
-    {
-        FileUtilities.cleanDirectory(i_RemoteBranchesDirPath);
     }
 
     public boolean isRRExists()
@@ -1290,5 +1277,60 @@ public class Repository
         }
 
         return rbName;
+    }
+
+    public boolean isPushRequired() throws IOException
+    {
+        // this method return true if rtb pointing commit is newer than rb pointing commit
+        if (m_RemoteRepositoryPath == null)
+        {
+            return false;
+        }
+
+        String headBranchPointedCommitSHA1 = m_Magit.getHead().getActiveBranch().getCommitSHA1();
+        Path rrCommitPath = m_RemoteRepositoryPath.resolve(".magit").resolve("objects").resolve(headBranchPointedCommitSHA1+".zip");
+
+        return !FileUtilities.isExists(rrCommitPath);
+    }
+
+    public void pull() throws IOException
+    {
+        Branch LRActiveBranch = m_Magit.getHead().getActiveBranch();
+        Path RRActiveBranchPath = m_RemoteRepositoryPath.resolve(".magit").resolve("branches").resolve(LRActiveBranch.getName() + ".txt");
+        String RRPointedCommitSHA1 = new String(Files.readAllBytes(RRActiveBranchPath));
+        pullCommitsObjectsRecursive(RRPointedCommitSHA1);
+    }
+
+    private void pullCommitsObjectsRecursive(String i_RRPointedCommitSHA1) throws IOException
+    {
+        List<String> parentsSHA1 = new LinkedList<>();
+        NodeMaps currentCommitNodeMaps = new NodeMaps();
+        Path RRCommitPath = m_RemoteRepositoryPath.resolve(".magit").resolve("objects").resolve(i_RRPointedCommitSHA1 + ".zip");
+        Path LRCommitPath = Magit.getMagitDir().resolve("objects").resolve(i_RRPointedCommitSHA1 + ".zip");
+        if(!m_Magit.getCommits().containsKey(i_RRPointedCommitSHA1))
+        {
+            // copying the commit object from RR objects dir to LR objects dir
+            FileUtilities.copyFile(RRCommitPath, LRCommitPath);
+            String rootFolderSHA1 = extractDataFromCommitZip(RRCommitPath, 0);
+            currentCommitNodeMaps.getSHA1ByPath().put(m_RemoteRepositoryPath, rootFolderSHA1);
+            setNodeMapsByRootFolder(m_RemoteRepositoryPath, currentCommitNodeMaps, false);
+            writeNodeMapsToFileSystem(Magit.getMagitDir().resolve("objects"), currentCommitNodeMaps);
+            String firstParent = extractDataFromCommitZip(RRCommitPath, 1);
+            if(firstParent != null)
+            {
+                parentsSHA1.add(firstParent);
+            }
+
+            String secondParent = extractDataFromCommitZip(RRCommitPath, 2);
+            if(secondParent != null)
+            {
+                parentsSHA1.add(secondParent);
+            }
+
+            for(String SHA1 : parentsSHA1)
+            {
+                pullCommitsObjectsRecursive(SHA1);
+            }
+        }
     }
 }

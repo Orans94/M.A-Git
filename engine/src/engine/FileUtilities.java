@@ -4,14 +4,19 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class FileUtilities
 {
@@ -168,7 +173,7 @@ public class FileUtilities
         return Files.isDirectory(i_dirToCheck);
     }
 
-    public static boolean exists(Path i_Path)
+    public static boolean isExists(Path i_Path)
     {
         try
         {
@@ -194,13 +199,40 @@ public class FileUtilities
         return new String(Files.readAllBytes(i_RRNameFilePath));
     }
 
-    public static void moveFile(Path i_Path, Path i_Dest) throws IOException
-    {
-        Files.move(i_Path, i_Dest);
-    }
-
     public static void cleanDirectory(Path i_Destination) throws IOException
     {
         FileUtils.cleanDirectory(new File(i_Destination.toString()));
+    }
+
+    public static void moveFile(Path i_Source, Path i_Dest) throws IOException
+    {
+        Files.move(i_Source, i_Dest, REPLACE_EXISTING);
+    }
+
+    public static void copyDirectoryContent(Path i_Source, Path i_Dest)
+    {
+        try (Stream<Path> walk = Files.walk(i_Source))
+        {
+            List<Path> result = walk
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+            for(Path path : result)
+            {
+                if(!path.getFileName().toString().equals("HEAD.txt"))
+                {
+                    copyFile(path, i_Dest.resolve(path.getFileName()));
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            //TODO
+            e.printStackTrace();
+        }
+    }
+
+    public static void copyFile(Path i_Source, Path i_Dest) throws IOException
+    {
+        Files.copy(i_Source, i_Dest, REPLACE_EXISTING);
     }
 }

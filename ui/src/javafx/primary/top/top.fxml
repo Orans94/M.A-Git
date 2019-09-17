@@ -72,7 +72,7 @@
               </items>
             </SplitMenuButton>
             <Button fx:id="pushButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="116.0" text="Push" HBox.hgrow="NEVER" />
-            <Button fx:id="pullButton" mnemonicParsing="false" prefHeight="23.0" prefWidth="104.0" text="Pull" HBox.hgrow="NEVER" />
+            <Button fx:id="pullButton" mnemonicParsing="false" onAction="#pullButtonOnAction" prefHeight="23.0" prefWidth="104.0" text="Pull" HBox.hgrow="NEVER" />
             <Button fx:id="commitButton" mnemonicParsing="false" onAction="#commitMenuItemAction" text="Commit(diff)" HBox.hgrow="NEVER" />
             <Button fx:id="showStatusButton" mnemonicParsing="false" onAction="#showStatusMenuItemAction" text="Show status" HBox.hgrow="NEVER" />
             <Button fx:id="createNewBranchButton" mnemonicParsing="false" onAction="#createBranchMenuItemAction" text="Create Branch" HBox.hgrow="NEVER" />

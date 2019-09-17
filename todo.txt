@@ -1,12 +1,10 @@
 TODO
-- display repository name
 - check create new branch feature
 - check delete branch can't delete head branch
-- check reset branch feature
 - add rb sign to commit tree
-- prohibit commit stage if WC is clean
-
-
+- delete all unused methods and members
+- binds menuitems to repository object, if it is null disable it.
+- disable fetch opreation menu item of the repository is not tracking after reposirory
 
 for readme file:
 - if a commit got two parents we displayed both of the deltas
@@ -14,4 +12,3 @@ for readme file:
 
 
 BUG:
-when cloning

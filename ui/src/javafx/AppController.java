@@ -1,6 +1,13 @@
 package javafx;
 
+import com.sun.xml.internal.ws.api.pipe.Engine;
 import engine.*;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.primary.bottom.BottomController;
 import javafx.primary.center.CenterController;
 import javafx.fxml.FXML;
@@ -444,5 +451,15 @@ public class AppController
     public void updatePrimaryStageTitle()
     {
         m_RepositoryNameTitleTextField.setText(m_Engine.getRepositoryName());
+    }
+
+    public boolean isPushRequired() throws IOException
+    {
+        return m_Engine.isPushRequired();
+    }
+
+    public void pull()
+    {
+        m_Engine.pull();
     }
 }

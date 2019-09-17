@@ -211,7 +211,7 @@ public class XMLValidator
             }
             else
             {
-                return FileUtilities.exists(Paths.get(i_XmlRepo.getMagitRemoteReference().getLocation()).resolve(".magit"));
+                return FileUtilities.isExists(Paths.get(i_XmlRepo.getMagitRemoteReference().getLocation()).resolve(".magit"));
             }
         }
         else

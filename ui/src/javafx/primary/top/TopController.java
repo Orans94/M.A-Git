@@ -84,6 +84,9 @@ public class TopController
     @FXML private RadioMenuItem changeThemeToDarkRadioMenuItem;
     @FXML private RadioMenuItem changeThemeToStadiumRadioMenuItem;
     @FXML private RadioMenuItem setBackgroundImageRadioMenuItem;
+
+    public MenuItem getCommitMenuItem() { return commitMenuItem; }
+
     @FXML private MenuItem commitMenuItem;
     @FXML private MenuItem pullMenuItem;
     @FXML private MenuItem pushMenuItem;
@@ -251,6 +254,7 @@ public class TopController
             if (m_MainController.isRRExists())
             {
                 m_MainController.fetch();
+                updateUIComponents();
                 AlertFactory.createInformationAlert("Fetch", "Fetch has been done successfully").showAndWait();
             }
             else
@@ -784,5 +788,36 @@ public class TopController
         addCommitsToTableView();
         updateCommitTree();
         updatePrimaryStageTitle();
+    }
+
+    public void pullButtonOnAction(ActionEvent actionEvent) throws IOException
+    {
+        //TODO disable this menu item of the repository is not tracking after repository
+        if (m_MainController.getActiveBranch().getIsTracking())
+        {
+            // head branch is RTB
+            if (!m_MainController.isFileSystemDirty(m_MainController.getFileSystemStatus()))
+            {
+                // file system is clean
+                if (!m_MainController.isPushRequired())
+                {
+                    // the requirements were validated, pull operation can start
+                    m_MainController.pull();
+
+                }
+                else
+                {
+                    // notify user that push operation is required before operate pull
+                }
+            }
+            else
+            {
+                // notify user that WC is dirty and pull operation cannot be done
+            }
+        }
+        else
+        {
+            // notify user that active branch isn't RTB
+        }
     }
 }

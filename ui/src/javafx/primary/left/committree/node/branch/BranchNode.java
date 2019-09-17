@@ -3,6 +3,7 @@ package javafx.primary.left.committree.node.branch;
 import com.fxgraph.cells.AbstractCell;
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.IEdge;
+import engine.StringFinals;
 import javafx.ComponentControllerConnector;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
@@ -25,9 +26,11 @@ public class BranchNode extends AbstractCell
 
     private BranchNodeController m_BranchNodeController;
     private CommitTreeManager m_CommitTreeManager;
-    public BranchNode(String i_BranchName, boolean i_IsHead)
+    public BranchNode(String i_BranchName, boolean i_IsHead, boolean i_IsRemote)
     {
-        m_BranchName = i_IsHead ? i_BranchName + " (HEAD)" : i_BranchName;
+        m_BranchName = i_BranchName;
+        m_BranchName += i_IsHead ? " (HEAD)" : StringFinals.EMPTY_STRING;
+        m_BranchName += i_IsRemote ? " (RB)" : StringFinals.EMPTY_STRING;
     }
 
     public BranchNodeController getBranchNodeController()

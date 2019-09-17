@@ -44,12 +44,12 @@ public class EngineManager
 
     public boolean isPathExists(Path i_Path)
     {
-           return FileUtilities.exists(i_Path);
+           return FileUtilities.isExists(i_Path);
     }
 
     public boolean isRepository(Path i_Path)
     {
-        return FileUtilities.exists(i_Path.resolve(".magit"));
+        return FileUtilities.isExists(i_Path.resolve(".magit"));
     }
 
     public boolean isBranchExists(String i_BranchName) { return m_Repository.getMagit().getBranches().containsKey(i_BranchName); }
@@ -84,7 +84,8 @@ public class EngineManager
 
     public Repository getRepository() { return m_Repository; }
 
-    public void loadRepositoryByPath(Path i_RepoPath) throws IOException, ParseException {
+    public void loadRepositoryByPath(Path i_RepoPath) throws IOException, ParseException
+    {
         m_Repository = new Repository(i_RepoPath);
         m_Repository.loadRepository(i_RepoPath);
     }
@@ -415,5 +416,15 @@ public class EngineManager
     public boolean areBranchesTrackingAfterAreValid(MagitBranches i_MagitBranches)
     {
         return m_XMLManager.areBranchesTrackingAfterAreValid(i_MagitBranches);
+    }
+
+    public boolean isPushRequired() throws IOException
+    {
+        return m_Repository.isPushRequired();
+    }
+
+    public void pull()
+    {
+        m_Repository.pull();
     }
 }

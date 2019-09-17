@@ -91,7 +91,7 @@ public class CommitTreeManager
             // create BranchNode from every Branch, add it to graph and reallocate it
             for (Branch branch : pointingBranches)
             {
-                currentBranchNode = new BranchNode(branch.getName(), isBranchRepresentHead(branch));
+                currentBranchNode = new BranchNode(branch.getName(), isBranchRepresentHead(branch), branch.getIsRemote());
                 branchesNames = branchesNames.concat(currentBranchNode.getBranchName() + ", ");
 
                 // add branch to graph

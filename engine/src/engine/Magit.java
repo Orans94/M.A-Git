@@ -79,8 +79,8 @@ public class Magit
         m_Branches.clear();
     }
 
-    public void load(Path i_repPath) throws IOException, ParseException {
-        //m_MagitDir = i_repPath.resolve(".magit");
+    public void load(Path i_repPath) throws IOException, ParseException
+    {
         loadBranches(Magit.getMagitDir().resolve("branches"), null);
         loadHead();
         loadCommits();
@@ -93,11 +93,10 @@ public class Magit
         m_Head.setActiveBranch(m_Branches.get(headContent));
     }
 
-    public void loadCommits() throws IOException, ParseException { // assuming branches is already loaded to m.a git system
-        Commit newCommit;
+    public void loadCommits() throws IOException, ParseException
+    { // assuming branches is already loaded to m.a git system
         Branch currentBranch;
-        String commitSHA1, parentCommitSHA1, commitContent, rootFolderSHA1, commitMessage, commitAuthor;
-        Date commitCreateDate;
+        String commitSHA1;
 
         for (Map.Entry<String, Branch> entry: m_Branches.entrySet())
         { // to all branches in objects\\branches
@@ -146,8 +145,7 @@ public class Magit
         // this method is loading branches from the given path.
         // if remote repository name is null - it does not act as loading remote branches.
         // if remote branch is not null - its acting like loading remote branches.
-        List<Path> remoteBranches;
-        String branchName, newBranchName, remoteRepositoryName, branchContent;
+        String branchName, branchContent;
         List<Path> branches = Files.walk(i_LoadFromPath, 1)
                 .filter(d-> !d.toFile().isDirectory())
                 .filter(d-> !d.toFile().getName().equals("HEAD.txt"))
@@ -160,7 +158,18 @@ public class Magit
                 branchName = i_RemoteRepositoryName + "\\" + FilenameUtils.removeExtension(path.toFile().getName());
             }
             branchContent = new String(Files.readAllBytes(path));
-            m_Branches.put(branchName, new Branch(branchName, branchContent));
+            if(!m_Branches.containsKey(branchName))
+            {
+                m_Branches.put(branchName, new Branch(branchName, branchContent));
+            }
+            else
+            {
+                m_Branches.get(branchName).setCommitSHA1(branchContent);
+            }
+            if(i_RemoteRepositoryName != null)
+            {
+                m_Branches.get(branchName).setIsRemote(true);
+            }
         }
     }
 
