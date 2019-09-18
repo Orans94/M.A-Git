@@ -804,20 +804,24 @@ public class TopController
                     // the requirements were validated, pull operation can start
                     m_MainController.pull();
                     updateUIComponents();
+                    AlertFactory.createInformationAlert("Pull", "Pulled successfully").showAndWait();
                 }
                 else
                 {
                     // notify user that push operation is required before operate pull
+                    AlertFactory.createErrorAlert("Pull", "Push is required before pull").showAndWait();
                 }
             }
             else
             {
                 // notify user that WC is dirty and pull operation cannot be done
+                AlertFactory.createErrorAlert("Pull", "WC status id dirty, cannot pull").showAndWait();
             }
         }
         else
         {
             // notify user that active branch isn't RTB
+            AlertFactory.createErrorAlert("Pull", "The active branch is not tracking after a remote branch(not RTB)").showAndWait();
         }
     }
 }

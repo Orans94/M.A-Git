@@ -1261,8 +1261,25 @@ public class Repository
         Path remoteBranchesDirPath = Magit.getMagitDir().resolve("branches").resolve(remoteRepositoryName);
         FileUtilities.copyDirectoryContent(m_RemoteRepositoryPath.resolve(".magit").resolve("branches"), remoteBranchesDirPath);
         m_Magit.loadBranches(remoteBranchesDirPath, remoteRepositoryName);
+        fixRBsIsRemote(remoteBranchesDirPath);
         FileUtilities.copyDirectoryContent(m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), Magit.getMagitDir().resolve("objects"));
         m_Magit.loadCommits();
+    }
+
+    private void fixRBsIsRemote(Path i_Path) throws IOException
+    {
+        String branchName;
+
+        try (Stream<Path> walk = Files.walk(i_Path))
+        {
+            List<Path> result = walk.filter(Files::isRegularFile).collect(Collectors.toList());
+            for(Path path : result)
+            {
+                branchName = FilenameUtils.removeExtension(path.toFile().getName());
+                m_Magit.setIsRemoteBranch(getRemoteRepositoryName() + "\\" +branchName, true);
+                FileUtilities.modifyTxtFile(path, m_Magit.getBranches().get(getRemoteRepositoryName() + "\\" +branchName).toString());
+            }
+        }
     }
 
     public boolean isRRExists()
@@ -1306,6 +1323,19 @@ public class Repository
         Path RRActiveBranchPath = m_RemoteRepositoryPath.resolve(".magit").resolve("branches").resolve(LRActiveBranch.getName() + ".txt");
         String RRPointedCommitSHA1 = StringUtilities.getContentInformation(new String(Files.readAllBytes(RRActiveBranchPath)), 0) ;
         pullCommitsObjectsRecursive(RRPointedCommitSHA1);
+        // changing RB and RTB to point on the new pointed commit
+        changeActiveBranchPointedCommit(RRPointedCommitSHA1);
+        changeRBToPointOnRTBCommit(LRActiveBranch);
+    }
+
+    private void changeRBToPointOnRTBCommit(Branch i_RTB) throws IOException
+    {
+        // this method gets an RTB and changing the RB he is tracking after to point on same commit
+        String RBName = i_RTB.getTrackingAfter();
+        Branch RBBranch = m_Magit.getBranches().get(RBName);
+        Path RBBranchPath = Magit.getMagitDir().resolve("branches").resolve(RBName + ".txt");
+        RBBranch.setCommitSHA1(i_RTB.getCommitSHA1());
+        FileUtilities.modifyTxtFile(RBBranchPath, RBBranch.toString());
     }
 
     private void pullCommitsObjectsRecursive(String i_RRPointedCommitSHA1) throws IOException, ParseException

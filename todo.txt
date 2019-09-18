@@ -7,6 +7,7 @@ TODO
 - disable fetch opreation menu item of the repository is not tracking after reposirory
 - after clone repository name doesn't change
 - when initializing new repo - empty master branch is created - dont allow to create new branch until master is pointing on commit
+- fix resizing - start size should be smaller, minimum size should be set that you can see all the buttons and components(nothing is disappearing).
 
 for readme file:
 - if a commit got two parents we displayed both of the deltas

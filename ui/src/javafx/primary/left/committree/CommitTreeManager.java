@@ -97,7 +97,6 @@ public class CommitTreeManager
                 // add branch to graph
                 graphModel.addCell(currentBranchNode);
                 currentBranchNode.setCommitTreeManager(this);
-
                 xPosition = m_TreeGraph.getGraphic(commitNode).getLayoutX();
                 xPosition -= DIFF_BETWEEN_BRANCH_COMMIT;
                 yPosition = m_TreeGraph.getGraphic(commitNode).getLayoutY();
