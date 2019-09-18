@@ -423,7 +423,7 @@ public class EngineManager
         return m_Repository.isPushRequired();
     }
 
-    public void pull()
+    public void pull() throws IOException, ParseException
     {
         m_Repository.pull();
     }

@@ -14,6 +14,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static engine.StringFinals.EMPTY_STRING;
+
 public class Repository
 {
     public static final String REPOSITORY_REMOTE_FILE = "Remote.txt";
@@ -58,7 +60,7 @@ public class Repository
 
     public void writeRemoteRepositoryPathToFileSystem() throws IOException
     {
-        String fileContent = m_RemoteRepositoryPath == null ? StringFinals.EMPTY_STRING : m_RemoteRepositoryPath.toString();
+        String fileContent = m_RemoteRepositoryPath == null ? EMPTY_STRING : m_RemoteRepositoryPath.toString();
         FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("Remote.txt"), fileContent);
     }
 
@@ -475,7 +477,8 @@ public class Repository
         String zipName = i_NodeMapsToUpdate.getSHA1ByPath().get(i_StartPath);
 
         // creating folder
-        String myDirContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"), zipName.concat(".txt"));
+        Path objectsMagitDir = Magit.getMagitDir().resolve("objects");
+        String myDirContent = FileUtilities.getTxtFromZip(objectsMagitDir.resolve(zipName + ".zip").toString(), zipName.concat(".txt"));
         Folder folder = new Folder(myDirContent);
 
         // add to map
@@ -498,7 +501,7 @@ public class Repository
             {
                 // getting the blob SHA1 by it path
                 zipName = i_NodeMapsToUpdate.getSHA1ByPath().get(i_StartPath.resolve(item.getName()));
-                myBlobContent = FileUtilities.getTxtFromZip(zipName.concat(".zip"), item.getName());
+                myBlobContent = FileUtilities.getTxtFromZip(objectsMagitDir.resolve(zipName + ".zip").toString(), item.getName());
                 if (i_LoadToFileSystem)
                 {
                     FileUtilities.createAndWriteTxtFile(i_StartPath.resolve(item.getName()), myBlobContent);
@@ -1293,7 +1296,7 @@ public class Repository
         return !FileUtilities.isExists(rrCommitPath);
     }
 
-    public void pull() throws IOException
+    public void pull() throws IOException, ParseException
     {
         Branch LRActiveBranch = m_Magit.getHead().getActiveBranch();
         Path RRActiveBranchPath = m_RemoteRepositoryPath.resolve(".magit").resolve("branches").resolve(LRActiveBranch.getName() + ".txt");
@@ -1301,35 +1304,53 @@ public class Repository
         pullCommitsObjectsRecursive(RRPointedCommitSHA1);
     }
 
-    private void pullCommitsObjectsRecursive(String i_RRPointedCommitSHA1) throws IOException
+    private void pullCommitsObjectsRecursive(String i_RRPointedCommitSHA1) throws IOException, ParseException
     {
         List<String> parentsSHA1 = new LinkedList<>();
         NodeMaps currentCommitNodeMaps = new NodeMaps();
         Path RRCommitPath = m_RemoteRepositoryPath.resolve(".magit").resolve("objects").resolve(i_RRPointedCommitSHA1 + ".zip");
         Path LRCommitPath = Magit.getMagitDir().resolve("objects").resolve(i_RRPointedCommitSHA1 + ".zip");
+        Commit commit;
+
         if(!m_Magit.getCommits().containsKey(i_RRPointedCommitSHA1))
         {
-            // copying the commit object from RR objects dir to LR objects dir
+            // copying the commit zipped file from RR objects dir to LR objects dir
             FileUtilities.copyFile(RRCommitPath, LRCommitPath);
-            String rootFolderSHA1 = extractDataFromCommitZip(RRCommitPath, 0);
+
+            // create commit object and add it to m_Magit commit map
+            commit = m_Magit.createCommitByObjectsDir(i_RRPointedCommitSHA1, RRCommitPath.getParent().toString());
+            m_Magit.getCommits().put(commit.getSHA1(), commit);
+
+            // create NodeMaps object from current commit
+            String rootFolderSHA1 = commit.getRootFolderSHA1();
             currentCommitNodeMaps.getSHA1ByPath().put(m_RemoteRepositoryPath, rootFolderSHA1);
             setNodeMapsByRootFolder(m_RemoteRepositoryPath, currentCommitNodeMaps, false);
             writeNodeMapsToFileSystem(Magit.getMagitDir().resolve("objects"), currentCommitNodeMaps);
-            String firstParent = extractDataFromCommitZip(RRCommitPath, 1);
-            if(firstParent != null)
+
+            // call recursive with parents
+            for(String parentSHA1 : commit.getParentsSHA1())
             {
-                parentsSHA1.add(firstParent);
+                pullCommitsObjectsRecursive(parentSHA1);
             }
 
-            String secondParent = extractDataFromCommitZip(RRCommitPath, 2);
-            if(secondParent != null)
-            {
-                parentsSHA1.add(secondParent);
-            }
+        }
+    }
 
-            for(String SHA1 : parentsSHA1)
+    private void writeNodeMapsToFileSystem(Path i_DestPath, NodeMaps i_NodeMapsToWrite) throws IOException
+    {
+        Path nodePath, localObjectsDir, sourcePath;
+
+        localObjectsDir = Magit.getMagitDir().resolve("objects");
+
+        for (String nodeSHA1 : i_NodeMapsToWrite.getNodeBySHA1().keySet())
+        {
+            nodePath = i_DestPath.resolve(nodeSHA1 + ".zip");
+
+            // copy every node from node map to ObjectMagitDir
+            if (!FileUtilities.isExists(nodePath))
             {
-                pullCommitsObjectsRecursive(SHA1);
+                sourcePath = MapUtilities.getKeyFromMap(i_NodeMapsToWrite.getSHA1ByPath(), nodeSHA1);
+                FileUtilities.copyFile(sourcePath , localObjectsDir.resolve(nodePath.getFileName()));
             }
         }
     }

@@ -145,11 +145,11 @@ public class FileUtilities
         return destFile;
     }
 
-    public static String getTxtFromZip(String i_ZipFileName, String i_TxtFileNameInZip) throws IOException
+    public static String getTxtFromZip(String i_ZipFilePath, String i_TxtFileNameInZip) throws IOException
     {
         //read File From Zip Without extract it
 
-        ZipFile zipFile = new ZipFile(Magit.getMagitDir().resolve("objects").resolve(i_ZipFileName).toString());
+        ZipFile zipFile = new ZipFile(i_ZipFilePath);
         ZipEntry zipEntry = zipFile.getEntry(i_TxtFileNameInZip);
 
         InputStream inputStream = zipFile.getInputStream(zipEntry);

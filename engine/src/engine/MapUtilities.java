@@ -1,8 +1,7 @@
 package engine;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class MapUtilities
 {
@@ -14,5 +13,16 @@ public class MapUtilities
             newHashMap.put(entry.getKey(), entry.getValue());
         }
         return newHashMap;
+    }
+
+    public static  <K, V> K getKeyFromMap(Map<K, V> map, V value)
+    {
+        return map
+                .entrySet()
+                .stream()
+                .filter(entry -> value.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .findAny()
+                .get();
     }
 }

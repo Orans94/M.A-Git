@@ -113,7 +113,8 @@ public class Magit
         if (!m_Commits.containsKey(i_CommitSHA1))
         { // the current commit not found in commits map
 
-           addCommitToMapsByObjectsDir(i_CommitSHA1);
+            Commit newCommit = createCommitByObjectsDir(i_CommitSHA1, Magit.getMagitDir().resolve("objects").toString());
+            m_Commits.put(i_CommitSHA1, newCommit);
             for(String SHA1 : m_Commits.get(i_CommitSHA1).getParentsSHA1())
             {
                 loadCommitsToMapsRecursive(SHA1);
@@ -121,13 +122,13 @@ public class Magit
         }
     }
 
-    private void addCommitToMapsByObjectsDir(String i_CommitSHA1) throws IOException, ParseException {
+    public Commit createCommitByObjectsDir(String i_CommitSHA1, String i_ObjectDir) throws IOException, ParseException {
         String commitContent, rootFolderSHA1, commitMessage, commitAuthor;
         List<String> parentsCommitSHA1 = new LinkedList<>();
-        Commit newCommit;
         Date commitCreateDate;
+        Path objectDirPath = Paths.get(i_ObjectDir);
 
-        commitContent = FileUtilities.getTxtFromZip(i_CommitSHA1 + ".zip", i_CommitSHA1 + ".txt");
+        commitContent = FileUtilities.getTxtFromZip(objectDirPath.resolve(i_CommitSHA1 + ".zip").toString() , i_CommitSHA1 + ".txt");
         rootFolderSHA1 = StringUtilities.getCommitInformation(commitContent, 0);
         parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,1));
         parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,2));
@@ -136,8 +137,7 @@ public class Magit
         commitCreateDate = DateUtils.FormatToDate(StringUtilities.getCommitInformation(commitContent, 4));
         commitAuthor = StringUtilities.getCommitInformation(commitContent, 5);
 
-        newCommit = new Commit(rootFolderSHA1, parentsCommitSHA1, commitMessage, commitCreateDate, commitAuthor);
-        m_Commits.put(i_CommitSHA1, newCommit);
+        return new Commit(rootFolderSHA1, parentsCommitSHA1, commitMessage, commitCreateDate, commitAuthor);
     }
 
     public void loadBranches(Path i_LoadFromPath, String i_RemoteRepositoryName) throws IOException

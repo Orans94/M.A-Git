@@ -5,6 +5,8 @@ TODO
 - delete all unused methods and members
 - binds menuitems to repository object, if it is null disable it.
 - disable fetch opreation menu item of the repository is not tracking after reposirory
+- after clone repository name doesn't change
+
 
 for readme file:
 - if a commit got two parents we displayed both of the deltas

@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static engine.StringFinals.EMPTY_STRING;
+
 public class BottomController
 {
     private AppController m_MainController;
@@ -266,7 +268,7 @@ public class BottomController
 
     public void clearTreeView()
     {
-        commitFileTextArea.setText(StringFinals.EMPTY_STRING);
+        commitFileTextArea.setText(EMPTY_STRING);
         commitTreeView.setRoot(null);
     }
 }

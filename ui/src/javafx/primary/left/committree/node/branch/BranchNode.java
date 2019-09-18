@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 
+import static engine.StringFinals.EMPTY_STRING;
 import static javafx.CommonResourcesPaths.BRANCH_NODE_GRAPH_FMXL_RESOURCE;
 import static javafx.CommonResourcesPaths.COMMIT_NODE_GRAPH_FXML_RESOURCE;
 
@@ -29,8 +30,8 @@ public class BranchNode extends AbstractCell
     public BranchNode(String i_BranchName, boolean i_IsHead, boolean i_IsRemote)
     {
         m_BranchName = i_BranchName;
-        m_BranchName += i_IsHead ? " (HEAD)" : StringFinals.EMPTY_STRING;
-        m_BranchName += i_IsRemote ? " (RB)" : StringFinals.EMPTY_STRING;
+        m_BranchName += i_IsHead ? " (HEAD)" : EMPTY_STRING;
+        m_BranchName += i_IsRemote ? " (RB)" : EMPTY_STRING;
     }
 
     public BranchNodeController getBranchNodeController()

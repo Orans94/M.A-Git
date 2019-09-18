@@ -458,7 +458,7 @@ public class AppController
         return m_Engine.isPushRequired();
     }
 
-    public void pull()
+    public void pull() throws IOException, ParseException
     {
         m_Engine.pull();
     }

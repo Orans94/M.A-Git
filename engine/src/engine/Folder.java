@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static engine.StringFinals.EMPTY_STRING;
+
 public class Folder extends Node
 {
     public List<Item> getItems() { return m_Items; }
@@ -100,7 +102,7 @@ public class Folder extends Node
 
     public void setContentFromItemList()
     {
-        m_Content = StringFinals.EMPTY_STRING;
+        m_Content = EMPTY_STRING;
         for(Item item : m_Items)
         {
             m_Content = m_Content.concat(item.toString() + System.lineSeparator());

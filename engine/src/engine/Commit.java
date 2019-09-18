@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static engine.StringFinals.EMPTY_STRING;
+
 public class Commit implements CommitRepresentative
 {
     private String m_RootFolderSHA1;
@@ -113,12 +115,12 @@ public class Commit implements CommitRepresentative
     @Override
     public String getFirstPrecedingSha1()
     {
-        return m_ParentsSHA1.size() > 0 ? m_ParentsSHA1.get(0) : StringFinals.EMPTY_STRING;
+        return m_ParentsSHA1.size() > 0 ? m_ParentsSHA1.get(0) : EMPTY_STRING;
     }
 
     @Override
     public String getSecondPrecedingSha1()
     {
-        return m_ParentsSHA1.size() > 1 ? m_ParentsSHA1.get(1) : StringFinals.EMPTY_STRING;
+        return m_ParentsSHA1.size() > 1 ? m_ParentsSHA1.get(1) : EMPTY_STRING;
     }
 }
