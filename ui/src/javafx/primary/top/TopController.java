@@ -790,7 +790,7 @@ public class TopController
         updatePrimaryStageTitle();
     }
 
-    public void pullButtonOnAction(ActionEvent actionEvent) throws IOException, ParseException
+    public void pullMenuItemOnAction(ActionEvent actionEvent) throws IOException, ParseException
     {
         //TODO disable this menu item of the repository is not tracking after repository
         if (m_MainController.getActiveBranch().getIsTracking())
@@ -803,7 +803,7 @@ public class TopController
                 {
                     // the requirements were validated, pull operation can start
                     m_MainController.pull();
-
+                    updateUIComponents();
                 }
                 else
                 {

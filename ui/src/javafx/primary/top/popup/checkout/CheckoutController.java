@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class CheckoutController implements PopupController
@@ -61,7 +62,7 @@ public class CheckoutController implements PopupController
                 }
 
                 m_TopController.checkout(branchName);
-                m_TopController.updateCommitTree();
+                m_TopController.updateUIComponents();
                 AlertFactory.createInformationAlert("Checkout", "Checkout made successfully").showAndWait();
             }
             else
@@ -75,11 +76,13 @@ public class CheckoutController implements PopupController
             String message = "Cannot checkout to remote branch." + System.lineSeparator()
             + "Would you like to create a new remote tracking branch and checkout to him?";
             boolean toCreateRTB = AlertFactory.createYesNoAlert("Clone repository", message)
-                    .showAndWait().get().getText().equals("Yes");;
+                    .showAndWait().get().getText().equals("Yes");
             if(toCreateRTB)
             {
+                branchName = Paths.get(branchName).getFileName().toString();
                 m_TopController.createNewRTB(branchName);
                 m_TopController.checkout(branchName);
+                m_TopController.updateUIComponents();
             }
             else
             {

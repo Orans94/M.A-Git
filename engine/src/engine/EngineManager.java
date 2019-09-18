@@ -275,7 +275,7 @@ public class EngineManager
         NodeMaps commitNodeMaps = new NodeMaps();
         Path rootFolderPath = Magit.getMagitDir().resolve("objects").resolve(i_NewValue.getRootFolderSHA1() + ".zip");
         commitNodeMaps.getSHA1ByPath().put(rootFolderPath, i_NewValue.getRootFolderSHA1());
-        m_Repository.setNodeMapsByRootFolder(rootFolderPath, commitNodeMaps, false);
+        m_Repository.setNodeMapsByRootFolder(rootFolderPath, m_Repository.getWorkingCopy().getWorkingCopyDir(), commitNodeMaps, false);
         m_LazyLoadedNodeMapsByCommitSHA1.put(i_CommitSHA1, commitNodeMaps);
     }
 

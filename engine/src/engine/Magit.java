@@ -65,7 +65,7 @@ public class Magit
         //set active branch content to new commit sha1
         m_Head.getActiveBranch().setCommitSHA1(i_CommitSHA1);
         //change file content in file system
-        FileUtilities.modifyTxtFile(m_MagitDir.resolve("branches").resolve(m_Head.getActiveBranch().getName() + ".txt"), i_CommitSHA1);
+        FileUtilities.modifyTxtFile(m_MagitDir.resolve("branches").resolve(m_Head.getActiveBranch().getName() + ".txt"), m_Head.getActiveBranch().toString());
     }
 
     public Commit createCommit(String i_RootFolderSha1, List<String> i_ParentsSHA1, String i_CommitMessage)
@@ -129,13 +129,13 @@ public class Magit
         Path objectDirPath = Paths.get(i_ObjectDir);
 
         commitContent = FileUtilities.getTxtFromZip(objectDirPath.resolve(i_CommitSHA1 + ".zip").toString() , i_CommitSHA1 + ".txt");
-        rootFolderSHA1 = StringUtilities.getCommitInformation(commitContent, 0);
-        parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,1));
-        parentsCommitSHA1.add(StringUtilities.getCommitInformation(commitContent,2));
+        rootFolderSHA1 = StringUtilities.getContentInformation(commitContent, 0);
+        parentsCommitSHA1.add(StringUtilities.getContentInformation(commitContent,1));
+        parentsCommitSHA1.add(StringUtilities.getContentInformation(commitContent,2));
         parentsCommitSHA1 = parentsCommitSHA1.stream().filter(d->!d.equals("")).collect(Collectors.toList());
-        commitMessage = StringUtilities.getCommitInformation(commitContent, 3);
-        commitCreateDate = DateUtils.FormatToDate(StringUtilities.getCommitInformation(commitContent, 4));
-        commitAuthor = StringUtilities.getCommitInformation(commitContent, 5);
+        commitMessage = StringUtilities.getContentInformation(commitContent, 3);
+        commitCreateDate = DateUtils.FormatToDate(StringUtilities.getContentInformation(commitContent, 4));
+        commitAuthor = StringUtilities.getContentInformation(commitContent, 5);
 
         return new Commit(rootFolderSHA1, parentsCommitSHA1, commitMessage, commitCreateDate, commitAuthor);
     }
@@ -145,7 +145,8 @@ public class Magit
         // this method is loading branches from the given path.
         // if remote repository name is null - it does not act as loading remote branches.
         // if remote branch is not null - its acting like loading remote branches.
-        String branchName, branchContent;
+        String branchName, branchPointedCommitSHA1, branchContent, trackingAfter;
+        boolean isTracking, isRemote;
         List<Path> branches = Files.walk(i_LoadFromPath, 1)
                 .filter(d-> !d.toFile().isDirectory())
                 .filter(d-> !d.toFile().getName().equals("HEAD.txt"))
@@ -157,18 +158,25 @@ public class Magit
             {
                 branchName = i_RemoteRepositoryName + "\\" + FilenameUtils.removeExtension(path.toFile().getName());
             }
+
             branchContent = new String(Files.readAllBytes(path));
+            branchPointedCommitSHA1 = StringUtilities.getContentInformation(branchContent, 0);
+            isRemote = StringUtilities.getContentInformation(branchContent, 1).equals("true");
+            isTracking = StringUtilities.getContentInformation(branchContent, 2).equals("true");
+            trackingAfter = StringUtilities.getContentInformation(branchContent, 3);
+            trackingAfter = trackingAfter.equals("null") ? null : trackingAfter;
             if(!m_Branches.containsKey(branchName))
             {
-                m_Branches.put(branchName, new Branch(branchName, branchContent));
+                Branch newBranch = new Branch(branchName, branchPointedCommitSHA1, isRemote, isTracking, trackingAfter);
+                m_Branches.put(branchName, newBranch);
             }
             else
             {
-                m_Branches.get(branchName).setCommitSHA1(branchContent);
-            }
-            if(i_RemoteRepositoryName != null)
-            {
-                m_Branches.get(branchName).setIsRemote(true);
+                Branch existingBranch = m_Branches.get(branchName);
+                existingBranch.setIsRemote(isRemote);
+                existingBranch.setIsTracking(isTracking);
+                existingBranch.setTrackingAfter(trackingAfter);
+                existingBranch.setCommitSHA1(branchPointedCommitSHA1);
             }
         }
     }
@@ -196,13 +204,15 @@ public class Magit
         return containedBranches;
     }
 
-    public void changeBranchName(String i_RRName, String i_BranchName)
+    public String changeBranchName(String i_RRName, String i_BranchName)
     {
         String newBranchName = i_RRName+ "\\" +i_BranchName;
         Branch branch = m_Branches.get(i_BranchName);
         branch.setName(newBranchName);
         m_Branches.remove(i_BranchName);
         m_Branches.put(newBranchName, branch);
+
+        return newBranchName;
     }
 
     public void setIsRemoteBranch(String i_BranchName, boolean i_IsRemote)
@@ -214,17 +224,15 @@ public class Magit
     {
         String remoteBranchName = i_RemoteRepositoryName +"\\"+i_RemoteBranchName;
         String commitSHA1 = m_Branches.get(remoteBranchName).getCommitSHA1();
-        Branch trackingBranch = new Branch(i_RemoteBranchName, commitSHA1);
-        trackingBranch.setIsTracking(true);
-        trackingBranch.setTrackingAfter(i_RemoteBranchName);
-        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_RemoteBranchName + ".txt"), commitSHA1);
+        Branch trackingBranch = new Branch(i_RemoteBranchName, commitSHA1, false, true, remoteBranchName);
+        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_RemoteBranchName + ".txt"), trackingBranch.toString());
         m_Branches.put(i_RemoteBranchName, trackingBranch);
     }
 
     public String getTrackingBranchName(String i_RemoteBranchName)
     {
         // this method gets a remote branch name and return the tracking branch name
-        return Paths.get(i_RemoteBranchName).getFileName().toString();
+        return FilenameUtils.removeExtension(Paths.get(i_RemoteBranchName).getFileName().toString());
     }
 
     public void deleteRemoteBranchesFromBranchesMap()
