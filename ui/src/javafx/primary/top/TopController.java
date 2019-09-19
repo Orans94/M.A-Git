@@ -3,7 +3,7 @@ package javafx.primary.top;
 import engine.*;
 import javafx.AlertFactory;
 import javafx.AppController;
-import javafx.beans.property.BooleanProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.StageUtilities;
 import javafx.fxml.FXML;
@@ -79,15 +79,14 @@ public class TopController
     @FXML private MenuItem loadRepositoryByPathMenuItem;
     @FXML private MenuItem loadRepositoryFromXMLMenuItem;
     @FXML private MenuItem cloneRepositoryMenuItem;
-    @FXML private RadioMenuItem changeThemeToLightRadioMenuItem;
     @FXML private ToggleGroup themes;
-    @FXML private RadioMenuItem changeThemeToDarkRadioMenuItem;
-    @FXML private RadioMenuItem changeThemeToStadiumRadioMenuItem;
+    @FXML private RadioMenuItem defaultThemeRadioMenuItem;
+    @FXML private RadioMenuItem darkThemeRadioMenuItem;
+    @FXML private RadioMenuItem lightThemeRadioMenuItem;
     @FXML private RadioMenuItem setBackgroundImageRadioMenuItem;
 
-    public MenuItem getCommitMenuItem() { return commitMenuItem; }
-
     @FXML private MenuItem commitMenuItem;
+
     @FXML private MenuItem pullMenuItem;
     @FXML private MenuItem pushMenuItem;
     @FXML private MenuItem createNewBranchMenuItem;
@@ -109,6 +108,8 @@ public class TopController
     @FXML private Button createNewBranchButton;
     @FXML private Button deleteBranchButton;
     @FXML private SplitMenuButton repositoryFullPathSplitMenuButton;
+
+    public MenuItem getCommitMenuItem() { return commitMenuItem; }
 
     public void setUpdateUsernameComponent(Parent i_UpdateUsernameComponent) { this.m_UpdateUsernameComponent = (VBox) i_UpdateUsernameComponent; }
 
@@ -835,6 +836,7 @@ public class TopController
                 if(m_MainController.isRRWcIsClean())
                 {
                     m_MainController.push();
+                    AlertFactory.createInformationAlert("Push", "Pushed successful").showAndWait();
                 }
                 else
                 {
@@ -858,5 +860,35 @@ public class TopController
     public boolean isRBAndRTBAlreadyTracking(Branch i_Branch)
     {
         return m_MainController.isRBAndRTBAlreadyTracking(i_Branch);
+    }
+
+    public void defaultThemeRadioMenuItemOnAction(ActionEvent actionEvent)
+    {
+        m_MainController.setTheme(DEFAULT_THEME_CSS_RESOURCE);
+    }
+
+    public void darkThemeRadioMenuItemOnAction(ActionEvent actionEvent)
+    {
+        m_MainController.setTheme(DARK_THEME_CSS_RESOURCE);
+    }
+
+    public void lightThemeRadioMenuItemOnAction(ActionEvent actionEvent)
+    {
+        m_MainController.setTheme(LIGHT_THEME_CSS_RESOURCE);
+    }
+
+    public ObservableList<String> getThemeStylesheets()
+    {
+        return m_MainController.getThemeStylesheets();
+    }
+
+    public void refreshButtonOnAction(ActionEvent actionEvent) throws IOException, ParseException
+    {
+        Path repositoryPath = Paths.get(repositoryFullPathSplitMenuButton.getText());
+        if (!isRepositoryEmpty(repositoryPath))
+        {
+            loadRepositoryByPath(repositoryPath);
+            updateUIComponents();
+        }
     }
 }

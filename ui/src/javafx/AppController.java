@@ -1,13 +1,7 @@
 package javafx;
 
-import com.sun.xml.internal.ws.api.pipe.Engine;
 import engine.*;
-import javafx.beans.binding.Binding;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.primary.bottom.BottomController;
 import javafx.primary.center.CenterController;
 import javafx.fxml.FXML;
@@ -486,5 +480,21 @@ public class AppController
     public void push() throws IOException, ParseException
     {
         m_Engine.push();
+    }
+
+    private void clearTheme()
+    {
+        m_PrimaryStage.getScene().getStylesheets().clear();
+    }
+
+    public void setTheme(String i_ThemeResourcePath)
+    {
+        clearTheme();
+        m_PrimaryStage.getScene().getStylesheets().add(i_ThemeResourcePath);
+    }
+
+    public ObservableList<String> getThemeStylesheets()
+    {
+        return m_PrimaryStage.getScene().getStylesheets();
     }
 }

@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 import static javafx.CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE;
+import static javafx.CommonResourcesPaths.DEFAULT_THEME_CSS_RESOURCE;
 import static javafx.application.Application.launch;
 
 public class Main extends Application
@@ -34,7 +35,7 @@ public class Main extends Application
         appController.setPrimaryStage(primaryStage);
 
         Scene scene = new Scene(root,1800,800 );
-        scene.getStylesheets().add("/javafx/primary/include/themes/dark.css");
+        scene.getStylesheets().add(DEFAULT_THEME_CSS_RESOURCE);
         primaryStage.setScene(scene);
         primaryStage.show();
 

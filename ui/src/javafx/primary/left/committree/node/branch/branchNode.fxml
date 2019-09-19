@@ -20,7 +20,7 @@
       </Label>
       <ImageView fx:id="arrowImageView" fitHeight="21.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@arrow.png" />
+            <Image url="@arrowWhite.png" />
          </image>
          <VBox.margin>
             <Insets left="10.0" />

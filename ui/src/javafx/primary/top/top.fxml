@@ -27,13 +27,13 @@
           </Menu>
           <Menu mnemonicParsing="false" text="View">
                <items>
-                  <RadioMenuItem fx:id="changeThemeToLightRadioMenuItem" mnemonicParsing="false" selected="true" text="Default theme">
+                  <RadioMenuItem fx:id="defaultThemeRadioMenuItem" mnemonicParsing="false" onAction="#defaultThemeRadioMenuItemOnAction" selected="true" text="Default theme">
                      <toggleGroup>
                         <ToggleGroup fx:id="themes" />
                      </toggleGroup>
                   </RadioMenuItem>
-                  <RadioMenuItem fx:id="changeThemeToDarkRadioMenuItem" mnemonicParsing="false" text="Dark theme" toggleGroup="$themes" />
-                  <RadioMenuItem fx:id="changeThemeToStadiumRadioMenuItem" mnemonicParsing="false" text="Light theme" toggleGroup="$themes" />
+                  <RadioMenuItem fx:id="darkThemeRadioMenuItem" mnemonicParsing="false" onAction="#darkThemeRadioMenuItemOnAction" text="Dark theme" toggleGroup="$themes" />
+                  <RadioMenuItem fx:id="lightThemeRadioMenuItem" mnemonicParsing="false" onAction="#lightThemeRadioMenuItemOnAction" text="Light theme" toggleGroup="$themes" />
                   <RadioMenuItem fx:id="setBackgroundImageRadioMenuItem" mnemonicParsing="false" text="Choose backgroud photo" toggleGroup="$themes" />
                </items></Menu>
           <Menu mnemonicParsing="false" text="Commands">
@@ -63,7 +63,7 @@
       </MenuBar>
       <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" prefWidth="904.0" VBox.vgrow="NEVER">
          <children>
-            <Button fx:id="refreshButton" mnemonicParsing="false" text="Refresh" HBox.hgrow="NEVER" />
+            <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonOnAction" text="Refresh" HBox.hgrow="NEVER" />
             <SplitMenuButton fx:id="repositoryFullPathSplitMenuButton" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="RepositoryFullPath" HBox.hgrow="ALWAYS" />
             <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Checkout (Active)" HBox.hgrow="NEVER">
               <items>

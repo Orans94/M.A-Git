@@ -67,6 +67,7 @@ public class Repository
     private String getRemoteActiveBranchName() throws IOException
     {
         Path headRemotePath = m_RemoteRepositoryPath.resolve(".magit").resolve("branches").resolve("HEAD.txt");
+
         return new String(Files.readAllBytes(headRemotePath));
     }
 
@@ -523,10 +524,10 @@ public class Repository
 
     private void workingCopyFileSystemClear() throws IOException
     {
-        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), getRemoveFileVisitor());
+        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), getRemoveFileVisitor(m_WorkingCopy.getWorkingCopyDir()));
     }
 
-    private SimpleFileVisitor<Path> getRemoveFileVisitor()
+    private SimpleFileVisitor<Path> getRemoveFileVisitor(Path i_PathToDeleteFrom)
     {
         return new SimpleFileVisitor<Path>()
         {
@@ -558,7 +559,7 @@ public class Repository
                 {
                     throw exc;
                 }
-                if (!dir.equals(m_WorkingCopy.getWorkingCopyDir()))
+                if (!dir.equals(i_PathToDeleteFrom))
                 {
                     try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dir))
                     {
@@ -1336,6 +1337,8 @@ public class Repository
         // changing RB and RTB to point on the new pointed commit
         setActiveBranchPointedCommitByCommitSHA1(RRPointedCommitSHA1);
         changeRBToPointOnRTBCommit(LRActiveBranch);
+        //TODO change m_WOrkingcopy commit sha 1 to the new sha 1 pulled
+        //TODO check if checkout needed at the end of pull
     }
 
     private void changeRBToPointOnRTBCommit(Branch i_RTB) throws IOException
@@ -1368,7 +1371,7 @@ public class Repository
             String rootFolderSHA1 = commit.getRootFolderSHA1();
             currentCommitNodeMaps.getSHA1ByPath().put(m_RemoteRepositoryPath, rootFolderSHA1);
             setNodeMapsByRootFolder(m_RemoteRepositoryPath, m_RemoteRepositoryPath, currentCommitNodeMaps, false);
-            writeNodeMapsToFileSystem(Magit.getMagitDir().resolve("objects"), currentCommitNodeMaps);
+            writeNodeMapsToFileSystem(m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), Magit.getMagitDir().resolve("objects"), currentCommitNodeMaps);
 
             // call recursive with parents
             for (String parentSHA1 : commit.getParentsSHA1())
@@ -1379,7 +1382,7 @@ public class Repository
         }
     }
 
-    private void writeNodeMapsToFileSystem(Path i_DestPath, NodeMaps i_NodeMapsToWrite) throws IOException
+    private void writeNodeMapsToFileSystem(Path i_SourcePath, Path i_DestPath, NodeMaps i_NodeMapsToWrite) throws IOException
     {
         Path nodePath;
         String nodeSHA1;
@@ -1391,7 +1394,7 @@ public class Repository
             // copy every node from node map to ObjectMagitDir
             if (!FileUtilities.isExists(nodePath))
             {
-                FileUtilities.copyFile(entry.getKey(), i_DestPath.resolve(nodePath.getFileName()));
+                FileUtilities.copyFile(i_SourcePath.resolve(nodeSHA1 + ".zip"), i_DestPath.resolve(nodePath.getFileName()));
             }
         }
     }
@@ -1465,6 +1468,37 @@ public class Repository
         pushCommitsObjectsRecursive(LRCommitSHA1);
         changeRBToPointOnRTBCommit(activeBranch);
         changeRRBranchToPointOnNewCommit(pathToRBInRR, m_Magit.getHead().getActiveBranch().getCommitSHA1());
+        checkoutRRWcIfNeeded();
+    }
+
+    private void checkoutRRWcIfNeeded() throws IOException
+    {
+        // if the rb is head in RR - than delete RR WC and checkout to pointed head commit
+
+        if(isActiveBranchInRREqualsLRActiveBranch())
+        {
+            deleteRRWC();
+            checkoutRR(m_Magit.getHead().getActiveBranch().getCommitSHA1());
+        }
+    }
+
+    private void checkoutRR(String i_CommitSHA1) throws IOException
+    {
+        NodeMaps nodeMaps = new NodeMaps();
+        String rootFolderSHA1 = m_Magit.getCommits().get(i_CommitSHA1).getRootFolderSHA1();
+        nodeMaps.getSHA1ByPath().put(m_RemoteRepositoryPath, rootFolderSHA1);
+        setNodeMapsByRootFolder(m_RemoteRepositoryPath, m_RemoteRepositoryPath, nodeMaps, true);
+    }
+
+    private void deleteRRWC() throws IOException
+    {
+        SimpleFileVisitor<Path> removeFileVisitor = getRemoveFileVisitor(m_RemoteRepositoryPath);
+        Files.walkFileTree(m_RemoteRepositoryPath, removeFileVisitor);
+    }
+
+    private boolean isActiveBranchInRREqualsLRActiveBranch() throws IOException
+    {
+        return m_Magit.getHead().getActiveBranch().getName().equals(getRemoteActiveBranchName());
     }
 
     private void changeRRBranchToPointOnNewCommit(Path i_PathToBranch, String i_CommitSHA1) throws IOException
@@ -1505,7 +1539,8 @@ public class Repository
             String rootFolderSHA1 = commit.getRootFolderSHA1();
             currentCommitNodeMaps.getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), rootFolderSHA1);
             setNodeMapsByRootFolder(m_WorkingCopy.getWorkingCopyDir(), m_WorkingCopy.getWorkingCopyDir(), currentCommitNodeMaps, false);
-            writeNodeMapsToFileSystem(m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), currentCommitNodeMaps);
+            setNodeMapsByRootFolder(m_WorkingCopy.getWorkingCopyDir(), m_WorkingCopy.getWorkingCopyDir(), currentCommitNodeMaps, false);
+            writeNodeMapsToFileSystem(Magit.getMagitDir().resolve("objects"), m_RemoteRepositoryPath.resolve(".magit").resolve("objects"), currentCommitNodeMaps);
 
             // call recursive with parents
             for (String parentSHA1 : commit.getParentsSHA1())

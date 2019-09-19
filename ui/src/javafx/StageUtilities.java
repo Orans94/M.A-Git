@@ -29,6 +29,8 @@ public class StageUtilities
         Stage stage = new Stage();
         Scene scene = new Scene(root);
         scene.setUserData(fxmlLoader);
+        scene.getStylesheets().add(i_ControllerToWire.getThemeStylesheets().get(0));
+
         stage.setScene(scene);
         stage.setTitle(i_Title);
         stage.initModality(Modality.APPLICATION_MODAL);
