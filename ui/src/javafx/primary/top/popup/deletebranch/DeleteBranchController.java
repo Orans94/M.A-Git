@@ -9,8 +9,6 @@ import javafx.primary.top.TopController;
 import javafx.primary.top.popup.PopupController;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.SplitMenuButton;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Map;
@@ -32,10 +30,14 @@ public class DeleteBranchController implements PopupController
         }
         else
         {
-            AlertFactory.createInformationAlert("Delete branch", "Branch " + branchName + " deleted successfully")
-                    .showAndWait();
+            if (m_TopController.isRBBranch(branchName))
+            {
+                m_TopController.updateRTBToBeRegularBranch(branchName);
+            }
             m_TopController.deleteBranch(branchName);
             m_TopController.updateCommitTree();
+            AlertFactory.createInformationAlert("Delete branch", "Branch " + branchName + " deleted successfully")
+                    .showAndWait();
         }
         StageUtilities.closeOpenSceneByActionEvent(event);
     }

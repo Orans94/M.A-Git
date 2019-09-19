@@ -4,9 +4,11 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="532.0" prefWidth="584.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.center.CenterController">
@@ -17,8 +19,25 @@
                     <children>
                         <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="20.0" VBox.vgrow="NEVER">
                             <children>
-                                <Label text="Label" />
-                                <ImageView pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER" />
+                        <Label text="WC Status:" />
+                        <Region prefHeight="17.0" prefWidth="59.0" />
+                                <ImageView fx:id="newImage" fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+                           <image>
+                              <Image url="@icons/add.png" />
+                           </image></ImageView>
+                        <Label fx:id="newLabel" />
+                        <ImageView fx:id="editImage" fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/edit.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="editLabel" />
+                        <ImageView fx:id="deletedImage" fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/trash.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="deleteLabel" />
                             </children>
                         </HBox>
                         <TableView fx:id="commitsTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">

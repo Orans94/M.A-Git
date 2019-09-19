@@ -78,7 +78,7 @@ public class LoadRepositoryByPathController implements PopupController
         }
     }
 
-    private void updateUIComponents(Path i_RepositoryPath)
+    private void updateUIComponents(Path i_RepositoryPath) throws IOException
     {
         m_TopController.updateUIComponents();
         m_TopController.setRepositoryFullPathSplitMenuButton(i_RepositoryPath);

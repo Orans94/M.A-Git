@@ -158,7 +158,7 @@ public class LoadRepositoryByXMLController implements PopupController
         pb.progressProperty().bind(i_Task.progressProperty());
     }
 
-    private void updateUIComponents()
+    private void updateUIComponents() throws IOException
     {
         m_TopController.updateUIComponents();
     }
@@ -283,7 +283,18 @@ public class LoadRepositoryByXMLController implements PopupController
                     updateProgress(2, 5);
                     m_TopController.createEmptyRepository(i_XMLRepositoryLocation, i_RepositoryName);
                     updateProgress(3, 5);
-                    Platform.runLater(() -> updateUIComponents(i_XMLRepositoryLocation));
+                    Platform.runLater(() ->
+                    {
+                        try
+                        {
+                            updateUIComponents(i_XMLRepositoryLocation);
+                        }
+                        catch (IOException e)
+                        {
+                            //TODO
+                            e.printStackTrace();
+                        }
+                    });
                     updateProgress(4, 5);
                     Platform.runLater(() -> notifyRepositoryHasBeenLoaded());
                     updateProgress(5, 5);
@@ -305,7 +316,18 @@ public class LoadRepositoryByXMLController implements PopupController
                 updateProgress(1, 3);
                 createNewRepository(i_XMLRepositoryLocation, i_RepositoryName);
                 updateProgress(2, 3);
-                Platform.runLater(() -> updateUIComponents(i_XMLRepositoryLocation));
+                Platform.runLater(() ->
+                {
+                    try
+                    {
+                        updateUIComponents(i_XMLRepositoryLocation);
+                    }
+                    catch (IOException e)
+                    {
+                        //TODO
+                        e.printStackTrace();
+                    }
+                });
                 updateProgress(3, 3);
                 Platform.runLater(() -> notifyRepositoryHasBeenCreated());
                 Platform.runLater(() -> m_TopController.getProgressBar().setVisible(false));
@@ -333,7 +355,18 @@ public class LoadRepositoryByXMLController implements PopupController
                     updateProgress(2, 4);
                     m_TopController.readRepositoryFromXMLFile(i_XMLRepo, m_TopController.getXMLMagitMaps());
                     updateProgress(3, 4);
-                    Platform.runLater(() -> updateUIComponents(i_XMLRepositoryLocation));
+                    Platform.runLater(() ->
+                    {
+                        try
+                        {
+                            updateUIComponents(i_XMLRepositoryLocation);
+                        }
+                        catch (IOException e)
+                        {
+                            //TODO
+                            e.printStackTrace();
+                        }
+                    });
                     updateProgress(4, 4);
                     Platform.runLater(() -> notifyRepositoryLoadedSuccessfullyFromXML(i_XMLRepo.getName()));
                     Platform.runLater(() -> m_TopController.getProgressBar().setVisible(false));
@@ -344,7 +377,7 @@ public class LoadRepositoryByXMLController implements PopupController
             }
         };
     }
-    private void updateUIComponents(Path i_XMLRepositoryLocation)
+    private void updateUIComponents(Path i_XMLRepositoryLocation) throws IOException
     {
         updateUIComponents();
         updateRepositoryFullPathSplitMenuButtonUI(i_XMLRepositoryLocation);

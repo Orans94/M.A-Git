@@ -783,12 +783,18 @@ public class TopController
         m_MainController.updatePrimaryStageTitle();
     }
 
-    public void updateUIComponents()
+    public void updateUIComponents() throws IOException
     {
         clearCommitTableViewAndTreeView();
         addCommitsToTableView();
         updateCommitTree();
         updatePrimaryStageTitle();
+        updateOpenChangesBar();
+    }
+
+    private void updateOpenChangesBar() throws IOException
+    {
+        m_MainController.updateOpenChangesBar();
     }
 
     public void pullMenuItemOnAction(ActionEvent actionEvent) throws IOException, ParseException
@@ -862,17 +868,17 @@ public class TopController
         return m_MainController.isRBAndRTBAlreadyTracking(i_Branch);
     }
 
-    public void defaultThemeRadioMenuItemOnAction(ActionEvent actionEvent)
+    public void defaultThemeRadioMenuItemAction(ActionEvent actionEvent)
     {
         m_MainController.setTheme(DEFAULT_THEME_CSS_RESOURCE);
     }
 
-    public void darkThemeRadioMenuItemOnAction(ActionEvent actionEvent)
+    public void darkThemeRadioMenuItemAction(ActionEvent actionEvent)
     {
         m_MainController.setTheme(DARK_THEME_CSS_RESOURCE);
     }
 
-    public void lightThemeRadioMenuItemOnAction(ActionEvent actionEvent)
+    public void lightThemeRadioMenuItemAction(ActionEvent actionEvent)
     {
         m_MainController.setTheme(LIGHT_THEME_CSS_RESOURCE);
     }
@@ -882,7 +888,7 @@ public class TopController
         return m_MainController.getThemeStylesheets();
     }
 
-    public void refreshButtonOnAction(ActionEvent actionEvent) throws IOException, ParseException
+    public void refreshButtonAction(ActionEvent actionEvent) throws IOException, ParseException
     {
         Path repositoryPath = Paths.get(repositoryFullPathSplitMenuButton.getText());
         if (!isRepositoryEmpty(repositoryPath))
@@ -890,5 +896,10 @@ public class TopController
             loadRepositoryByPath(repositoryPath);
             updateUIComponents();
         }
+    }
+
+    public void updateRTBToBeRegularBranch(String i_RBName) throws IOException
+    {
+        m_MainController.updateRTBToBeRegularBranch(i_RBName);
     }
 }

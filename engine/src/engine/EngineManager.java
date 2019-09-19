@@ -452,4 +452,9 @@ public class EngineManager
     {
         m_Repository.push();
     }
+
+    public void updateRTBToBeRegularBranch(String i_RBName) throws IOException
+    {
+        m_Repository.updateRTBToBeRegularBranch(i_RBName);
+    }
 }

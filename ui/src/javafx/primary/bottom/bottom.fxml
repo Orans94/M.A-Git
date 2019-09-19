@@ -15,17 +15,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="-Infinity" prefHeight="213.0" prefWidth="835.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.bottom.BottomController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="-Infinity" prefHeight="188.0" prefWidth="802.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.bottom.BottomController">
     <center>
-        <TabPane fx:id="bottomTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <TabPane fx:id="bottomTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="150.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <tabs>
                 <Tab fx:id="commitTab" closable="false" text="Commit">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="200.0">
                             <children>
-                                <VBox prefHeight="181.0" prefWidth="829.0">
+                                <VBox prefHeight="130.0" prefWidth="802.0">
                                     <children>
-                                        <HBox prefHeight="54.0" prefWidth="600.0">
+                                        <HBox prefHeight="48.0" prefWidth="600.0">
                                             <children>
                                                 <Label text="Author:">
                                                     <HBox.margin>
@@ -37,7 +37,7 @@
                                                         <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
                                                     </HBox.margin>
                                                 </Text>
-                                                <Label prefHeight="21.0" prefWidth="67.0" text="Parents:">
+                                                <Label prefHeight="21.0" prefWidth="59.0" text="Parents:">
                                                     <HBox.margin>
                                                         <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
                                                     </HBox.margin>
@@ -49,14 +49,14 @@
                                                 </Text>
                                             </children>
                                         </HBox>
-                                        <HBox prefHeight="56.0" prefWidth="600.0">
+                                        <HBox prefHeight="48.0" prefWidth="600.0">
                                             <children>
-                                                <Label prefHeight="21.0" prefWidth="74.0" text="Date:">
+                                                <Label prefHeight="21.0" prefWidth="92.0" text="Date:">
                                                     <HBox.margin>
                                                         <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
                                                     </HBox.margin>
                                                 </Label>
-                                                <Text fx:id="dateText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="210.0" HBox.hgrow="NEVER">
+                                                <Text fx:id="dateText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="203.0" HBox.hgrow="NEVER">
                                                     <HBox.margin>
                                                         <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
                                                     </HBox.margin>
@@ -80,7 +80,7 @@
                                                         <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
                                                     </HBox.margin>
                                                 </Label>
-                                                <Text fx:id="containedInBranchesText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="92.0" HBox.hgrow="NEVER">
+                                                <Text fx:id="containedInBranchesText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="83.0" HBox.hgrow="NEVER">
                                                     <HBox.margin>
                                                         <Insets bottom="5.0" left="10.0" right="5.0" top="15.0" />
                                                     </HBox.margin>
@@ -104,11 +104,11 @@
                 </Tab>
                 <Tab closable="false" text="File Tree">
                     <content>
-                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="155.0" prefWidth="814.0">
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="130.0" prefWidth="814.0">
                             <children>
-                                <SplitPane dividerPositions="0.29797979797979796" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="160.0" prefWidth="835.0">
+                                <SplitPane dividerPositions="0.29797979797979796" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="130.0" prefWidth="802.0">
                                     <items>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="269.0">
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="130.0" prefWidth="269.0">
                                             <children>
                                                 <ScrollPane prefHeight="156.0" prefWidth="246.0">
                                                     <content>
@@ -121,11 +121,11 @@
                                                 </ScrollPane>
                                             </children>
                                         </AnchorPane>
-                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="537.0" SplitPane.resizableWithParent="false">
+                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="130.0" prefWidth="471.0" SplitPane.resizableWithParent="false">
                                             <children>
-                                                <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="159.0" prefWidth="581.0">
+                                                <ScrollPane layoutX="1.0" layoutY="-2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="133.0" prefWidth="557.0">
                                                     <content>
-                                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="157.0" prefWidth="579.0">
+                                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="108.0" prefWidth="490.0">
                                                             <children>
                                                                 <TextArea fx:id="commitFileTextArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="156.0" prefWidth="580.0" />
                                                             </children>

@@ -26,7 +26,8 @@ public class Main extends Application
     public void start(Stage primaryStage) throws Exception
     {
         primaryStage.setTitle("M.A Git");
-
+        primaryStage.setMinHeight(430);
+        primaryStage.setMinWidth(700);
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL url = getClass().getResource(APP_FXML_INCLUDE_RESOURCE);
         fxmlLoader.setLocation(url);

@@ -1,7 +1,5 @@
 TODO
-- check create new branch feature
 - check delete branch can't delete head branch
-- add rb sign to commit tree
 - delete all unused methods and members
 - binds menuitems to repository object, if it is null disable it.
 - disable fetch opreation menu item of the repository is not tracking after reposirory

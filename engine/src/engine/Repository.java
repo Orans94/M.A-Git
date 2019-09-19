@@ -697,7 +697,7 @@ public class Repository
 
         if (isRootFolderEmpty())
         {
-            OpenChanges openChanges = new OpenChanges();
+            OpenChanges openChanges = new OpenChanges();;
             openChanges.getDeletedNodes().addAll(m_WorkingCopy.getNodeMaps().getSHA1ByPath().keySet());
 
             return openChanges;
@@ -1548,5 +1548,23 @@ public class Repository
                 pushCommitsObjectsRecursive(parentSHA1);
             }
         }
+    }
+
+    public void updateRTBToBeRegularBranch(String i_RBName) throws IOException
+    {
+        String rtbName;
+        Branch rtb;
+        Path rtbPath;
+
+        rtbName = m_Magit.getTrackingBranchName(i_RBName);
+        rtb = m_Magit.getBranches().get(rtbName);
+
+        rtb.setIsTracking(false);
+        rtb.setTrackingAfter(null);
+
+        rtbPath = Magit.getMagitDir().resolve("branches").resolve(rtbName + ".txt");
+
+        // update it tracking on file system
+        FileUtilities.modifyTxtFile(rtbPath, rtb.toString());
     }
 }

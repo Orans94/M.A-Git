@@ -10,9 +10,12 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
@@ -24,12 +27,17 @@ public class CenterController
     private AppController m_MainController;
     private ObservableList<Commit> m_CommitsObservableList = FXCollections.observableArrayList();
 
-
+    @FXML private ImageView newImage;
+    @FXML private ImageView deletedImage;
+    @FXML private ImageView editImage;
     @FXML private TableView<Commit> commitsTableView;
     @FXML private TableColumn<Commit, String> messageTableColumn;
     @FXML private TableColumn<Commit, String> authorTableColumn;
     @FXML private TableColumn<Commit, Date> dateTableColumn;
     @FXML private TableColumn<Commit, String> sha1TableColumn;
+    @FXML private Label newLabel;
+    @FXML private Label editLabel;
+    @FXML private Label deleteLabel;
 
     public void setMainController(AppController i_MainController)
     {
@@ -72,6 +80,12 @@ public class CenterController
             }
         });
     }
+
+    public Label getNewLabel() { return newLabel; }
+
+    public Label getEditLabel() { return editLabel; }
+
+    public Label getDeleteLabel() { return deleteLabel; }
 
     private void tableViewLoad(ObservableList<Commit> i_CommitsData) { commitsTableView.setItems(getCommitsData()); }
 

@@ -497,4 +497,18 @@ public class AppController
     {
         return m_PrimaryStage.getScene().getStylesheets();
     }
+
+    public void updateRTBToBeRegularBranch(String i_RBName) throws IOException
+    {
+        m_Engine.updateRTBToBeRegularBranch(i_RBName);
+    }
+
+    public void updateOpenChangesBar() throws IOException
+    {
+        OpenChanges openChanges = m_Engine.getFileSystemStatus();
+
+        m_CenterComponentController.getNewLabel().setText(Integer.toString(openChanges.getNewNodes().size()));
+        m_CenterComponentController.getDeleteLabel().setText(Integer.toString(openChanges.getDeletedNodes().size()));
+        m_CenterComponentController.getEditLabel().setText(Integer.toString(openChanges.getModifiedNodes().size()));
+    }
 }
