@@ -5,13 +5,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.net.URL;
 
 import static javafx.CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE;
-import static javafx.CommonResourcesPaths.CREATE_NEW_REPOSITORY_FXML_RESOURCE;
 import static javafx.application.Application.launch;
 
 public class Main extends Application
@@ -36,6 +34,7 @@ public class Main extends Application
         appController.setPrimaryStage(primaryStage);
 
         Scene scene = new Scene(root,1800,800 );
+        scene.getStylesheets().add("/javafx/primary/include/themes/dark.css");
         primaryStage.setScene(scene);
         primaryStage.show();
 

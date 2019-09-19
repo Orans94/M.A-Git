@@ -255,4 +255,21 @@ public class Magit
             FileUtilities.modifyTxtFile(getMagitDir().resolve("branches").resolve("HEAD.txt"), i_BranchNameToSet);
         }
     }
+
+    public boolean isRBAndRTBAlreadyTracking(Branch i_Branch)
+    {
+        boolean isRB , isRTBAlreadyTracking = false;
+
+        isRB = m_Branches.get(i_Branch.getName()).getIsRemote();
+        for(Branch branch : m_Branches.values())
+        {
+            if(branch.getIsTracking() && branch.getTrackingAfter().equals(i_Branch.getName()))
+            {
+                isRTBAlreadyTracking = true;
+                break;
+            }
+        }
+
+        return isRB && isRTBAlreadyTracking;
+    }
 }

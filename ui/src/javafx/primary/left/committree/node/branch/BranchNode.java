@@ -6,10 +6,12 @@ import com.fxgraph.graph.IEdge;
 import engine.StringFinals;
 import javafx.ComponentControllerConnector;
 import javafx.beans.binding.DoubleBinding;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.primary.left.committree.CommitTreeManager;
 import javafx.primary.left.committree.node.commit.CommitNodeController;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 
@@ -27,6 +29,8 @@ public class BranchNode extends AbstractCell
 
     private BranchNodeController m_BranchNodeController;
     private CommitTreeManager m_CommitTreeManager;
+
+    @FXML private ImageView arrowImageView;
     public BranchNode(String i_BranchName, boolean i_IsHead, boolean i_IsRemote)
     {
         m_BranchName = i_BranchName;

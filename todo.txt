@@ -8,10 +8,11 @@ TODO
 - after clone repository name doesn't change
 - when initializing new repo - empty master branch is created - dont allow to create new branch until master is pointing on commit
 - fix resizing - start size should be smaller, minimum size should be set that you can see all the buttons and components(nothing is disappearing).
-
+- delete branch : delete RTB is ok, but when we delete RB - if he has RTB we should change that he is not tracking anymore and tracking after is null.
+- show WC status - 1 new , 2 changed , 1 deleted with logos on center
 for readme file:
 - if a commit got two parents we displayed both of the deltas
-
+- delete branch : delete RTB is ok, but when we delete RB - if he has RTB we should change that he is not tracking anymore and tracking after is null.
 
 
 BUG:

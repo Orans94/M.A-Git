@@ -18,4 +18,6 @@ public class CommonResourcesPaths
     public final static String CLONE_REPOSITORY_FMXL_RESOURCE = "/javafx/primary/top/popup/clone/cloneRepository.fxml";
     public final static String COMMIT_NODE_GRAPH_FXML_RESOURCE = "/javafx/primary/left/committree/node/commit/commitNode.fxml";
     public final static String BRANCH_NODE_GRAPH_FMXL_RESOURCE = "/javafx/primary/left/committree/node/branch/branchNode.fxml";
+    public final static String DARK_THEME_CSS_RESOURCE = "/javafx/primary/include/themes/dark.css";
+
 }

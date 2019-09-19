@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
 import javafx.primary.top.popup.PopupController;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 
@@ -27,16 +26,19 @@ public class CheckoutController implements PopupController
     public void bindBranchesToChoiceBox(ActionEvent event)
     {
         Map<String, Branch> branches = m_TopController.getBranches();
-        addAllBranchesToChoiceBox(branches);
+        addRelevantBranchesToChoiceBox(branches);
     }
 
-    public void addAllBranchesToChoiceBox(Map<String, Branch> i_Branches)
+    public void addRelevantBranchesToChoiceBox(Map<String, Branch> i_Branches)
     {
         Branch activeBranch = m_TopController.getActiveBranch();
 
         for(Branch branch : i_Branches.values())
         {
-            branchNamesChoiceBox.getItems().add(branch.getName());
+            if(!m_TopController.isRBAndRTBAlreadyTracking(branch))
+            {
+                branchNamesChoiceBox.getItems().add(branch.getName());
+            }
         }
 
         branchNamesChoiceBox.setValue(activeBranch.getName());

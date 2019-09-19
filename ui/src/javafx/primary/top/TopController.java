@@ -3,6 +3,7 @@ package javafx.primary.top;
 import engine.*;
 import javafx.AlertFactory;
 import javafx.AppController;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.StageUtilities;
 import javafx.fxml.FXML;
@@ -42,7 +43,6 @@ import static javafx.CommonResourcesPaths.*;
 public class TopController
 {
     private AppController m_MainController;
-
     // ------ CONTROLLERS AND COMPONENTS ------
 
     @FXML private VBox m_CreateNewBranchComponent;
@@ -793,7 +793,7 @@ public class TopController
     public void pullMenuItemOnAction(ActionEvent actionEvent) throws IOException, ParseException
     {
         //TODO disable this menu item of the repository is not tracking after repository
-        if (m_MainController.getActiveBranch().getIsTracking())
+        if (m_MainController.isHeadRTBAndTrackingAfterRB())
         {
             // head branch is RTB
             if (!m_MainController.isFileSystemDirty(m_MainController.getFileSystemStatus()))
@@ -823,5 +823,40 @@ public class TopController
             // notify user that active branch isn't RTB
             AlertFactory.createErrorAlert("Pull", "The active branch is not tracking after a remote branch(not RTB)").showAndWait();
         }
+    }
+
+    @FXML
+    void pushMenuItemAction(ActionEvent event) throws IOException, ParseException
+    {
+        if(m_MainController.isHeadRTBAndTrackingAfterRB())
+        {
+            if(m_MainController.isRBEqualInRRAndLR(m_MainController.getActiveBranch().getTrackingAfter()))
+            {
+                if(m_MainController.isRRWcIsClean())
+                {
+                    m_MainController.push();
+                }
+                else
+                {
+                    AlertFactory.createErrorAlert("Push", "The Remote Repository WC status is dirty, can not push")
+                            .showAndWait();
+                }
+            }
+            else
+            {
+                AlertFactory.createErrorAlert("Push", "The RB in RR is not pointing on the same commit as in LR")
+                        .showAndWait();
+            }
+        }
+        else
+        {
+            AlertFactory.createErrorAlert("Push", "In order to push, the head branch must be an RTB and must track after a RB")
+                    .showAndWait();
+        }
+    }
+
+    public boolean isRBAndRTBAlreadyTracking(Branch i_Branch)
+    {
+        return m_MainController.isRBAndRTBAlreadyTracking(i_Branch);
     }
 }

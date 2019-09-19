@@ -126,7 +126,7 @@ public class EngineManager
     public boolean isCommitSHA1Exists(String i_CommitSHA1) { return m_Repository.getMagit().getCommits().containsKey(i_CommitSHA1); }
 
     public void changeActiveBranchPointedCommit(String i_CommitSHA1) throws IOException
-    { m_Repository.changeActiveBranchPointedCommit(i_CommitSHA1); }
+    { m_Repository.setActiveBranchPointedCommitByCommitSHA1(i_CommitSHA1); }
 
     public String getActiveBranchName() { return m_Repository.getMagit().getHead().getActiveBranch().getName();}
 
@@ -327,7 +327,7 @@ public class EngineManager
 
     public void setActiveBranchPointedCommit(String i_BranchNameToCopyPointedCommit) throws IOException
     {
-        m_Repository.setActiveBranchPointedCommit(i_BranchNameToCopyPointedCommit);
+        m_Repository.setActiveBranchPointedCommitByBranchName(i_BranchNameToCopyPointedCommit);
     }
 
     public boolean isFastForwardMerge(String i_TheirBranchName)
@@ -426,5 +426,30 @@ public class EngineManager
     public void pull() throws IOException, ParseException
     {
         m_Repository.pull();
+    }
+
+    public boolean isRRWcIsClean() throws IOException, ParseException
+    {
+        return m_Repository.isRRWcIsClean();
+    }
+
+    public boolean isHeadRTBAndTrackingAfterRB()
+    {
+        return m_Repository.isHeadRTBAndTrackingAfterRB();
+    }
+
+    public boolean isRBEqualInRRAndLR(String i_TrackingAfter) throws IOException
+    {
+        return m_Repository.isRBEqualInRRAndLR(i_TrackingAfter);
+    }
+
+    public boolean isRBAndRTBAlreadyTracking(Branch i_Branch)
+    {
+        return m_Repository.isRBAndRTBAlreadyTracking(i_Branch);
+    }
+
+    public void push() throws IOException, ParseException
+    {
+        m_Repository.push();
     }
 }

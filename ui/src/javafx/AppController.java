@@ -462,4 +462,29 @@ public class AppController
     {
         m_Engine.pull();
     }
+
+    public boolean isHeadRTBAndTrackingAfterRB()
+    {
+        return m_Engine.isHeadRTBAndTrackingAfterRB();
+    }
+
+    public boolean isRBEqualInRRAndLR(String i_TrackingAfter) throws IOException
+    {
+        return m_Engine.isRBEqualInRRAndLR(i_TrackingAfter);
+    }
+
+    public boolean isRRWcIsClean() throws IOException, ParseException
+    {
+        return m_Engine.isRRWcIsClean();
+    }
+
+    public boolean isRBAndRTBAlreadyTracking(Branch i_Branch)
+    {
+        return m_Engine.isRBAndRTBAlreadyTracking(i_Branch);
+    }
+
+    public void push() throws IOException, ParseException
+    {
+        m_Engine.push();
+    }
 }
