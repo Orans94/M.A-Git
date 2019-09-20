@@ -18,6 +18,8 @@ public class CommonResourcesPaths
     public final static String CLONE_REPOSITORY_FMXL_RESOURCE = "/javafx/primary/top/popup/clone/cloneRepository.fxml";
     public final static String COMMIT_NODE_GRAPH_FXML_RESOURCE = "/javafx/primary/left/committree/node/commit/commitNode.fxml";
     public final static String BRANCH_NODE_GRAPH_FMXL_RESOURCE = "/javafx/primary/left/committree/node/branch/branchNode.fxml";
+    public final static String ENTER_BRANCH_NAME_FXML_RESOURCE = "/javafx/primary/left/committree/node/commit/contextmenu/enterBranchName.fxml";
+    public final static String CHOOSE_BRANCH_FXML_RESOURCE = "/javafx/primary/left/committree/node/commit/contextmenu/chooseBranch.fxml";
     public final static String DEFAULT_THEME_CSS_RESOURCE = "/javafx/primary/include/themes/default.css";
     public final static String CONTEXT_MENU_FXML_RESOURCE = "/javafx/primary/left/committree/node/commit/contextmenu/contextMenu.fxml";
     public final static String DARK_THEME_CSS_RESOURCE = "/javafx/primary/include/themes/dark.css";

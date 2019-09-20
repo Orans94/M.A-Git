@@ -516,4 +516,9 @@ public class AppController
     {
         m_LeftComponentController.resetBranchAnimate(i_CommitSHA1);
     }
+
+    public void pushNotRTB() throws IOException, ParseException
+    {
+        m_Engine.pushNotRTB();
+    }
 }

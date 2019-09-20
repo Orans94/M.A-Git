@@ -1567,4 +1567,57 @@ public class Repository
         // update it tracking on file system
         FileUtilities.modifyTxtFile(rtbPath, rtb.toString());
     }
+
+    public void pushNotRTB() throws IOException, ParseException
+    {
+        String commitSHA1;
+        String activeBranchName = m_Magit.getHead().getActiveBranch().getName();
+        String RBname = createRBForActiveBranch(activeBranchName);
+        setActiveBranchTrackingAfter(RBname);
+        commitSHA1 = getFirstCommitThatExistsInRR(m_Magit.getHead().getActiveBranch().getCommitSHA1());
+        createRBInRR(activeBranchName, commitSHA1);
+        push();
+    }
+
+    private String getFirstCommitThatExistsInRR(String i_CommitSHA1)
+    {
+        Commit commit = m_Magit.getCommits().get(i_CommitSHA1);
+        Path path = m_RemoteRepositoryPath.resolve(".magit").resolve("objects").resolve(i_CommitSHA1 + ".zip");
+        while(!FileUtilities.isExists(path))
+        {
+            for(String parent : commit.getParentsSHA1())
+            {
+                getFirstCommitThatExistsInRR(parent);
+            }
+        }
+
+        return i_CommitSHA1;
+    }
+
+    private void createRBInRR(String i_BranchName, String i_CommitSHA1) throws IOException
+    {
+        Branch RRBranch = new Branch(i_BranchName, i_CommitSHA1, false, false, null);
+        Path pathToBranch = m_RemoteRepositoryPath.resolve(".magit").resolve("branches").resolve(i_BranchName + ".txt");
+        FileUtilities.createAndWriteTxtFile(pathToBranch, RRBranch.toString());
+    }
+
+    private void setActiveBranchTrackingAfter(String i_RBName) throws IOException
+    {
+        Branch activeBranch = m_Magit.getHead().getActiveBranch();
+
+        activeBranch.setIsTracking(true);
+        activeBranch.setTrackingAfter(i_RBName);
+        FileUtilities.modifyTxtFile(Magit.getMagitDir().resolve("branches").resolve(activeBranch.getName() + ".txt"), activeBranch.toString());
+    }
+
+    private String createRBForActiveBranch(String i_ActiveBranchName) throws IOException
+    {
+        String branchName = getRemoteRepositoryName() + "\\" + i_ActiveBranchName;
+        Branch RB = new Branch(getRemoteRepositoryName() + "\\" + i_ActiveBranchName, m_Magit.getHead().getActiveBranch().getCommitSHA1(), true, false, null);
+        m_Magit.getBranches().put(branchName, RB);
+        Path pathToBranch = Magit.getMagitDir().resolve("branches").resolve(getRemoteRepositoryName()).resolve(branchName + ".txt");
+        FileUtilities.createAndWriteTxtFile(pathToBranch, RB.toString());
+
+        return branchName;
+    }
 }

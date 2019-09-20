@@ -11,11 +11,11 @@
 #messageText,
 #sha1Text
 {
--fx-fill : white;
+    -fx-fill : white;
 }
 
 #arrowImageView{
--fx-image: url("/javafx/primary/left/committree/node/branch/arrowWhite.png");
+    -fx-image: url("/javafx/primary/left/committree/node/branch/arrowWhite.png");
 }
 
 .button {

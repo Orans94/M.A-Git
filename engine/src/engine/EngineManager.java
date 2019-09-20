@@ -457,4 +457,9 @@ public class EngineManager
     {
         m_Repository.updateRTBToBeRegularBranch(i_RBName);
     }
+
+    public void pushNotRTB() throws IOException, ParseException
+    {
+        m_Repository.pushNotRTB();
+    }
 }

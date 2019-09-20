@@ -84,7 +84,8 @@ public class TopController
     @FXML private RadioMenuItem darkThemeRadioMenuItem;
     @FXML private RadioMenuItem lightThemeRadioMenuItem;
     @FXML private RadioMenuItem setBackgroundImageRadioMenuItem;
-
+    @FXML private CheckMenuItem resertBranchAnimationCheckMenuItem;
+    @FXML private CheckMenuItem branchPulseAnimationCheckMenuItem;
     @FXML private MenuItem commitMenuItem;
 
     @FXML private MenuItem pullMenuItem;
@@ -110,6 +111,8 @@ public class TopController
     @FXML private SplitMenuButton repositoryFullPathSplitMenuButton;
 
     public MenuItem getCommitMenuItem() { return commitMenuItem; }
+    public CheckMenuItem getResertBranchAnimationCheckMenuItem() { return resertBranchAnimationCheckMenuItem; }
+    public CheckMenuItem getBranchPulseAnimationCheckMenuItem() { return branchPulseAnimationCheckMenuItem; }
 
     public void setUpdateUsernameComponent(Parent i_UpdateUsernameComponent) { this.m_UpdateUsernameComponent = (VBox) i_UpdateUsernameComponent; }
 
@@ -835,30 +838,33 @@ public class TopController
     @FXML
     void pushMenuItemAction(ActionEvent event) throws IOException, ParseException
     {
-        if(m_MainController.isHeadRTBAndTrackingAfterRB())
+
+        if(m_MainController.isRBEqualInRRAndLR(m_MainController.getActiveBranch().getTrackingAfter()))
         {
-            if(m_MainController.isRBEqualInRRAndLR(m_MainController.getActiveBranch().getTrackingAfter()))
+            if(m_MainController.isRRWcIsClean())
             {
-                if(m_MainController.isRRWcIsClean())
+                if(m_MainController.isHeadRTBAndTrackingAfterRB())
                 {
                     m_MainController.push();
                     AlertFactory.createInformationAlert("Push", "Pushed successful").showAndWait();
                 }
                 else
                 {
-                    AlertFactory.createErrorAlert("Push", "The Remote Repository WC status is dirty, can not push")
-                            .showAndWait();
+                    // head is not RTB
+                    m_MainController.pushNotRTB();
+                    AlertFactory.createInformationAlert("Push", "Pushed successful").showAndWait();
+
                 }
             }
             else
             {
-                AlertFactory.createErrorAlert("Push", "The RB in RR is not pointing on the same commit as in LR")
+                AlertFactory.createErrorAlert("Push", "The Remote Repository WC status is dirty, can not push")
                         .showAndWait();
             }
         }
         else
         {
-            AlertFactory.createErrorAlert("Push", "In order to push, the head branch must be an RTB and must track after a RB")
+            AlertFactory.createErrorAlert("Push", "The RB in RR is not pointing on the same commit as in LR")
                     .showAndWait();
         }
     }

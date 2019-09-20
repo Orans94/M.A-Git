@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.primary.left.committree.CommitTreeManager;
 import javafx.scene.control.ScrollPane;
 
+import java.io.IOException;
 import java.util.List;
 
 public class LeftController
@@ -15,6 +16,8 @@ public class LeftController
     private CommitTreeManager m_CommitTreeManager = new CommitTreeManager(this);
 
     @FXML private ScrollPane treeSurfaceScrollPane;
+
+    public ScrollPane getTreeSurfaceScrollPane() { return treeSurfaceScrollPane; }
 
     public void setMainController(AppController i_MainController)
     {
@@ -64,5 +67,20 @@ public class LeftController
     public void resetBranchAnimate(String i_CommitSHA1)
     {
         m_CommitTreeManager.resetBranchAnimate(i_CommitSHA1);
+    }
+
+    public void resetBranch(String i_CommitSHA1) throws IOException
+    {
+        m_MainController.changeActiveBranchPointedCommit(i_CommitSHA1);
+    }
+
+    public void merge(String chosedBranchName) throws IOException
+    {
+        m_MainController.merge(chosedBranchName);
+    }
+
+    public void deleteBranch(String i_ChosedBranchName) throws IOException
+    {
+        m_MainController.deleteBranch(i_ChosedBranchName);
     }
 }
