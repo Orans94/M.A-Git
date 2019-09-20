@@ -902,4 +902,9 @@ public class TopController
     {
         m_MainController.updateRTBToBeRegularBranch(i_RBName);
     }
+
+    public void resetBranchAnimate(String i_CommitSHA1)
+    {
+        m_MainController.resetBranchAnimate(i_CommitSHA1);
+    }
 }

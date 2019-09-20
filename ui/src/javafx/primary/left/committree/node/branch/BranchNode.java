@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.scene.shape.Shape;
 
 import java.io.IOException;
 import java.net.URL;

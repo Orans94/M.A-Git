@@ -25,6 +25,7 @@ public class ContextMenuController
     @FXML
     void createNewBranchMenuItemAction(ActionEvent event)
     {
+
     }
 
     @FXML

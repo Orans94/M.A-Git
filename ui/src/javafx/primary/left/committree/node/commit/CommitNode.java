@@ -81,22 +81,11 @@ public class CommitNode extends AbstractCell
         return m_DateOfCreation != null ? m_DateOfCreation.hashCode() : 0;
     }
 
-    @FXML
-    void contextMenuAction(ContextMenuEvent event) throws IOException
-    {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        URL url = getClass().getResource(CONTEXT_MENU_FXML_RESOURCE);
-        fxmlLoader.setLocation(url);
-        ContextMenu root = fxmlLoader.load(url.openStream());
-        ContextMenuController controller = fxmlLoader.getController();
-        controller.setCommitTreeManager(m_CommitTreeManager);
-        controller.setCommitSHA1(m_SHA1);
-        root.show(m_CommitNodeController.getCommitCircle(), event.getScreenX(), event.getScreenY());
-    }
-
     public String getSHA1() { return m_SHA1; }
 
     public Date getDateOfCreation() { return m_DateOfCreation; }
+
+    public CommitTreeManager getCommitTreeManager() { return m_CommitTreeManager; }
 
     public void setCommitTreeManager(CommitTreeManager i_CommitTreeManager) { m_CommitTreeManager = i_CommitTreeManager; }
 

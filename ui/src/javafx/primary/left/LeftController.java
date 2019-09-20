@@ -60,4 +60,9 @@ public class LeftController
     {
         return m_MainController.getActiveBranch();
     }
+
+    public void resetBranchAnimate(String i_CommitSHA1)
+    {
+        m_CommitTreeManager.resetBranchAnimate(i_CommitSHA1);
+    }
 }

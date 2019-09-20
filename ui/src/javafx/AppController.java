@@ -511,4 +511,9 @@ public class AppController
         m_CenterComponentController.getDeleteLabel().setText(Integer.toString(openChanges.getDeletedNodes().size()));
         m_CenterComponentController.getEditLabel().setText(Integer.toString(openChanges.getModifiedNodes().size()));
     }
+
+    public void resetBranchAnimate(String i_CommitSHA1)
+    {
+        m_LeftComponentController.resetBranchAnimate(i_CommitSHA1);
+    }
 }

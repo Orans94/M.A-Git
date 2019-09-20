@@ -70,12 +70,14 @@ public class ResetBranchController implements PopupController
             if (toContinue)
             {
                 resetBranch(commitSHA1, event);
+                m_TopController.resetBranchAnimate(commitSHA1);
                 m_TopController.updateUIComponents();
             }
         }
         else
         {
             resetBranch(commitSHA1, event);
+            m_TopController.resetBranchAnimate(commitSHA1);
             m_TopController.updateUIComponents();
         }
 

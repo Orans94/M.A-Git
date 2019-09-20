@@ -5,14 +5,20 @@ import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.Model;
 import engine.Branch;
 import engine.Commit;
+import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.primary.left.LeftController;
 import javafx.primary.left.committree.node.branch.BranchNode;
 import javafx.primary.left.committree.node.commit.CommitNode;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Region;
+import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 import java.util.*;
 import java.util.List;
+
+import static engine.StringFinals.EMPTY_STRING;
 
 public class CommitTreeManager
 {
@@ -20,6 +26,8 @@ public class CommitTreeManager
     private LeftController m_LeftController;
     private Map<Commit, CommitNode> m_CommitNodeByCommit;
     private Map<CommitNode, Commit> m_CommitByCommitNode;
+    private Map<Branch, BranchNode> m_BranchNodeByBranch;
+    private Map<BranchNode, Branch> m_BranchByBranchNode;
     private List<Edge> m_GraphEdges;
 
     public CommitTreeManager(LeftController i_LeftController)
@@ -29,6 +37,8 @@ public class CommitTreeManager
         m_GraphEdges = new LinkedList<>();
         m_CommitNodeByCommit = new HashMap<>();
         m_CommitByCommitNode = new HashMap<>();
+        m_BranchNodeByBranch = new HashMap<>();
+        m_BranchByBranchNode = new HashMap<>();
     }
 
     public void update(ScrollPane i_PaneToDraw)
@@ -42,13 +52,14 @@ public class CommitTreeManager
             m_TreeGraph.getUseViewportGestures().set(false);
             m_TreeGraph.getUseNodeGestures().set(false);
         });
-
     }
 
     private void clearMaps()
     {
         m_CommitByCommitNode.clear();
         m_CommitNodeByCommit.clear();
+        m_BranchByBranchNode.clear();
+        m_BranchNodeByBranch.clear();
         m_GraphEdges.clear();
     }
 
@@ -67,6 +78,7 @@ public class CommitTreeManager
 
         addBranchesToGraphModel();
 
+        resetBranchAnimate("fcd00c5d2e016a4cabea7144fbc2850984226b80");
         graph.endUpdate();
     }
 
@@ -86,7 +98,7 @@ public class CommitTreeManager
         {
             // getting pointed branches from commit
             pointingBranches = m_LeftController.getContainedBranches(commitNode.getSHA1());
-            branchesNames = "";
+            branchesNames = EMPTY_STRING;
 
             // create BranchNode from every Branch, add it to graph and reallocate it
             for (Branch branch : pointingBranches)
@@ -104,6 +116,10 @@ public class CommitTreeManager
 
                 // reallocate current branch
                 m_TreeGraph.getGraphic(currentBranchNode).relocate(xPosition, yPosition);
+
+                // add branch to maps
+                m_BranchByBranchNode.put(currentBranchNode, branch);
+                m_BranchNodeByBranch.put(branch, currentBranchNode);
             }
             if(!branchesNames.equals(""))
             {
@@ -258,5 +274,26 @@ public class CommitTreeManager
     public void commitNodeTreeSelected(String i_CommitSHA1)
     {
         m_LeftController.commitNodeTreeSelected(i_CommitSHA1);
+    }
+
+    public void resetBranchAnimate(String i_CommitSHA1)
+    {
+        Branch activeBranch = m_LeftController.getActiveBranch();
+        BranchNode animateBranchNode = m_BranchNodeByBranch.get(activeBranch);
+        Region branchNodeGraphic = m_TreeGraph.getGraphic(animateBranchNode);
+        Region commitNodeGraphic = m_TreeGraph.getGraphic(m_CommitNodeByCommit.get(m_LeftController.getCommit(i_CommitSHA1)));
+
+        Line line = new Line();
+        line.setStartX(branchNodeGraphic.getLayoutX());
+        line.setStartY(branchNodeGraphic.getLayoutY());
+        line.setEndY(commitNodeGraphic.getLayoutX());
+        line.setEndX(commitNodeGraphic.getLayoutY());
+
+
+        PathTransition pt = new PathTransition(Duration.millis(8000), line, branchNodeGraphic);
+        //pt.setCycleCount(Animation.INDEFINITE);
+        pt.setAutoReverse(false);
+        pt.play();
+
     }
 }
