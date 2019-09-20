@@ -4,9 +4,13 @@ import com.fxgraph.cells.AbstractCell;
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.IEdge;
 import javafx.beans.binding.DoubleBinding;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.primary.left.committree.CommitTreeManager;
+import javafx.primary.left.committree.node.commit.contextmenu.ContextMenuController;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 
@@ -15,6 +19,7 @@ import java.net.URL;
 import java.util.Date;
 
 import static javafx.CommonResourcesPaths.COMMIT_NODE_GRAPH_FXML_RESOURCE;
+import static javafx.CommonResourcesPaths.CONTEXT_MENU_FXML_RESOURCE;
 
 public class CommitNode extends AbstractCell
 {
@@ -76,7 +81,21 @@ public class CommitNode extends AbstractCell
         return m_DateOfCreation != null ? m_DateOfCreation.hashCode() : 0;
     }
 
+    @FXML
+    void contextMenuAction(ContextMenuEvent event) throws IOException
+    {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        URL url = getClass().getResource(CONTEXT_MENU_FXML_RESOURCE);
+        fxmlLoader.setLocation(url);
+        ContextMenu root = fxmlLoader.load(url.openStream());
+        ContextMenuController controller = fxmlLoader.getController();
+        controller.setCommitTreeManager(m_CommitTreeManager);
+        controller.setCommitSHA1(m_SHA1);
+        root.show(m_CommitNodeController.getCommitCircle(), event.getScreenX(), event.getScreenY());
+    }
+
     public String getSHA1() { return m_SHA1; }
+
     public Date getDateOfCreation() { return m_DateOfCreation; }
 
     public void setCommitTreeManager(CommitTreeManager i_CommitTreeManager) { m_CommitTreeManager = i_CommitTreeManager; }

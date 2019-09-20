@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+
+<ContextMenu fx:id="commitContextMenu" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.primary.left.committree.node.commit.contextmenu.ContextMenuController">
+  <items>
+    <MenuItem fx:id="createNewBranchMenuItem" mnemonicParsing="false" onAction="#createNewBranchMenuItemAction" text="Create new branch on this commit" />
+      <MenuItem fx:id="resetHeadBranchMenuItem" mnemonicParsing="false" onAction="#resetHeadBranchMenuItemAction" text="Reset head branch to this commit" />
+      <MenuItem fx:id="mergeHeadBranchMenuItem" mnemonicParsing="false" onAction="#mergeHeadBranchMenuItemAction" text="Merge head branch with branch pointing on this commit" />
+      <MenuItem fx:id="deleteBranchMenuItem" mnemonicParsing="false" onAction="#deleteBranchMenuItemAction" text="Delete branch pointing on this commit" />
+  </items>
+</ContextMenu>

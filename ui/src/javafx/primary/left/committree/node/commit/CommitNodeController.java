@@ -15,6 +15,9 @@ public class CommitNodeController
         String commitSHA1 = m_CommitNode.getSHA1();
         m_CommitNode.commitNodeTreeSelected(commitSHA1);
     }
+
+    public Circle getCommitCircle() { return CommitCircle; }
+
     public int getCircleRadius() {
         return (int)CommitCircle.getRadius();
     }
