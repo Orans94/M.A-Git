@@ -51,6 +51,15 @@ public class CommitNodeController
         ContextMenuController controller = fxmlLoader.getController();
         controller.setCommitTreeManager(m_CommitNode.getCommitTreeManager());
         controller.setCommitSHA1(m_CommitNode.getSHA1());
+        controller.setTopController(m_CommitNode.getCommitTreeManager().getLeftController().getMainController().getTopComponentController());
+
+        // --------- add your shit to this checkbox here ---------
+        // send your logic to add branches to checkbox in this method
+        controller.addToCheckBox();
+        // --------- add your shit to this checkbox here ---------
+
         root.show(CommitCircle, event.getScreenX(), event.getScreenY());
+
+        System.out.println(controller.hashCode());
     }
 }

@@ -69,28 +69,33 @@ public class ResetBranchController implements PopupController
             toContinue = alert.showAndWait().get().getText().equals("Yes");
             if (toContinue)
             {
-                //m_TopController.resetBranchAnimate(commitSHA1);
                 resetBranch(commitSHA1, event);
-                m_TopController.updateUIComponents();
             }
         }
         else
         {
-            //m_TopController.resetBranchAnimate(commitSHA1);
             resetBranch(commitSHA1, event);
-            m_TopController.updateUIComponents();
         }
 
         StageUtilities.closeOpenSceneByActionEvent(event);
     }
 
+    private void resetBranchAnimateIfSelected(String I_CommitSHA1)
+    {
+        if (m_TopController.getResertBranchAnimationCheckMenuItem().isSelected())
+            m_TopController.resetBranchAnimate(I_CommitSHA1);
+    }
+
+
     private void resetBranch(String i_CommitSHA1, ActionEvent event) throws IOException
     {
+        resetBranchAnimateIfSelected(i_CommitSHA1);
         m_TopController.changeActiveBranchPointedCommit(i_CommitSHA1);
         AlertFactory.createInformationAlert("Reset branch", "The active branch is now pointing on commit " + i_CommitSHA1)
                 .showAndWait();
         m_TopController.checkout(m_TopController.getActiveBranchName());
         m_TopController.showDetailsOfCurrentCommitScene(event);
+        m_TopController.updateUIComponents();
     }
 
     private void tableViewLoad() { commitsTableView.setItems(m_CommitsObservableList); }

@@ -101,6 +101,8 @@ public class AppController
         m_Engine.setActiveBranchName(i_BranchName);
     }
 
+    public TopController getTopComponentController() { return m_TopComponentController; }
+
     public void addNewestCommitToTableView()
     {
         Commit newestCommit = m_Engine.getNewestCommitByItDate();
@@ -461,9 +463,9 @@ public class AppController
         m_Engine.pull();
     }
 
-    public boolean isHeadRTBAndTrackingAfterRB()
+    public boolean isHeadRTB()
     {
-        return m_Engine.isHeadRTBAndTrackingAfterRB();
+        return m_Engine.isHeadRTB();
     }
 
     public boolean isRBEqualInRRAndLR(String i_TrackingAfter) throws IOException
@@ -534,5 +536,24 @@ public class AppController
     public BooleanProperty getIsRepositoryClonedProperty()
     {
         return m_Engine.getIsRepositoryClonedProperty();
+    }
+
+    public boolean isHeadTrackingAfterRB()
+    {
+        return m_Engine.isHeadTrackingAfterRB();
+    }
+
+    public void updateUIComponents() throws IOException
+    {
+        clearCommitTableViewAndTreeView();
+        addCommitsToTableView();
+        updateCommitTree();
+        updatePrimaryStageTitle();
+        updateOpenChangesBar();
+    }
+
+    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    {
+        return m_Engine.getConnectedCommitsByBranch(i_Branch);
     }
 }

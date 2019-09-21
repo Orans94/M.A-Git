@@ -12,6 +12,8 @@ import java.util.List;
 
 public class LeftController
 {
+    public AppController getMainController() { return m_MainController; }
+
     private AppController m_MainController;
     private CommitTreeManager m_CommitTreeManager = new CommitTreeManager(this);
 
@@ -82,5 +84,15 @@ public class LeftController
     public void deleteBranch(String i_ChosedBranchName) throws IOException
     {
         m_MainController.deleteBranch(i_ChosedBranchName);
+    }
+
+    public void updateUIComponents() throws IOException
+    {
+        m_MainController.updateUIComponents();
+    }
+
+    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    {
+        return m_MainController.getConnectedCommitsByBranch(i_Branch);
     }
 }

@@ -29,6 +29,7 @@ public class BranchNode extends AbstractCell
     private String m_BranchName;
 
     private BranchNodeController m_BranchNodeController;
+
     private CommitTreeManager m_CommitTreeManager;
 
     @FXML private ImageView arrowImageView;
@@ -38,6 +39,10 @@ public class BranchNode extends AbstractCell
         m_BranchName += i_IsHead ? " (HEAD)" : EMPTY_STRING;
         m_BranchName += i_IsRemote ? " (RB)" : EMPTY_STRING;
     }
+
+    public CommitTreeManager getCommitTreeManager() { return m_CommitTreeManager; }
+
+    public void setBranchName(String m_BranchName) { this.m_BranchName = m_BranchName; }
 
     public BranchNodeController getBranchNodeController()
     {
@@ -68,4 +73,9 @@ public class BranchNode extends AbstractCell
     }
 
     public void setCommitTreeManager(CommitTreeManager i_CommitTreeManager) { m_CommitTreeManager = i_CommitTreeManager; }
+
+    public void animateBranchConnections()
+    {
+        m_CommitTreeManager.animateBranchConnections(this);
+    }
 }

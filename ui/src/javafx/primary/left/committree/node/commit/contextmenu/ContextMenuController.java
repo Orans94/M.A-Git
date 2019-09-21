@@ -19,7 +19,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
+import static engine.StringFinals.EMPTY_STRING;
 import static javafx.CommonResourcesPaths.*;
 
 public class ContextMenuController implements PopupController
@@ -30,11 +32,11 @@ public class ContextMenuController implements PopupController
     @FXML private MenuItem resetHeadBranchMenuItem;
     @FXML private MenuItem mergeHeadBranchMenuItem;
     @FXML private MenuItem deleteBranchMenuItem;
-    private CommitTreeManager m_CommitTreeManager;
-    private TopController m_TopController;
     @FXML private Label chooseBranchLabel;
     @FXML private ChoiceBox<String> branchChoiceBox;
     @FXML private TextField branchNameTextField;
+    private CommitTreeManager m_CommitTreeManager;
+    private TopController m_TopController;
 
     public void setCommitTreeManager(CommitTreeManager i_CommitTreeManager) { this.m_CommitTreeManager = i_CommitTreeManager; }
 
@@ -43,22 +45,39 @@ public class ContextMenuController implements PopupController
     @FXML
     void createNewBranchMenuItemAction(ActionEvent event) throws IOException
     {
-        //m_CommitTreeManager.createNewBranch(m_CommitSHA1);
+        String commit = m_CommitSHA1;
         Stage stage = StageUtilities.createPopupStage("Create new branch", ENTER_BRANCH_NAME_FXML_RESOURCE, m_TopController);
+        stage.setOnCloseRequest(evt -> {
+            // prevent window from closing
+            evt.consume();
+        });
+        ContextMenuController contextMenuController = getContextMenuController(stage);
+        contextMenuController.m_CommitSHA1 = commit;
         stage.showAndWait();
     }
 
     @FXML
     void deleteBranchMenuItemAction(ActionEvent event) throws IOException
     {
-        branchChoiceBox.getItems().clear();
+        // -------------------- SAME TRICK --------------------------
+        ChoiceBox<String> savedChoiceBox = branchChoiceBox;
+        // -------------------- SAME TRICK --------------------------
+
+        //branchChoiceBox.getItems().clear();
         List<Branch> containedBranches;
         containedBranches = m_CommitTreeManager.getContainedBranches(m_CommitSHA1);
         if(containedBranches.size() == 1)
         {
-            m_TopController.deleteBranch(containedBranches.get(0).getName());
-            m_TopController.updateUIComponents();
-            AlertFactory.createInformationAlert("Delete branch", "Branch " + containedBranches.get(0).getName() + " deleted successfully").showAndWait();
+            if(!containedBranches.get(0).getName().equals(m_TopController.getActiveBranchName()))
+            {
+                m_TopController.deleteBranch(containedBranches.get(0).getName());
+                m_TopController.updateUIComponents();
+                AlertFactory.createInformationAlert("Delete branch", "Branch " + containedBranches.get(0).getName() + " deleted successfully").showAndWait();
+            }
+            else
+            {
+                AlertFactory.createErrorAlert("Delete branch", "Cant delete active branch").showAndWait();
+            }
         }
         else if(containedBranches.size() > 1)
         {
@@ -66,8 +85,19 @@ public class ContextMenuController implements PopupController
             {
                 branchChoiceBox.getItems().add(branch.getName());
             }
-            chooseBranchLabel.setText("In order to delete branch , please choose a branch from the list below");
+            branchChoiceBox.getSelectionModel().select(0);
+            //chooseBranchLabel.setText("In order to delete branch , please choose a branch from the list below");
             Stage stage = StageUtilities.createPopupStage("Choose Branch", CHOOSE_BRANCH_FXML_RESOURCE, m_TopController);
+            stage.setOnCloseRequest(evt -> {
+                // prevent window from closing
+                evt.consume();
+            });
+
+            // -------------------- SAME TRICK --------------------------
+            ContextMenuController contextMenuController = getContextMenuController(stage);
+            contextMenuController.branchChoiceBox.setItems(savedChoiceBox.getItems());
+            // -------------------- SAME TRICK --------------------------
+
             stage.showAndWait();
 
             m_TopController.deleteBranch(branchChoiceBox.getSelectionModel().getSelectedItem());
@@ -79,6 +109,11 @@ public class ContextMenuController implements PopupController
             AlertFactory.createErrorAlert("Delete branch", "There are no branches pointing on the current commit")
                     .showAndWait();
         }
+    }
+
+    private ContextMenuController getContextMenuController(Stage i_CreatedStage)
+    {
+        return ((FXMLLoader) i_CreatedStage.getScene().getUserData()).getController();
     }
 
     @FXML
@@ -100,8 +135,13 @@ public class ContextMenuController implements PopupController
             {
                 branchChoiceBox.getItems().add(branch.getName());
             }
+            branchChoiceBox.getSelectionModel().select(1);
             chooseBranchLabel.setText("In order to merge , please choose a branch from the list below");
             Stage stage = StageUtilities.createPopupStage("Choose Branch", CHOOSE_BRANCH_FXML_RESOURCE, m_TopController);
+            stage.setOnCloseRequest(evt -> {
+                // prevent window from closing
+                evt.consume();
+            });
             stage.showAndWait();
 
             m_TopController.merge(branchChoiceBox.getSelectionModel().getSelectedItem());
@@ -113,6 +153,8 @@ public class ContextMenuController implements PopupController
             AlertFactory.createErrorAlert("Merge", "There are no branches pointing on the current commit")
                     .showAndWait();
         }
+
+        branchChoiceBox.getItems().clear();
     }
 
     @FXML
@@ -140,21 +182,50 @@ public class ContextMenuController implements PopupController
     @FXML
     void createBranchAction(ActionEvent event) throws IOException
     {
-        if(!m_TopController.getBranches().containsKey(branchNameTextField.getText()))
+        if(!m_TopController.getBranches().containsKey(branchNameTextField.getText()) && !branchNameTextField.getText().equals(EMPTY_STRING))
         {
             m_TopController.createNewBranch(branchNameTextField.getText(), m_CommitSHA1);
             m_TopController.updateUIComponents();
+            AlertFactory.createInformationAlert("Create new branch", "Branch " + branchNameTextField.getText() + " created successfully")
+                    .showAndWait();
         }
         else
         {
             AlertFactory.createErrorAlert("Create new branch", "Branch " + branchNameTextField.getText() + " already exists").showAndWait();
         }
 
+        branchNameTextField.clear();
         StageUtilities.closeOpenSceneByActionEvent(event);
     }
+
+    public void addToCheckBox()
+    {
+
+        bindBranchesToChoiceBox();
+    }
+
+    public void bindBranchesToChoiceBox()
+    {
+        Map<String, Branch> branches = m_TopController.getBranches();
+        addAllBranchesToChoiceBox(branches);
+    }
+
+    public void addAllBranchesToChoiceBox(Map<String, Branch> i_Branches)
+    {
+        Branch activeBranch = m_TopController.getActiveBranch();
+
+        for(Branch branch : i_Branches.values())
+        {
+            branchChoiceBox.getItems().add(branch.getName());
+        }
+
+        branchChoiceBox.setValue(activeBranch.getName());
+    }
+
     @Override
     public void setTopController(TopController i_TopController)
     {
         m_TopController = i_TopController;
     }
+
 }

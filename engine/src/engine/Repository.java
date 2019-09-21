@@ -1,7 +1,5 @@
 package engine;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import mypackage.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -617,7 +615,8 @@ public class Repository
     private void loadRemoteFromFile() throws IOException
     {
         Path remoteFilePath = Magit.getMagitDir().resolve(REPOSITORY_REMOTE_FILE);
-        m_RemoteRepositoryPath = Paths.get(new String(Files.readAllBytes(remoteFilePath)));
+        String remoteFileContent = new String(Files.readAllBytes(remoteFilePath));
+        m_RemoteRepositoryPath = remoteFileContent.equals(EMPTY_STRING) ? null : Paths.get(remoteFileContent);
     }
 
     public OpenChanges delta(Commit i_FirstCommit, Commit i_SecondCommit) throws IOException
@@ -1435,11 +1434,11 @@ public class Repository
         return StringUtilities.getContentInformation(new String(Files.readAllBytes(pathToBranch)), 0);
     }
 
-    public boolean isHeadRTBAndTrackingAfterRB()
+    public boolean isHeadRTB()
     {
         Branch headBranch = m_Magit.getHead().getActiveBranch();
 
-        return headBranch.getIsTracking() && m_Magit.getBranches().get(headBranch.getTrackingAfter()).getIsRemote();
+        return headBranch.getIsTracking();
     }
 
     public boolean isRBEqualInRRAndLR(String i_TrackingAfter) throws IOException
@@ -1583,17 +1582,18 @@ public class Repository
 
     private String getFirstCommitThatExistsInRR(String i_CommitSHA1)
     {
-        Commit commit = m_Magit.getCommits().get(i_CommitSHA1);
-        Path path = m_RemoteRepositoryPath.resolve(".magit").resolve("objects").resolve(i_CommitSHA1 + ".zip");
-        while(!FileUtilities.isExists(path))
+        String SHA1 = i_CommitSHA1;
+        Commit commit;
+        Path Objpath = m_RemoteRepositoryPath.resolve(".magit").resolve("objects");
+        Path commitPath = Objpath.resolve(SHA1 + ".zip");
+        while(!FileUtilities.isExists(commitPath))
         {
-            for(String parent : commit.getParentsSHA1())
-            {
-                getFirstCommitThatExistsInRR(parent);
-            }
+            commit = m_Magit.getCommits().get(i_CommitSHA1);
+            SHA1 = commit.getParentsSHA1().get(0);
+            commitPath = Objpath.resolve(SHA1 + ".zip");
         }
 
-        return i_CommitSHA1;
+        return SHA1;
     }
 
     private void createRBInRR(String i_BranchName, String i_CommitSHA1) throws IOException
@@ -1615,11 +1615,22 @@ public class Repository
     private String createRBForActiveBranch(String i_ActiveBranchName) throws IOException
     {
         String branchName = getRemoteRepositoryName() + "\\" + i_ActiveBranchName;
-        Branch RB = new Branch(getRemoteRepositoryName() + "\\" + i_ActiveBranchName, m_Magit.getHead().getActiveBranch().getCommitSHA1(), true, false, null);
+        Branch RB = new Branch(branchName, m_Magit.getHead().getActiveBranch().getCommitSHA1(), true, false, null);
         m_Magit.getBranches().put(branchName, RB);
-        Path pathToBranch = Magit.getMagitDir().resolve("branches").resolve(getRemoteRepositoryName()).resolve(branchName + ".txt");
+        Path pathToBranch = Magit.getMagitDir().resolve("branches").resolve(getRemoteRepositoryName()).resolve(i_ActiveBranchName + ".txt");
         FileUtilities.createAndWriteTxtFile(pathToBranch, RB.toString());
 
         return branchName;
+    }
+
+    public boolean isHeadTrackingAfterRB()
+    {
+        Branch activeBranch = m_Magit.getHead().getActiveBranch();
+        return m_Magit.getBranches().containsKey(activeBranch.getTrackingAfter()) && m_Magit.getBranches().get(activeBranch.getTrackingAfter()).getIsRemote();
+    }
+
+    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    {
+        return m_Magit.getConnectedCommitsByBranch(i_Branch);
     }
 }

@@ -272,4 +272,18 @@ public class Magit
 
         return isRB && isRTBAlreadyTracking;
     }
+
+    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    {
+        List<Commit> connectedCommits = new LinkedList<>();
+
+        addConnectedCommitsRecursive(connectedCommits, i_Branch.getCommitSHA1());
+
+        return connectedCommits;
+    }
+
+    private void addConnectedCommitsRecursive(List<Commit> i_ConnectedCommits, String i_CommitSHA1)
+    {
+
+    }
 }

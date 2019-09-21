@@ -1,23 +1,17 @@
 package javafx.primary.left.committree;
 
-import com.fxgraph.cells.TriangleCell;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.graph.Graph;
-import com.fxgraph.graph.ICell;
 import com.fxgraph.graph.Model;
 import engine.Branch;
 import engine.Commit;
-import javafx.animation.Animation;
 import javafx.animation.PathTransition;
 import javafx.application.Platform;
-import javafx.geometry.Bounds;
 import javafx.primary.left.LeftController;
 import javafx.primary.left.committree.node.branch.BranchNode;
 import javafx.primary.left.committree.node.commit.CommitNode;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
@@ -30,6 +24,9 @@ import static engine.StringFinals.EMPTY_STRING;
 public class CommitTreeManager
 {
     private Graph m_TreeGraph;
+
+    public LeftController getLeftController() { return m_LeftController; }
+
     private LeftController m_LeftController;
     private Map<Commit, CommitNode> m_CommitNodeByCommit;
     private Map<CommitNode, Commit> m_CommitByCommitNode;
@@ -303,19 +300,29 @@ public class CommitTreeManager
         addBranchesToGraphModel();
 
         BranchNode animateBranchNode = m_BranchNodeByBranch.get(activeBranch);
+        animateBranchNode.getBranchNodeController().setBranchesNamesLabelText(EMPTY_STRING);
+
         CommitNode commitNode = m_CommitNodeByCommit.get(m_LeftController.getCommit(i_CommitSHA1));
         Region branchNodeGraphic = m_TreeGraph.getGraphic(animateBranchNode);
         Region commitNodeGraphic = m_TreeGraph.getGraphic(commitNode);
 
-        Line line = new Line();
-        line.setStartX(branchNodeGraphic.getLayoutX());
-        line.setStartY(branchNodeGraphic.getLayoutY());
-        line.setEndX(commitNodeGraphic.getLayoutX());
-        line.setEndY(commitNodeGraphic.getLayoutY());
+        Line line = new Line(branchNodeGraphic.getLayoutX(), branchNodeGraphic.getLayoutY(), commitNodeGraphic.getLayoutX(), commitNodeGraphic.getLayoutY());
 
         PathTransition pt = new PathTransition(Duration.millis(4000), line, branchNodeGraphic);
-        pt.setCycleCount(Animation.INDEFINITE);
-        pt.setAutoReverse(true);
+
+        pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+        pt.setOnFinished(e->
+        {
+            try
+            {
+                m_LeftController.updateUIComponents();
+            }
+            catch (IOException ex)
+            {
+                //TODO ??
+                ex.printStackTrace();
+            }
+        });
         pt.play();
 
         m_TreeGraph.endUpdate();
@@ -344,5 +351,11 @@ public class CommitTreeManager
     public void deleteBranch(String i_ChosedBranchName) throws IOException
     {
         m_LeftController.deleteBranch(i_ChosedBranchName);
+    }
+
+    public void animateBranchConnections(BranchNode i_BranchNode)
+    {
+        List<Commit> connectedCommits = m_LeftController.getConnectedCommitsByBranch(m_BranchByBranchNode.get(i_BranchNode));
+
     }
 }

@@ -45,6 +45,7 @@ public class EngineManager
     {
         m_Repository = new Repository(i_RepPath, i_Name);
         m_IsRepositoryLoadedProperty.setValue(true);
+        m_IsRepositoryClonedProperty.setValue(m_Repository.getRemoteRepositoryPath() != null);
     }
 
     public boolean commit(String i_CommitMessage, String i_SecondParentSHA1) throws IOException
@@ -101,6 +102,7 @@ public class EngineManager
         m_Repository = new Repository(i_RepoPath);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_Repository.loadRepository(i_RepoPath);
+        m_IsRepositoryClonedProperty.setValue(m_Repository.getRemoteRepositoryPath() != null);
     }
 
     public boolean isDirectory(Path i_DirToCheck) { return FileUtilities.isDirectoryInFileSystem(i_DirToCheck); }
@@ -188,6 +190,7 @@ public class EngineManager
         m_Repository.loadNameFromFile();
         m_Repository.getMagit().loadBranches(Magit.getMagitDir().resolve("branches"), null);
         m_Repository.getMagit().loadHead();
+        m_IsRepositoryClonedProperty.setValue(m_Repository.getRemoteRepositoryPath() != null);
     }
 
     public boolean isRootFolderEmpty() throws IOException
@@ -200,6 +203,7 @@ public class EngineManager
     {
         m_Repository = new Repository(i_RepoPath, i_RepoName);
         m_IsRepositoryLoadedProperty.setValue(true);
+        m_IsRepositoryClonedProperty.setValue(m_Repository.getRemoteRepositoryPath() != null);
     }
 
     public Commit getNewestCommitByItDate()
@@ -450,9 +454,9 @@ public class EngineManager
         return m_Repository.isRRWcIsClean();
     }
 
-    public boolean isHeadRTBAndTrackingAfterRB()
+    public boolean isHeadRTB()
     {
-        return m_Repository.isHeadRTBAndTrackingAfterRB();
+        return m_Repository.isHeadRTB();
     }
 
     public boolean isRBEqualInRRAndLR(String i_TrackingAfter) throws IOException
@@ -483,5 +487,15 @@ public class EngineManager
     public BooleanProperty getIsRepositoryClonedProperty()
     {
         return m_IsRepositoryClonedProperty;
+    }
+
+    public boolean isHeadTrackingAfterRB()
+    {
+        return m_Repository.isHeadTrackingAfterRB();
+    }
+
+    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    {
+        return m_Repository.getConnectedCommitsByBranch(i_Branch);
     }
 }
