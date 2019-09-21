@@ -941,3 +941,15 @@ VBox > .split-menu-button.last > .arrow-button {
 .slider:vertical .track {
     -fx-pref-width: 5;
 }
+
+#refreshButton,
+#checkoutButton,
+#pushButton,
+#pullButton,
+#commitButton,
+#showStatusButton,
+#createNewBranchButton,
+#deleteBranchButton,
+#repositoryFullPathSplitMenuButton{
+    -fx-font-size: 10;
+}

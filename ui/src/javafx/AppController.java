@@ -1,6 +1,7 @@
 package javafx;
 
 import engine.*;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.primary.bottom.BottomController;
 import javafx.primary.center.CenterController;
@@ -59,6 +60,9 @@ public class AppController
 
         m_RepositoryNameTitleTextField = new TextField();
         m_RepositoryNameTitleTextField.textProperty().addListener((obs, oldTitle, newTitle) -> updateTitle(MAGIT_TITLE + newTitle));
+
+        // MenuItems and Buttons bindings
+        m_TopComponentController.bindControls();
     }
 
     public void createNewBranch(String i_BranchName, String i_CommitSHA1) throws IOException { m_Engine.createNewBranch(i_BranchName, i_CommitSHA1); }
@@ -520,5 +524,15 @@ public class AppController
     public void pushNotRTB() throws IOException, ParseException
     {
         m_Engine.pushNotRTB();
+    }
+
+    public BooleanProperty getIsRepositoryLoadedProperty()
+    {
+        return m_Engine.getIsRepositoryLoadedProperty();
+    }
+
+    public BooleanProperty getIsRepositoryClonedProperty()
+    {
+        return m_Engine.getIsRepositoryClonedProperty();
     }
 }

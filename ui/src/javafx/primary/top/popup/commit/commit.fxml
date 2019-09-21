@@ -12,12 +12,12 @@
    <children>
       <HBox maxHeight="75.0" maxWidth="500.0" minHeight="75.0" minWidth="500.0" prefHeight="75.0" prefWidth="500.0">
          <children>
-            <Label prefHeight="29.0" prefWidth="98.0" text="Commit message: ">
+            <Label prefHeight="29.0" prefWidth="136.0" text="Commit message: ">
                <HBox.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />
                </HBox.margin>
             </Label>
-            <Region prefHeight="75.0" prefWidth="172.0" />
+            <Region prefHeight="75.0" prefWidth="126.0" />
             <TextField fx:id="commitMessageTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="149.0">
                <HBox.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />

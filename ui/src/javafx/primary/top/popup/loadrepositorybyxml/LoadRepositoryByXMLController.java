@@ -93,10 +93,6 @@ public class LoadRepositoryByXMLController implements PopupController
                     task = createStashAndCreateEmptyRepositoryTask(XMLRepositoryLocation, repositoryName);
                     bindTaskToProgressBar(task);
                     new Thread(task).start();
-                    /*m_TopController.stashRepository(XMLRepositoryLocation);
-                    m_TopController.createEmptyRepository(XMLRepositoryLocation, repositoryName);
-                    updateCommitsUI();
-                    notifyRepositoryHasBeenLoaded();*/
                 }
             }
             else
@@ -105,10 +101,6 @@ public class LoadRepositoryByXMLController implements PopupController
                 task = createCreateEmptyRepositoryTask(XMLRepositoryLocation, repositoryName);
                 bindTaskToProgressBar(task);
                 new Thread(task).start();
-
-                /*createNewRepository(XMLRepositoryLocation, repositoryName);
-                updateCommitsUI();
-                notifyRepositoryHasBeenCreated();*/
             }
         }
         else if (validateXMLRepository(XMLRepo, XMLFilePath, m_TopController.getMagitSingleFolderByID()))
@@ -121,11 +113,6 @@ public class LoadRepositoryByXMLController implements PopupController
                     task = createCreateNonEmptyRepositoryTask(true, XMLRepositoryLocation, XMLRepo);
                     bindTaskToProgressBar(task);
                     new Thread(task).start();
-
-                    /*m_TopController.stashRepository(XMLRepositoryLocation);
-                    m_TopController.readRepositoryFromXMLFile(XMLRepo, m_TopController.getXMLMagitMaps());
-                    updateCommitsUI();
-                    notifyRepositoryLoadedSuccessfullyFromXML(XMLRepo.getName());*/
                 }
             }
             else
@@ -135,9 +122,6 @@ public class LoadRepositoryByXMLController implements PopupController
                     task = createCreateNonEmptyRepositoryTask(false, XMLRepositoryLocation, XMLRepo);
                     bindTaskToProgressBar(task);
                     new Thread(task).start();
-                    /*m_TopController.readRepositoryFromXMLFile(XMLRepo, m_TopController.getXMLMagitMaps());
-                    updateCommitsUI();
-                    notifyRepositoryLoadedSuccessfullyFromXML(XMLRepo.getName());*/
                 }
                 else
                 {

@@ -96,8 +96,6 @@ public class CloneRepositoryController implements PopupController
         m_TopController.cloneRepository(Paths.get(sourceDirectoryTextField.getText()), destination, repositoryNameTextField.getText());
         AlertFactory.createInformationAlert("Clone repository", "The repository has been cloned successfully")
                 .showAndWait();
-        m_TopController.clearCommitTableViewAndTreeView();
-        m_TopController.addCommitsToTableView();
-        m_TopController.updateCommitTree();
+        m_TopController.updateUIComponents();
     }
 }

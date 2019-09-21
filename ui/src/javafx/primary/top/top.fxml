@@ -42,7 +42,7 @@
                   <CheckMenuItem fx:id="resertBranchAnimationCheckMenuItem" mnemonicParsing="false" text="Resert branch animation" />
                   <CheckMenuItem fx:id="branchPulseAnimationCheckMenuItem" mnemonicParsing="false" text="Branch pulse animation" />
                </items></Menu>
-          <Menu mnemonicParsing="false" text="Commands">
+          <Menu fx:id="commandsMenu" mnemonicParsing="false" text="Commands">
             <items>
               <MenuItem fx:id="commitMenuItem" mnemonicParsing="false" onAction="#commitMenuItemAction" text="Commit" />
                   <MenuItem fx:id="pullMenuItem" mnemonicParsing="false" onAction="#pullMenuItemOnAction" text="Pull" />
@@ -67,7 +67,7 @@
             </Menu>
         </menus>
       </MenuBar>
-      <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="400.0" prefHeight="25.0" prefWidth="904.0" VBox.vgrow="NEVER">
+      <HBox fx:id="shortcutMenuHBox" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="400.0" prefHeight="25.0" prefWidth="904.0" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonAction" prefHeight="25.0" prefWidth="76.0" text="Refresh" HBox.hgrow="NEVER">
                <font>
@@ -78,7 +78,7 @@
                <font>
                   <Font size="11.0" />
                </font></SplitMenuButton>
-            <Button mnemonicParsing="false" onAction="#checkoutMenuItemAction" prefHeight="25.0" prefWidth="75.0" text="Checkout" HBox.hgrow="NEVER">
+            <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#checkoutMenuItemAction" prefHeight="25.0" prefWidth="75.0" text="Checkout" HBox.hgrow="NEVER">
                <font>
                   <Font size="11.0" />
                </font>

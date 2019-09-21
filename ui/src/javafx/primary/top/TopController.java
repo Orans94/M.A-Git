@@ -3,6 +3,8 @@ package javafx.primary.top;
 import engine.*;
 import javafx.AlertFactory;
 import javafx.AppController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.StageUtilities;
@@ -25,6 +27,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import mypackage.*;
@@ -87,7 +90,7 @@ public class TopController
     @FXML private CheckMenuItem resertBranchAnimationCheckMenuItem;
     @FXML private CheckMenuItem branchPulseAnimationCheckMenuItem;
     @FXML private MenuItem commitMenuItem;
-
+    @FXML private Menu commandsMenu;
     @FXML private MenuItem pullMenuItem;
     @FXML private MenuItem pushMenuItem;
     @FXML private MenuItem createNewBranchMenuItem;
@@ -109,10 +112,27 @@ public class TopController
     @FXML private Button createNewBranchButton;
     @FXML private Button deleteBranchButton;
     @FXML private SplitMenuButton repositoryFullPathSplitMenuButton;
+    @FXML private HBox shortcutMenuHBox;
 
     public MenuItem getCommitMenuItem() { return commitMenuItem; }
     public CheckMenuItem getResertBranchAnimationCheckMenuItem() { return resertBranchAnimationCheckMenuItem; }
     public CheckMenuItem getBranchPulseAnimationCheckMenuItem() { return branchPulseAnimationCheckMenuItem; }
+
+    public void bindControls()
+    {
+        BooleanProperty isRepositoryLoadedProp = m_MainController.getIsRepositoryLoadedProperty();
+        BooleanProperty isClonedProp = m_MainController.getIsRepositoryClonedProperty();
+
+        commandsMenu.disableProperty().bind(Bindings.not(isRepositoryLoadedProp));
+        shortcutMenuHBox.disableProperty().bind(Bindings.not(isRepositoryLoadedProp));
+
+        pullMenuItem.disableProperty().bind(Bindings.not(isClonedProp));
+        fetchMenuItem.disableProperty().bind(Bindings.not(isClonedProp));
+        pushMenuItem.disableProperty().bind(Bindings.not(isClonedProp));
+
+        pullButton.disableProperty().bind(Bindings.not(isClonedProp));
+        pushButton.disableProperty().bind(Bindings.not(isClonedProp));
+    }
 
     public void setUpdateUsernameComponent(Parent i_UpdateUsernameComponent) { this.m_UpdateUsernameComponent = (VBox) i_UpdateUsernameComponent; }
 

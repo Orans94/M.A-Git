@@ -1,9 +1,6 @@
 TODO
-- check delete branch can't delete head branch
 - delete all unused methods and members
-- binds menuitems to repository object, if it is null disable it.
 - disable fetch opreation menu item of the repository is not tracking after reposirory
-- after clone repository name doesn't change
 - when initializing new repo - empty master branch is created - dont allow to create new branch until master is pointing on commit
 - fix resizing - start size should be smaller, minimum size should be set that you can see all the buttons and components(nothing is disappearing).
 - delete branch : delete RTB is ok, but when we delete RB - if he has RTB we should change that he is not tracking anymore and tracking after is null.
@@ -11,6 +8,6 @@ TODO
 for readme file:
 - if a commit got two parents we displayed both of the deltas
 - delete branch : delete RTB is ok, but when we delete RB - if he has RTB we should change that he is not tracking anymore and tracking after is null.
-
+- tree view don't have scroll
 
 BUG:
