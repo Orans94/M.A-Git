@@ -8,6 +8,8 @@
       <element id="file-copy" path="$PROJECT_DIR$/resources/commons-codec-1.12.jar" />
       <element id="file-copy" path="$PROJECT_DIR$/resources/commons-io-2.6.jar" />
       <element id="file-copy" path="$PROJECT_DIR$/resources/commons-collections4-4.3.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/resources/AncestorFinder.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/resources/fxgraph-0.0.3.jar" />
     </root>
   </artifact>
 </component>

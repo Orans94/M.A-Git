@@ -2,6 +2,8 @@ package javafx.primary.left.committree.node.commit.contextmenu;
 
 import engine.Branch;
 import engine.Commit;
+import engine.MergeNodeMaps;
+import engine.OpenChanges;
 import javafx.AlertFactory;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;
@@ -33,24 +35,104 @@ public class ContextMenuController implements PopupController
     @FXML private MenuItem mergeHeadBranchMenuItem;
     @FXML private MenuItem deleteBranchMenuItem;
     @FXML private Label chooseBranchLabel;
-    @FXML private ChoiceBox<String> branchChoiceBox;
+    @FXML private ChoiceBox<String> branchChoiceBox = new ChoiceBox<>();
     @FXML private TextField branchNameTextField;
     private CommitTreeManager m_CommitTreeManager;
     private TopController m_TopController;
+    @FXML private CheckBox toCheckout = new CheckBox();
 
     public void setCommitTreeManager(CommitTreeManager i_CommitTreeManager) { this.m_CommitTreeManager = i_CommitTreeManager; }
 
     public void setCommitSHA1(String i_CommitSHA1) { this.m_CommitSHA1 = i_CommitSHA1; }
+
+    private void handleCreateNewBranch(String i_BranchName) throws IOException
+    {
+        String branchName = i_BranchName;
+        String commitSHA1Selected = m_CommitSHA1;
+
+        boolean isBranchExists = m_TopController.isBranchExists(branchName);
+        if (isBranchExists)
+        {
+            AlertFactory.createErrorAlert("Create New Branch", "Branch " + branchName + " already exists")
+                    .showAndWait();
+        }
+        else
+        {
+            if (m_TopController.isBranchNameEqualsHead(branchName))
+            {
+                AlertFactory.createErrorAlert("Create New Branch", "You can not set branch name to HEAD")
+                        .showAndWait();
+            }
+            else
+            {
+                String rbName = m_TopController.getRBNameFromCommitSHA1(commitSHA1Selected);
+
+                if (rbName != null)
+                {
+                    // the selected commit is pointed by RB
+                    String messageRTBIssue = "The commit you choose recognized as a commit that pointed by RB." + System.lineSeparator() +
+                            "Would you like to create the new branch as an RTB?" + System.lineSeparator() +
+                            "*Note: if you chose to create it as RTB, the branch name will be the same as the RB.";
+                    boolean createBranchAsRTB = AlertFactory.createYesNoAlert("Create new branch", messageRTBIssue)
+                            .showAndWait().get().getText().equals("Yes");
+                    String createdBranchName;
+                    if (createBranchAsRTB)
+                    {
+                        rbName = m_TopController.getTrackingBranchName(rbName);
+                        createdBranchName = rbName;
+                        m_TopController.createNewRTB(rbName);
+                    }
+                    else
+                    {
+                        createdBranchName = branchName;
+                        m_TopController.createNewBranch(branchName, commitSHA1Selected);
+                    }
+                    handleCheckoutUserDecision(createdBranchName);
+                }
+                else
+                {
+                    m_TopController.createNewBranch(branchName, commitSHA1Selected);
+                    handleCheckoutUserDecision(branchName);
+                }
+                m_TopController.updateCommitTree();
+            }
+        }
+    }
+
+    private void handleCheckoutUserDecision(String i_BranchName) throws IOException
+    {
+        boolean isCheckout = toCheckout.isSelected();
+        if (isCheckout)
+        {
+            OpenChanges openChanges = m_TopController.getFileSystemStatus();
+            if (m_TopController.isFileSystemDirty(openChanges))
+            {
+                // WC dirty - didnt checkout
+                AlertFactory.createInformationAlert("Create New Branch", "Branch " + i_BranchName + " created successfully"
+                        + System.lineSeparator() + "The WC status is dirty, the system did not checked out")
+                        .showAndWait();
+            }
+            else
+            {
+                // WC clean - we can checkout
+                m_TopController.setActiveBranchName(i_BranchName);
+                AlertFactory.createInformationAlert("Create New Branch", "Branch " + i_BranchName + " created successfully"
+                        + System.lineSeparator() + "Checkout to branch " + i_BranchName + " has been made successfully")
+                        .showAndWait();
+            }
+        }
+        else
+        {
+            AlertFactory.createInformationAlert("Create New Branch", "Branch " + i_BranchName + " created successfully")
+                    .showAndWait();
+        }
+    }
 
     @FXML
     void createNewBranchMenuItemAction(ActionEvent event) throws IOException
     {
         String commit = m_CommitSHA1;
         Stage stage = StageUtilities.createPopupStage("Create new branch", ENTER_BRANCH_NAME_FXML_RESOURCE, m_TopController);
-        stage.setOnCloseRequest(evt -> {
-            // prevent window from closing
-            evt.consume();
-        });
         ContextMenuController contextMenuController = getContextMenuController(stage);
         contextMenuController.m_CommitSHA1 = commit;
         stage.showAndWait();
@@ -63,7 +145,6 @@ public class ContextMenuController implements PopupController
         ChoiceBox<String> savedChoiceBox = branchChoiceBox;
         // -------------------- SAME TRICK --------------------------
 
-        //branchChoiceBox.getItems().clear();
         List<Branch> containedBranches;
         containedBranches = m_CommitTreeManager.getContainedBranches(m_CommitSHA1);
         if(containedBranches.size() == 1)
@@ -81,11 +162,7 @@ public class ContextMenuController implements PopupController
         }
         else if(containedBranches.size() > 1)
         {
-            for(Branch branch : containedBranches)
-            {
-                branchChoiceBox.getItems().add(branch.getName());
-            }
-            branchChoiceBox.getSelectionModel().select(0);
+
             //chooseBranchLabel.setText("In order to delete branch , please choose a branch from the list below");
             Stage stage = StageUtilities.createPopupStage("Choose Branch", CHOOSE_BRANCH_FXML_RESOURCE, m_TopController);
             stage.setOnCloseRequest(evt -> {
@@ -119,42 +196,32 @@ public class ContextMenuController implements PopupController
     @FXML
     void mergeHeadBranchMenuItemAction(ActionEvent event) throws IOException
     {
-        branchChoiceBox.getItems().clear();
         List<Branch> branchNames;
- 
+        ChoiceBox<String> savedChoiceBox = branchChoiceBox;
+
         branchNames = m_CommitTreeManager.getContainedBranches(m_CommitSHA1);
         if(branchNames.size() == 1)
         {
-            m_TopController.merge(branchNames.get(0).getName());
-            m_TopController.updateUIComponents();
-            AlertFactory.createInformationAlert("Merge", "Merged successfully").showAndWait();
+            handleMerge(event, branchNames.get(0).getName());
         }
         else if(branchNames.size() > 1)
         {
-            for(Branch branch : branchNames)
-            {
-                branchChoiceBox.getItems().add(branch.getName());
-            }
-            branchChoiceBox.getSelectionModel().select(1);
             chooseBranchLabel.setText("In order to merge , please choose a branch from the list below");
             Stage stage = StageUtilities.createPopupStage("Choose Branch", CHOOSE_BRANCH_FXML_RESOURCE, m_TopController);
+            ContextMenuController contextMenuController = getContextMenuController(stage);
+            contextMenuController.branchChoiceBox.setItems(savedChoiceBox.getItems());
             stage.setOnCloseRequest(evt -> {
                 // prevent window from closing
                 evt.consume();
             });
             stage.showAndWait();
-
-            m_TopController.merge(branchChoiceBox.getSelectionModel().getSelectedItem());
-            m_TopController.updateUIComponents();
-            AlertFactory.createInformationAlert("Merge", "Merged successfully").showAndWait();
+            handleMerge(event, branchChoiceBox.getSelectionModel().getSelectedItem());
         }
         else
         {
             AlertFactory.createErrorAlert("Merge", "There are no branches pointing on the current commit")
                     .showAndWait();
         }
-
-        branchChoiceBox.getItems().clear();
     }
 
     @FXML
@@ -162,15 +229,26 @@ public class ContextMenuController implements PopupController
     {
         if(!m_CommitTreeManager.getActiveBranchPointedCommit().equals(m_CommitSHA1))
         {
-            m_CommitTreeManager.resetHeadBranch(m_CommitSHA1);
+            resetBranchAnimateIfSelected(m_CommitSHA1);
+            m_TopController.changeActiveBranchPointedCommit(m_CommitSHA1);
+            m_TopController.checkout(m_TopController.getActiveBranchName());
+            m_TopController.showDetailsOfCurrentCommitScene(event);
             m_TopController.updateUIComponents();
-            AlertFactory.createInformationAlert("Reset branch", "Head branch reset successful").showAndWait();
+            AlertFactory.createInformationAlert("Reset branch", "The active branch is now pointing on commit " + m_CommitSHA1)
+                    .showAndWait();
+
         }
         else
         {
             AlertFactory.createErrorAlert("Reset branch", "Head branch is already pointing on that commit")
                     .showAndWait();
         }
+    }
+
+    private void resetBranchAnimateIfSelected(String I_CommitSHA1)
+    {
+        if (m_TopController.getResertBranchAnimationCheckMenuItem().isSelected())
+            m_TopController.resetBranchAnimate(I_CommitSHA1);
     }
 
     @FXML
@@ -182,44 +260,21 @@ public class ContextMenuController implements PopupController
     @FXML
     void createBranchAction(ActionEvent event) throws IOException
     {
-        if(!m_TopController.getBranches().containsKey(branchNameTextField.getText()) && !branchNameTextField.getText().equals(EMPTY_STRING))
-        {
-            m_TopController.createNewBranch(branchNameTextField.getText(), m_CommitSHA1);
-            m_TopController.updateUIComponents();
-            AlertFactory.createInformationAlert("Create new branch", "Branch " + branchNameTextField.getText() + " created successfully")
-                    .showAndWait();
-        }
-        else
-        {
-            AlertFactory.createErrorAlert("Create new branch", "Branch " + branchNameTextField.getText() + " already exists").showAndWait();
-        }
-
+        handleCreateNewBranch(branchNameTextField.getText());
         branchNameTextField.clear();
         StageUtilities.closeOpenSceneByActionEvent(event);
     }
 
     public void addToCheckBox()
     {
-
-        bindBranchesToChoiceBox();
-    }
-
-    public void bindBranchesToChoiceBox()
-    {
-        Map<String, Branch> branches = m_TopController.getBranches();
-        addAllBranchesToChoiceBox(branches);
-    }
-
-    public void addAllBranchesToChoiceBox(Map<String, Branch> i_Branches)
-    {
-        Branch activeBranch = m_TopController.getActiveBranch();
-
-        for(Branch branch : i_Branches.values())
+        for(Branch branch : m_CommitTreeManager.getContainedBranches(m_CommitSHA1))
         {
-            branchChoiceBox.getItems().add(branch.getName());
+            if(!branch.getName().equals(m_TopController.getActiveBranchName()))
+            {
+                branchChoiceBox.getItems().add(branch.getName());
+                branchChoiceBox.getSelectionModel().selectFirst();
+            }
         }
-
-        branchChoiceBox.setValue(activeBranch.getName());
     }
 
     @Override
@@ -228,4 +283,37 @@ public class ContextMenuController implements PopupController
         m_TopController = i_TopController;
     }
 
+    private void handleMerge(ActionEvent event, String i_TheirBranchName) throws IOException
+    {
+        if(m_TopController.isFastForwardMerge(i_TheirBranchName))
+        {
+            if(m_TopController.isOursContainsTheirs(i_TheirBranchName))
+            {
+                AlertFactory.createInformationAlert("Merge", "Fast forward merge, nothing to merge")
+                        .showAndWait();
+            }
+            else
+            { // their contains ours
+                m_TopController.setActiveBranchPointedCommit(i_TheirBranchName);
+                AlertFactory.createInformationAlert("Merge", "Fast forward merge, active branch points to " + i_TheirBranchName + "pointed commit")
+                        .showAndWait();
+            }
+        }
+        else
+        {
+            MergeNodeMaps mergeNodeMapsResult = m_TopController.merge(i_TheirBranchName);
+
+            // solve conflicts if exists
+            if (mergeNodeMapsResult.getConflicts().size() > 0)
+            {
+                m_TopController.showMergeSolveConflictsScene(mergeNodeMapsResult);
+            }
+
+            // commit the merge
+            String theirParentCommitSHA1 = m_TopController.getPointedCommitSHA1(i_TheirBranchName);
+            m_TopController.showForcedCommitScene(event, theirParentCommitSHA1);
+        }
+
+        m_TopController.updateUIComponents();
+    }
 }

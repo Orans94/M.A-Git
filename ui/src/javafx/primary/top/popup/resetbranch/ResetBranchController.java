@@ -95,7 +95,10 @@ public class ResetBranchController implements PopupController
                 .showAndWait();
         m_TopController.checkout(m_TopController.getActiveBranchName());
         m_TopController.showDetailsOfCurrentCommitScene(event);
-        m_TopController.updateUIComponents();
+        if (!m_TopController.getResertBranchAnimationCheckMenuItem().isSelected())
+        {
+            m_TopController.updateUIComponents();
+        }
     }
 
     private void tableViewLoad() { commitsTableView.setItems(m_CommitsObservableList); }

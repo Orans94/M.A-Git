@@ -37,7 +37,6 @@
                   </RadioMenuItem>
                   <RadioMenuItem fx:id="darkThemeRadioMenuItem" mnemonicParsing="false" onAction="#darkThemeRadioMenuItemAction" text="Dark theme" toggleGroup="$themes" />
                   <RadioMenuItem fx:id="lightThemeRadioMenuItem" mnemonicParsing="false" onAction="#lightThemeRadioMenuItemAction" text="Light theme" toggleGroup="$themes" />
-                  <RadioMenuItem fx:id="setBackgroundImageRadioMenuItem" mnemonicParsing="false" text="Choose backgroud photo" toggleGroup="$themes" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <CheckMenuItem fx:id="resertBranchAnimationCheckMenuItem" mnemonicParsing="false" text="Resert branch animation" />
                   <CheckMenuItem fx:id="branchPulseAnimationCheckMenuItem" mnemonicParsing="false" text="Branch pulse animation" />

@@ -9,6 +9,7 @@ import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.primary.left.LeftController;
 import javafx.primary.left.committree.node.branch.BranchNode;
+import javafx.primary.left.committree.node.branchpulseanimation.PulseTransition;
 import javafx.primary.left.committree.node.commit.CommitNode;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
@@ -300,7 +301,7 @@ public class CommitTreeManager
         addBranchesToGraphModel();
 
         BranchNode animateBranchNode = m_BranchNodeByBranch.get(activeBranch);
-        animateBranchNode.getBranchNodeController().setBranchesNamesLabelText(EMPTY_STRING);
+        animateBranchNode.getBranchNodeController().setBranchesNamesLabelText(activeBranch.getName());
 
         CommitNode commitNode = m_CommitNodeByCommit.get(m_LeftController.getCommit(i_CommitSHA1));
         Region branchNodeGraphic = m_TreeGraph.getGraphic(animateBranchNode);
@@ -355,7 +356,33 @@ public class CommitTreeManager
 
     public void animateBranchConnections(BranchNode i_BranchNode)
     {
-        List<Commit> connectedCommits = m_LeftController.getConnectedCommitsByBranch(m_BranchByBranchNode.get(i_BranchNode));
+        List<Commit> connectedCommits = m_LeftController.getConnectedCommitsByCommitSHA1(m_BranchByBranchNode.get(i_BranchNode).getCommitSHA1());
+        PulseTransition pulseTransition;
 
+        for (Commit commit : connectedCommits)
+        {
+            pulseTransition = new PulseTransition(m_TreeGraph.getGraphic(m_CommitNodeByCommit.get(commit)));
+            pulseTransition.setAutoReverse(false);
+            pulseTransition.setRate(60);
+            pulseTransition.setCycleCount(130);
+            pulseTransition.play();
+        }
+    }
+
+    public void boldCommitHierarchy(String i_CommitSHA1)
+    {
+        List<Commit> connectedCommits = m_LeftController.getConnectedCommitsByCommitSHA1(i_CommitSHA1);
+
+        for (Commit commit : connectedCommits)
+        {
+            CommitNode commitNode = m_CommitNodeByCommit.get(commit);
+            int circleRadius = commitNode.getCommitNodeController().getCircleRadius();
+            m_CommitNodeByCommit.get(commit).getCommitNodeController().setCircleRadius( circleRadius * 1.4);
+        }
+    }
+
+    public void updateCommitTree()
+    {
+        m_LeftController.updateCommitTree();
     }
 }

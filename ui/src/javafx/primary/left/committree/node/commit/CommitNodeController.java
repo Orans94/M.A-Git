@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.primary.left.committree.node.commit.contextmenu.ContextMenuController;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
@@ -18,12 +19,25 @@ public class CommitNodeController
     @FXML private Circle CommitCircle;
     private CommitNode m_CommitNode;
 
+
     @FXML
     void commitNodeMouseClicked(MouseEvent event)
     {
-        String commitSHA1 = m_CommitNode.getSHA1();
-        m_CommitNode.commitNodeTreeSelected(commitSHA1);
+        if (event.getButton().equals(MouseButton.PRIMARY))
+        {
+            // select commit on table view
+            String commitSHA1 = m_CommitNode.getSHA1();
+            m_CommitNode.commitNodeTreeSelected(commitSHA1);
+
+            // redraw commit tree
+            m_CommitNode.updateCommitTree();
+
+            // bold commits hierarchy
+            m_CommitNode.boldCommitHierarchy();
+        }
     }
+
+    public void setCircleRadius(double x) { CommitCircle.setRadius(x); }
 
     public Circle getCommitCircle() { return CommitCircle; }
 
@@ -59,7 +73,5 @@ public class CommitNodeController
         // --------- add your shit to this checkbox here ---------
 
         root.show(CommitCircle, event.getScreenX(), event.getScreenY());
-
-        System.out.println(controller.hashCode());
     }
 }

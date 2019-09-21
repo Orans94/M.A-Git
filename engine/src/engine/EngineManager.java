@@ -494,8 +494,8 @@ public class EngineManager
         return m_Repository.isHeadTrackingAfterRB();
     }
 
-    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    public List<Commit> getConnectedCommitsByCommitSHA1(String i_CommitSHA1)
     {
-        return m_Repository.getConnectedCommitsByBranch(i_Branch);
+        return m_Repository.getConnectedCommitsByCommitSHA1(i_CommitSHA1);
     }
 }

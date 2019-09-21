@@ -91,8 +91,8 @@ public class LeftController
         m_MainController.updateUIComponents();
     }
 
-    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    public List<Commit> getConnectedCommitsByCommitSHA1(String i_CommitSHA1)
     {
-        return m_MainController.getConnectedCommitsByBranch(i_Branch);
+        return m_MainController.getConnectedCommitsByCommitSHA1(i_CommitSHA1);
     }
 }

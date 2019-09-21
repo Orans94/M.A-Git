@@ -1629,8 +1629,8 @@ public class Repository
         return m_Magit.getBranches().containsKey(activeBranch.getTrackingAfter()) && m_Magit.getBranches().get(activeBranch.getTrackingAfter()).getIsRemote();
     }
 
-    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    public List<Commit> getConnectedCommitsByCommitSHA1(String i_CommitSHA1)
     {
-        return m_Magit.getConnectedCommitsByBranch(i_Branch);
+        return m_Magit.getConnectedCommitsByCommitSHA1(i_CommitSHA1);
     }
 }

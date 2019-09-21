@@ -59,8 +59,9 @@ public class MergeSelectBranchController implements PopupController
             String theirParentCommitSHA1 = m_TopController.getPointedCommitSHA1(theirBranchName);
             m_TopController.showForcedCommitScene(event, theirParentCommitSHA1);
         }
-
-        m_TopController.updateCommitTree();
+        // TODO - changed from line num 2 to line num 1
+        m_TopController.updateUIComponents();
+        //m_TopController.updateCommitTree();
 
         // close stage
         StageUtilities.closeOpenSceneByActionEvent(event);

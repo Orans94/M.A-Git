@@ -25,14 +25,17 @@ public class CommitNode extends AbstractCell
 {
     private String m_SHA1;
     private Date m_DateOfCreation;
-    private CommitNodeController m_CommitNodeController;
-    private CommitTreeManager m_CommitTreeManager;
 
+    private CommitNodeController m_CommitNodeController;
+
+    private CommitTreeManager m_CommitTreeManager;
     public CommitNode(Date i_DateOfCreation, String i_SHA1)
     {
         this.m_DateOfCreation = i_DateOfCreation;
         this.m_SHA1 = i_SHA1;
     }
+
+    public CommitNodeController getCommitNodeController() { return m_CommitNodeController; }
 
     @Override
     public Region getGraphic(Graph graph)
@@ -92,5 +95,15 @@ public class CommitNode extends AbstractCell
     public void commitNodeTreeSelected(String i_CommitSHA1)
     {
         m_CommitTreeManager.commitNodeTreeSelected(i_CommitSHA1);
+    }
+
+    public void boldCommitHierarchy()
+    {
+        m_CommitTreeManager.boldCommitHierarchy(m_SHA1);
+    }
+
+    public void updateCommitTree()
+    {
+        m_CommitTreeManager.updateCommitTree();
     }
 }

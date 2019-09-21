@@ -273,17 +273,23 @@ public class Magit
         return isRB && isRTBAlreadyTracking;
     }
 
-    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    public List<Commit> getConnectedCommitsByCommitSHA1(String i_CommitSHA1)
     {
         List<Commit> connectedCommits = new LinkedList<>();
 
-        addConnectedCommitsRecursive(connectedCommits, i_Branch.getCommitSHA1());
+        addConnectedCommitsRecursive(connectedCommits, i_CommitSHA1);
 
         return connectedCommits;
     }
 
     private void addConnectedCommitsRecursive(List<Commit> i_ConnectedCommits, String i_CommitSHA1)
     {
+        Commit currentCommit = m_Commits.get(i_CommitSHA1);
 
+        i_ConnectedCommits.add(currentCommit);
+        for (String parentSHA1 : currentCommit.getParentsSHA1())
+        {
+            addConnectedCommitsRecursive(i_ConnectedCommits, parentSHA1);
+        }
     }
 }

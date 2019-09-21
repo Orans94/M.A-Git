@@ -552,8 +552,8 @@ public class AppController
         updateOpenChangesBar();
     }
 
-    public List<Commit> getConnectedCommitsByBranch(Branch i_Branch)
+    public List<Commit> getConnectedCommitsByCommitSHA1(String i_CommitSHA1)
     {
-        return m_Engine.getConnectedCommitsByBranch(i_Branch);
+        return m_Engine.getConnectedCommitsByCommitSHA1(i_CommitSHA1);
     }
 }
