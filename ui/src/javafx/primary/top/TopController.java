@@ -1,6 +1,10 @@
 package javafx.primary.top;
 
-import engine.*;
+import engine.branches.Branch;
+import engine.dataobjects.MergeNodeMaps;
+import engine.dataobjects.OpenChanges;
+import engine.objects.Commit;
+import engine.xml.XMLMagitMaps;
 import javafx.AlertFactory;
 import javafx.AppController;
 import javafx.beans.binding.Bindings;

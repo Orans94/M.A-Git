@@ -1,7 +1,7 @@
 package javafx.primary.top.popup.showinformation;
 
-import engine.Branch;
-import engine.Head;
+import engine.branches.Branch;
+import engine.branches.Head;
 
 import java.util.Map;
 

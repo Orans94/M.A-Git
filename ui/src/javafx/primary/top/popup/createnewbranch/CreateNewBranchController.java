@@ -1,7 +1,7 @@
 package javafx.primary.top.popup.createnewbranch;
 
-import engine.Commit;
-import engine.OpenChanges;
+import engine.objects.Commit;
+import engine.dataobjects.OpenChanges;
 import javafx.AlertFactory;
 import javafx.StageUtilities;
 import javafx.application.Platform;

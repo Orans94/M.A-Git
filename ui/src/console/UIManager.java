@@ -1,5 +1,13 @@
 package console;
-import engine.*;
+import engine.branches.Branch;
+import engine.branches.Head;
+import engine.dataobjects.NodeMaps;
+import engine.dataobjects.OpenChanges;
+import engine.managers.EngineManager;
+import engine.objects.Commit;
+import engine.objects.Folder;
+import engine.objects.Item;
+import engine.utils.DateUtils;
 import mypackage.MagitRepository;
 import mypackage.MagitSingleFolder;
 

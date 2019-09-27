@@ -1,6 +1,6 @@
 package javafx.primary.top.popup.showinformation;
 
-import engine.Commit;
+import engine.objects.Commit;
 import javafx.fxml.FXML;
 import javafx.primary.top.TopController;
 import javafx.primary.top.popup.PopupController;

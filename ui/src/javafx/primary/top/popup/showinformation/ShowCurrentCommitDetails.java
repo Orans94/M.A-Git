@@ -1,9 +1,9 @@
 package javafx.primary.top.popup.showinformation;
 
-import engine.DateUtils;
-import engine.Folder;
-import engine.Item;
-import engine.NodeMaps;
+import engine.utils.DateUtils;
+import engine.objects.Folder;
+import engine.objects.Item;
+import engine.dataobjects.NodeMaps;
 
 import java.nio.file.Path;
 import java.util.List;

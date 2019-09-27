@@ -2,27 +2,18 @@ package javafx.primary.left.committree.node.branch;
 
 import com.fxgraph.cells.AbstractCell;
 import com.fxgraph.graph.Graph;
-import com.fxgraph.graph.IEdge;
-import engine.StringFinals;
 import javafx.ComponentControllerConnector;
-import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.primary.left.committree.CommitTreeManager;
-import javafx.primary.left.committree.node.commit.CommitNodeController;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
-import javafx.scene.shape.Shape;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Date;
 
-import static engine.StringFinals.EMPTY_STRING;
+import static engine.utils.StringFinals.EMPTY_STRING;
 import static javafx.CommonResourcesPaths.BRANCH_NODE_GRAPH_FMXL_RESOURCE;
-import static javafx.CommonResourcesPaths.COMMIT_NODE_GRAPH_FXML_RESOURCE;
 
 public class BranchNode extends AbstractCell
 {

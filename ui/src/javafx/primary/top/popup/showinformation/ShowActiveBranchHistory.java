@@ -1,8 +1,8 @@
 package javafx.primary.top.popup.showinformation;
 
-import engine.Branch;
-import engine.Commit;
-import engine.DateUtils;
+import engine.branches.Branch;
+import engine.objects.Commit;
+import engine.utils.DateUtils;
 
 import java.util.Map;
 import java.util.SortedSet;

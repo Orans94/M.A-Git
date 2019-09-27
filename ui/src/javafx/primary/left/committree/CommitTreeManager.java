@@ -3,8 +3,8 @@ package javafx.primary.left.committree;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.Model;
-import engine.Branch;
-import engine.Commit;
+import engine.branches.Branch;
+import engine.objects.Commit;
 import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.primary.left.LeftController;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-import static engine.StringFinals.EMPTY_STRING;
+import static engine.utils.StringFinals.EMPTY_STRING;
 
 public class CommitTreeManager
 {

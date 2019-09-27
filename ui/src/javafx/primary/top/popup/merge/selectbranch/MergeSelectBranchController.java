@@ -1,7 +1,7 @@
 package javafx.primary.top.popup.merge.selectbranch;
 
-import engine.Branch;
-import engine.MergeNodeMaps;
+import engine.branches.Branch;
+import engine.dataobjects.MergeNodeMaps;
 import javafx.AlertFactory;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;

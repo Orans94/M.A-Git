@@ -1,29 +1,22 @@
 package javafx.primary.left.committree.node.commit.contextmenu;
 
-import engine.Branch;
-import engine.Commit;
-import engine.MergeNodeMaps;
-import engine.OpenChanges;
+import engine.branches.Branch;
+import engine.dataobjects.MergeNodeMaps;
+import engine.dataobjects.OpenChanges;
 import javafx.AlertFactory;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.primary.left.committree.CommitTreeManager;
-import javafx.primary.left.committree.node.commit.CommitNodeController;
 import javafx.primary.top.TopController;
 import javafx.primary.top.popup.PopupController;
-import javafx.primary.top.popup.merge.selectbranch.MergeSelectBranchController;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
-import static engine.StringFinals.EMPTY_STRING;
 import static javafx.CommonResourcesPaths.*;
 
 public class ContextMenuController implements PopupController

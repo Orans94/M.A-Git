@@ -1,6 +1,6 @@
 package javafx.primary.top.popup.deletebranch;
 
-import engine.Branch;
+import engine.branches.Branch;
 import javafx.AlertFactory;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;

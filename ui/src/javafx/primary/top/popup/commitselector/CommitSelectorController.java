@@ -1,9 +1,6 @@
 package javafx.primary.top.popup.commitselector;
 
-import engine.Commit;
-import engine.OpenChanges;
-import javafx.AlertFactory;
-import javafx.StageUtilities;
+import engine.objects.Commit;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;

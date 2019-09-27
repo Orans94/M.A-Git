@@ -1,7 +1,7 @@
 package javafx.primary.left;
 
-import engine.Branch;
-import engine.Commit;
+import engine.branches.Branch;
+import engine.objects.Commit;
 import javafx.AppController;
 import javafx.fxml.FXML;
 import javafx.primary.left.committree.CommitTreeManager;

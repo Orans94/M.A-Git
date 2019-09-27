@@ -1,6 +1,12 @@
 package javafx.primary.bottom;
 
-import engine.*;
+import engine.branches.Branch;
+import engine.dataobjects.OpenChanges;
+import engine.objects.Commit;
+import engine.objects.Folder;
+import engine.objects.Item;
+import engine.objects.Node;
+import engine.utils.DateUtils;
 import javafx.AppController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static engine.StringFinals.EMPTY_STRING;
+import static engine.utils.StringFinals.EMPTY_STRING;
 
 public class BottomController
 {

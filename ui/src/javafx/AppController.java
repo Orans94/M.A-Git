@@ -1,6 +1,15 @@
 package javafx;
 
-import engine.*;
+import engine.branches.Branch;
+import engine.branches.Head;
+import engine.dataobjects.MergeNodeMaps;
+import engine.dataobjects.NodeMaps;
+import engine.dataobjects.OpenChanges;
+import engine.managers.EngineManager;
+import engine.objects.Commit;
+import engine.objects.Folder;
+import engine.objects.Node;
+import engine.xml.XMLMagitMaps;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.primary.bottom.BottomController;

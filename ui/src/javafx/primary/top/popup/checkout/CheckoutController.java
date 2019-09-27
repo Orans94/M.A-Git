@@ -1,7 +1,7 @@
 package javafx.primary.top.popup.checkout;
 
-import engine.Branch;
-import engine.OpenChanges;
+import engine.branches.Branch;
+import engine.dataobjects.OpenChanges;
 import javafx.AlertFactory;
 import javafx.StageUtilities;
 import javafx.event.ActionEvent;
