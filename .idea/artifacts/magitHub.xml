@@ -13,6 +13,7 @@
           <element id="file-copy" path="$PROJECT_DIR$/resources/commons-collections4-4.3.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/resources/commons-io-2.6.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/resources/AncestorFinder.jar" />
+          <element id="library" level="module" name="gson" module-name="magitHub" />
         </element>
       </element>
     </root>

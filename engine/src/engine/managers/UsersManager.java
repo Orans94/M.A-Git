@@ -9,7 +9,6 @@ of the user of this class to handle the synchronization of isUserExists with oth
  */
 public class UsersManager
 {
-    private User m_ActiveUser;
     private final Map<String, User> m_UsersMap;
 
     public UsersManager() { m_UsersMap = new HashMap<>(); }
@@ -21,8 +20,4 @@ public class UsersManager
     public synchronized Map<String, User> getUsers() { return Collections.unmodifiableMap(m_UsersMap); }
 
     public boolean isUserExists(String i_Username) { return m_UsersMap.containsKey(i_Username); }
-
-    public User getActiveUser() { return m_ActiveUser; }
-
-    public void setActiveUser(String i_ActiveUsername) { m_ActiveUser = m_UsersMap.get(i_ActiveUsername); }
 }

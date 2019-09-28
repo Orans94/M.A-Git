@@ -7,8 +7,20 @@
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>magithub.servlets.LoginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>magithub.servlets.UserServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
     </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>UserServlet</servlet-name>
+        <url-pattern>/pages/main/user</url-pattern>
+    </servlet-mapping>
+
 </web-app>

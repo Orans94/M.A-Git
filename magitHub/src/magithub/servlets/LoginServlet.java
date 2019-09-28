@@ -62,7 +62,6 @@ public class LoginServlet extends HttpServlet
                     } else {
                         //add the new user to the users list
                         userManager.addUser(usernameFromParameter);
-                        userManager.setActiveUser(usernameFromParameter);
                         //set the username in a session so it will be available on each request
                         //the true parameter means that if a session object does not exists yet
                         //create a new one

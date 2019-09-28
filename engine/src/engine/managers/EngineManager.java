@@ -61,6 +61,7 @@ public class EngineManager
         m_LoadedRepository = new Repository(i_RepPath, i_Name);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
+        m_Repositories.put(i_RepPath, m_LoadedRepository);
     }
 
     public boolean commit(String i_CommitMessage, String i_SecondParentSHA1) throws IOException
@@ -102,6 +103,7 @@ public class EngineManager
         m_LoadedRepository.loadXMLRepoToSystem(i_XMLRepository, i_XMLMagitMaps);
         m_LoadedRepository.checkout(m_LoadedRepository.getMagit().getHead().getActiveBranch().getName());
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
+        m_Repositories.put(Paths.get(i_XMLRepository.getLocation()), m_LoadedRepository);
     }
 
     public OpenChanges getFileSystemStatus() throws IOException { return m_LoadedRepository.getFileSystemStatus(); }
@@ -118,6 +120,7 @@ public class EngineManager
         m_IsRepositoryLoadedProperty.setValue(true);
         m_LoadedRepository.loadRepository(i_RepoPath);
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
+        m_Repositories.put(i_RepoPath, m_LoadedRepository);
     }
 
     public boolean isDirectory(Path i_DirToCheck) { return FileUtilities.isDirectoryInFileSystem(i_DirToCheck); }
@@ -206,6 +209,7 @@ public class EngineManager
         m_LoadedRepository.getMagit().loadBranches(Magit.getMagitDir().resolve("branches"), null);
         m_LoadedRepository.getMagit().loadHead();
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
+        m_Repositories.put(i_RepoPath, m_LoadedRepository);
     }
 
     public boolean isRootFolderEmpty() throws IOException
@@ -219,6 +223,7 @@ public class EngineManager
         m_LoadedRepository = new Repository(i_RepoPath, i_RepoName);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
+        m_Repositories.put(i_RepoPath, m_LoadedRepository);
     }
 
     public Commit getNewestCommitByItDate()
@@ -407,6 +412,7 @@ public class EngineManager
         m_LoadedRepository.deleteRepositoryNameFile();
         m_LoadedRepository.createRepositoryNameFile();
         m_LoadedRepository.checkout(m_LoadedRepository.getMagit().getHead().getActiveBranch().getName());
+        m_Repositories.put(i_Source, m_LoadedRepository);
     }
 
     public boolean isRBBranch(String i_BranchName)
