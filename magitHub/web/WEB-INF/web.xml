@@ -11,6 +11,10 @@
         <servlet-name>UserServlet</servlet-name>
         <servlet-class>magithub.servlets.UserServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UploadRepositoryServlet</servlet-name>
+        <servlet-class>magithub.servlets.UploadRepositoryServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -21,6 +25,11 @@
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/pages/main/user</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UploadRepositoryServlet</servlet-name>
+        <url-pattern>/pages/main/upload-repository</url-pattern>
     </servlet-mapping>
 
 </web-app>
