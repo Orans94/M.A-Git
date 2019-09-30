@@ -36,7 +36,7 @@ public class Repository
     public static final String REPOSITORY_NAME_FILE = "RepositoryName.txt";
     private WC m_WorkingCopy;
     private Magit m_Magit;
-    private static List<String> m_ChildrenInformation = new LinkedList<>();
+    private transient static List<String> m_ChildrenInformation = new LinkedList<>();
     private String m_Name;
     private Path m_RemoteRepositoryPath = null;
 

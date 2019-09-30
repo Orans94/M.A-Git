@@ -1,6 +1,8 @@
 package magithub.servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import engine.managers.User;
 import engine.managers.UsersManager;
 import magithub.utils.ServletUtils;
@@ -20,12 +22,19 @@ public class UserServlet extends HttpServlet
         //returning JSON objects, not HTML
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            Gson gson = new Gson();
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.setPrettyPrinting();
+            Gson gson = gsonBuilder.create();
             UsersManager userManager = ServletUtils.getUserManager(getServletContext());
             User user = userManager.getUsers().get(i_UserName);
-            String json = gson.toJson(user);
-            out.println(json);
-            out.flush();
+           try
+           {
+               String json = gson.toJson(user);
+               out.println(json);
+               out.flush();
+           }
+           catch (StackOverflowError e) { e.printStackTrace();}
+
         }
     }
 

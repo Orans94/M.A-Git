@@ -1,12 +1,12 @@
 package engine.core;
 
 import engine.dataobjects.NodeMaps;
+import java.nio.file.Path;
 
-import java.nio.file.*;
 
 public class WC
 {
-    private Path m_WorkingCopyDir;
+    private transient Path m_WorkingCopyDir;
     private NodeMaps m_NodeMaps;
     private String m_CommitSHA1 = "";
 
