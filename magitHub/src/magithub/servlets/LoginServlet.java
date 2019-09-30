@@ -1,5 +1,6 @@
 package magithub.servlets;
 
+import engine.managers.User;
 import engine.managers.UsersManager;
 import magithub.constants.Constants;
 import magithub.utils.ServletUtils;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static magithub.constants.Constants.USER;
 import static magithub.constants.Constants.USERNAME;
 
 public class LoginServlet extends HttpServlet
@@ -22,9 +24,9 @@ public class LoginServlet extends HttpServlet
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
     {
         response.setContentType("text/html;charset=UTF-8");
-        String usernameFromSession = SessionUtils.getUsername(request);
+        String userNameFromSession = SessionUtils.getUsername(request);
         UsersManager userManager = ServletUtils.getUserManager(getServletContext());
-        if (usernameFromSession == null) {
+        if (userNameFromSession == null) {
             //user is not logged in yet
             String usernameFromParameter = request.getParameter(USERNAME);
             if (usernameFromParameter == null || usernameFromParameter.isEmpty()) {

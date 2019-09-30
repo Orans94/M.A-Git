@@ -97,6 +97,12 @@ public class EngineManager
         return jaxb.createRepositoryFromXML(i_XMLFilePath);
     }
 
+    public MagitRepository createXMLRepository(String i_XMLContent) throws JAXBException, FileNotFoundException
+    {
+        SchemaBasedJAXB jaxb = new SchemaBasedJAXB();
+        return jaxb.createRepositoryFromXML(i_XMLContent);
+    }
+
     public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException {
         m_LoadedRepository = new Repository(Paths.get(i_XMLRepository.getLocation()));
         m_IsRepositoryLoadedProperty.setValue(true);

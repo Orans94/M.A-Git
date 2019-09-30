@@ -1,5 +1,6 @@
 package magithub.utils;
 
+import engine.managers.User;
 import magithub.constants.Constants;
 
 import javax.servlet.http.HttpServletRequest;

@@ -5,10 +5,7 @@ import mypackage.MagitRepository;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Path;
 
 public class SchemaBasedJAXB
@@ -19,6 +16,15 @@ public class SchemaBasedJAXB
     {
         File file = new File(i_XMLFilePath.toString());
         InputStream inputStream = new FileInputStream(file);
+        JAXBContext jc = JAXBContext.newInstance(JAXB_XML_GAME_PACKAGE_NAME);
+        Unmarshaller u = jc.createUnmarshaller();
+
+        return (MagitRepository) u.unmarshal(inputStream);
+    }
+
+    public MagitRepository createRepositoryFromXML(String i_XMLContent) throws JAXBException, FileNotFoundException
+    {
+        InputStream inputStream = new ByteArrayInputStream(i_XMLContent.getBytes());
         JAXBContext jc = JAXBContext.newInstance(JAXB_XML_GAME_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
 

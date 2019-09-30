@@ -1,4 +1,6 @@
 const USER_URL = buildUrlWithContextPath("user");
+var numOfRepositories;
+
 
 $(function() { // onload function
     console.log("check2");
@@ -6,25 +8,16 @@ $(function() { // onload function
     $.ajax({
         url: "/magitHub/pages/main/user",
         data:{"isLoggedInUser" : "TRUE"},
-        timeout: 2000,
+        //timeout: 2000,
         error: function() {
             console.log("no");
         },
         success: function(data) {
             console.log(data);
-            $('<p>' + 'Welcome ' + data.m_Name + '</p>').appendTo($("#username"));
-
-            var counter = 0;
-            var repositoriesMap = data.m_Engine.m_Repositories;
-            $.each(repositoriesMap || [], function(index, repositories) {
-
-                //create a new <option> tag with a value in it and
-                //appeand it to the #userslist (div with id=userslist) element
-                $('<li>' + repositories + '</li>').appendTo($("#repositories"));
-            });
         }
     });
 });
+
 $(function() { // onload...do
     $("#uploadRepositoryForm").submit(function() {
 
@@ -39,7 +32,7 @@ $(function() { // onload...do
             url: this.action,
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-            timeout: 4000,
+            //timeout: 4000,
             error: function(e) {
                 console.log("error");
             },

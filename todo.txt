@@ -1,9 +1,2 @@
 TODO
-- delete all unused methods and members
-
-for readme file:
-- if a commit got two parents we displayed both of the deltas
-- delete branch : delete RTB is ok, but when we delete RB - if he has RTB we should change that he is not tracking anymore and tracking after is null.
-- tree view don't have scroll
-
-BUG:
+-add ServletContextListener- to delete magit-ex3 folder in the end of the server!

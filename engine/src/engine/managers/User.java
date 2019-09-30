@@ -23,6 +23,8 @@ public class User
 
     public void setName(String i_Name) { this.m_Name = i_Name; }
 
+    public EngineManager getEngine() { return m_Engine; }
+
     public List<Notification> getUnseenNotifications() { return m_UnseenNotifications; }
 
     public void setUnseenNotifications(List<Notification> i_UnseenNotifications) { this.m_UnseenNotifications = i_UnseenNotifications; }

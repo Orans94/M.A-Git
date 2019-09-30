@@ -1,8 +1,7 @@
 package javafx.primary.top.popup.merge.solveconflict;
 
-import engine.FileUtilities;
-import engine.MergeNodeMaps;
-import engine.Node;
+import engine.dataobjects.MergeNodeMaps;
+import engine.objects.Node;
 import javafx.AlertFactory;
 import javafx.StageUtilities;
 import javafx.beans.binding.Bindings;
