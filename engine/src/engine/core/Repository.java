@@ -1475,6 +1475,21 @@ public class Repository
         return m_Magit.isRBAndRTBAlreadyTracking(i_Branch);
     }
 
+    public void pullRequest() throws IOException, ParseException
+    {
+        // TODO - on server side make new notification for the RR user with all the needed information
+        Branch activeBranch = m_Magit.getHead().getActiveBranch();
+        String LRCommitSHA1 = activeBranch.getCommitSHA1();
+        pushCommitsObjectsRecursive(LRCommitSHA1);
+        createPRTargetBranch(activeBranch);
+    }
+
+    private void createPRTargetBranch(Branch i_BranchToCreate) throws IOException
+    {
+        Path pathToBranchInRR = m_RemoteRepositoryPath.resolve(".magit").resolve("branches").resolve(i_BranchToCreate.getName() + ".txt");
+        FileUtilities.createAndWriteTxtFile(pathToBranchInRR, i_BranchToCreate.getCommitSHA1());
+    }
+
     public void push() throws IOException, ParseException
     {
         Branch activeBranch = m_Magit.getHead().getActiveBranch();

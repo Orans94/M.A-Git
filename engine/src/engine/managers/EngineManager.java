@@ -118,7 +118,7 @@ public class EngineManager
 
     public void checkout(String i_BranchName) throws IOException { m_LoadedRepository.checkout(i_BranchName); }
 
-    public Repository getRepository() { return m_LoadedRepository; }
+    public Repository getLoadedRepository() { return m_LoadedRepository; }
 
     public void loadRepositoryByPath(Path i_RepoPath) throws IOException, ParseException
     {

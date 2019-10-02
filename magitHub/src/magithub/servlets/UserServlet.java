@@ -2,9 +2,9 @@ package magithub.servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import engine.managers.User;
 import engine.managers.UsersManager;
+import magithub.WindowsPathConverter;
 import magithub.utils.ServletUtils;
 import magithub.utils.SessionUtils;
 
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 
 public class UserServlet extends HttpServlet
 {
@@ -22,18 +23,15 @@ public class UserServlet extends HttpServlet
         //returning JSON objects, not HTML
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            GsonBuilder gsonBuilder = new GsonBuilder();
+            GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(Path.class, new WindowsPathConverter());
+
             gsonBuilder.setPrettyPrinting();
             Gson gson = gsonBuilder.create();
             UsersManager userManager = ServletUtils.getUserManager(getServletContext());
             User user = userManager.getUsers().get(i_UserName);
-           try
-           {
-               String json = gson.toJson(user);
-               out.println(json);
-               out.flush();
-           }
-           catch (StackOverflowError e) { e.printStackTrace();}
+            String json = gson.toJson(user);
+            out.println(json);
+            out.flush();
 
         }
     }

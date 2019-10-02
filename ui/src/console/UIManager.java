@@ -612,9 +612,9 @@ public class UIManager
     private void printBranch(Branch i_Branch, Head i_Head)
     {
         // printing all branches - helper of func #8
-        boolean isGitHaveCommits = m_Engine.getRepository().getMagit().getCommits().containsKey(i_Branch.getCommitSHA1());
+        boolean isGitHaveCommits = m_Engine.getLoadedRepository().getMagit().getCommits().containsKey(i_Branch.getCommitSHA1());
         String commitMessage = isGitHaveCommits ?
-                m_Engine.getRepository().getMagit().getCommits().get(i_Branch.getCommitSHA1()).getMessage() : "";
+                m_Engine.getLoadedRepository().getMagit().getCommits().get(i_Branch.getCommitSHA1()).getMessage() : "";
         if (i_Branch == i_Head.getActiveBranch())
         {
             System.out.println("1. Branch name: " + i_Branch.getName() + " (HEAD)");
@@ -670,7 +670,7 @@ public class UIManager
     private void notifyRepositoryHasBeenLoaded()
     {
         System.out.println(System.lineSeparator());
-        System.out.println("Repository " + m_Engine.getRepository().getName() + " has been loaded");
+        System.out.println("Repository " + m_Engine.getLoadedRepository().getName() + " has been loaded");
     }
 
     private void showAllBranches()
@@ -682,8 +682,8 @@ public class UIManager
         }
         else
         {
-            Map<String, Branch> branches = m_Engine.getRepository().getMagit().getBranches();
-            Head head = m_Engine.getRepository().getMagit().getHead();
+            Map<String, Branch> branches = m_Engine.getLoadedRepository().getMagit().getBranches();
+            Head head = m_Engine.getLoadedRepository().getMagit().getHead();
             for (Map.Entry<String, Branch> entry : branches.entrySet())
             {
                 printBranch(entry.getValue(), head);
@@ -700,7 +700,7 @@ public class UIManager
         }
         else
         {
-            NodeMaps nodeMaps = m_Engine.getRepository().getNodeMaps();
+            NodeMaps nodeMaps = m_Engine.getLoadedRepository().getNodeMaps();
             if (nodeMaps.isEmpty())
             {
                 System.out.println("Commit has not been done yet");
@@ -748,8 +748,8 @@ public class UIManager
             {
                 Map<String, Commit> commitBySHA1;
                 SortedSet<String> orderedCommitHistorySHA1;
-                orderedCommitHistorySHA1 = m_Engine.getRepository().getActiveBranchHistory();
-                commitBySHA1 = m_Engine.getRepository().getMagit().getCommits();
+                orderedCommitHistorySHA1 = m_Engine.getLoadedRepository().getActiveBranchHistory();
+                commitBySHA1 = m_Engine.getLoadedRepository().getMagit().getCommits();
                 for (String SHA1 : orderedCommitHistorySHA1)
                 {
                     printCommit(commitBySHA1.get(SHA1), SHA1);

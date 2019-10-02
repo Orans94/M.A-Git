@@ -1,5 +1,5 @@
 const USER_URL = buildUrlWithContextPath("user");
-var numOfRepositories;
+var numberOfRepositories = 0;
 
 
 $(function() { // onload function
@@ -14,6 +14,32 @@ $(function() { // onload function
         },
         success: function(data) {
             console.log(data);
+            var repositoriesArray = data.m_Engine.m_Repositories;
+
+            $.each( repositoriesArray, function (key, value){
+                if (numberOfRepositories % 3 === 0){
+                    var rowElem = $('<div class="row">');
+                    $( ".row.mb-4").before(rowElem);
+                }
+
+                var repositoryName = value.m_Name;
+                var repositoryActiveBranchName = "Active branch name: " + value.m_Magit.m_Head.m_ActiveBranch.m_Name + '<br>';
+                var repositoryActiveBranchCommit = "Active branch pointed commit: " + value.m_Magit.m_Head.m_ActiveBranch.m_CommitSHA1.substring(0,7) + '<br>';
+                //var commitMessage = "Commit message: " + value.m_Magit.m_Head.m_ActiveBranch.m_Message + '\n';
+                var commitDetails = repositoryActiveBranchName + repositoryActiveBranchCommit;
+
+                $(".row").eq(-2).append( $('<div class="col-lg-4 mb-4">'));
+                $(".col-lg-4:last").append( $('<div class="card h-100">'));
+                $(".card.h-100:last").append($('<h4 class="card-header"></h4>'));
+                $(".card-header:last").text(repositoryName)
+                $(".card.h-100:last").append($('<div class="card-body">'));
+                $(".card-body:last").append( $('<p class="card-text"></p>'));
+                $(".card-text:last").text(commitDetails);
+                $(".card.h-100:last").append($('<div class="card-footer">'));
+                $(".card-footer:last").append( $('<a href="#" class="btn btn-primary">Some button</a>'));
+
+                numberOfRepositories++;
+            });
         }
     });
 });
@@ -38,6 +64,7 @@ $(function() { // onload...do
             },
             success: function(r) {
                 console.log("success");
+                location.reload();
                 //$("#result").text(r);
             }
         });

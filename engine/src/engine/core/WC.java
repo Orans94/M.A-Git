@@ -6,7 +6,7 @@ import java.nio.file.Path;
 
 public class WC
 {
-    private transient Path m_WorkingCopyDir;
+    private Path m_WorkingCopyDir;
     private NodeMaps m_NodeMaps;
     private String m_CommitSHA1 = "";
 

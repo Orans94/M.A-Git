@@ -1,6 +1,7 @@
 package engine.managers;
 
 
+import engine.dataobjects.PullRequest;
 import engine.notifications.Notification;
 
 import java.util.LinkedList;
@@ -10,14 +11,18 @@ public class User
 {
     private String m_Name;
     private EngineManager m_Engine;
-    private List<Notification> m_UnseenNotifications; //TODO - on logout clear notifications of logged in user(what happens if someone added notification while im logged in?)
+    private List<Notification> m_UnseenNotifications; //TODO - on logout set last seen index or(?) clear notifications of logged in user(what happens if someone added notification while im logged in?)
+    private List<PullRequest> m_PullRequests;
 
     public User(String i_Username)
     {
+        m_PullRequests = new LinkedList<>();
         m_Name = i_Username;
         m_Engine = new EngineManager();
         m_UnseenNotifications = new LinkedList<>();
     }
+
+    public List<PullRequest> getPullRequests() { return m_PullRequests; }
 
     public String getName() { return m_Name; }
 
