@@ -12,8 +12,8 @@ $(function() { // onload function
             '                        <td class="isRemoteColumn"> + value.m_IsRemote + </td>\n' +
             '                        <td class="isTrackingColumn"> + value.m_IsTracking + </td>\n' +
             '                        <td class="pointedCommitColumn"> + value.m_CommitSHA1 + </td>\n' +
-            '                        <td class="commitMessageColumn">Message</td>\n' +
-            '                    </tr>');
+            '                        <td class="commitMessageColumn">Message</td>\n'+
+        '                    </tr>');
     });
 
     $.each(commits, function(key, value){

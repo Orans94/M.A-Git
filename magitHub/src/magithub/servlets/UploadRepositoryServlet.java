@@ -30,6 +30,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Scanner;
 
+import static engine.utils.StringFinals.EMPTY_STRING;
+
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class UploadRepositoryServlet extends HttpServlet
@@ -44,7 +46,7 @@ public class UploadRepositoryServlet extends HttpServlet
         User loggedInUser;
         Path XMLRepositoryLocation;
         boolean isRepositoryAlreadyExistsInPath;
-        StringBuilder validationErrorMessage = new StringBuilder();
+        StringBuilder validationErrorMessage = new StringBuilder(EMPTY_STRING);
 
         PrintWriter out = response.getWriter();
         loggedInUsername = SessionUtils.getUsername(request);
@@ -155,56 +157,55 @@ public class UploadRepositoryServlet extends HttpServlet
     private boolean validateXMLRepository(MagitRepository i_XmlRepo, Map<String, MagitSingleFolder> i_MagitFolderByID, StringBuilder i_ValidatioErrorMessage)
     {
         boolean isXMLTotallyValid = true;
-        String errorMessage = null;
 
         if (!m_UserEngine.areIDsValid(i_XmlRepo))
         {
             // 3.2
             isXMLTotallyValid = false;
-            errorMessage = "Load repository by XML error: There are 2 identical IDs";
+            i_ValidatioErrorMessage.append("Load repository by XML error: There are 2 identical IDs").append(System.lineSeparator());
         }
 
         if (!m_UserEngine.areFoldersReferencesValid(i_XmlRepo.getMagitFolders(), i_XmlRepo.getMagitBlobs()))
         {
             // 3.3, 3.4, 3.5
             isXMLTotallyValid = false;
-            errorMessage = "Load repository by XML error: Folders references are not valid";
+            i_ValidatioErrorMessage.append("Load repository by XML error: Folders references are not valid").append(System.lineSeparator());
         }
 
         if (!m_UserEngine.areCommitsReferencesAreValid(i_XmlRepo.getMagitCommits(), i_MagitFolderByID))
         {
             // 3.6, 3.7
             isXMLTotallyValid = false;
-            errorMessage = "Load repository by XML error: Commits references are not valid";
+            i_ValidatioErrorMessage.append("Load repository by XML error: Commits references are not valid").append(System.lineSeparator());
         }
 
         if (!m_UserEngine.areBranchesReferencesAreValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitCommits()))
         {
             // 3.8
             isXMLTotallyValid = false;
-            errorMessage = "Load repository by XML error: Branches references are not valid";
+            i_ValidatioErrorMessage.append("Load repository by XML error: Branches references are not valid").append(System.lineSeparator());
         }
 
         if (!m_UserEngine.isHeadReferenceValid(i_XmlRepo.getMagitBranches(), i_XmlRepo.getMagitBranches().getHead()))
         {
             isXMLTotallyValid = false;
-            errorMessage = "Load repository by XML error: Head reference is not valid";
+            i_ValidatioErrorMessage.append("Load repository by XML error: Head reference is not valid").append(System.lineSeparator());
         }
 
         if(!m_UserEngine.isMagitRemoteReferenceValid(i_XmlRepo))
         {
             // 4.1
             isXMLTotallyValid = false;
-            errorMessage = "Load repository by XML error: There is no M.A Git repository on the path represents the M.A Git remote repository";
+            i_ValidatioErrorMessage.append("Load repository by XML error: There is no M.A Git repository on the path represents the M.A Git remote repository").append(System.lineSeparator());
         }
 
         if(!m_UserEngine.areBranchesTrackingAfterAreValid(i_XmlRepo.getMagitBranches()))
         {
             // 4.2
             isXMLTotallyValid = false;
-            errorMessage = "Load repository by XML error: A tracking branch is tracking after a non remote branch";
+            i_ValidatioErrorMessage.append("Load repository by XML error: A tracking branch is tracking after a non remote branch").append(System.lineSeparator());
         }
-        if (errorMessage != null) i_ValidatioErrorMessage.append(errorMessage);
+
         return isXMLTotallyValid;
     }
 }

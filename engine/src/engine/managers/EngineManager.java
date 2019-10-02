@@ -41,7 +41,6 @@ public class EngineManager
     private Map<String, NodeMaps> m_LazyLoadedNodeMapsByCommitSHA1 = new HashMap<>();
     private BooleanProperty m_IsRepositoryLoadedProperty = new SimpleBooleanProperty(false);
     private BooleanProperty m_IsRepositoryClonedProperty = new SimpleBooleanProperty(false);
-
     public BooleanProperty getIsRepositoryLoadedProperty() { return m_IsRepositoryLoadedProperty; }
 
     public XMLManager getXMLManager() { return m_XMLManager; }

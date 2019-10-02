@@ -30,13 +30,15 @@ $(function() { // onload function
 
                 $(".row").eq(-2).append( $('<div class="col-lg-4 mb-4">'));
                 $(".col-lg-4:last").append( $('<div class="card h-100">'));
-                $(".card.h-100:last").append($('<h4 class="card-header"></h4>'));
-                $(".card-header:last").text(repositoryName)
+                $(".card.h-100:last").append($('<h4 class="card-header">' + repositoryName + '</h4>'));
+                //$(".card-header:last").text(repositoryName)
                 $(".card.h-100:last").append($('<div class="card-body">'));
-                $(".card-body:last").append( $('<p class="card-text"></p>'));
-                $(".card-text:last").text(commitDetails);
+                $(".card-body:last").append( $('<p class="card-text">' + commitDetails + '</p>'));
+                //$(".card-text:last").text(commitDetails);
                 $(".card.h-100:last").append($('<div class="card-footer">'));
-                $(".card-footer:last").append( $('<a href="#" class="btn btn-primary">Some button</a>'));
+                $(".card-footer:last").append($(
+                    '<form method="get" action="/showRepository" class="btn btn-primary">'));
+                $(".btn.btn-primary").append($('<input type="hidden" name="repositoryName" value=' + value+'/>'));
 
                 numberOfRepositories++;
             });
