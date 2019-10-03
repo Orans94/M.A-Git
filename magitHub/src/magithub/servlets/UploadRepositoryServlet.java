@@ -3,6 +3,7 @@ package magithub.servlets;
 
 import engine.managers.EngineManager;
 import engine.managers.User;
+import engine.managers.UsersManager;
 import magithub.utils.ServletUtils;
 import magithub.utils.SessionUtils;
 import mypackage.MagitRepository;
@@ -26,12 +27,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static engine.utils.StringFinals.EMPTY_STRING;
+import static magithub.constants.Constants.MAGITEX3_DIRECTORY_PATH;
 
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class UploadRepositoryServlet extends HttpServlet
 {
-    private final Path MAGITEX3_DIRECTORY_PATH = Paths.get("C:\\magit-ex3");
     private EngineManager m_UserEngine;
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, JAXBException, ParseException
@@ -43,6 +44,7 @@ public class UploadRepositoryServlet extends HttpServlet
         Path XMLRepositoryLocation;
         boolean isRepositoryAlreadyExistsInPath;
         StringBuilder validationErrorMessage = new StringBuilder(EMPTY_STRING);
+        UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
 
         PrintWriter out = response.getWriter();
         loggedInUsername = SessionUtils.getUsername(request);
@@ -83,6 +85,7 @@ public class UploadRepositoryServlet extends HttpServlet
             {
                 // ----------- the repository in XML is empty && there is no repository on location path ---------
                 m_UserEngine.createRepository(XMLRepositoryLocation, repositoryName);
+                //assignUserToUsersManager(loggedInUsername, usersManager);
             }
         }
         else if (validateXMLRepository(XMLRepo, m_UserEngine.getMagitSingleFolderByID(), validationErrorMessage))
@@ -98,6 +101,7 @@ public class UploadRepositoryServlet extends HttpServlet
                 if (m_UserEngine.isDirectoryEmpty(XMLRepositoryLocation))
                 {
                     m_UserEngine.readRepositoryFromXMLFile(XMLRepo, m_UserEngine.getXMLMagitMaps());
+                    //assignUserToUsersManager(loggedInUsername, usersManager);
                 }
                 else
                 {
@@ -111,6 +115,20 @@ public class UploadRepositoryServlet extends HttpServlet
             // send validation error message
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             out.print(validationErrorMessage.toString());
+        }
+    }
+
+    private void assignUserToUsersManager(String i_LoggedInUsername, UsersManager i_UsersManager)
+    {
+        if (!i_UsersManager.isUserExists(i_LoggedInUsername))
+        {
+            synchronized (this)
+            {
+                if (!i_UsersManager.isUserExists(i_LoggedInUsername))
+                {
+                    i_UsersManager.addUser(i_LoggedInUsername);
+                }
+            }
         }
     }
 

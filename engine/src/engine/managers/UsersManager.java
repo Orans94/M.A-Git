@@ -14,7 +14,7 @@ public class UsersManager
 
     public UsersManager() { m_UsersMap = new HashMap<>(); }
 
-    public synchronized void addUser(String i_Username) { m_UsersMap.put(i_Username, new User(i_Username)); }
+    public synchronized void addUser(String i_Username){ m_UsersMap.put(i_Username, new User(i_Username)); }
 
     public synchronized void removeUser(String i_Username) { m_UsersMap.remove(i_Username); }
 

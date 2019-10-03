@@ -2,7 +2,7 @@ const USER_URL = buildUrlWithContextPath("user");
 var numberOfRepositories = 0;
 
 
-$(function() { // onload function
+$(function() { // onload function- load repositories cards
     console.log("check2");
 
     $.ajax({
@@ -24,7 +24,7 @@ $(function() { // onload function
 
                 var repositoryName = value.m_Name;
                 var repositoryActiveBranchName = "Active branch name: " + value.m_Magit.m_Head.m_ActiveBranch.m_Name + '<br>';
-                var repositoryActiveBranchCommit = "Active branch pointed commit: " + value.m_Magit.m_Head.m_ActiveBranch.m_CommitSHA1.substring(0,7) + '<br>';
+                var repositoryActiveBranchCommit = "Active branch pointed commit SHA1: " + value.m_Magit.m_Head.m_ActiveBranch.m_CommitSHA1.substring(0,7) + '<br>';
                 //var commitMessage = "Commit message: " + value.m_Magit.m_Head.m_ActiveBranch.m_Message + '\n';
                 var commitDetails = repositoryActiveBranchName + repositoryActiveBranchCommit;
 
@@ -38,7 +38,6 @@ $(function() { // onload function
                 $(".card.h-100:last").append($('<div class="card-footer">'));
                 $(".card-footer:last").append( $('<a href="#" class="btn btn-primary" id="chooseRepo">Choose repository</a>'));
                 $("#chooseRepo").click(function () {
-                    //var name = $("#repositoryName").val();
                     var url = "../repository/repository.html?repositoryName=" + repositoryName + "&userName=" + data.m_Name;
                     window.location.href = url;
                 });
@@ -50,7 +49,7 @@ $(function() { // onload function
     });
 });
 
-$(function() { // onload...do
+$(function() { // onload function- attach functionality to upload repository button
     $("#uploadRepositoryForm").submit(function() {
 
         var file1 = this[0].files[0];
@@ -78,4 +77,23 @@ $(function() { // onload...do
         // by default - we'll always return false so it doesn't redirect the user.
         return false;
     })
-})
+});
+
+$(function() { // onload function- update users list in side bar
+
+    $.ajax({
+        method:'get',
+        url: "/magitHub/pages/main/usersList",
+        //timeout: 4000, TODO delete comment
+        error: function(e) {
+            //alert("Unable to load users list in side bar")
+        },
+        success: function(data) {
+            // a list of users name returned from server
+            for (var i = 0; i < data.length ; i++){
+                $(".side-bar").append($('<li class="list-group-item pl-3 py-2 user-item">'));
+                $(".user-item:last").append($('<a href="#"><i class="fa fa-user-o" aria-hidden="true"><span class="ml-2 align-middle">' + data[i] + '</span></i></a>'));
+            }
+        }
+    });
+});

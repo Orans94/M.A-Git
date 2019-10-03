@@ -524,4 +524,9 @@ public class EngineManager
     {
         return m_LoadedRepository.getConnectedCommitsByCommitSHA1(i_CommitSHA1);
     }
+
+    public NodeMaps getNodeMapsByCommitSHA1(Path i_RepositoryPath, String i_CommitSHA1) throws IOException
+    {
+        return m_Repositories.get(i_RepositoryPath).getNodeMapsByCommitSHA1(i_CommitSHA1);
+    }
 }

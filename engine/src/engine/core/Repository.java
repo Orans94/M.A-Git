@@ -1662,4 +1662,14 @@ public class Repository
     {
         return m_Magit.getConnectedCommitsByCommitSHA1(i_CommitSHA1);
     }
+
+    public NodeMaps getNodeMapsByCommitSHA1(String i_CommitSHA1) throws IOException
+    {
+        NodeMaps temp = new NodeMaps();
+
+        temp.getSHA1ByPath().put(m_WorkingCopy.getWorkingCopyDir(), m_Magit.getCommits().get(i_CommitSHA1).getRootFolderSHA1());
+        setNodeMapsByRootFolder(m_WorkingCopy.getWorkingCopyDir(), m_WorkingCopy.getWorkingCopyDir(), temp, false);
+
+        return temp;
+    }
 }
