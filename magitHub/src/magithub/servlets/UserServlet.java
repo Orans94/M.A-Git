@@ -27,7 +27,7 @@ public class UserServlet extends HttpServlet
 
             gsonBuilder.setPrettyPrinting();
             Gson gson = gsonBuilder.create();
-            UsersManager userManager = ServletUtils.getUserManager(getServletContext());
+            UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
             User user = userManager.getUsers().get(i_UserName);
             String json = gson.toJson(user);
             out.println(json);

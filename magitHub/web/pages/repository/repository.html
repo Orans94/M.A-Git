@@ -20,6 +20,17 @@
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!--===============================================================================================-->
+
+    <!--===============================================================================================-->
+    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="vendor/bootstrap/js/popper.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="js/repository.js"></script>
+
 </head>
 <body>
 
@@ -38,28 +49,7 @@
                         <th class="commitMessageColumn">Commit message</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td class="branchNameColumn">Master(HEAD)</td>
-                        <td class="isRemoteColumn">FALSE</td>
-                        <td class="isTrackingColumn">FALSE</td>
-                        <td class="pointedCommitColumn">20AB275023942</td>
-                        <td class="commitMessageColumn">oran is gay</td>
-                    </tr>
-                    <tr>
-                        <td class="branchNameColumn">Gay's branch</td>
-                        <td class="isRemoteColumn">FALSE</td>
-                        <td class="isTrackingColumn">TRUE</td>
-                        <td class="pointedCommitColumn">200397ACDF23536</td>
-                        <td class="commitMessageColumn">Oran is added</td>
-                    </tr>
-                    <tr>
-                        <td class="branchNameColumn">Out of the closet branch</td>
-                        <td class="isRemoteColumn">TRUE</td>
-                        <td class="isTrackingColumn">FALSE</td>
-                        <td class="pointedCommitColumn">200396ADBCF23547</td>
-                        <td class="commitMessageColumn">Oran is out</td>
-                    </tr>
+                    <tbody class = "branchTableBody">
                     </tbody>
                 </table>
             </div>
@@ -81,25 +71,7 @@
                         <th class="commitSHA1Column">SHA-1</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <th class="commitMessageColumn">blabla</th>
-                        <th class="commitAuthorColumn">tomer</th>
-                        <th class="commitDateColumn">Yesterday</th>
-                        <th class="commitSHA1Column">ADBFC23984702341</th>
-                    </tr>
-                    <tr>
-                        <th class="commitMessageColumn">blublu</th>
-                        <th class="commitAuthorColumn">oran</th>
-                        <th class="commitDateColumn">Tomorrow</th>
-                        <th class="commitSHA1Column">ADBFC2398470234</th>
-                    </tr>
-                    <tr>
-                        <th class="commitMessageColumn">blibli</th>
-                        <th class="commitAuthorColumn">hagbi</th>
-                        <th class="commitDateColumn">today</th>
-                        <th class="commitSHA1Column">ADBFC2398470234</th>
-                    </tr>
+                    <tbody class = "commitTableBody">
                     </tbody>
                 </table>
             </div>
@@ -107,15 +79,7 @@
     </div>
 </div>
 
-<!--===============================================================================================-->
-<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/bootstrap/js/popper.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
-<script src="js/main.js"></script>
+
 
 </body>
 </html>

@@ -8,7 +8,7 @@ $(function() { // onload function
     $.ajax({
         url: "/magitHub/pages/main/user",
         data:{"isLoggedInUser" : "TRUE"},
-        //timeout: 2000,
+        //timeout: 2000, TODO delete comment
         error: function() {
             console.log("no");
         },
@@ -30,15 +30,19 @@ $(function() { // onload function
 
                 $(".row").eq(-2).append( $('<div class="col-lg-4 mb-4">'));
                 $(".col-lg-4:last").append( $('<div class="card h-100">'));
-                $(".card.h-100:last").append($('<h4 class="card-header">' + repositoryName + '</h4>'));
+                $(".card.h-100:last").append($('<h4 class="card-header" id="repositoryName" value=""' + repositoryName + '>' + repositoryName + '</h4>'));
                 //$(".card-header:last").text(repositoryName)
                 $(".card.h-100:last").append($('<div class="card-body">'));
                 $(".card-body:last").append( $('<p class="card-text">' + commitDetails + '</p>'));
                 //$(".card-text:last").text(commitDetails);
                 $(".card.h-100:last").append($('<div class="card-footer">'));
-                $(".card-footer:last").append($(
-                    '<form method="get" action="/showRepository" class="btn btn-primary">'));
-                $(".btn.btn-primary").append($('<input type="hidden" name="repositoryName" value=' + value+'/>'));
+                $(".card-footer:last").append( $('<a href="#" class="btn btn-primary" id="chooseRepo">Choose repository</a>'));
+                $("#chooseRepo").click(function () {
+                    //var name = $("#repositoryName").val();
+                    var url = "../repository/repository.html?repositoryName=" + repositoryName + "&userName=" + data.m_Name;
+                    window.location.href = url;
+                });
+
 
                 numberOfRepositories++;
             });
@@ -60,14 +64,13 @@ $(function() { // onload...do
             url: this.action,
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-            //timeout: 4000,
-            error: function(e) {
-                console.log("error");
+            //timeout: 4000, TODO delete comment
+            error: function(xhr, status, error) {
+                alert("Repository upload failed: " + xhr.responseText);
             },
             success: function(r) {
-                console.log("success");
+                // a new repository loaded successfully
                 location.reload();
-                //$("#result").text(r);
             }
         });
 

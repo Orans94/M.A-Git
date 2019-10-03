@@ -3,7 +3,6 @@ package magithub.servlets;
 import engine.dataobjects.PullRequest;
 import engine.managers.EngineManager;
 import engine.managers.User;
-import engine.notifications.NewPullRequestNotification;
 import magithub.utils.ServletUtils;
 import magithub.utils.SessionUtils;
 
@@ -40,8 +39,8 @@ public class PullRequestServlet extends HttpServlet
         LRPath = MAGITEX3_DIRECTORY_PATH.resolve(LRUserName).resolve(LRName);
         RRPath = MAGITEX3_DIRECTORY_PATH.resolve(RRUserName).resolve(RRName);
 
-        LRUser = ServletUtils.getUserManager(getServletContext()).getUsers().get(LRUserName);
-        RRUser = ServletUtils.getUserManager(getServletContext()).getUsers().get(RRUserName);
+        LRUser = ServletUtils.getUsersManager(getServletContext()).getUsers().get(LRUserName);
+        RRUser = ServletUtils.getUsersManager(getServletContext()).getUsers().get(RRUserName);
         LRUserEngine = LRUser.getEngine();
         if(LRUserEngine.getLoadedRepository().getRemoteRepositoryPath() == null)
         {

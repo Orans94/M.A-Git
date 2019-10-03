@@ -15,7 +15,10 @@
         <servlet-name>UploadRepositoryServlet</servlet-name>
         <servlet-class>magithub.servlets.UploadRepositoryServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>magithub.servlets.LogoutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
@@ -30,6 +33,11 @@
     <servlet-mapping>
         <servlet-name>UploadRepositoryServlet</servlet-name>
         <url-pattern>/pages/main/upload-repository</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/pages/main/logout</url-pattern>
     </servlet-mapping>
 
 </web-app>

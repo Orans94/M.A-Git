@@ -1,5 +1,6 @@
 package engine.managers;
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /*
@@ -20,4 +21,5 @@ public class UsersManager
     public synchronized Map<String, User> getUsers() { return Collections.unmodifiableMap(m_UsersMap); }
 
     public boolean isUserExists(String i_Username) { return m_UsersMap.containsKey(i_Username); }
+
 }

@@ -5,3 +5,8 @@
  Note:
  loading from xml- when loading repo from xml, the location doesn't our system create it whole location but if the xml loading opreation
  canceled the new path will still be existing in the fs.
+
+
+
+EX03:
+- Usernames aren't case sensitive- the username (i.e Oran is the same as OrAN)

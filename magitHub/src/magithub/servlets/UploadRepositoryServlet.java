@@ -1,11 +1,8 @@
 package magithub.servlets;
 
 
-import com.sun.xml.internal.ws.streaming.XMLReaderException;
 import engine.managers.EngineManager;
 import engine.managers.User;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import magithub.utils.ServletUtils;
 import magithub.utils.SessionUtils;
 import mypackage.MagitRepository;
@@ -13,13 +10,11 @@ import mypackage.MagitSingleFolder;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -42,6 +37,7 @@ public class UploadRepositoryServlet extends HttpServlet
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, JAXBException, ParseException
     {
         response.setContentType("text/html;charset=UTF-8");
+
         String loggedInUsername;
         User loggedInUser;
         Path XMLRepositoryLocation;
@@ -50,7 +46,7 @@ public class UploadRepositoryServlet extends HttpServlet
 
         PrintWriter out = response.getWriter();
         loggedInUsername = SessionUtils.getUsername(request);
-        loggedInUser = ServletUtils.getUserManager(getServletContext()).getUsers().get(loggedInUsername);
+        loggedInUser = ServletUtils.getUsersManager(getServletContext()).getUsers().get(loggedInUsername);
         m_UserEngine = loggedInUser.getEngine();
 
         Collection<Part> parts = request.getParts();
@@ -80,15 +76,13 @@ public class UploadRepositoryServlet extends HttpServlet
                 // ----------- the repository in XML is empty && a repository is already exists in location path ---------
 
                 // response error- a repository name already exists
-                response.sendError(HttpServletResponse.SC_FORBIDDEN,"a repository in the name is already exists");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                out.print("a repository in the same name is already exists");
             }
             else
             {
                 // ----------- the repository in XML is empty && there is no repository on location path ---------
                 m_UserEngine.createRepository(XMLRepositoryLocation, repositoryName);
-                printRepositoryDetailsToResponse(XMLRepositoryLocation, out, XMLRepo, repositoryName);
-                //updateUIComponents();
-                //notifyRepositoryHasBeenCreated
             }
         }
         else if (validateXMLRepository(XMLRepo, m_UserEngine.getMagitSingleFolderByID(), validationErrorMessage))
@@ -96,28 +90,27 @@ public class UploadRepositoryServlet extends HttpServlet
             if (isRepositoryAlreadyExistsInPath)
             {
                 // response error- a repository name already exists
-                response.sendError(HttpServletResponse.SC_FORBIDDEN,"a repository in the name is already exists");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                out.print("a repository in the same name is already exists");
             }
             else
             {
                 if (m_UserEngine.isDirectoryEmpty(XMLRepositoryLocation))
                 {
                     m_UserEngine.readRepositoryFromXMLFile(XMLRepo, m_UserEngine.getXMLMagitMaps());
-                    printRepositoryDetailsToResponse(XMLRepositoryLocation, out, XMLRepo, repositoryName);
-                    //updateUIComponents();
-                    //notifyRepositoryLoadedSuccessfullyFromXML(i_XMLRepo.getName());
                 }
                 else
                 {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN,"the repository folder has content");
-                    //notifyTheLoadingWasCanceledFolderHasContent();
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    out.print("the repository folder has content");
                 }
             }
         }
         else
         {
             // send validation error message
-            response.sendError(HttpServletResponse.SC_FORBIDDEN,validationErrorMessage.toString());
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            out.print(validationErrorMessage.toString());
         }
     }
 

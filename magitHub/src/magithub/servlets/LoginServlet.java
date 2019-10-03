@@ -1,6 +1,5 @@
 package magithub.servlets;
 
-import engine.managers.User;
 import engine.managers.UsersManager;
 import magithub.constants.Constants;
 import magithub.utils.ServletUtils;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static magithub.constants.Constants.USER;
 import static magithub.constants.Constants.USERNAME;
 
 public class LoginServlet extends HttpServlet
@@ -25,7 +23,7 @@ public class LoginServlet extends HttpServlet
     {
         response.setContentType("text/html;charset=UTF-8");
         String userNameFromSession = SessionUtils.getUsername(request);
-        UsersManager userManager = ServletUtils.getUserManager(getServletContext());
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
         if (userNameFromSession == null) {
             //user is not logged in yet
             String usernameFromParameter = request.getParameter(USERNAME);
@@ -38,6 +36,8 @@ public class LoginServlet extends HttpServlet
                 //normalize the username value
                 usernameFromParameter = usernameFromParameter.trim();
 
+                //lower case all user name letters
+                usernameFromParameter = usernameFromParameter.toLowerCase();
                 /*
                 One can ask why not enclose all the synchronizations inside the userManager object ?
                 Well, the atomic action we need to perform here includes both the question (isUserExists) and (potentially) the insertion

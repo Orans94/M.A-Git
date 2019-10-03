@@ -18,7 +18,7 @@ public class ServletUtils {
 	 */
 	private static final Object userManagerLock = new Object();
 
-	public static UsersManager getUserManager(ServletContext servletContext) {
+	public static UsersManager getUsersManager(ServletContext servletContext) {
 
 		synchronized (userManagerLock) {
 			if (servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME) == null) {

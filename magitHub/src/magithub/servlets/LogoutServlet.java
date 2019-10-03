@@ -1,31 +1,35 @@
 package magithub.servlets;
 
-import com.google.gson.Gson;
 import engine.managers.UsersManager;
 import magithub.utils.ServletUtils;
+import magithub.utils.SessionUtils;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Set;
 
-public class UsersListServlet extends HttpServlet
+
+public class LogoutServlet extends HttpServlet
 {
-
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        //returning JSON objects, not HTML
-        response.setContentType("application/json");
-        try (PrintWriter out = response.getWriter()) {
-            Gson gson = new Gson();
-            UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
-            Set<String> usersList = userManager.getUsers().keySet();
-            String json = gson.toJson(usersList);
-            out.println(json);
-            out.flush();
+            throws IOException {
+        String usernameFromSession = SessionUtils.getUsername(request);
+        UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
+
+        if (usernameFromSession != null) {
+            System.out.println("Clearing session for " + usernameFromSession);
+            //usersManager.removeUser(usernameFromSession);
+            SessionUtils.clearSession(request);
+
+            /*
+            when sending redirect, tomcat has a shitty logic how to calculate the URL given, weather its relative or not
+            you can read about it here:
+            https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/HttpServletResponse.html#sendRedirect(java.lang.String)
+            the best way (IMO) is to fetch the context path dynamically and build the redirection from it and on
+             */
+
+            response.sendRedirect(request.getContextPath() + "/index.html");
         }
     }
 
@@ -35,12 +39,11 @@ public class UsersListServlet extends HttpServlet
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         processRequest(request, response);
     }
 
@@ -49,12 +52,11 @@ public class UsersListServlet extends HttpServlet
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         processRequest(request, response);
     }
 
