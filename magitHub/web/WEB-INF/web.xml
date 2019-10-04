@@ -23,8 +23,19 @@
         <servlet-name>UsersListServlet</servlet-name>
         <servlet-class>magithub.servlets.UsersListServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CommitFilesServlet</servlet-name>
+        <servlet-class>magithub.servlets.CommitFilesServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FileContentServlet</servlet-name>
+        <servlet-class>magithub.servlets.FileContentServlet</servlet-class>
+    </servlet>
 
-
+    <servlet-mapping>
+        <servlet-name>FileContentServlet</servlet-name>
+        <url-pattern>/pages/filemanager/fileContent</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
@@ -37,6 +48,11 @@
     <servlet-mapping>
         <servlet-name>UploadRepositoryServlet</servlet-name>
         <url-pattern>/pages/main/upload-repository</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CommitFilesServlet</servlet-name>
+        <url-pattern>/pages/filemanager/commit</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

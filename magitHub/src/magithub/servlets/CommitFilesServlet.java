@@ -41,7 +41,7 @@ public class CommitFilesServlet extends HttpServlet
         {
             if (!engine.isDirectory(path))
             {
-                out.println(path);
+                out.println(path.subpath(3,path.getNameCount()));
             }
         }
 

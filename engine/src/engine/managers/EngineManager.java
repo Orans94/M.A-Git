@@ -314,10 +314,10 @@ public class EngineManager
         return m_LoadedRepository.getNodeBySHA1(i_ItemSHA1);
     }
 
-    public void lazyLoadCommitFromFileSystem(Commit i_NewValue, String i_CommitSHA1) throws IOException
+    public void lazyLoadCommitFromFileSystem(Path i_RepositoryPath, Commit i_NewValue, String i_CommitSHA1) throws IOException
     {
         NodeMaps commitNodeMaps = new NodeMaps();
-        Path rootFolderPath = Magit.getMagitDir().resolve("objects").resolve(i_NewValue.getRootFolderSHA1() + ".zip");
+        Path rootFolderPath = i_RepositoryPath.resolve(".magit").resolve("objects").resolve(i_NewValue.getRootFolderSHA1() + ".zip");
         commitNodeMaps.getSHA1ByPath().put(rootFolderPath, i_NewValue.getRootFolderSHA1());
         m_LoadedRepository.setNodeMapsByRootFolder(rootFolderPath, m_LoadedRepository.getWorkingCopy().getWorkingCopyDir(), commitNodeMaps, false);
         m_LazyLoadedNodeMapsByCommitSHA1.put(i_CommitSHA1, commitNodeMaps);
@@ -527,6 +527,16 @@ public class EngineManager
 
     public NodeMaps getNodeMapsByCommitSHA1(Path i_RepositoryPath, String i_CommitSHA1) throws IOException
     {
-        return m_Repositories.get(i_RepositoryPath).getNodeMapsByCommitSHA1(i_CommitSHA1);
+        if(!m_LazyLoadedNodeMapsByCommitSHA1.containsKey(i_CommitSHA1))
+        {
+            NodeMaps node = m_Repositories.get(i_RepositoryPath).getNodeMapsByCommitSHA1(i_CommitSHA1);
+            m_LazyLoadedNodeMapsByCommitSHA1.put(i_CommitSHA1,node);
+
+            return node;
+        }
+        else
+        {
+            return m_LazyLoadedNodeMapsByCommitSHA1.get(i_CommitSHA1);
+        }
     }
 }

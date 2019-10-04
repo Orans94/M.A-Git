@@ -253,7 +253,8 @@ public class AppController
     {
         if(m_Engine.getLazyLoadedNodeMapsByCommitSHA1(i_CommitSHA1) == null)
         {
-            m_Engine.lazyLoadCommitFromFileSystem(i_NewValue, i_CommitSHA1);
+            Path repositoryPath = m_Engine.getLoadedRepository().getWorkingCopy().getWorkingCopyDir();
+            m_Engine.lazyLoadCommitFromFileSystem(repositoryPath, i_NewValue, i_CommitSHA1);
         }
 
         m_BottomComponentController.setBottomTabsDetails(i_NewValue, i_CommitSHA1);

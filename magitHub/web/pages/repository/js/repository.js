@@ -55,20 +55,20 @@ $(function() { // onload function
 
             $.each(branches, function (key, value) {
                 $(".branchTableBody").append('<tr>\n' +
-                    '                        <td class="branchNameColumn"> ' + value.m_Name + ' </td>\n' +
-                    '                        <td class="isRemoteColumn"> ' + value.m_IsRemote + ' </td>\n' +
-                    '                        <td class="isTrackingColumn"> ' + value.m_IsTracking + ' </td>\n' +
-                    '                        <td class="pointedCommitColumn"> ' + value.m_CommitSHA1 + ' </td>\n' +
-                    '                        <td class="commitMessageColumn">' + commits[value.m_CommitSHA1].m_Message + '</td>\n' +
+                    '                        <td class="branchNameColumn">' + value.m_Name + '</td>\n' +
+                    '                        <td class="isRemoteColumn">' + value.m_IsRemote + '</td>\n' +
+                    '                        <td class="isTrackingColumn">' + value.m_IsTracking + '</td>\n' +
+                    '                        <td class="pointedCommitColumn">' + value.m_CommitSHA1 + '</td>\n' +
+                    '                        <td class="commitMessageColumn">'+ commits[value.m_CommitSHA1].m_Message +'</td>\n' +
                     '                    </tr>');
             });
 
             $.each(commits, function (key, value) {
                 $(".commitTableBody").append('<tr id="tableRow">\n' +
                     '                        <td class="commitMessageColumn">' + value.m_Message + '</td>\n' +
-                    '                        <td class="commitAuthorColumn"> ' + value.m_CommitAuthor + ' </td>\n' +
-                    '                        <td class="commitDateColumn"> ' + value.m_CommitDate + ' </td>\n' +
-                    '                        <td class="commitSHA1Column"> ' + key + ' </td>\n' +
+                    '                        <td class="commitAuthorColumn">' + value.m_CommitAuthor + '</td>\n' +
+                    '                        <td class="commitDateColumn">' + value.m_CommitDate + '</td>\n' +
+                    '                        <td class="commitSHA1Column">' + key + '</td>\n' +
                     '                    </tr>');
             });
 
