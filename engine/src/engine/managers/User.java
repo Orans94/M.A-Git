@@ -34,4 +34,6 @@ public class User
 
     public void setUnseenNotifications(List<Notification> i_UnseenNotifications) { this.m_UnseenNotifications = i_UnseenNotifications; }
 
+    // active user is a user with at least 1 repository
+    public boolean isActiveUser() { return !m_Engine.getRepositories().isEmpty();}
 }

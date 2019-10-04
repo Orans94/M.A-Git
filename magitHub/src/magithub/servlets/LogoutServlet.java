@@ -15,7 +15,6 @@ public class LogoutServlet extends HttpServlet
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String usernameFromSession = SessionUtils.getUsername(request);
-        UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
 
         if (usernameFromSession != null) {
             System.out.println("Clearing session for " + usernameFromSession);

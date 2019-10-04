@@ -19,7 +19,7 @@ import java.nio.file.Path;
 public class UserServlet extends HttpServlet
 {
     private void processRequest(HttpServletRequest request, HttpServletResponse response, String i_UserName)
-            throws ServletException, IOException {
+            throws IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {

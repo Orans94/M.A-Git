@@ -43,6 +43,8 @@ public class EngineManager
     private BooleanProperty m_IsRepositoryClonedProperty = new SimpleBooleanProperty(false);
     public BooleanProperty getIsRepositoryLoadedProperty() { return m_IsRepositoryLoadedProperty; }
 
+    public Map<Path, Repository> getRepositories() { return m_Repositories; }
+
     public XMLManager getXMLManager() { return m_XMLManager; }
 
     public static String getUserName()
