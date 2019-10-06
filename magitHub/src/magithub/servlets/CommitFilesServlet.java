@@ -28,12 +28,12 @@ public class CommitFilesServlet extends HttpServlet
 {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ParseException
     {
-        String userName = request.getParameter("userName");
+        String username = request.getParameter("username");
         String repositoryName = request.getParameter("repositoryName");
         String commitSHA1 = request.getParameter("commitSHA1");
-        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(userName).resolve(repositoryName);
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
         UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
-        User user = userManager.getUsers().get(userName);
+        User user = userManager.getUsers().get(username);
         EngineManager engine= user.getEngine();
         PrintWriter out = response.getWriter();
         NodeMaps nodeMaps = engine.getNodeMapsByCommitSHA1(repositoryPath, commitSHA1);

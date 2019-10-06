@@ -11,26 +11,27 @@ body {
 #paper {
 	color:#FFF;
 	font-size:20px;
+	overflow: auto;
+	height:600px;
 }
 #margin {
 	margin-left:12px;
-	margin-bottom:20px;
+	margin-bottom:5px;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	-o-user-select: none;
 	user-select: none; 
 }
-button.commitFile { background:none;border:none; }
 #fileContent {
-	width:500px;
-	overflow:hidden;
+	width:700px;
+	height: 600px;
+	overflow: auto;
 	background-color:#FFF;
 	color:#222;
 	font-family:Courier, monospace;
 	font-weight:normal;
 	font-size:24px;
-	resize:none;
 	line-height:40px;
 	padding-left:100px;
 	padding-right:100px;
@@ -53,11 +54,11 @@ button.commitFile { background:none;border:none; }
 	font-family:Courier, monospace;
 	height:28px;
 	font-weight:bold;
-	width:220px;
+	width:40px;
 }
-#button {
+#saveButton, #editButton {
+	margin-bottom:5px;
 	cursor:pointer;
-	margin-top:20px;
 	float:right;
 	height:40px;
 	padding-left:24px;
@@ -76,19 +77,20 @@ button.commitFile { background:none;border:none; }
 	background-image:url(https://static.tumblr.com/maopbtg/ZHLmgtok7/button.png);
 	background-repeat:repeat-x;
 }
-#button:active {
+#saveButton, #editButton :active {
 	zoom: 1;
 	filter: alpha(opacity=80);
 	opacity: 0.8;
 }
-#button:focus {
+#saveButton, #editButton:focus {
 	zoom: 1;
 	filter: alpha(opacity=80);
 	opacity: 0.8;
 }
 #wrapper {
 	width:700px;
-	height:auto;
+	overflow: auto;
+	height:600px;
 	margin-left:auto;
 	margin-right:auto;
 	margin-top:24px;

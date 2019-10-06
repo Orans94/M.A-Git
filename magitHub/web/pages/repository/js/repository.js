@@ -1,17 +1,5 @@
-function getUrlParameter(sParam) {
-    var sPageURL = window.location.search.substring(1),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-        }
-    }
-}
+var username = getUrlParameter("username");
+var repositoryName = getUrlParameter('repositoryName');
 
 function onRowClick(tableId, callback) {
     var table = document.getElementsByClassName(tableId),
@@ -24,14 +12,12 @@ function onRowClick(tableId, callback) {
             };
         }(table[0].rows[i]);
     }
-}
 
-var userName = getUrlParameter("userName");
-var repositoryName = getUrlParameter('repositoryName');
+}
 $(function() { // onload function
     $.ajax({
         url: "/magitHub/pages/main/user",
-        data: {"isLoggedInUser": "FALSE", "userName": userName},
+        data: {"isLoggedInUser": "FALSE", "username": username},
         //timeout: 2000,
         error: function () {
             console.log("no");
@@ -75,7 +61,7 @@ $(function() { // onload function
             onRowClick("commitTable", function (row){
             var commitSHA1 = row.getElementsByClassName("commitSHA1Column")[0].textContent;
             // redirect to filemanager page with parameters - username, repository, and commit sha1
-            var url = "../filemanager/fileManager.html?userName=" + userName + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1;
+            var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1;
             window.location.href = url;
         });
         }

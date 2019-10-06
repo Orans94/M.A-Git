@@ -26,9 +26,9 @@ public class FileContentServlet extends HttpServlet
     {
         String fileContent;
         String file = request.getParameter("filePath");
-        String userName = request.getParameter("userName");
+        String username = request.getParameter("username");
         String repositoryName = request.getParameter("repositoryName");
-        Path filePath = Paths.get("C:").resolve(userName).resolve(repositoryName).resolve(file);
+        Path filePath = Paths.get("C:\\magit-ex3").resolve(username).resolve(repositoryName).resolve(file);
         PrintWriter out = response.getWriter();
         if(filePath.endsWith(".zip"))
         {

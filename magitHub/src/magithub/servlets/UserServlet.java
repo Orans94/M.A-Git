@@ -56,7 +56,7 @@ public class UserServlet extends HttpServlet
         }
         else
         {
-            processRequest(request, response, request.getParameter("userName"));
+            processRequest(request, response, request.getParameter("username"));
         }
     }
 
