@@ -28,4 +28,6 @@ abstract public class Node
     }
 
     public String getContent(){return m_Content;}
+
+    public void setContent(String i_Content){ m_Content = i_Content;}
 }

@@ -14,7 +14,10 @@ $(function() { // onload function- load repositories cards
         success: function(data) {
             console.log(data);
             var repositoriesArray = data.m_Engine.m_Repositories;
-            updateRepositoriesCardsInHTML(repositoriesArray, data.m_Name, "Choose repository");
+            updateRepositoriesCardsInHTML(repositoriesArray, data.m_Name, "Choose repository", function(event) {
+                    var url = "../repository/repository.html?repositoryName=" + event.data.repositoryName + "&username=" + event.data.username;
+                    window.location.href = url;
+                });
         }
     });
 });

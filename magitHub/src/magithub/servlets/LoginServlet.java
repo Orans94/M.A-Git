@@ -17,13 +17,12 @@ public class LoginServlet extends HttpServlet
 {
     private final String SIGN_UP_URL = "../signup/signup.html";
     private final String MAIN_URL = "../main/main.html";
-    private final String LOGIN_ERROR_URL = "/pages/loginerror/login_attempt_after_error.jsp";  // must start with '/' since will be used in request dispatcher...
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         response.setContentType("text/html;charset=UTF-8");
         String userNameFromSession = SessionUtils.getUsername(request);
-        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
         if (userNameFromSession == null)
         {
             //user is not logged in yet
@@ -43,7 +42,7 @@ public class LoginServlet extends HttpServlet
                 //lower case all user name letters
                 usernameFromParameter = usernameFromParameter.toLowerCase();
                 /*
-                One can ask why not enclose all the synchronizations inside the userManager object ?
+                One can ask why not enclose all the synchronizations inside the usersManager object ?
                 Well, the atomic action we need to perform here includes both the question (isUserExists) and (potentially) the insertion
                 of a new user (addUser). These two actions needs to be considered atomic, and synchronizing only each one of them, solely, is not enough.
                 (of course there are other more sophisticated and performable means for that (atomic objects etc) but these are not in our scope)
@@ -56,9 +55,9 @@ public class LoginServlet extends HttpServlet
                  */
                 synchronized (this)
                 {
-                    if (!userManager.isUserExists(usernameFromParameter))
+                    if (!usersManager.isUserExists(usernameFromParameter))
                     {
-                        userManager.addUser(usernameFromParameter);
+                        usersManager.addUser(usernameFromParameter);
                     }
                     //add the new user to the users list
                     //set the username in a session so it will be available on each request

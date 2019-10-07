@@ -541,4 +541,9 @@ public class EngineManager
             return m_LazyLoadedNodeMapsByCommitSHA1.get(i_CommitSHA1);
         }
     }
+
+    public void modifyTxtFile(Path i_filePath, String i_fileContent) throws IOException
+    {
+        FileUtilities.modifyTxtFile(i_filePath, i_fileContent);
+    }
 }

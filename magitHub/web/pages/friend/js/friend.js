@@ -12,13 +12,37 @@ $(function() { // onload function- load friend repository
         error: function(e) {
             alert("Unable to load friend repositories")
         },
-        success: function(data) {
+        success: function (data) {
             // data represent the user object include all it repositories
 
-            var repositoriesArray = data.m_Engine.m_Repositories;
             var username = data.m_Name;
-            updateRepositoriesCardsInHTML(repositoriesArray, username, "Fork repository");
+            var repositoriesArray = data.m_Engine.m_Repositories;
             $(".header-title").text(username + "'s Repositories");
+            updateRepositoriesCardsInHTML(repositoriesArray, username, "Fork repository", function (event) {
+                var userRepositoryNameInput = prompt("Please enter repository name for the forked repository");
+                if (!(userRepositoryNameInput == null || userRepositoryNameInput === "")){
+                    $.ajax({
+                        method: 'POST',
+                        data: {
+                            "repositoryOwnerName": event.data.username,
+                            "repositoryNameInOwner": event.data.repositoryName,
+                            "repositoryNameToFork": userRepositoryNameInput
+                        },
+                        url: "/magitHub/pages/friend/fork",
+                        //timeout: 4000, TODO delete comment
+                        error: function (data) {
+                            alert("error was occurred while forking " + data.repositoryName + "from " + data.repositoryOwnerName);
+                        },
+                        success: function (data) {
+                            // data represent loggedInUsername and repositoryName
+
+                            alert("repository " + data.repositoryName + " forked successfully to you. The forked repository name is " +  data.repositoryNameToFork)
+                            var url = "../repository/repository.html?repositoryName=" + data.repositoryNameToFork + "&username=" + data.loggedInUsername;
+                            window.location.href = url;
+                        }
+                    });
+                }
+            });
         }
     });
 })

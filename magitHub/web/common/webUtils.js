@@ -44,7 +44,7 @@ function extractNumberOfRepositoryBranches(branches) {
 }
 
 
-function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork){
+function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork, chooseOrForkClickMethod){
     var numberOfRepositories = 0;
     $.each( repositoriesArray, function (key, value){
         if (numberOfRepositories % 3 === 0){
@@ -69,11 +69,7 @@ function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork
         $(".card-body:last").append( $('<p class="card-text">' + commitDetails + '</p>'));
         $(".card.h-100:last").append($('<div class="card-footer">'));
         $(".card-footer:last").append( $('<a href="#" class="btn btn-primary chooseRepo">' + chooseOrFork + '</a>'));
-        $(".chooseRepo:last").click(function () {
-            var url = "../repository/repository.html?repositoryName=" + repositoryName + "&username=" + username;
-            window.location.href = url;
-        });
-
+        $(".chooseRepo:last").click({repositoryName: repositoryName, username: username}, chooseOrForkClickMethod);
         numberOfRepositories++;
     });
 }
