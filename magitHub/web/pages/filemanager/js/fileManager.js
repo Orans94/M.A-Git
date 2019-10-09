@@ -8,6 +8,11 @@ $(document).ready(function(){
 });
 
 $(function() { //onload function
+    $('#backButton').on('click', function(e){
+        e.preventDefault();
+        var url = "../repository/repository.html?repositoryName=" + repositoryName + "&username=" + username;
+        window.location.href = url;
+    });
     $.ajax({
         url: "/magitHub/repositoryInfo",
         data: {"requestType": "activeBranch", "username": username, "repositoryName": repositoryName},
@@ -40,14 +45,16 @@ $(function() { //onload function
                 $("#createNewFileButton").click(createNewFileButton);
 
                 var deleteFileButton = function () {
-                    var fileName = $("#fileName")[0].innerHTML
+                    var fileName = $("#fileName")[0].innerHTML;
                     $.ajax({
                         url: "/magitHub/repositoryInfo",
                         data: {"requestType": "deleteFile", "username": username, "repositoryName": repositoryName, "fileName": fileName},
-                        error: function () {
+                        error: function (data) {
+                            alert("File not found");
                             console.log("no");
                         },
                         success: function () {
+                            alert("The file has been deleted successfully");
                             console.log("deleted");
                             $.each($(".commitFile"), function () {
                                 if(this.innerHTML === $("#fileName")[0].innerHTML)
@@ -60,13 +67,13 @@ $(function() { //onload function
                                     {
                                         this.parentNode.removeChild(this);
                                     }
-                                })
+                                });
 
                                 $(".commitFile:last").trigger("click");
                             })
                         }
                 });
-                    return false;
+                    //return false;
                 };
                 $("#deleteFileButton").click(deleteFileButton);
 
@@ -78,19 +85,19 @@ $(function() { //onload function
                     $.ajax({
                         method: 'POST',
                         url: "/magitHub/pages/filemanager/fileContent",
-                        data: {"filePath": pathToFile, "fileContent": fileContent, "commitSHA1": commitSHA1},
+                        data: {"filePath": pathToFile, "fileContent": fileContent, "requestType": "Commit"},
                         error: function () {
+                            alert("Editing\\creating the file has been failed");
                             console.log("no");
                         },
                         success: function () {
                             console.log("changed file");
+                            alert("File has been edited\\created successfully");
+                            window.location.reload(true);
                         }
                     });
-                    $("#saveButton").click(save);
-
-                    var url = "fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1;
-                    window.location.href = url;
                 };
+                $("#saveButton").click(save);
 
                 $("#deleteFileButton").show();
                 $("#createNewFileButton").show();
@@ -120,7 +127,7 @@ $(function() { //onload function
             var fileButtonClick = function(event){
                 $.ajax({
                     url: "/magitHub/pages/filemanager/fileContent",
-                    data: {"filePath": event.data.filePath, "username" : username, "repositoryName" : repositoryName},
+                    data: {"filePath": event.data.filePath, "username" : username, "repositoryName" : repositoryName, "commitSHA1": commitSHA1},
                     error: function () {
                         console.log("no");
                     },

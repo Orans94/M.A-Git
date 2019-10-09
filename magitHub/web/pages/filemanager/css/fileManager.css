@@ -56,7 +56,7 @@ body {
 	font-weight:bold;
 	width:40px;
 }
-#saveButton, #editButton, #deleteFileButton, #createNewFileButton {
+#saveButton, #editButton, #deleteFileButton, #createNewFileButton, #backButton {
 	margin-bottom:5px;
 	cursor:pointer;
 	float:right;
@@ -77,12 +77,12 @@ body {
 	background-image:url(https://static.tumblr.com/maopbtg/ZHLmgtok7/button.png);
 	background-repeat:repeat-x;
 }
-#saveButton, #editButton, #deleteFileButton, #createNewFileButton :active {
+#saveButton, #editButton, #deleteFileButton, #createNewFileButton, #backButton :active {
 	zoom: 1;
 	filter: alpha(opacity=80);
 	opacity: 0.8;
 }
-#saveButton, #editButton, #deleteFileButton, #createNewFileButton:focus {
+#saveButton, #editButton, #deleteFileButton, #createNewFileButton, #backButton:focus {
 	zoom: 1;
 	filter: alpha(opacity=80);
 	opacity: 0.8;

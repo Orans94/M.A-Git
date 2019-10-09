@@ -25,12 +25,19 @@
 
 </head>
 <body>
-
 <div class="limiter">
     <div class="container-table100">
+        <button class="button" id="backButton">Back</button>
+        <div class="status">
+            <p id="WCStatus"></p>
+        </div>
+        <div class="operations">
+            <button class="button" type="button" id="commit">Commit</button>
+        </div>
         <div class="wrap-table100">
             <div class="table100Branch">
                 <em><b><i><strong>Branches</strong></i></b></em>
+                <button class ="button" id="createNewBranchButton" type="button">Create new branch</button>
                 <table class ="branchTable">
                     <thead>
                     <tr class="table100Branch-head">
@@ -54,6 +61,7 @@
         <div class="wrap-table100">
             <div class="table100Commit">
                 <em><b><i><strong>Commits</strong></i></b></em>
+                <button class ="button" id="updateWC" type="button">Update WC</button>
                 <table class="commitTable">
                     <thead>
                     <tr class="table100Commit-head">
