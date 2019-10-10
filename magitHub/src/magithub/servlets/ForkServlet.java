@@ -72,7 +72,7 @@ public class ForkServlet extends HttpServlet
 
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         processRequest(request,response);
     }

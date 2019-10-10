@@ -1672,4 +1672,40 @@ public class Repository
 
         return temp;
     }
+
+    public Set<Path> getWCFilePaths() throws IOException
+    {
+        Set<Path> pathSet = new HashSet<>();
+        SimpleFileVisitor<Path> fileVisitor = getWCFilePathsFileVisitor(pathSet);
+        Files.walkFileTree(m_WorkingCopy.getWorkingCopyDir(), fileVisitor);
+
+        return pathSet;
+    }
+
+    private SimpleFileVisitor<Path> getWCFilePathsFileVisitor(Set<Path> pathSet)
+    {
+        return new SimpleFileVisitor<Path>()
+        {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+            {
+                if (dir.getFileName().toString().equals(".magit"))
+                {
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
+                else
+                {
+                    return FileVisitResult.CONTINUE;
+                }
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+            {
+                pathSet.add(file);
+
+                return FileVisitResult.CONTINUE;
+            }
+        };
+    }
 }

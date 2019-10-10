@@ -17,7 +17,7 @@ function onRowClick(tableId, callback) {
 $(function() { // onload function
     $('#backButton').on('click', function(e){
         e.preventDefault();
-        window.history.back(); // TODO fix
+        window.location.href = "../main/main.html";
     });
 
     var wcStatus = $("#WCStatus");
@@ -43,7 +43,7 @@ $(function() { // onload function
     });
 
     var updateWC = function(){
-        var url = "../filemanager/updateWC.html?username=" + username + "&repositoryName=" + repositoryName;
+        var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + "nothing" + "&requestType="+"WC";
         window.location.href = url;
     };
     $("#updateWC").click(updateWC);
@@ -139,7 +139,7 @@ $(function() { // onload function
             onRowClick("commitTable", function (row){
             var commitSHA1 = row.getElementsByClassName("commitSHA1Column")[0].textContent;
             // redirect to filemanager page with parameters - username, repository, and commit sha1
-            var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1;
+            var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1 + "&requestType="+"Commit";
             window.location.href = url;
         });
         }

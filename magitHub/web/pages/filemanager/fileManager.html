@@ -25,12 +25,12 @@
             font-weight: normal;
         }
 
-        H2 {
+        /*H2 {
             font-family: Georgia, serif;
             font-size: 16px;
             font-weight: normal;
             margin: 0px 0px 10px 0px;
-        }
+        }*/
 
         .example {
             resize: vertical;
@@ -38,6 +38,10 @@
             overflow: auto;
             float: left;
             margin: 15px;
+            background: -webkit-linear-gradient(45deg, #283048, #859398);
+            background: -o-linear-gradient(45deg, #283048, #859398);
+            background: -moz-linear-gradient(45deg, #283048, #859398);
+            background: linear-gradient(45deg, #283048, #859398);
         }
 
         .demo {
@@ -51,6 +55,10 @@
             background: #FFF;
             overflow: auto;
             padding: 5px;
+            background: -webkit-linear-gradient(45deg, #232526, #414345);
+            background: -o-linear-gradient(45deg, #232526, #414345);
+            background: -moz-linear-gradient(45deg, #232526, #414345);
+            background: linear-gradient(45deg, #232526, #414345);
         }
 
     </style>
@@ -59,8 +67,12 @@
 <body>
 <button id="backButton" class="button">Back</button>
         <div class="example">
-            <h2>Default options</h2>
-            <div id="fileTreeDemo_1" class="demo"></div>
+            <h2>Files list</h2>
+            <div>
+                <ul id="fileTreeDemo_1" class="demo">
+
+                </ul>
+            </div>
         </div>
 
         <div id="wrapper">

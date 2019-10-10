@@ -18,7 +18,7 @@ import static magithub.constants.Constants.*;
 
 public class PullRequestServlet extends HttpServlet
 {
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ParseException
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException
     {
         // ASSUMPTION: 1.the user will have the option to press on the pull request button only on relevant RR repositories.
         //             2.all the relevant parameters are presetted on the request.
@@ -59,7 +59,7 @@ public class PullRequestServlet extends HttpServlet
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
         try
         {

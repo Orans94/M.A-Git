@@ -21,7 +21,7 @@ import static magithub.constants.Constants.MAGITEX3_DIRECTORY_PATH;
 
 public class RepositoryInfoServlet extends HttpServlet
 {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
     {
 
     }
