@@ -76,7 +76,6 @@ $(function() { // onload function- update users list in side bar
                 userItemElem = $(".user-item:last");
                 userItemElem.append($('<a href="#"><i class="fa fa-user-o" aria-hidden="true"><span class="ml-2 align-middle">' + data[i] + '</span></i></a>'));
                 userItemElem.click({friendName : data[i]}, friendClickFunc);
-
                 }
             }
         });

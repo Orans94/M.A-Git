@@ -1,5 +1,7 @@
 var username = getUrlParameter("username");
 var repositoryName = getUrlParameter('repositoryName');
+var isRepositoryCloned = getUrlParameter('isRepositoryCloned');
+
 
 function onRowClick(tableId, callback) {
     var table = document.getElementsByClassName(tableId),

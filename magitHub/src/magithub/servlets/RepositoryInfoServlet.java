@@ -9,7 +9,6 @@ import engine.managers.User;
 import engine.managers.UsersManager;
 import engine.utils.FileUtilities;
 import magithub.utils.ServletUtils;
-
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

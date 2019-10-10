@@ -33,7 +33,7 @@ public class FileContentServlet extends HttpServlet
         NodeMaps nodeMaps = engine.getLazyLoadedNodeMapsByCommitSHA1(commitSHA1);
 
         Path filePath = Paths.get("C:\\magit-ex3").resolve(username).resolve(repositoryName).resolve(file);
-        String fileSHA1 =nodeMaps.getSHA1ByPath().get(filePath);
+        String fileSHA1 = nodeMaps.getSHA1ByPath().get(filePath);
         Node node = nodeMaps.getNodeBySHA1().get(fileSHA1);
         PrintWriter out = response.getWriter();
         out.print(node.getContent());
@@ -58,6 +58,7 @@ public class FileContentServlet extends HttpServlet
         }
         else
         {
+            Files.createDirectories(i_FilePath.getParent());
             i_Engine.createAndWriteTxtFile(i_FilePath, i_FileContent);
         }
     }

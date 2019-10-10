@@ -16,10 +16,14 @@ body {
   height: 65vh;
   min-height: 300px;
   //background: no-repeat center center scroll;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  //-webkit-background-size: cover;
+  //-moz-background-size: cover;
+//  -o-background-size: cover;
+ // background-size: cover;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
 
   background: -webkit-linear-gradient(45deg, #283048, #859398);
   background: -o-linear-gradient(45deg, #283048, #859398);

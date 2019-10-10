@@ -37,7 +37,7 @@ $(function() { // onload function- load friend repository
                             // data represent loggedInUsername and repositoryName
 
                             alert("repository " + data.repositoryName + " forked successfully to you. The forked repository name is " +  data.repositoryNameToFork)
-                            var url = "../repository/repository.html?repositoryName=" + data.repositoryNameToFork + "&username=" + data.loggedInUsername;
+                            var url = "../main/main.html";
                             window.location.href = url;
                         }
                     });

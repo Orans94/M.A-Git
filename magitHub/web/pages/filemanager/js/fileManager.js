@@ -23,7 +23,8 @@ $(function() { //onload function
 
             var createNewFileButton = function () {
                 do {
-                    var input = prompt("Enter the new file name");
+                    var input = prompt("Enter the new file path");
+                    //TODO - check path validation
                 }while(input == null || input === "");
                 $("#editButton").hide();
                 $("#deleteFileButton").hide();

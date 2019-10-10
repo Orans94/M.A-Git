@@ -61,6 +61,7 @@ function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork
         var latestCommitMessage = "Latest commit message : " +  latestCommit.value.m_Message + '<br>';
 
         var commitDetails = repositoryActiveBranchName + numberOfRepositoryBranches + latestCommitDate + latestCommitMessage;
+        var isRepositoryCloned = value.m_RemoteRepositoryPath !== undefined;
 
         $(".row").eq(-2).append( $('<div class="col-lg-4 mb-4">'));
         $(".col-lg-4:last").append( $('<div class="card h-100">'));
@@ -69,7 +70,7 @@ function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork
         $(".card-body:last").append( $('<p class="card-text">' + commitDetails + '</p>'));
         $(".card.h-100:last").append($('<div class="card-footer">'));
         $(".card-footer:last").append( $('<a href="#" class="btn btn-primary chooseRepo">' + chooseOrFork + '</a>'));
-        $(".chooseRepo:last").click({repositoryName: repositoryName, username: username}, chooseOrForkClickMethod);
+        $(".chooseRepo:last").click({repositoryName: repositoryName, username: username, isRepositoryCloned: isRepositoryCloned}, chooseOrForkClickMethod);
         numberOfRepositories++;
     });
 }
