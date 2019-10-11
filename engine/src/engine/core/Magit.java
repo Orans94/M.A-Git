@@ -1,6 +1,5 @@
 package engine.core;
 
-import engine.managers.EngineManager;
 import engine.branches.Branch;
 import engine.branches.Head;
 import engine.objects.Commit;
@@ -21,7 +20,7 @@ public class Magit
 {
     private Map<String, Commit> m_Commits = new HashMap<>();
     private Map<String, Branch> m_Branches = new HashMap<>();
-    private static Path m_MagitDir = Paths.get("");
+    private Path m_MagitDir = Paths.get("");
     private Head m_Head;
 
     public Magit(Path i_MagitPath) throws IOException
@@ -40,9 +39,9 @@ public class Magit
         m_Head = new Head();
     }
 
-    public static Path getMagitDir() { return m_MagitDir; }
+    public Path getMagitDir() { return m_MagitDir; }
 
-    public static void setMagitDir(Path i_MagitDir) { m_MagitDir = i_MagitDir; }
+    public void setMagitDir(Path i_MagitDir) { m_MagitDir = i_MagitDir; }
 
     public Map<String, Commit> getCommits() { return m_Commits; }
 
@@ -56,13 +55,13 @@ public class Magit
 
     public void setHead(Head i_Head) { this.m_Head = i_Head; }
 
-    public String handleNewCommit(String i_RootFolderSha1, List<String> i_ParentsSHA1, String i_CommitMessage) throws IOException
+    public String handleNewCommit(String i_RootFolderSha1, List<String> i_ParentsSHA1, String i_CommitMessage, String i_Username) throws IOException
     {
-        Commit commit = createCommit(i_RootFolderSha1, i_ParentsSHA1, i_CommitMessage);
+        Commit commit = createCommit(i_RootFolderSha1, i_ParentsSHA1, i_CommitMessage, i_Username);
         String commitSHA1 = commit.getSHA1();
         m_Commits.put(commitSHA1, commit);
         setActiveBranchToNewCommit(commitSHA1);
-        commit.Zip(commitSHA1);
+        commit.Zip(commitSHA1, m_MagitDir);
 
         return commitSHA1;
     }
@@ -75,9 +74,9 @@ public class Magit
         FileUtilities.modifyTxtFile(m_MagitDir.resolve("branches").resolve(m_Head.getActiveBranch().getName() + ".txt"), m_Head.getActiveBranch().toString());
     }
 
-    public Commit createCommit(String i_RootFolderSha1, List<String> i_ParentsSHA1, String i_CommitMessage)
+    public Commit createCommit(String i_RootFolderSha1, List<String> i_ParentsSHA1, String i_CommitMessage, String i_Username)
     {
-        return new Commit(i_RootFolderSha1,i_ParentsSHA1,i_CommitMessage, new Date(), EngineManager.getUserName());
+        return new Commit(i_RootFolderSha1,i_ParentsSHA1,i_CommitMessage, new Date(), i_Username);
     }
 
     public void clear()
@@ -88,7 +87,7 @@ public class Magit
 
     public void load(Path i_repPath) throws IOException, ParseException
     {
-        loadBranches(Magit.getMagitDir().resolve("branches"), null);
+        loadBranches(m_MagitDir.resolve("branches"), null);
         loadHead();
         loadCommits();
     }
@@ -120,7 +119,7 @@ public class Magit
         if (!m_Commits.containsKey(i_CommitSHA1))
         { // the current commit not found in commits map
 
-            Commit newCommit = createCommitByObjectsDir(i_CommitSHA1, Magit.getMagitDir().resolve("objects").toString());
+            Commit newCommit = createCommitByObjectsDir(i_CommitSHA1, m_MagitDir.resolve("objects").toString());
             m_Commits.put(i_CommitSHA1, newCommit);
             for(String SHA1 : m_Commits.get(i_CommitSHA1).getParentsSHA1())
             {
@@ -232,7 +231,7 @@ public class Magit
         String remoteBranchName = i_RemoteRepositoryName +"\\"+i_RemoteBranchName;
         String commitSHA1 = m_Branches.get(remoteBranchName).getCommitSHA1();
         Branch trackingBranch = new Branch(i_RemoteBranchName, commitSHA1, false, true, remoteBranchName);
-        FileUtilities.createAndWriteTxtFile(Magit.getMagitDir().resolve("branches").resolve(i_RemoteBranchName + ".txt"), trackingBranch.toString());
+        FileUtilities.createAndWriteTxtFile(m_MagitDir.resolve("branches").resolve(i_RemoteBranchName + ".txt"), trackingBranch.toString());
         m_Branches.put(i_RemoteBranchName, trackingBranch);
     }
 

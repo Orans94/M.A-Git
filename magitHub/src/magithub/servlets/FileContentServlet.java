@@ -37,6 +37,7 @@ public class FileContentServlet extends HttpServlet
         Node node = nodeMaps.getNodeBySHA1().get(fileSHA1);
         PrintWriter out = response.getWriter();
         out.print(node.getContent());
+        out.close();
     }
 
     private void processPost(HttpServletRequest request, HttpServletResponse response) throws IOException
@@ -101,5 +102,6 @@ public class FileContentServlet extends HttpServlet
         }
 
         out.print(fileContent);
+        out.close();
     }
 }

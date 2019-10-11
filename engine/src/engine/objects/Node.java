@@ -17,13 +17,13 @@ abstract public class Node
 
     public String SHA1() { return DigestUtils.sha1Hex(m_Content); }
 
-    public void Zip(String i_SHA1FileName, Path i_PathOfTheFile) throws IOException { FileUtilities.zip(i_SHA1FileName, i_PathOfTheFile); }
+    public void Zip(String i_SHA1FileName, Path i_PathOfTheFile, Path i_MagitDir) throws IOException { FileUtilities.zip(i_SHA1FileName, i_PathOfTheFile, i_MagitDir ); }
 
-    public String generateStringInformation(String i_Sha1, String i_FileName)
+    public String generateStringInformation(String i_Sha1, String i_FileName,String i_Username)
     {
         return "" + i_FileName + "," + i_Sha1 + "," +
                 this.getClass().getSimpleName().toLowerCase() + "," +
-                EngineManager.getUserName() + "," +
+                i_Username + "," +
                 DateUtils.FormatToString(new Date());
     }
 

@@ -51,7 +51,6 @@ public class CheckoutController implements PopupController
         {
             if (!m_TopController.isBranchPointedCommitSHA1Empty(branchName))
             {
-
                 OpenChanges openChanges = m_TopController.getFileSystemStatus();
                 if (m_TopController.isFileSystemDirty(openChanges))
                 {

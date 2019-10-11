@@ -15,14 +15,54 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static magithub.constants.Constants.MAGITEX3_DIRECTORY_PATH;
 
 public class RepositoryInfoServlet extends HttpServlet
 {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
+        String requestType = request.getParameter("requestType");
+        switch (requestType)
+        {
+            case "checkout":
+                checkoutRequest(request,response);
+                break;
+            case "checkoutRTB":
+                checkoutRTBRequest(request,response);
+                break;
+        }
+    }
 
+    private void checkoutRTBRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String branchName = request.getParameter("branchName");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository rep = engine.getRepositories().get(repositoryPath);
+
+        branchName = Paths.get(branchName).getFileName().toString();
+        rep.createNewRTB(branchName);
+        rep.checkout(branchName);
+    }
+
+    private void checkoutRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String branchName = request.getParameter("branchName");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository rep = engine.getRepositories().get(repositoryPath);
+
+        rep.checkout(branchName);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException
@@ -45,7 +85,46 @@ public class RepositoryInfoServlet extends HttpServlet
             case "WCStatus":
                 WCStatusRequest(request,response);
                 break;
+            case "isBranchExist":
+                isBranchExistsRequest(request,response);
+                break;
         }
+    }
+
+    private void isBranchExistsRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String branchName = request.getParameter("branchName");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository rep = engine.getRepositories().get(repositoryPath);
+        PrintWriter out = response.getWriter();
+
+        if(rep.getMagit().getBranches().containsKey(branchName))
+        {
+            Branch branch = rep.getMagit().getBranches().get(branchName);
+            if(branch.getIsRemote())
+            {
+                out.print("RB");
+            }
+            else if(rep.getMagit().getHead().getActiveBranch() == branch)
+            {
+                out.print("active");
+            }
+            else
+            {
+                out.print("true");
+            }
+        }
+        else
+        {
+            out.print("branch doesnt exist");
+        }
+
+        out.close();
     }
 
     private void WCStatusRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
@@ -66,6 +145,8 @@ public class RepositoryInfoServlet extends HttpServlet
         {
             out.print("WC Status: Dirty");
         }
+
+        out.close();
     }
 
     private void commitRequest(HttpServletRequest request, HttpServletResponse response) throws IOException

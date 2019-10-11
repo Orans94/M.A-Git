@@ -36,7 +36,7 @@ public class EngineManager
 {
     private Map<Path, Repository> m_Repositories = new HashMap<>();
     private Repository m_LoadedRepository;
-    private static String m_UserName = "Administrator";
+    private String m_UserName = "Administrator";
     private XMLManager m_XMLManager = new XMLManager();
     private Map<String, NodeMaps> m_LazyLoadedNodeMapsByCommitSHA1 = new HashMap<>();
     private BooleanProperty m_IsRepositoryLoadedProperty = new SimpleBooleanProperty(false);
@@ -47,19 +47,24 @@ public class EngineManager
 
     public XMLManager getXMLManager() { return m_XMLManager; }
 
-    public static String getUserName()
+    public String getUserName()
     {
         return m_UserName;
     }
 
-    public static void setUserName(String i_UserName)
+    public void setUserName(String i_UserName)
     {
-        EngineManager.m_UserName = i_UserName;
+        m_UserName = i_UserName;
+        if (m_LoadedRepository != null)
+        {
+            m_LoadedRepository.setUsername(m_UserName);
+        }
     }
 
     public void createRepository(Path i_RepPath, String i_Name) throws IOException
     {
         m_LoadedRepository = new Repository(i_RepPath, i_Name);
+        m_LoadedRepository.setUsername(m_UserName);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
         m_Repositories.put(i_RepPath, m_LoadedRepository);
@@ -106,6 +111,7 @@ public class EngineManager
 
     public void readRepositoryFromXMLFile(MagitRepository i_XMLRepository, XMLMagitMaps i_XMLMagitMaps) throws IOException, ParseException {
         m_LoadedRepository = new Repository(Paths.get(i_XMLRepository.getLocation()));
+        m_LoadedRepository.setUsername(m_UserName);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_LoadedRepository.loadXMLRepoToSystem(i_XMLRepository, i_XMLMagitMaps);
         m_LoadedRepository.checkout(m_LoadedRepository.getMagit().getHead().getActiveBranch().getName());
@@ -124,6 +130,7 @@ public class EngineManager
     public void loadRepositoryByPath(Path i_RepoPath) throws IOException, ParseException
     {
         m_LoadedRepository = new Repository(i_RepoPath);
+        m_LoadedRepository.setUsername(m_UserName);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_LoadedRepository.loadRepository(i_RepoPath);
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
@@ -173,7 +180,7 @@ public class EngineManager
     public void setActiveBranchName(String i_BranchName) throws IOException
     {
         m_LoadedRepository.getMagit().getHead().setActiveBranch(m_LoadedRepository.getMagit().getBranches().get(i_BranchName));
-        FileUtilities.modifyTxtFile(Magit.getMagitDir().resolve("branches").resolve("HEAD.txt"), i_BranchName);
+        FileUtilities.modifyTxtFile(m_LoadedRepository.getMagit().getMagitDir().resolve("branches").resolve("HEAD.txt"), i_BranchName);
     }
 
     public void createRepositoryPathDirectories(Path i_XmlRepositoryLocation) throws IOException
@@ -210,10 +217,11 @@ public class EngineManager
     public void loadEmptyRepository(Path i_RepoPath) throws IOException
     {
         m_LoadedRepository = new Repository(i_RepoPath);
+        m_LoadedRepository.setUsername(m_UserName);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_LoadedRepository.writeRemoteRepositoryPathToFileSystem();
         m_LoadedRepository.loadNameFromFile();
-        m_LoadedRepository.getMagit().loadBranches(Magit.getMagitDir().resolve("branches"), null);
+        m_LoadedRepository.getMagit().loadBranches(m_LoadedRepository.getMagit().getMagitDir().resolve("branches"), null);
         m_LoadedRepository.getMagit().loadHead();
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
         m_Repositories.put(i_RepoPath, m_LoadedRepository);
@@ -228,6 +236,7 @@ public class EngineManager
     public void createEmptyRepository(Path i_RepoPath, String i_RepoName) throws IOException
     {
         m_LoadedRepository = new Repository(i_RepoPath, i_RepoName);
+        m_LoadedRepository.setUsername(m_UserName);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_IsRepositoryClonedProperty.setValue(m_LoadedRepository.getRemoteRepositoryPath() != null);
         m_Repositories.put(i_RepoPath, m_LoadedRepository);
@@ -414,6 +423,7 @@ public class EngineManager
     public void cloneRepository(Path i_Source, Path i_Destination, String i_Name) throws IOException, ParseException
     {
         m_LoadedRepository = new Repository(i_Source, i_Destination, i_Name);
+        m_LoadedRepository.setUsername(m_UserName);
         m_IsRepositoryLoadedProperty.setValue(true);
         m_IsRepositoryClonedProperty.setValue(true);
         m_LoadedRepository.deleteRepositoryNameFile();

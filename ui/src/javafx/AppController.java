@@ -221,7 +221,7 @@ public class AppController
         return m_Engine.isDirectoryEmpty(xmlRepositoryLocation);
     }
 
-    public void updateUsername(String i_Username) { EngineManager.setUserName(i_Username);}
+    public void updateUsername(String i_Username) { m_Engine.setUserName(i_Username);}
 
     public boolean isXMLRepositoryEmpty(MagitRepository xmlRepo)
     {

@@ -116,6 +116,8 @@ public class UploadRepositoryServlet extends HttpServlet
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             out.print(validationErrorMessage.toString());
         }
+
+        out.close();
     }
 
     private void assignUserToUsersManager(String i_LoggedInUsername, UsersManager i_UsersManager)

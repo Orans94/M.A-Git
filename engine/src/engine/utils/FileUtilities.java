@@ -1,6 +1,5 @@
 package engine.utils;
 
-import engine.core.Magit;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -39,7 +38,7 @@ public class FileUtilities
         }
     }
 
-    public static void createZipFileFromContent(String i_ZipName, String i_Content , String i_NameOfTxtFileInsideZip) throws IOException
+    public static void createZipFileFromContent(String i_ZipName, String i_Content , String i_NameOfTxtFileInsideZip, Path i_MagitDir) throws IOException
     {
         // this method creates a zip - his name is i_ZipName , he contains a txt file named i_NameOfTxtFileInsideZip
         // and the content of the txt file is i_Content
@@ -48,17 +47,17 @@ public class FileUtilities
         {
             i_NameOfTxtFileInsideZip = i_NameOfTxtFileInsideZip.concat(".txt");
         }
-        Path createdTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_NameOfTxtFileInsideZip);
+        Path createdTempTxtPath = i_MagitDir.resolve("objects").resolve(i_NameOfTxtFileInsideZip);
         createAndWriteTxtFile(createdTempTxtPath, i_Content);
-        zip(i_ZipName, createdTempTxtPath);
+        zip(i_ZipName, createdTempTxtPath, i_MagitDir);
         deleteFile(createdTempTxtPath);
     }
 
-    public static void zip(String i_ZipName, Path i_FilePath) throws IOException
+    public static void zip(String i_ZipName, Path i_FilePath, Path i_MagitDir) throws IOException
     {
         // this method recieves a path to a file and name , and creates a zip file name i_ZipName in objects dir
 
-        Path zippingPath = Magit.getMagitDir().resolve("objects").resolve(i_ZipName + ".zip");
+        Path zippingPath = i_MagitDir.resolve("objects").resolve(i_ZipName + ".zip");
         String sourceFile = i_FilePath.toString();
         FileOutputStream fos = new FileOutputStream(zippingPath.toString());
         ZipOutputStream zipOut = new ZipOutputStream(fos);
@@ -77,11 +76,11 @@ public class FileUtilities
         fos.close();
     }
 
-    public static void unzip(String i_ZipName, Path i_DestToUnZip) throws IOException
+    public static void unzip(String i_ZipName, Path i_DestToUnZip, Path i_MagitDir) throws IOException
     {
         // this method recieves a zip name and destination path and unzipping the file name i_Zipname to destination
 
-        String fileZip = Magit.getMagitDir().resolve("objects").resolve(i_ZipName).toString();
+        String fileZip = i_MagitDir.resolve("objects").resolve(i_ZipName).toString();
         File destDir = new File(i_DestToUnZip.toString());
         byte[] buffer = new byte[1024];
         ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));

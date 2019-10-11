@@ -19,6 +19,7 @@ public class User
         m_PullRequests = new LinkedList<>();
         m_Name = i_Username;
         m_Engine = new EngineManager();
+        m_Engine.setUserName(m_Name);
         m_UnseenNotifications = new LinkedList<>();
     }
 

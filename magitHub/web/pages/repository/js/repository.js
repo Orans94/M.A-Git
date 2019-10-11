@@ -16,16 +16,17 @@ function onRowClick(tableId, callback) {
     }
 
 }
-$(function() { // onload function
-    $('#backButton').on('click', function(e){
+
+$(function () { // onload function
+    $('#backButton').on('click', function (e) {
         e.preventDefault();
         window.location.href = "../main/main.html";
     });
 
     var wcStatus = $("#WCStatus");
     $.ajax({
-       url:"/magitHub/repositoryInfo",
-       data:{"requestType": "WCStatus", "username":username, "repositoryName": repositoryName},
+        url: "/magitHub/repositoryInfo",
+        data: {"requestType": "WCStatus", "username": username, "repositoryName": repositoryName},
         error: function () {
             console.log("no");
         },
@@ -33,45 +34,44 @@ $(function() { // onload function
             console.log(data);
             wcStatus.empty();
             wcStatus.append(data);
-            if(data.includes("Clean"))
-            {
+            if (data.includes("Clean")) {
                 wcStatus.css('background-color', 'green');
-            }
-            else
-            {
+            } else {
                 wcStatus.css('background-color', 'red');
             }
         }
     });
 
-    var updateWC = function(){
-        var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + "nothing" + "&requestType="+"WC";
+    var updateWC = function () {
+        var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + "nothing" + "&requestType=" + "WC";
         window.location.href = url;
     };
     $("#updateWC").click(updateWC);
 
     var commitClick = function () {
-        if(wcStatus[0].innerText.includes("Dirty"))
-        {
+        if (wcStatus[0].innerText.includes("Dirty")) {
             do {
                 var commitMessage = prompt("Please enter commit message");
-            }while(commitMessage == null || commitMessage === "");
+            } while (commitMessage == null || commitMessage === "");
             $.ajax({
-               url: "/magitHub/repositoryInfo",
-               data:{"requestType": "commit", "username": username, "repositoryName": repositoryName, "commitMessage": commitMessage},
+                url: "/magitHub/repositoryInfo",
+                data: {
+                    "requestType": "commit",
+                    "username": username,
+                    "repositoryName": repositoryName,
+                    "commitMessage": commitMessage
+                },
                 error: function () {
-                   alert("Commit failed");
+                    alert("Commit failed");
                     console.log("no");
                 },
                 success: function (data) {
-                   alert("Committed successfully");
+                    alert("Committed successfully");
                     console.log(data);
                     window.location.reload(true);
                 }
             });
-        }
-        else
-        {
+        } else {
             alert("WC status is clean, nothing to commit");
         }
     };
@@ -85,39 +85,19 @@ $(function() { // onload function
             console.log("no");
         },
         success: function (data) {
-        console.log(data);
-        var repositories = data.m_Engine.m_Repositories;
-        $.each(repositories, function(key,value){
-               if(value.m_Name === repositoryName)
-               {
-                   repository = value;
-               }
+            console.log(data);
+            var repositories = data.m_Engine.m_Repositories;
+            $.each(repositories, function (key, value) {
+                if (value.m_Name === repositoryName) {
+                    repository = value;
+                }
             });
 
             var repository;
 
 
             var branches = repository.m_Magit.m_Branches;
-
             var commits = repository.m_Magit.m_Commits;
-            var createBranchClick = function(){
-                do {
-                    var branchName = prompt("Please enter branch name");
-                }while(branchName == null || branchName === "");
-                $.ajax({
-                    url : "../../repositoryInfo",
-                    data: {"requestType": "createBranch", "branchName": branchName, "username" : username, "repositoryName": repositoryName},
-                    error: function () {
-                        console.log("no");
-                    },
-                    success: function (data) {
-                        console.log("branch created");
-                        var url = "repository.html?repositoryName="+repositoryName+"&username="+username;
-                        window.location.href = url;
-                    }
-                })
-            };
-            $("#createNewBranchButton").click(createBranchClick);
 
             $.each(branches, function (key, value) {
                 $(".branchTableBody").append('<tr>\n' +
@@ -125,9 +105,28 @@ $(function() { // onload function
                     '                        <td class="isRemoteColumn">' + value.m_IsRemote + '</td>\n' +
                     '                        <td class="isTrackingColumn">' + value.m_IsTracking + '</td>\n' +
                     '                        <td class="pointedCommitColumn">' + value.m_CommitSHA1 + '</td>\n' +
-                    '                        <td class="commitMessageColumn">'+ commits[value.m_CommitSHA1].m_Message +'</td>\n' +
+                    '                        <td class="commitMessageColumn">' + commits[value.m_CommitSHA1].m_Message + '</td>\n' +
                     '                    </tr>');
             });
+
+            $.ajax({
+                url: "../../repositoryInfo",
+                data: {"requestType": "activeBranch", "username": username, "repositoryName": repositoryName},
+                //timeout: 2000,
+                error: function () {
+                    console.log("no");
+                },
+                success: function (data) {
+                    $.each($(".branchNameColumn"), function ()
+                    {
+                        var br = JSON.parse(data);
+                        if(this.innerHTML === br.m_Name)
+                        {
+                            this.append("(HEAD)");
+                        }
+                    })
+                 }
+                });
 
             $.each(commits, function (key, value) {
                 $(".commitTableBody").append('<tr id="tableRow">\n' +
@@ -138,12 +137,114 @@ $(function() { // onload function
                     '                    </tr>');
             });
 
-            onRowClick("commitTable", function (row){
-            var commitSHA1 = row.getElementsByClassName("commitSHA1Column")[0].textContent;
-            // redirect to filemanager page with parameters - username, repository, and commit sha1
-            var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1 + "&requestType="+"Commit";
-            window.location.href = url;
-        });
+            onRowClick("commitTable", function (row) {
+                var commitSHA1 = row.getElementsByClassName("commitSHA1Column")[0].textContent;
+                // redirect to filemanager page with parameters - username, repository, and commit sha1
+                var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1 + "&requestType=" + "Commit";
+                window.location.href = url;
+            });
+
+            var createBranchClick = function () {
+                do {
+                    var branchName = prompt("Please enter branch name");
+                } while (branchName == null || branchName === "");
+                $.ajax({
+                    url: "../../repositoryInfo",
+                    data: {
+                        "requestType": "createBranch",
+                        "branchName": branchName,
+                        "username": username,
+                        "repositoryName": repositoryName
+                    },
+                    error: function () {
+                        console.log("no");
+                    },
+                    success: function (data) {
+                        console.log("branch created");
+                        var url = "repository.html?repositoryName=" + repositoryName + "&username=" + username;
+                        window.location.href = url;
+                    }
+                })
+            };
+            $("#createNewBranchButton").click(createBranchClick);
+
+            var checkoutButton = $("#checkoutButton");
+            var checkoutClick = function ()
+            {
+            if (wcStatus[0].innerText.includes("Clean"))
+            {
+                do{
+                    var branchName = prompt("Please enter branch name");
+                }while(branchName == null || branchName === "");
+                    $.ajax({
+                        url: "../../repositoryInfo",
+                        data: {
+                            "requestType": "isBranchExist",
+                            "branchName": branchName,
+                            "username": username,
+                            "repositoryName": repositoryName
+                        },
+                        error: function () {
+                            console.log("no");
+                        },
+                        success: function (data) {
+                                if (data === "true") {
+                                    //checkout
+                                    $.ajax({
+                                        method: "POST",
+                                        url: "../../repositoryInfo",
+                                        data: {
+                                            "requestType": "checkout",
+                                            "branchName": branchName,
+                                            "username": username,
+                                            "repositoryName": repositoryName
+                                        },
+                                        error: function () {
+                                            console.log("no");
+                                        },
+                                        success: function (data) {
+                                            alert("Checked out to branch " + branchName + " successfully");
+                                            window.location.reload(true);
+                                        }
+                                    });
+                                } else if (data === "active") {
+                                    alert("Head is already on branch " + branchName);
+                                } else if (data === "RB") {
+                                    if (confirm("The chosen branch is a remote branch.\nWould you like to create a Remote Tracking Branch and checkout to him?")) {
+                                        //create rtb
+                                        $.ajax({
+                                            method: "POST",
+                                            url: "../../repositoryInfo",
+                                            data: {
+                                                "requestType": "checkoutRTB",
+                                                "branchName": branchName,
+                                                "username": username,
+                                                "repositoryName": repositoryName
+                                            },
+                                            error: function () {
+                                                console.log("no");
+                                            },
+                                            success: function (data) {
+                                                alert("Checked out to branch " + branchName + " successfully");
+                                                window.location.reload(true);
+                                            }
+                                        });
+                                    } else {
+                                        alert("The system did not checked out");
+                                    }
+                                } else {
+                                    alert("Branch " + branchName + " does not exist");
+                                }
+                        }
+                    });
+            }
+            else
+            {
+                //WC is dirty
+                alert("The system can not checkout when the WC status is dirty");
+            }
+                };
+            checkoutButton.click(checkoutClick);
         }
     });
 });

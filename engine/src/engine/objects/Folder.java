@@ -34,14 +34,14 @@ public class Folder extends Node
     }
 
     @Override
-    public void Zip(String i_SHA1FileName, Path i_PathOfTheFile) throws IOException
+    public void Zip(String i_SHA1FileName, Path i_PathOfTheFile, Path i_MagitDir) throws IOException
     {
         // 1. creating temp txt file in objects dir
-        Path createdTempTxtPath = Magit.getMagitDir().resolve("objects").resolve(i_SHA1FileName + ".txt");
+        Path createdTempTxtPath = i_MagitDir.resolve("objects").resolve(i_SHA1FileName + ".txt");
         FileUtilities.createAndWriteTxtFile(createdTempTxtPath, m_Content);
 
         // 2. zipping the temp txt file
-        super.Zip(i_SHA1FileName, createdTempTxtPath);
+        super.Zip(i_SHA1FileName, createdTempTxtPath, i_MagitDir);
 
         // 3. remove the tmp txt file
         FileUtilities.deleteFile(createdTempTxtPath);

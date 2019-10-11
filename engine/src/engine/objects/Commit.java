@@ -1,6 +1,5 @@
 package engine.objects;
 
-import engine.managers.EngineManager;
 import engine.utils.DateUtils;
 import engine.utils.FileUtilities;
 import engine.utils.StringUtilities;
@@ -8,6 +7,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import puk.team.course.magit.ancestor.finder.CommitRepresentative;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class Commit implements CommitRepresentative
 
     public List<String> getParentsSHA1() {return m_ParentsSHA1;}
 
-    public Commit(String i_RootFolderSHA1, String i_ParentSHA1, String i_Message)
+/*    public Commit(String i_RootFolderSHA1, String i_ParentSHA1, String i_Message, String i_Username)
     {
         // ctor that takes the current time and current user name
         m_RootFolderSHA1 = i_RootFolderSHA1;
@@ -49,8 +49,8 @@ public class Commit implements CommitRepresentative
         }
         m_Message = i_Message;
         m_CommitDate = new Date();
-        m_CommitAuthor = EngineManager.getUserName();
-    }
+        m_CommitAuthor = i_Username;
+    }*/
 
     public void addParent(String i_ParentSHA1)
     {
@@ -61,8 +61,8 @@ public class Commit implements CommitRepresentative
         }
     }
 
-    public void Zip(String i_CommitSHA1FileName) throws IOException
-    { FileUtilities.createZipFileFromContent(i_CommitSHA1FileName, this.toString(), i_CommitSHA1FileName); }
+    public void Zip(String i_CommitSHA1FileName, Path i_MagitDir) throws IOException
+    { FileUtilities.createZipFileFromContent(i_CommitSHA1FileName, this.toString(), i_CommitSHA1FileName, i_MagitDir); }
 
     @Override
     public String toString()

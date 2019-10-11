@@ -69,7 +69,6 @@ public class ForkServlet extends HttpServlet
             jsonObject.addProperty("repositoryNameToFork", repositoryNameToFork);
             out.println(jsonObject);
         }
-
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException

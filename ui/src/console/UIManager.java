@@ -410,7 +410,7 @@ public class UIManager
         Menu.requestUserName();
         Scanner scanner = new Scanner(System.in);
         String userName = scanner.nextLine();
-        EngineManager.setUserName(userName);
+        m_Engine.setUserName(userName);
     }
 
     private void commit() throws IOException
