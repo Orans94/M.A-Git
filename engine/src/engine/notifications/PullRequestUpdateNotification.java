@@ -17,4 +17,10 @@ public class PullRequestUpdateNotification implements Notification
                 + System.lineSeparator() + "Base branch: " + m_BaseBranchName
                 + System.lineSeparator() + "Target branch: " + m_TargetBranchName;
     }
+
+    @Override
+    public String getNotificationDetails()
+    {
+        return null;
+    }
 }

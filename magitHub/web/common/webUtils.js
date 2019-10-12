@@ -1,3 +1,6 @@
+var notificationsVersion;
+var refreshRate = 2000; //milli seconds
+
 function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
@@ -74,3 +77,58 @@ function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork
         numberOfRepositories++;
     });
 }
+
+function appendToNotificationArea(newNotifications) {
+    $.each(newNotifications || [], appendNotification);
+}
+
+function appendNotification(index, entry){
+    var entryElement = createNotificationElement(entry);
+    $(".notification-sidebar").append(entryElement);
+}
+
+function createNotificationElement (entry){
+    return '<a href="#" role="button" style="text-decoration:none"> <div class="notibox">' + entry.m_NotificationDetails +' <div class="cancel">✕</div> </div> </a>';
+}
+
+function ajaxNotificationsContent() {
+    $.ajax({
+        method: 'GET',
+        data: {"notificationType" : "NOTIFICATIONS_VERSION"
+            ,"notificationsVersion" : notificationsVersion
+        },
+        url: "/magitHub/pages/friend/notifications",
+        //timeout: 4000, TODO delete comment
+        error: function (data) {
+            alert("error was occurred while getting notifications version");
+            triggerAjaxNotificationsContent();
+        },
+        success: function (data) {
+            if (notificationsVersion === undefined){
+                notificationsVersion = 0;
+            }
+            if (notificationsVersion !== data.updatedNotificationsVersion){
+                // new notifications arrived to user
+                notificationsVersion = data.updatedNotificationsVersion;
+                appendToNotificationArea(data.newNotifications);
+            }
+            triggerAjaxNotificationsContent();
+        }
+    });
+}
+
+function triggerAjaxNotificationsContent() {
+    setTimeout(ajaxNotificationsContent, refreshRate);
+}
+
+//activate the timer calls after the page is loaded
+$(function() {
+
+    //The users list is refreshed automatically every second
+    //TODO need to refresh users list
+
+    //The chat content is refreshed only once (using a timeout) but
+    //on each call it triggers another execution of itself later (1 second later)
+    triggerAjaxNotificationsContent();
+});
+

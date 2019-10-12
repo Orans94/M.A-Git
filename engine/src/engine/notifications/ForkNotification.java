@@ -2,12 +2,13 @@ package engine.notifications;
 
 public class ForkNotification implements Notification
 {
-    private String m_ForkedRepositoryName;
-    private String m_ForkingUsername;
+    private String m_NotificationDetails;
+
+    public ForkNotification(String i_ForkedRepositoryName, String i_ForkingUsername)
+    {
+        m_NotificationDetails = i_ForkingUsername + " has forked " + i_ForkedRepositoryName + " repository";
+    }
 
     @Override
-    public String toString()
-    {
-        return m_ForkingUsername + " has forked repository " + m_ForkedRepositoryName;
-    }
+    public String getNotificationDetails() { return m_NotificationDetails; }
 }

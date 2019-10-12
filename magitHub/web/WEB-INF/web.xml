@@ -35,9 +35,15 @@
         <servlet-name>FileContentServlet</servlet-name>
         <servlet-class>magithub.servlets.FileContentServlet</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>ForkServlet</servlet-name>
         <servlet-class>magithub.servlets.ForkServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>NotificationsServlet</servlet-name>
+        <servlet-class>magithub.servlets.NotificationsServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -84,5 +90,16 @@
         <servlet-name>ForkServlet</servlet-name>
         <url-pattern>/pages/friend/fork</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>NotificationsServlet</servlet-name>
+        <url-pattern>/pages/friend/notifications</url-pattern>
+    </servlet-mapping>
+
+    <listener>
+        <listener-class>
+            magithub.utils.OnShutdown
+        </listener-class>
+    </listener>
 
 </web-app>
