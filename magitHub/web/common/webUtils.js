@@ -78,17 +78,72 @@ function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork
     });
 }
 
-function appendToNotificationArea(newNotifications) {
-    $.each(newNotifications || [], appendNotification);
+// initialize notificationsVersion and appending seen notifications in html
+$(function () {
+    $.ajax({
+        method: 'GET',
+        data: {
+            "notificationType": "NOTIFICATIONS_VERSION"
+            , "notificationsVersion": "INITIALIZE"
+        },
+        url: "/magitHub/pages/friend/notifications",
+        //timeout: 4000, TODO delete comment
+        error: function (data) {
+            console.log("error was occurred while getting notifications version");
+        },
+        success: function (data) {
+            notificationsVersion = data.lastVersionSeen;
+            appendToNotificationArea(data.seenNotifications, false);
+        }
+    })
+});
+
+
+
+function appendToNotificationArea(newNotifications, toMarkAsNewNotifications) {
+    $.each(newNotifications || [], function(index, entry){
+        var entryElement = createNotificationElement(entry, toMarkAsNewNotifications);
+        $(".notification-title").after(entryElement)
+        if (toMarkAsNewNotifications) {
+            $(".new-notification").css({'background-color': '#191970'});
+        }
+    });
 }
 
-function appendNotification(index, entry){
-    var entryElement = createNotificationElement(entry);
-    $(".notification-sidebar").append(entryElement);
+
+
+function createNotificationElement (entry, toMarkAsNewNotifications){
+    var elementResult;
+
+    if (toMarkAsNewNotifications) {
+        elementResult = '<a href="#" role="button" style="text-decoration:none"> <div class="notibox new-notification">' + entry.m_NotificationDetails + ' <div class="cancel">✕</div> </div> </a>';
+    } else{
+        elementResult = '<a href="#" role="button" style="text-decoration:none"> <div class="notibox">' + entry.m_NotificationDetails + ' <div class="cancel">✕</div> </div> </a>';
+    }
+
+    return elementResult;
 }
 
-function createNotificationElement (entry){
-    return '<a href="#" role="button" style="text-decoration:none"> <div class="notibox">' + entry.m_NotificationDetails +' <div class="cancel">✕</div> </div> </a>';
+function blinkNotificationsButton() {
+    var notificationButtonElem = $(".notification-sidebar.active");
+    if (notificationButtonElem.length === 0){
+        // notification arrived and notification side-bar is closed
+        $(".toggle").css({'animation' : 'changeColor ease'
+            ,'animation' : 'changeColor ease'
+            ,'animation-iteration-count' : 'infinite'
+            ,'animation-duration' : '1s'
+            ,'animation-fill-mode' : 'both'});
+    }
+
+}
+
+function markNewNotifications() {
+    var notificationButtonElem = $(".notification-sidebar.active");
+    if (notificationButtonElem.length === 0){
+        // notification arrived and notification side-bar is closed
+        // marking new notification background
+        $(".new-notification").css({'background-color' : '#191970'});
+    }
 }
 
 function ajaxNotificationsContent() {
@@ -100,17 +155,16 @@ function ajaxNotificationsContent() {
         url: "/magitHub/pages/friend/notifications",
         //timeout: 4000, TODO delete comment
         error: function (data) {
-            alert("error was occurred while getting notifications version");
+            console.log("error was occurred in ajaxNotificationsContent");
             triggerAjaxNotificationsContent();
         },
         success: function (data) {
-            if (notificationsVersion === undefined){
-                notificationsVersion = 0;
-            }
             if (notificationsVersion !== data.updatedNotificationsVersion){
                 // new notifications arrived to user
                 notificationsVersion = data.updatedNotificationsVersion;
-                appendToNotificationArea(data.newNotifications);
+                appendToNotificationArea(data.newNotifications, true);
+                blinkNotificationsButton();
+                markNewNotifications();
             }
             triggerAjaxNotificationsContent();
         }
@@ -132,3 +186,43 @@ $(function() {
     triggerAjaxNotificationsContent();
 });
 
+function updateNotificationsLastVersionSeen() {
+    $.ajax({
+        method: 'POST',
+        data: {"notificationType" : "LAST_VERSION_SEEN",
+            "lastVersionSeen" : $(".notibox").length
+        },
+        url: "/magitHub/pages/friend/notifications",
+        //timeout: 4000, TODO delete comment
+        error: function (data) {
+            console.log("error");
+
+        },
+        success: function (data) {
+            console.log("last version seen set to " + $(".notibox").length);
+        }
+    });
+
+}
+
+$(function() { // onload function- configure notification sidebar
+    $(".toggle").click(function () {
+        console.log("toggling sidebar");
+        $(".notification-sidebar").toggleClass('active');
+        var notificationButtonElem = $(".notification-sidebar.active");
+        if (notificationButtonElem.length > 0) {
+            // notification side-bar open now
+            $(this).css({'animation-iteration-count' : '1'});
+            updateNotificationsLastVersionSeen();
+        }
+        else{
+            $(".new-notification").css({'background-color' : '#0d0d0d'}).removeClass("new-notification");
+        }
+
+    });
+    $(".cancel").click(function () {
+        console.log("toggling visibility");
+        $(this).parent().toggleClass('gone');
+
+    });
+});

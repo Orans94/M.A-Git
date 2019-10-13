@@ -6,6 +6,7 @@ import engine.managers.User;
 import engine.managers.UsersManager;
 import engine.notifications.ForkNotification;
 import engine.notifications.Notification;
+import engine.notifications.NotificationManager;
 import magithub.utils.ServletUtils;
 import magithub.utils.SessionUtils;
 
@@ -29,12 +30,18 @@ public class NotificationsServlet extends HttpServlet
     private final String NOTIFICATIONS_VERSION = "notificationsVersion";
     private final String UPDATED_NOTIFICATIONS_VERSION = "updatedNotificationsVersion";
     private final String NEW_NOTIFICATIONS = "newNotifications";
+    private final String INITIALIZE = "INITIALIZE";
+    private final String LAST_VERSION_SEEN = "lastVersionSeen";
+    private final String SEEN_NOTIFICATIONS = "seenNotifications";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String requestType = request.getParameter("notificationType");
         switch (requestType)
         {
+            case "LAST_VERSION_SEEN":
+                updateLastVersionSeen(request,response);
+                break;
             case "NOTIFICATIONS_VERSION":
                 notificationVersionRequest(request,response);
                 break;
@@ -44,46 +51,65 @@ public class NotificationsServlet extends HttpServlet
         }
     }
 
+    private void updateLastVersionSeen(HttpServletRequest request, HttpServletResponse response)
+    {
+        String username;
+        User user;
+        NotificationManager notificationManager;
+
+        username = SessionUtils.getUsername(request);
+        UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
+        user = usersManager.getUsers().get(username);
+        notificationManager = user.getNotificationsManager();
+        notificationManager.setLastVersionSeen(Integer.parseInt(request.getParameter(LAST_VERSION_SEEN)));
+    }
+
     private void notificationVersionRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         User user;
+        NotificationManager notificationManager;
         String username, notificationsVersionParameter;
         int updatedUserNotificationsVersion;
 
         response.setContentType("application/json");
         username = SessionUtils.getUsername(request);
-        notificationsVersionParameter = request.getParameter(NOTIFICATIONS_VERSION);
-        if (notificationsVersionParameter == null)
-            notificationsVersionParameter = "0";
+        UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
+        user = usersManager.getUsers().get(username);
+        notificationManager = user.getNotificationsManager();
+        updatedUserNotificationsVersion = notificationManager.getNotificationVersion();
+        JsonObject returnedJsobObj = new JsonObject();
 
         try (PrintWriter out = response.getWriter())
         {
-            UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
-            user = usersManager.getUsers().get(username);
-            updatedUserNotificationsVersion = user.getNotificationVersion();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(UPDATED_NOTIFICATIONS_VERSION, updatedUserNotificationsVersion);
-            int oldNotificationVersion = Integer.parseInt(notificationsVersionParameter);
-            if (oldNotificationVersion != updatedUserNotificationsVersion)
+            notificationsVersionParameter = request.getParameter(NOTIFICATIONS_VERSION);
+            if (notificationsVersionParameter.equals(INITIALIZE))
             {
-                // adding new notifications to returned object
-                jsonObject.add(NEW_NOTIFICATIONS, extractNewNotifications(user.getNotifications(), oldNotificationVersion, updatedUserNotificationsVersion));
+                returnedJsobObj.addProperty(LAST_VERSION_SEEN, notificationManager.getLastVersionSeen());
+                returnedJsobObj.add(SEEN_NOTIFICATIONS, extractNewNotifications(notificationManager.getNotifications(),0,notificationManager.getLastVersionSeen()));
             }
-            out.println(jsonObject);
+            else
+            {
+                returnedJsobObj.addProperty(UPDATED_NOTIFICATIONS_VERSION, updatedUserNotificationsVersion);
+                int oldNotificationVersion = Integer.parseInt(notificationsVersionParameter);
+                if (oldNotificationVersion != updatedUserNotificationsVersion)
+                {
+                    // adding new notifications to returned object
+                    returnedJsobObj.add(NEW_NOTIFICATIONS, extractNewNotifications(notificationManager.getNotifications(), oldNotificationVersion, updatedUserNotificationsVersion));
+                }
+            }
+            out.println(returnedJsobObj);
             out.flush();
         }
     }
 
     private JsonArray extractNewNotifications(ArrayList<Notification> allNotificationsList, int oldNotificationsVersion, int newNotificationsVersion)
     {
-        List<Notification> newNotifications = new LinkedList<>();
         Gson gson = new Gson();
         JsonArray notificationsJsonArray = new JsonArray();
 
 
         for (int i = oldNotificationsVersion; i < newNotificationsVersion; i++)
         {
-            newNotifications.add(allNotificationsList.get(i));
             notificationsJsonArray.add(gson.toJsonTree(allNotificationsList.get(i)));
         }
 
@@ -100,7 +126,7 @@ public class NotificationsServlet extends HttpServlet
 
         UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
         User ownerRepositoryUser = usersManager.getUsers().get(repositoryOwnerNameParameter);
-        ownerRepositoryUser.addNotification(new ForkNotification(forkedRepositoryNameParameter,forkingUsernameParameter));
+        ownerRepositoryUser.getNotificationsManager().addNotification(new ForkNotification(forkedRepositoryNameParameter,forkingUsernameParameter));
     }
 
     @Override
