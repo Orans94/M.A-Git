@@ -51,32 +51,3 @@ $(function() { // onload function- attach functionality to upload repository but
         return false;
     })
 });
-
-$(function() { // onload function- update users list in side bar
-
-    $.ajax({
-        method:'get',
-        url: "/magitHub/pages/main/usersList",
-        data: {"onlyActiveUsers" : "TRUE"},
-        //timeout: 4000, TODO delete comment
-        error: function(e) {
-            alert("Unable to load users list in side bar")
-        },
-        success: function(data) {
-            // data represent an array of users that have at least 1 repository
-            var url;
-            var userItemElem;
-            var friendClickFunc = function(event) {
-                url = "../friend/friend.html?username=" + event.data.friendName;
-                window.location.href = url;
-            };
-
-            for (var i = 0; i < data.length ; i++){
-                $(".side-bar").append($('<li class="list-group-item pl-3 py-2 user-item">'));
-                userItemElem = $(".user-item:last");
-                userItemElem.append($('<a href="#"><i class="fa fa-user-o" aria-hidden="true"><span class="ml-2 align-middle">' + data[i] + '</span></i></a>'));
-                userItemElem.click({friendName : data[i]}, friendClickFunc);
-                }
-            }
-        });
-    });

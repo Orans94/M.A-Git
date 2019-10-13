@@ -77,27 +77,27 @@ public class NotificationsServlet extends HttpServlet
         user = usersManager.getUsers().get(username);
         notificationManager = user.getNotificationsManager();
         updatedUserNotificationsVersion = notificationManager.getNotificationVersion();
-        JsonObject returnedJsobObj = new JsonObject();
+        JsonObject returnedJsonObj = new JsonObject();
 
         try (PrintWriter out = response.getWriter())
         {
             notificationsVersionParameter = request.getParameter(NOTIFICATIONS_VERSION);
             if (notificationsVersionParameter.equals(INITIALIZE))
             {
-                returnedJsobObj.addProperty(LAST_VERSION_SEEN, notificationManager.getLastVersionSeen());
-                returnedJsobObj.add(SEEN_NOTIFICATIONS, extractNewNotifications(notificationManager.getNotifications(),0,notificationManager.getLastVersionSeen()));
+                returnedJsonObj.addProperty(LAST_VERSION_SEEN, notificationManager.getLastVersionSeen());
+                returnedJsonObj.add(SEEN_NOTIFICATIONS, extractNewNotifications(notificationManager.getNotifications(),0,notificationManager.getLastVersionSeen()));
             }
             else
             {
-                returnedJsobObj.addProperty(UPDATED_NOTIFICATIONS_VERSION, updatedUserNotificationsVersion);
+                returnedJsonObj.addProperty(UPDATED_NOTIFICATIONS_VERSION, updatedUserNotificationsVersion);
                 int oldNotificationVersion = Integer.parseInt(notificationsVersionParameter);
                 if (oldNotificationVersion != updatedUserNotificationsVersion)
                 {
                     // adding new notifications to returned object
-                    returnedJsobObj.add(NEW_NOTIFICATIONS, extractNewNotifications(notificationManager.getNotifications(), oldNotificationVersion, updatedUserNotificationsVersion));
+                    returnedJsonObj.add(NEW_NOTIFICATIONS, extractNewNotifications(notificationManager.getNotifications(), oldNotificationVersion, updatedUserNotificationsVersion));
                 }
             }
-            out.println(returnedJsobObj);
+            out.println(returnedJsonObj);
             out.flush();
         }
     }

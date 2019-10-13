@@ -2,6 +2,7 @@ package magithub.servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import engine.managers.User;
 import engine.managers.UsersManager;
 import magithub.utils.ServletUtils;
@@ -19,7 +20,7 @@ import java.util.Set;
 public class UsersListServlet extends HttpServlet
 {
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response, boolean onlyActiveUsers)
+    private void usersListRequest(HttpServletRequest request, HttpServletResponse response, boolean onlyActiveUsers)
             throws IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
@@ -72,16 +73,34 @@ public class UsersListServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        if(request.getParameter("onlyActiveUsers").equals("TRUE"))
+        // active user <=> user got at least 1 repository
+        String requestType;
+
+        requestType = request.getParameter("requestType");
+        switch (requestType)
         {
-            processRequest(request ,response, true);
-        }
-        else
-        {
-            processRequest(request, response, false);
+            case "usersList":
+                usersListRequest(request, response, Boolean.parseBoolean(request.getParameter("onlyActiveUsers")));
+                break;
+            case "numberOfUsersList":
+                numberOfUsersListRequest(request, response);
+                break;
         }
     }
 
+    private void numberOfUsersListRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        response.setContentType("application/json");
+
+        try (PrintWriter out = response.getWriter())
+        {
+            JsonObject returnedJsonObj = new JsonObject();
+            UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
+            returnedJsonObj.addProperty("usersListVersion", usersManager.getUsers().size());
+            out.println(returnedJsonObj);
+            out.flush();
+        }
+    }
     /**
      * Handles the HTTP <code>POST</code> method.
      *

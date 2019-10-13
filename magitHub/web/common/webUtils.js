@@ -1,4 +1,5 @@
 var notificationsVersion;
+var usersListVersion;
 var refreshRate = 2000; //milli seconds
 
 function getUrlParameter(sParam) {
@@ -98,7 +99,21 @@ $(function () {
     })
 });
 
-
+// initializing users list version
+$(function(){
+    $.ajax({
+        method: 'GET',
+        data: {"requestType" : "numberOfUsersList"},
+        url: "/magitHub/pages/main/usersList",
+        //timeout: 4000, TODO delete comment
+        error: function (data) {
+            console.log("error was occurred while initializing number of users list");
+        },
+        success: function (data) {
+            usersListVersion = data.usersListVersion;
+        }
+    })
+});
 
 function appendToNotificationArea(newNotifications, toMarkAsNewNotifications) {
     $.each(newNotifications || [], function(index, entry){
@@ -171,15 +186,58 @@ function ajaxNotificationsContent() {
     });
 }
 
+function ajaxUsersListContent(){
+    $.ajax({
+        method:'get',
+        url: "/magitHub/pages/main/usersList",
+        data: {"requestType" : "usersList"
+            ,"onlyActiveUsers" : "TRUE"},
+        //timeout: 4000, TODO delete comment
+        error: function(e) {
+            console.log("Unable to load users list in side bar");
+            triggerUsersListContent();
+        },
+        success: function(data) {
+            // data represent an array of users that have at least 1 repository
+            if (data.length !== usersListVersion) {
+                var url;
+                var userItemElem;
+                var sideBarElement = $(".side-bar");
+                var friendClickFunc = function (event) {
+                    url = "../friend/friend.html?username=" + event.data.friendName;
+                    window.location.href = url;
+                };
+
+                sideBarElement.empty();
+                for (var i = 0; i < data.length; i++) {
+                    sideBarElement.append($('<li class="list-group-item pl-3 py-2 user-item">'));
+                    userItemElem = $(".user-item:last");
+                    userItemElem.append($('<a href="#"><i class="fa fa-user-o" aria-hidden="true"><span class="ml-2 align-middle">' + data[i] + '</span></i></a>'));
+                    userItemElem.click({friendName: data[i]}, friendClickFunc);
+                }
+
+                usersListVersion = data.length;
+            }
+            triggerUsersListContent();
+        }
+    });
+
+}
+
 function triggerAjaxNotificationsContent() {
     setTimeout(ajaxNotificationsContent, refreshRate);
+}
+
+function triggerUsersListContent() {
+    setTimeout(ajaxUsersListContent, refreshRate);
 }
 
 //activate the timer calls after the page is loaded
 $(function() {
 
-    //The users list is refreshed automatically every second
-    //TODO need to refresh users list
+    //The users list is refreshed automatically every refreshRate defined above
+    // update users list and active timer for updating users list
+    ajaxUsersListContent()
 
     //The chat content is refreshed only once (using a timeout) but
     //on each call it triggers another execution of itself later (1 second later)
