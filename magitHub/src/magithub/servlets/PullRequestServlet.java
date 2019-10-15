@@ -4,6 +4,7 @@ import engine.dataobjects.PullRequest;
 import engine.managers.EngineManager;
 import engine.managers.User;
 import engine.managers.UsersManager;
+import engine.notifications.NewPullRequestNotification;
 import magithub.utils.ServletUtils;
 import magithub.utils.SessionUtils;
 
@@ -53,12 +54,10 @@ public class PullRequestServlet extends HttpServlet
         else
         {
             pullRequest = new PullRequest(LRPath, RRPath, RRUserName, LRUserName, targetBranchName, baseBranchName, PRMessage);
-            LRUserEngine.getLoadedRepository().pullRequest();
+            LRUserEngine.getRepositories().get(LRPath).pullRequest();
 
-            LRUser.getPullRequests().add(pullRequest);
             RRUser.getPullRequests().add(pullRequest);
-            //RRUser.getUnseenNotifications().add(new NewPullRequestNotification(pullRequest));
-            //TODO- above line not compiling
+            //RRUser.getNotificationsManager().addNotification(new NewPullRequestNotification(pullRequest));
         }
     }
 

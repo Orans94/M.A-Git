@@ -7,6 +7,7 @@ import engine.core.Repository;
 import engine.managers.EngineManager;
 import engine.managers.User;
 import engine.managers.UsersManager;
+import engine.objects.Commit;
 import engine.utils.FileUtilities;
 import magithub.utils.ServletUtils;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +18,7 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.Map;
 
 import static magithub.constants.Constants.MAGITEX3_DIRECTORY_PATH;
 
@@ -114,7 +116,37 @@ public class RepositoryInfoServlet extends HttpServlet
             case "isPushRequired":
                 isPushRequiredRequest(request,response);
                 break;
+            case "Push":
+                try
+                {// TODO
+                    pushRequest(request, response);
+                }
+                catch (ParseException e)
+                {
+                    e.printStackTrace();
+                }
+                break;
         }
+    }
+
+    private void pushRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException
+    {
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository rep = engine.getRepositories().get(repositoryPath);
+        rep.pushNotRTB();
+
+        //update rr user repository
+        Path RRPath = rep.getRemoteRepositoryPath();
+        String RRUsername = rep.getRemoteRepositoryPath().getParent().getFileName().toString();
+        User RRUser = userManager.getUsers().get(RRUsername);
+        EngineManager RREngine = RRUser.getEngine();
+        RREngine.getRepositories().get(rep.getRemoteRepositoryPath()).getMagit().loadBranches(RRPath.resolve(".magit").resolve("branches"), null);
+        RREngine.getRepositories().get(rep.getRemoteRepositoryPath()).getMagit().loadCommits();
     }
 
     private void isPushRequiredRequest(HttpServletRequest request, HttpServletResponse response) throws IOException

@@ -126,14 +126,21 @@ function appendToNotificationArea(newNotifications, toMarkAsNewNotifications) {
 }
 
 
+function getCurrentDateTimeString() {
+    var today = new Date();
+    var date = today.getDate()+ '.' + (today.getMonth()+1) + '.' + today.getFullYear();
+    var time = today.getHours() + ":" + today.getMinutes();
+    return date + ' at ' + time;
+}
 
 function createNotificationElement (entry, toMarkAsNewNotifications){
     var elementResult;
-
+    var currentDateTime = getCurrentDateTimeString();
+    
     if (toMarkAsNewNotifications) {
-        elementResult = '<a href="#" role="button" style="text-decoration:none"> <div class="notibox new-notification">' + entry.m_NotificationDetails + ' <div class="cancel">✕</div> </div> </a>';
+        elementResult = '<a href="#" role="button" style="text-decoration:none"> <div class="notibox new-notification">' + entry.m_NotificationDetails + '<div class="time" style="color: white; font-size: 8px; margin-left: 7.5em;">' + currentDateTime + '</div> <div class="cancel">✕</div> </div> </a>';
     } else{
-        elementResult = '<a href="#" role="button" style="text-decoration:none"> <div class="notibox">' + entry.m_NotificationDetails + ' <div class="cancel">✕</div> </div> </a>';
+        elementResult = '<a href="#" role="button" style="text-decoration:none"> <div class="notibox">' + entry.m_NotificationDetails + '<div class="time" style="color: white; font-size: 8px; margin-left: 7.5em;">' + currentDateTime + '</div> <div class="cancel">✕</div> </div> </a>';
     }
 
     return elementResult;

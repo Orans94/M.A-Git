@@ -68,14 +68,14 @@ $(function () { // onload function
                 console.log("no");
             },
             success: function (data) {
-                alert("Pull request made successfully");
+                alert("Pull request sent successfully");
             }
         });
     };
     $("#pullRequestButton").click(pullRequestClick);
 
     var pullClick = function () {
-        if(wcStatus.innerHTML.includes("Dirty"))
+        if(wcStatus[0].innerHTML.includes("Dirty"))
         {
             alert("WC status is dirty, can not pull");
         }
@@ -106,6 +106,7 @@ $(function () { // onload function
                                     alert("Push has to be made before pulling");
                                 } else {
                                     $.ajax({
+                                        method: "POST",
                                         url: "../../repositoryInfo",
                                         data: {
                                             "requestType": "Pull",
@@ -118,6 +119,7 @@ $(function () { // onload function
                                         },
                                         success: function (data) {
                                             alert("Pulled successfully");
+                                            window.location.reload();
                                         }
                                     });
                                 }
@@ -134,8 +136,27 @@ $(function () { // onload function
     };
     $("#pullButton").click(pullClick);
 
+    var pushClick = function () {
+        $.ajax({
+            url: "../../repositoryInfo",
+            data: {
+                "requestType": "Push",
+                "username": username,
+                "repositoryName": repositoryName
+            },
+            //timeout: 2000,
+            error: function () {
+                console.log("error on push");
+            },
+            success: function (data) {
+                alert("Pushed successfully");
+            }
+            });
+    };
+    $("#pushButton").click(pushClick);
+
     var updateWC = function () {
-        var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + "nothing" + "&requestType=" + "WC";
+        var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + "nothing" + "&requestType=" + "WC" + "&isRepositoryCloned=" + isRepositoryCloned;
         window.location.href = url;
     };
     $("#updateWC").click(updateWC);
@@ -232,7 +253,7 @@ $(function () { // onload function
             onRowClick("commitTable", function (row) {
                 var commitSHA1 = row.getElementsByClassName("commitSHA1Column")[0].textContent;
                 // redirect to filemanager page with parameters - username, repository, and commit sha1
-                var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1 + "&requestType=" + "Commit";
+                var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1 + "&requestType=" + "Commit" + "&isRepositoryCloned=" + isRepositoryCloned;
                 window.location.href = url;
             });
 

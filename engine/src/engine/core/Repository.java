@@ -1610,9 +1610,11 @@ public class Repository
         String activeBranchName = m_Magit.getHead().getActiveBranch().getName();
         String RBname = createRBForActiveBranch(activeBranchName);
         setActiveBranchTrackingAfter(RBname);
+        String activeBranchCommit = m_Magit.getHead().getActiveBranch().getCommitSHA1();
         commitSHA1 = getFirstCommitThatExistsInRR(m_Magit.getHead().getActiveBranch().getCommitSHA1());
-        createRBInRR(activeBranchName, commitSHA1);
-        push();
+        createRBInRR(activeBranchName, activeBranchCommit);
+        pushCommitsObjectsRecursive(activeBranchCommit);
+        checkoutRRWcIfNeeded();
     }
 
     private String getFirstCommitThatExistsInRR(String i_CommitSHA1)

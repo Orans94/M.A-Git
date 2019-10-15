@@ -3,6 +3,7 @@ var username = getUrlParameter('username');
 var repositoryName = getUrlParameter('repositoryName');
 var commitSHA1 = getUrlParameter('commitSHA1');
 var requestType = getUrlParameter('requestType');
+var isRepositoryCloned = getUrlParameter("isRepositoryCloned");
 var repositoryPath = "C:\\magit-ex3\\" + username + "\\" + repositoryName;
 $(document).ready(function(){
     $('#fileName').focus();
@@ -11,7 +12,7 @@ $(document).ready(function(){
 $(function() { //onload function
     $('#backButton').on('click', function(e){
         e.preventDefault();
-        var url = "../repository/repository.html?repositoryName=" + repositoryName + "&username=" + username + "&isRepositoryCloned" + isRepositoryCloned;
+        var url = "../repository/repository.html?repositoryName=" + repositoryName + "&username=" + username + "&isRepositoryCloned=" + isRepositoryCloned;
         window.location.href = url;
     });
         if(requestType === "WC")
