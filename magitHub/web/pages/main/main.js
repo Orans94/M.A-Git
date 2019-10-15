@@ -15,7 +15,7 @@ $(function() { // onload function- load repositories cards
             console.log(data);
             var repositoriesArray = data.m_Engine.m_Repositories;
             updateRepositoriesCardsInHTML(repositoriesArray, data.m_Name, "Choose repository", function(event) {
-                    var url = "../repository/repository.html?repositoryName=" + event.data.repositoryName + "&username=" + event.data.username;
+                    var url = "../repository/repository.html?repositoryName=" + event.data.repositoryName + "&username=" + event.data.username + "&isRepositoryCloned=" + event.data.isRepositoryCloned;
                     window.location.href = url;
                 });
         }

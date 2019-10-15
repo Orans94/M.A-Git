@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 
 import static magithub.constants.Constants.MAGITEX3_DIRECTORY_PATH;
 
@@ -32,7 +33,29 @@ public class RepositoryInfoServlet extends HttpServlet
             case "checkoutRTB":
                 checkoutRTBRequest(request,response);
                 break;
+            case "Pull":
+                try
+                {// TODO
+                    pull(request,response);
+                }
+                catch (ParseException e)
+                {
+                    e.printStackTrace();
+                }
+                break;
         }
+    }
+
+    private void pull(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException
+    {
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository rep = engine.getRepositories().get(repositoryPath);
+        rep.pull();
     }
 
     private void checkoutRTBRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
@@ -88,7 +111,23 @@ public class RepositoryInfoServlet extends HttpServlet
             case "isBranchExist":
                 isBranchExistsRequest(request,response);
                 break;
+            case "isPushRequired":
+                isPushRequiredRequest(request,response);
+                break;
         }
+    }
+
+    private void isPushRequiredRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository rep = engine.getRepositories().get(repositoryPath);
+        PrintWriter out = response.getWriter();
+        out.print(rep.isPushRequired());
     }
 
     private void isBranchExistsRequest(HttpServletRequest request, HttpServletResponse response) throws IOException

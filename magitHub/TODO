@@ -1,3 +1,4 @@
 //we have to ignore repository location when loading it - and automatically load it to C:\\magit-ex3
 // on commit- before commit - delete empty directories from WC
 // fix back button from repository page
+// notification sidebar should be available on all the pages

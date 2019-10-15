@@ -11,7 +11,7 @@ $(document).ready(function(){
 $(function() { //onload function
     $('#backButton').on('click', function(e){
         e.preventDefault();
-        var url = "../repository/repository.html?repositoryName=" + repositoryName + "&username=" + username;
+        var url = "../repository/repository.html?repositoryName=" + repositoryName + "&username=" + username + "&isRepositoryCloned" + isRepositoryCloned;
         window.location.href = url;
     });
         if(requestType === "WC")

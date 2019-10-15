@@ -23,6 +23,14 @@ $(function () { // onload function
         window.location.href = "../main/main.html";
     });
 
+    if(!(isRepositoryCloned === "true"))
+    {
+        $("#pullButton").hide();
+        $("#pullRequestButton").hide();
+        $("#pushButton").hide();
+    }
+
+
     var wcStatus = $("#WCStatus");
     $.ajax({
         url: "/magitHub/repositoryInfo",
@@ -41,6 +49,90 @@ $(function () { // onload function
             }
         }
     });
+
+    var pullRequestClick = function () {
+        var message = prompt("Please enter pull request message");
+
+        do {
+            var baseBranch = prompt("Please enter base branch name");
+        } while (baseBranch == null || baseBranch === "");
+
+        do {
+            var targetBranch = prompt("Please enter target branch name");
+        } while (targetBranch == null || targetBranch === "");
+
+        $.ajax({
+            url: "/magitHub/pullRequest",
+            data: {"repositoryName" : repositoryName, "baseBranch": baseBranch, "targetBranch": targetBranch, "Message": message},
+            error: function () {
+                console.log("no");
+            },
+            success: function (data) {
+                alert("Pull request made successfully");
+            }
+        });
+    };
+    $("#pullRequestButton").click(pullRequestClick);
+
+    var pullClick = function () {
+        if(wcStatus.innerHTML.includes("Dirty"))
+        {
+            alert("WC status is dirty, can not pull");
+        }
+        else {
+            $.ajax({
+                url: "../../repositoryInfo",
+                data: {"requestType": "activeBranch", "username": username, "repositoryName": repositoryName},
+                //timeout: 2000,
+                error: function () {
+                    console.log("error while getting active branch");
+                },
+                success: function (data) {
+                    var br = JSON.parse(data);
+                    if(br.m_IsTracking) {
+                        $.ajax({
+                            url: "../../repositoryInfo",
+                            data: {
+                                "requestType": "isPushRequired",
+                                "username": username,
+                                "repositoryName": repositoryName
+                            },
+                            //timeout: 2000,
+                            error: function () {
+                                console.log("error while checking if push required");
+                            },
+                            success: function (data) {
+                                if (data === "true") {
+                                    alert("Push has to be made before pulling");
+                                } else {
+                                    $.ajax({
+                                        url: "../../repositoryInfo",
+                                        data: {
+                                            "requestType": "Pull",
+                                            "username": username,
+                                            "repositoryName": repositoryName
+                                        },
+                                        //timeout: 2000,
+                                        error: function () {
+                                            console.log("error while checking if push required");
+                                        },
+                                        success: function (data) {
+                                            alert("Pulled successfully");
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        alert("The head branch is not tracking after an RB");
+                    }
+                }
+            });
+        }
+    };
+    $("#pullButton").click(pullClick);
 
     var updateWC = function () {
         var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + "nothing" + "&requestType=" + "WC";
@@ -114,12 +206,12 @@ $(function () { // onload function
                 data: {"requestType": "activeBranch", "username": username, "repositoryName": repositoryName},
                 //timeout: 2000,
                 error: function () {
-                    console.log("no");
+                    console.log("error while getting active branch");
                 },
                 success: function (data) {
+                    var br = JSON.parse(data);
                     $.each($(".branchNameColumn"), function ()
                     {
-                        var br = JSON.parse(data);
                         if(this.innerHTML === br.m_Name)
                         {
                             this.append("(HEAD)");
@@ -161,7 +253,7 @@ $(function () { // onload function
                     },
                     success: function (data) {
                         console.log("branch created");
-                        var url = "repository.html?repositoryName=" + repositoryName + "&username=" + username;
+                        var url = "repository.html?repositoryName=" + repositoryName + "&username=" + username + "&isRepositoryCloned=" + isRepositoryCloned;
                         window.location.href = url;
                     }
                 })

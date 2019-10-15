@@ -58,7 +58,7 @@ $(function() { // onload function- load friend repository
                         success: function (data) {
                             // data represent loggedInUsername and repositoryName
                             notifyFriendAboutForkingItRepository(data.repositoryOwnerName, data.repositoryName, data.loggedInUsername);
-                            alert("repository " + data.repositoryName + " forked successfully to you. The forked repository name is " +  data.repositoryNameToFork)
+                            alert("repository " + data.repositoryName + " forked successfully to you. The forked repository name is " +  data.repositoryNameToFork);
                             var url = "../main/main.html";
                             window.location.href = url;
                         }
@@ -67,4 +67,4 @@ $(function() { // onload function- load friend repository
             });
         }
     });
-})
+});

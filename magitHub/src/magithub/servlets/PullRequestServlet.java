@@ -3,6 +3,7 @@ package magithub.servlets;
 import engine.dataobjects.PullRequest;
 import engine.managers.EngineManager;
 import engine.managers.User;
+import engine.managers.UsersManager;
 import magithub.utils.ServletUtils;
 import magithub.utils.SessionUtils;
 
@@ -22,27 +23,30 @@ public class PullRequestServlet extends HttpServlet
     {
         // ASSUMPTION: 1.the user will have the option to press on the pull request button only on relevant RR repositories.
         //             2.all the relevant parameters are presetted on the request.
-        String targetBranchName, baseBranchName, LRUserName, RRUserName, LRName, RRName, PRMessage;
+        String targetBranchName, baseBranchName, LRUserName, RRUserName, LRName, RRName, PRMessage, repositoryName;
         Path LRPath, RRPath;
         User LRUser, RRUser;
         EngineManager LRUserEngine;
         PullRequest pullRequest;
 
+        LRName = request.getParameter("repositoryName");
         baseBranchName = request.getParameter("baseBranch");
         targetBranchName = request.getParameter("targetBranch");
         PRMessage = request.getParameter("Message");
-        LRName = request.getParameter("LRName");
-        RRName = request.getParameter("RRName");
-        RRUserName = request.getParameter("RRUserName");
         LRUserName = SessionUtils.getUsername(request);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        LRUser = userManager.getUsers().get(LRName);
+        LRUserEngine = LRUser.getEngine();
+
 
         LRPath = MAGITEX3_DIRECTORY_PATH.resolve(LRUserName).resolve(LRName);
+
+        RRName = LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath().getFileName().toString();
+        RRUserName = LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath().getParent().getFileName().toString();
         RRPath = MAGITEX3_DIRECTORY_PATH.resolve(RRUserName).resolve(RRName);
 
-        LRUser = ServletUtils.getUsersManager(getServletContext()).getUsers().get(LRUserName);
         RRUser = ServletUtils.getUsersManager(getServletContext()).getUsers().get(RRUserName);
-        LRUserEngine = LRUser.getEngine();
-        if(LRUserEngine.getLoadedRepository().getRemoteRepositoryPath() == null)
+        if(LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath() == null)
         {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Remote repository is undefined");
         }

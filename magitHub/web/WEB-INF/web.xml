@@ -8,6 +8,10 @@
         <servlet-class>magithub.servlets.LoginServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>PullRequestServlet</servlet-name>
+        <servlet-class>magithub.servlets.PullRequestServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>RepositoryInfoServlet</servlet-name>
         <servlet-class>magithub.servlets.RepositoryInfoServlet</servlet-class>
     </servlet>
@@ -56,6 +60,11 @@
         <url-pattern>/repositoryInfo</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>PullRequestServlet</servlet-name>
+        <url-pattern>/pullRequest</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
