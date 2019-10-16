@@ -1,6 +1,7 @@
 package magithub.servlets;
 
 import engine.dataobjects.PullRequest;
+import engine.dataobjects.ePullRequestState;
 import engine.managers.EngineManager;
 import engine.managers.User;
 import engine.managers.UsersManager;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 
 import static magithub.constants.Constants.*;
@@ -53,10 +55,10 @@ public class PullRequestServlet extends HttpServlet
         }
         else
         {
-            pullRequest = new PullRequest(LRPath, RRPath, RRUserName, LRUserName, targetBranchName, baseBranchName, PRMessage);
+         //   pullRequest = new PullRequest(LRPath, RRPath, RRUserName, LRUserName, targetBranchName, baseBranchName, PRMessage);
             LRUserEngine.getRepositories().get(LRPath).pullRequest();
 
-            RRUser.getPullRequests().add(pullRequest);
+           // RRUser.getPullRequests().add(pullRequest);
             //RRUser.getNotificationsManager().addNotification(new NewPullRequestNotification(pullRequest));
         }
     }
@@ -64,13 +66,28 @@ public class PullRequestServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
-        try
+        demoProcessRequest(req,resp);
+    /*    try
         {
             processRequest(req, resp);
         }
         catch (ParseException e) // TODO
         {
             e.printStackTrace();
+        }*/
+    }
+
+    private void demoProcessRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+
+        PullRequest pullRequest = new PullRequest("fok1", "rep 1", "Oran", "Tomer", "targetBranch", "baseBranch","little message");
+        if (request.getParameter("Message").equals("a"))
+        {
+            pullRequest.setStatus(ePullRequestState.Approved);
         }
+        String loggedInUsername = SessionUtils.getUsername(request);
+        UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
+        User user = usersManager.getUsers().get("oran");
+        user.getPullRequests().add(pullRequest);
     }
 }

@@ -2,6 +2,7 @@ package magithub.servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import engine.managers.User;
 import engine.managers.UsersManager;
 import magithub.WindowsPathConverter;
@@ -49,9 +50,10 @@ public class UserServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if(request.getParameter("isLoggedInUser").equals("TRUE"))
+        if (Boolean.parseBoolean(request.getParameter("isLoggedInUser")))
         {
             // get current user
+
             processRequest(request, response, SessionUtils.getUsername(request));
         }
         else

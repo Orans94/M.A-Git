@@ -79,13 +79,6 @@ function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork
     });
 }
 
-// set navigation links
-$(function() {
-    $(".home-link").attr("href", "/magitHub/pages/main/main.html");
-    $(".pr-link").attr("href", "/magitHub/pages/pullRequest/pullRequest.html");
-    $(".logout-link").attr("href", "/magitHub/pages/main/logout");
-});
-
 // initialize notificationsVersion and appending seen notifications in html
 $(function () {
     $.ajax({
