@@ -17,6 +17,32 @@ function onRowClick(tableId, callback) {
 
 }
 
+//TODO
+function sortCommitsByDate(commits) {
+    var sortedCommits = [];
+    $.each( commits, function (key, value){
+        sortedCommits.push({
+            "key" : key,
+            "value" : value
+        })
+    });
+
+    sortedCommits.sort(function(a,b){
+        var c = new Date(a.value.m_CommitDate);
+        var d = new Date(b.value.m_CommitDate);
+        return d-c;
+    });
+
+    var result = {};
+
+    $.each(sortedCommits, function(index, entry){
+        result.entry.key = entry.value;
+    });
+
+
+    return result;
+}
+
 $(function () { // onload function
     $('#backButton').on('click', function (e) {
         e.preventDefault();

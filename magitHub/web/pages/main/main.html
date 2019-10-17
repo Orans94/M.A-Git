@@ -120,8 +120,6 @@
         <h1 class="my-4">My Repositories</h1>
         <!-- Repositories Icons Section -->
         <!-- /.row -->
-
-        <!-- Call to Action Section -->
         <div class="row mb-4">
             <div class="col-md-8">
                 <p>Upload a new repository from XML file now!</p>
@@ -129,8 +127,7 @@
             <div class="col-md-4">
                 <form id="uploadRepositoryForm" action="upload-repository" enctype="multipart/form-data" method="POST">
                 <input class="btn btn-lg btn-secondary btn-block upload-repository" id="uploadRepositoryBtn" type="file" accept=".xml" name="xml-repository" href="#"><br>
-                <input type="submit" value="Upload File"><br>
-                    <!--                 <a class="btn btn-lg btn-secondary btn-block upload-repository" id="uploadRepositoryBtn" href="#">Upload a repository!</a>-->
+                <input type="submit" value="Upload File" disabled><br>
                 </form>
             </div>
         </div>

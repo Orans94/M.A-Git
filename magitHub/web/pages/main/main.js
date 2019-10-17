@@ -24,7 +24,6 @@ $(function() { // onload function- load repositories cards
 
 $(function() { // onload function- attach functionality to upload repository button
     $("#uploadRepositoryForm").submit(function() {
-
         var file1 = this[0].files[0];
 
         var formData = new FormData();
@@ -50,4 +49,18 @@ $(function() { // onload function- attach functionality to upload repository but
         // by default - we'll always return false so it doesn't redirect the user.
         return false;
     })
+});
+
+// bind choose file and upload repository
+$(function(){
+    $('input:file').change(
+        function(){
+            if ($(this).val() !== "") {
+                $('input:submit').attr('disabled',false);
+            }else{
+                $('input:submit').attr('disabled',true);
+            }
+        }
+    );
+
 });
