@@ -126,6 +126,8 @@ public class Magit
                 loadCommitsToMapsRecursive(SHA1);
             }
         }
+
+
     }
 
     public Commit createCommitByObjectsDir(String i_CommitSHA1, String i_ObjectDir) throws IOException, ParseException {

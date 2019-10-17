@@ -1481,15 +1481,6 @@ public class Repository
         return m_Magit.isRBAndRTBAlreadyTracking(i_Branch);
     }
 
-    public void pullRequest() throws IOException, ParseException
-    {
-        // TODO - on server side make new notification for the RR user with all the needed information
-        Branch activeBranch = m_Magit.getHead().getActiveBranch();
-        String LRCommitSHA1 = activeBranch.getCommitSHA1();
-        pushCommitsObjectsRecursive(LRCommitSHA1);
-        createPRTargetBranch(activeBranch);
-    }
-
     private void createPRTargetBranch(Branch i_BranchToCreate) throws IOException
     {
         Path pathToBranchInRR = m_RemoteRepositoryPath.resolve(".magit").resolve("branches").resolve(i_BranchToCreate.getName() + ".txt");
@@ -1606,12 +1597,12 @@ public class Repository
 
     public void pushNotRTB() throws IOException, ParseException
     {
-        String commitSHA1;
+        //String commitSHA1;
         String activeBranchName = m_Magit.getHead().getActiveBranch().getName();
         String RBname = createRBForActiveBranch(activeBranchName);
         setActiveBranchTrackingAfter(RBname);
         String activeBranchCommit = m_Magit.getHead().getActiveBranch().getCommitSHA1();
-        commitSHA1 = getFirstCommitThatExistsInRR(m_Magit.getHead().getActiveBranch().getCommitSHA1());
+       // commitSHA1 = getFirstCommitThatExistsInRR(m_Magit.getHead().getActiveBranch().getCommitSHA1());
         createRBInRR(activeBranchName, activeBranchCommit);
         pushCommitsObjectsRecursive(activeBranchCommit);
         checkoutRRWcIfNeeded();

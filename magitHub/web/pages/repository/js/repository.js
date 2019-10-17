@@ -63,7 +63,7 @@ $(function () { // onload function
 
         $.ajax({
             url: "/magitHub/pullRequest",
-            data: {"repositoryName" : repositoryName, "baseBranch": baseBranch, "targetBranch": targetBranch, "Message": message},
+            data: {"requestType": "newPR", "repositoryName" : repositoryName, "baseBranch": baseBranch, "targetBranch": targetBranch, "Message": message},
             error: function () {
                 console.log("no");
             },

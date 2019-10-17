@@ -2,3 +2,5 @@
 // on commit- before commit - delete empty directories from WC
 // fix back button from repository page
 // notification sidebar should be available on all the pages
+// sort commits before sending the data to the table(on the servlet before printing the data).
+// clicking upload file without choosing file - repository loaded successfully.

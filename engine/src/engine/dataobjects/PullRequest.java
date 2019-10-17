@@ -27,7 +27,7 @@ public class PullRequest
         m_TargetBranchName = i_TargetBranchName;
         m_BaseBranchName = i_BaseBranchName;
         m_Message = i_Message;
-        m_DateOfCreation = DateUtils.FormatToDate(new Date().toString());
+        m_DateOfCreation = new Date();
         m_Status = ePullRequestState.Open;
     }
 
@@ -62,7 +62,7 @@ public class PullRequest
 
     public int getID() { return m_RequestID; }
 
-    public void setID(int i_ID) { m_RequestID = i_ID; }
+    public void setRequestID(int i_ID) { m_RequestID = i_ID; }
 
     public String getLRName() { return m_LRName; }
 

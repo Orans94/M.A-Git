@@ -13,18 +13,42 @@ function categorizePullRequests(pullRequests) {
     return result;
 }
 
+function handlePR(event) {
+    //event.data.PRID
+    //event.data.userDecision
+    $.ajax({
+        method: 'POST',
+        data: {
+            "requestType": "handlePR"
+            ,"PRID": event.data.PRID
+            ,"userDecision" : event.data.userDecision
+            },
+        url: "/magitHub/pullRequest",
+        //timeout: 4000, TODO delete comment
+        error: function (data) {
+            console.log("error was occurred while handling pr via user request");
+        },
+        success: function (data) {
+
+        }
+    });
+
+
+}
+
 function appendPRCardsByStatus(PRArray) {
     var numberOfPR = 0;
     var repositoryName, PRCreator, baseBranch, targetBranch, dateOfCreation, status;
-    var lastRowElement, containerElement = $(".container");
+    var lastRowElement, mainContainerElement = $(".main-container");
 
     $.each(PRArray || [], function (index, entry) {
         if (numberOfPR % 4 === 0) {
-            $(".row:last").after($('<div class="row mb-4"></div>'));
             if (entry.m_Status === "Open") {
                 $(".closed-pr-header").before($('<div class="row">'));
+                $(".row:last").after($('<div class="row mb-4"></div>'));
             } else {
-                $(".py-5 bg-dark").before($('<div class="row"></div>'));
+                mainContainerElement.append($('<div class="row"></div>'));
+                mainContainerElement.append($('<div class="row mb-4"></div>'));
             }
         }
         repositoryName = entry.m_RRName;
@@ -34,8 +58,17 @@ function appendPRCardsByStatus(PRArray) {
         dateOfCreation = entry.m_DateOfCreation;
         status = entry.m_Status;
 
-        $(".row:last").append('<div class="col-xl-3 col-md-6 col-sm-12"> <div class="card"> <div class="card-content"> <div class="card-body"> <h4 class="card-title">Requested repository: ' + repositoryName +'</h4> <h6 class="card-subtitle text-muted">Pull request creator: '+ PRCreator +'</h6> </div>' +
-            '<div class="card-body"> <p class="card-text">Base branch: '+ baseBranch + '<br>Target branch: ' + targetBranch+ '<br>Date of creation :' + dateOfCreation + ' <br>Status: ' + status + '</p> <a href="http://localhost:8080/magitHub/pages/friend/friend.html?username=oran#" class="card-link pink">Approve</a> <a href="http://localhost:8080/magitHub/pages/friend/friend.html?username=oran#" class="card-link pink">Decline</a> </div> </div> </div> </div>');
+        lastRowElement = $(".row:last");
+        if (entry.m_Status === "Open") {
+            lastRowElement.append('<div class="col-xl-3 col-md-6 col-sm-12"> <div class="card"> <div class="card-content"> <div class="card-body"> <h4 class="card-title style="font-size:16px"">' + repositoryName + '</h4> <h6 class="card-subtitle text-muted" style="font-size:14px">Pull request creator: ' + PRCreator + '</h6> </div>' +
+                '<div class="card-body"> <p class="card-text">Base branch: ' + baseBranch + '<br>Target branch: ' + targetBranch + '<br>Date of creation :' + dateOfCreation + ' <br>Status: ' + status + '</p><a class="card-link pink watch-link" style="font-size:17px">Watch</a> <a class="card-link pink approve-link" href="#" style="font-size:17px">Approve</a><a class="card-link pink decline-link" href="#" style="font-size:17px">Decline</a> </div> </div> </div> </div>');
+            $(".watch-link:last").attr("href", "/magitHub/pages/prcontent/prcontent.html?PRID=" + entry.m_RequestID);
+            $(".approve-link:last").click({PRID : entry.m_RequestID, userDecision : "approve"}, handlePR);
+            $(".decline-link:last").click({PRID : entry.m_RequestID, userDecision : "decline"}, handlePR);
+        } else {
+            lastRowElement.append('<div class="col-xl-3 col-md-6 col-sm-12"> <div class="card"> <div class="card-content"> <div class="card-body"> <h4 class="card-title style="font-size:16px"">' + repositoryName + '</h4> <h6 class="card-subtitle text-muted" style="font-size:14px">Pull request creator: ' + PRCreator + '</h6> </div>' +
+                '<div class="card-body"> <p class="card-text">Base branch: ' + baseBranch + '<br>Target branch: ' + targetBranch + '<br>Date of creation :' + dateOfCreation + ' <br>Status: ' + status + '</p> </div> </div> </div> </div>');
+        }
         numberOfPR++;
     });
 }

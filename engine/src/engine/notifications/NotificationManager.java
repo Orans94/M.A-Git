@@ -10,9 +10,9 @@ public class NotificationManager
 
     public NotificationManager() { m_Notifications = new ArrayList<>(); m_LastVersionSeen = 0;}
 
-    public void addNotification(ForkNotification i_ForkNotification)
+    public void addNotification(Notification i_Notification)
     {
-        m_Notifications.add(i_ForkNotification);
+        m_Notifications.add(i_Notification);
         //m_NotificationVersion++;
     }
 

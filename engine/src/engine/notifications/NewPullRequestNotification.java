@@ -1,24 +1,30 @@
 package engine.notifications;
 
+import engine.dataobjects.PullRequest;
+
 public class NewPullRequestNotification implements Notification
 {
-    private String m_RepositoryName;
-    private String m_PullRequestMessage;
-    private String m_TargetBranchName;
-    private String m_BaseBranchName;
-    private String m_Username;
+    private PullRequest m_PullRequest;
+    private String m_NotificationDetails;
+
+    public NewPullRequestNotification(PullRequest i_PullRequest)
+    {
+        m_PullRequest = i_PullRequest;
+        m_NotificationDetails = this.toString();
+    }
+
     @Override
     public String toString()
     {
-        return "A new Pull Request for repository " + m_RepositoryName + " has been recieved from user " + m_Username + System.lineSeparator()
-                +"Message: \"" + m_PullRequestMessage + "\""
-                + System.lineSeparator() + "Base branch: " + m_BaseBranchName
-                + System.lineSeparator() + "Target branch: " + m_TargetBranchName;
+        return "A new Pull Request for repository " + m_PullRequest.getRRName() + " has been recieved from user " + m_PullRequest.getLRUsername() + System.lineSeparator()
+                +"Message: \"" + m_PullRequest.getMessage() + "\"" + System.lineSeparator()
+                + System.lineSeparator() + "Base branch: " + m_PullRequest.getBaseBranchName() + System.lineSeparator()
+                + System.lineSeparator() + "Target branch: " + m_PullRequest.getTargetBranchName();
     }
 
     @Override
     public String getNotificationDetails()
     {
-        return null;
+        return this.toString();
     }
 }

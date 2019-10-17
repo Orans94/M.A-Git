@@ -2,11 +2,8 @@ package engine.managers;
 
 
 import engine.dataobjects.PullRequest;
-import engine.notifications.ForkNotification;
-import engine.notifications.Notification;
 import engine.notifications.NotificationManager;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,5 +37,10 @@ public class User
     // active user is a user with at least 1 repository
     public boolean isActiveUser() { return !m_Engine.getRepositories().isEmpty();}
 
+    public void addPullRequest(PullRequest i_NewPullRequest)
+    {
+        i_NewPullRequest.setRequestID(m_PullRequests.size());
+        m_PullRequests.add(i_NewPullRequest);
+    }
 
 }
