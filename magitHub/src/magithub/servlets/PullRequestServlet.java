@@ -13,6 +13,7 @@ import engine.managers.User;
 import engine.managers.UsersManager;
 import engine.notifications.ForkNotification;
 import engine.notifications.NewPullRequestNotification;
+import engine.notifications.PullRequestUpdateNotification;
 import engine.objects.Commit;
 import engine.objects.Node;
 import magithub.WindowsPathConverter;
@@ -33,44 +34,30 @@ import static magithub.constants.Constants.*;
 
 public class PullRequestServlet extends HttpServlet
 {
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
-        // ASSUMPTION: 1.the user will have the option to press on the pull request button only on relevant RR repositories.
-        //             2.all the relevant parameters are presetted on the request.
-        String targetBranchName, baseBranchName, LRUserName, RRUserName, LRName, RRName, PRMessage, repositoryName;
-        Path LRPath, RRPath;
-        User LRUser, RRUser;
-        EngineManager LRUserEngine;
-        PullRequest pullRequest;
+        String requestType = request.getParameter("requestType");
 
-        LRName = request.getParameter("repositoryName");
-        baseBranchName = request.getParameter("baseBranch");
-        targetBranchName = request.getParameter("targetBranch");
-        PRMessage = request.getParameter("Message");
-        LRUserName = SessionUtils.getUsername(request);
-        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
-        LRUser = userManager.getUsers().get(LRName);
-        LRUserEngine = LRUser.getEngine();
-
-
-        LRPath = MAGITEX3_DIRECTORY_PATH.resolve(LRUserName).resolve(LRName);
-
-        RRName = LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath().getFileName().toString();
-        RRUserName = LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath().getParent().getFileName().toString();
-        RRPath = MAGITEX3_DIRECTORY_PATH.resolve(RRUserName).resolve(RRName);
-
-        RRUser = ServletUtils.getUsersManager(getServletContext()).getUsers().get(RRUserName);
-/*        if(LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath() == null)
+        switch(requestType)
         {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Remote repository is undefined");
+            case "handlePR":
+                handlePRRequest(request, response);
+                /*
+                in this flow the user choose to approve or decline a pr
+                this is the parameters sent from the ajax call:
+                data: {
+                        "requestType": "handlePR"
+                        ,"PRID": event.data.PRID
+                        ,"userDecision" : event.data.userDecision
+                        },
+                * if the user approved the request than => userDecision = approve
+                * if the user decline the request than => userDecision = decline
+
+                this ajax call is from pullRequest.js in handlePR function
+                */
+                break;
         }
-        else
-        {
-         //   pullRequest = new PullRequest(LRPath, RRPath, RRUserName, LRUserName, targetBranchName, baseBranchName, PRMessage);
-
-           // RRUser.getPullRequests().add(pullRequest);
-            //RRUser.getNotificationsManager().addNotification(new NewPullRequestNotification(pullRequest));
-        }*/
     }
 
     @Override
@@ -89,35 +76,35 @@ public class PullRequestServlet extends HttpServlet
             case "newPR":
                 newPullRequest(req,resp);
                 break;
-           /* case "handlePR":
-                handlePRRequest(req, resp);
-                *//*
-                in this flow the user choose to approve or decline a pr
-                this is the parameters sent from the ajax call:
-                data: {
-                        "requestType": "handlePR"
-                        ,"PRID": event.data.PRID
-                        ,"userDecision" : event.data.userDecision
-                        },
-                * if the user approved the request than => userDecision = approve
-                * if the user decline the request than => userDecision = decline
-
-                this ajax call is from pullRequest.js in handlePR function
-                *//*
-                break;*/
         }
-        //demoProcessRequest(req,resp);
-    /*    try
-        {
-            processRequest(req, resp);
-        }
-        catch (ParseException e) // TODO
-        {
-            e.printStackTrace();
-        }*/
     }
 
-    private void newPullRequest(HttpServletRequest req, HttpServletResponse resp)
+    private void handlePRRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        String PRID = req.getParameter("PRID");
+        String userDecision = req.getParameter("userDecision");
+        String username = SessionUtils.getUsername(req);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User RRUser = userManager.getUsers().get(username);
+        PullRequest pullRequest = RRUser.getPullRequests().get(Integer.parseInt(PRID));
+        User LRUser= userManager.getUsers().get(pullRequest.getLRUsername());
+        switch(userDecision)
+        {
+            case "approve":
+                pullRequest.setStatus(ePullRequestState.Approved);
+                LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("approved", username));
+                RRUser.getEngine().checkout(pullRequest.getBaseBranchName());
+                RRUser.getEngine().merge(pullRequest.getTargetBranchName());
+                //RRUser.getEngine().get
+                break;
+            case "decline":
+                pullRequest.setStatus(ePullRequestState.Denied);
+                LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("declined", username));
+                break;
+        }
+    }
+
+    private void newPullRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
         String targetBranchName, baseBranchName, LRUserName, RRUserName, LRName, RRName, PRMessage;
         Path LRPath;
@@ -133,16 +120,42 @@ public class PullRequestServlet extends HttpServlet
         UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
         LRUser = userManager.getUsers().get(LRUserName);
         LRUserEngine = LRUser.getEngine();
-
-
         LRPath = MAGITEX3_DIRECTORY_PATH.resolve(LRUserName).resolve(LRName);
 
-        RRName = LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath().getFileName().toString();
-        RRUserName = LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath().getParent().getFileName().toString();
-        pullRequest = new PullRequest(LRName, RRName, RRUserName, LRUserName, targetBranchName, baseBranchName, PRMessage);
-        RRUser = ServletUtils.getUsersManager(getServletContext()).getUsers().get(RRUserName);
-        RRUser.addPullRequest(pullRequest);
-        RRUser.getNotificationsManager().addNotification(new NewPullRequestNotification(pullRequest));
+        if(!LRUserEngine.getRepositories().get(LRPath).getMagit().getBranches().containsKey(baseBranchName))
+        {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            resp.getWriter().print("Branch " + baseBranchName + " does not exist");
+        }
+        else if(!LRUserEngine.getRepositories().get(LRPath).getMagit().getBranches().containsKey(targetBranchName))
+        {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            resp.getWriter().print("Branch " + targetBranchName + " does not exist");
+        }
+        else
+        {
+            Branch target = LRUserEngine.getRepositories().get(LRPath).getMagit().getBranches().get(targetBranchName);
+            Branch base = LRUserEngine.getRepositories().get(LRPath).getMagit().getBranches().get(baseBranchName);
+            if (!target.getIsTracking())
+            {
+                resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                resp.getWriter().print("Branch " + targetBranchName + " is not a RTB");
+            }
+            else if (!(base.getIsTracking() || base.getIsRemote()))
+            {
+                resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                resp.getWriter().print("Branch " + baseBranchName + " is not a RTB or RB");
+            }
+            else
+            {
+                RRName = LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath().getFileName().toString();
+                RRUserName = LRUserEngine.getRepositories().get(LRPath).getRemoteRepositoryPath().getParent().getFileName().toString();
+                pullRequest = new PullRequest(LRName, RRName, RRUserName, LRUserName, targetBranchName, baseBranchName, PRMessage);
+                RRUser = ServletUtils.getUsersManager(getServletContext()).getUsers().get(RRUserName);
+                RRUser.addPullRequest(pullRequest);
+                RRUser.getNotificationsManager().addNotification(new NewPullRequestNotification(pullRequest));
+            }
+        }
     }
 
     private void fileContentRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException
@@ -243,19 +256,5 @@ public class PullRequestServlet extends HttpServlet
 
         out.flush();
         out.close();
-    }
-
-    private void demoProcessRequest(HttpServletRequest request, HttpServletResponse response)
-    {
-
-        PullRequest pullRequest = new PullRequest("fok1", "rep 1", "Oran", "Tomer", "targetBranch", "baseBranch","little message");
-        if (request.getParameter("Message").equals("a"))
-        {
-            pullRequest.setStatus(ePullRequestState.Approved);
-        }
-        String loggedInUsername = SessionUtils.getUsername(request);
-        UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
-        User user = usersManager.getUsers().get("oran");
-        user.getPullRequests().add(pullRequest);
     }
 }

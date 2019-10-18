@@ -2,6 +2,45 @@ var notificationsVersion;
 var usersListVersion;
 var refreshRate = 2000; //milli seconds
 
+// import navigation, users sidebar and notification sidebar
+$(function(){
+    $("#navigation-import").load("../../common/navigation.html", function () {
+        $("#notificationsSidebar-import").load("../../common/notificationsSidebar.html", function () {
+            configureNavigationLinks();
+            loadNotificationsAndInitNotifictionsVersion();
+            $(".toggle").click(function () {
+                console.log("toggling sidebar");
+                $(".notification-sidebar").toggleClass('active');
+                var notificationButtonElem = $(".notification-sidebar.active");
+                if (notificationButtonElem.length > 0) {
+                    // notification side-bar open now
+                    $(this).css({'animation-iteration-count' : '1'});
+                    updateNotificationsLastVersionSeen();
+                }
+                else{
+                    $(".new-notification").css({'background-color' : '#0d0d0d'}).removeClass("new-notification");
+                }
+
+            });
+            $(".cancel").click(function () {
+                console.log("toggling visibility");
+                $(this).parent().toggleClass('gone');
+
+            });
+        });
+    });
+
+    $("#usersSidebar-import").load("../../common/usersSidebar.html", function () {
+        //The users list is refreshed automatically every refreshRate defined above
+        // update users list and active timer for updating users list
+        ajaxUsersListContent()
+
+    });
+
+
+});
+
+
 function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
@@ -79,15 +118,14 @@ function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork
     });
 }
 
-// set navigation links
-$(function() {
+function configureNavigationLinks() {
     $(".home-link").attr("href", "/magitHub/pages/main/main.html");
     $(".pr-link").attr("href", "/magitHub/pages/pullRequest/pullRequest.html");
     $(".logout-link").attr("href", "/magitHub/pages/main/logout");
-});
+}
 
-// initialize notificationsVersion and appending seen notifications in html
-$(function () {
+
+function loadNotificationsAndInitNotifictionsVersion() {
     $.ajax({
         method: 'GET',
         data: {
@@ -104,7 +142,8 @@ $(function () {
             appendToNotificationArea(data.seenNotifications, false);
         }
     })
-});
+}
+
 
 // initializing users list version
 $(function(){
@@ -248,11 +287,6 @@ function triggerUsersListContent() {
 
 //activate the timer calls after the page is loaded
 $(function() {
-
-    //The users list is refreshed automatically every refreshRate defined above
-    // update users list and active timer for updating users list
-    ajaxUsersListContent()
-
     //The chat content is refreshed only once (using a timeout) but
     //on each call it triggers another execution of itself later (1 second later)
     triggerAjaxNotificationsContent();
@@ -276,25 +310,3 @@ function updateNotificationsLastVersionSeen() {
     });
 
 }
-
-$(function() { // onload function- configure notification sidebar
-    $(".toggle").click(function () {
-        console.log("toggling sidebar");
-        $(".notification-sidebar").toggleClass('active');
-        var notificationButtonElem = $(".notification-sidebar.active");
-        if (notificationButtonElem.length > 0) {
-            // notification side-bar open now
-            $(this).css({'animation-iteration-count' : '1'});
-            updateNotificationsLastVersionSeen();
-        }
-        else{
-            $(".new-notification").css({'background-color' : '#0d0d0d'}).removeClass("new-notification");
-        }
-
-    });
-    $(".cancel").click(function () {
-        console.log("toggling visibility");
-        $(this).parent().toggleClass('gone');
-
-    });
-});

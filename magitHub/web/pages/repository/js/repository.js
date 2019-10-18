@@ -89,8 +89,8 @@ $(function () { // onload function
         $.ajax({
             url: "/magitHub/pullRequest",
             data: {"requestType": "newPR", "repositoryName" : repositoryName, "baseBranch": baseBranch, "targetBranch": targetBranch, "Message": message},
-            error: function () {
-                console.log("no");
+            error: function (data) {
+                alert("Pull request failed, " + data);
             },
             success: function (data) {
                 alert("Pull request sent successfully");
@@ -175,6 +175,7 @@ $(function () { // onload function
             },
             success: function (data) {
                 alert("Pushed successfully");
+                window.location.reload();
             }
             });
     };
@@ -322,8 +323,8 @@ $(function () { // onload function
                             "username": username,
                             "repositoryName": repositoryName
                         },
-                        error: function () {
-                            console.log("no");
+                        error: function (data) {
+                           console.log("checkout error")
                         },
                         success: function (data) {
                                 if (data === "true") {
@@ -337,8 +338,8 @@ $(function () { // onload function
                                             "username": username,
                                             "repositoryName": repositoryName
                                         },
-                                        error: function () {
-                                            console.log("no");
+                                        error: function (data) {
+                                            alert("Checkout failed, " + data);
                                         },
                                         success: function (data) {
                                             alert("Checked out to branch " + branchName + " successfully");

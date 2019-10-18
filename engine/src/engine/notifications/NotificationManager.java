@@ -1,6 +1,5 @@
 package engine.notifications;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 
 public class NotificationManager
@@ -13,7 +12,6 @@ public class NotificationManager
     public void addNotification(Notification i_Notification)
     {
         m_Notifications.add(i_Notification);
-        //m_NotificationVersion++;
     }
 
     public int getNotificationVersion()
@@ -28,5 +26,11 @@ public class NotificationManager
     public ArrayList<Notification> getNotifications()
     {
         return m_Notifications;
+    }
+
+    public void removeSeenNotifications()
+    {
+        m_Notifications = new ArrayList<>(m_Notifications.subList(m_LastVersionSeen, getNotificationVersion()));
+        m_LastVersionSeen = 0;
     }
 }

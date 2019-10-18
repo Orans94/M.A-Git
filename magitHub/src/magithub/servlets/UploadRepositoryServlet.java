@@ -85,7 +85,6 @@ public class UploadRepositoryServlet extends HttpServlet
             {
                 // ----------- the repository in XML is empty && there is no repository on location path ---------
                 m_UserEngine.createRepository(XMLRepositoryLocation, repositoryName);
-                //assignUserToUsersManager(loggedInUsername, usersManager);
             }
         }
         else if (validateXMLRepository(XMLRepo, m_UserEngine.getMagitSingleFolderByID(), validationErrorMessage))
@@ -101,7 +100,6 @@ public class UploadRepositoryServlet extends HttpServlet
                 if (m_UserEngine.isDirectoryEmpty(XMLRepositoryLocation))
                 {
                     m_UserEngine.readRepositoryFromXMLFile(XMLRepo, m_UserEngine.getXMLMagitMaps());
-                    //assignUserToUsersManager(loggedInUsername, usersManager);
                 }
                 else
                 {
@@ -120,26 +118,6 @@ public class UploadRepositoryServlet extends HttpServlet
         out.close();
     }
 
-    private void assignUserToUsersManager(String i_LoggedInUsername, UsersManager i_UsersManager)
-    {
-        if (!i_UsersManager.isUserExists(i_LoggedInUsername))
-        {
-            synchronized (this)
-            {
-                if (!i_UsersManager.isUserExists(i_LoggedInUsername))
-                {
-                    i_UsersManager.addUser(i_LoggedInUsername);
-                }
-            }
-        }
-    }
-
-    private void printRepositoryDetailsToResponse(Path i_XMLRepositoryLocation, PrintWriter i_Out, MagitRepository i_XMLRepo, String i_RepositoryName)
-    {
-        i_Out.println("Repository name: " + i_RepositoryName);
-        i_Out.println("Repository location: " + i_XMLRepositoryLocation);
-        //i_Out.println("Active branch pointed commit: " + i_XMLRepo.getMagitBranches().getHead().substring(0, 7));
-    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {

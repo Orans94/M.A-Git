@@ -13,7 +13,7 @@
     <script src="../../common/webUtils.js"></script>
     <script src="pullRequest.js"></script>
 
-    <link rel="stylesheet" href="../../common/sidebar.css">
+    <link rel="stylesheet" href="../../common/usersSidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap core CSS -->
     <link href="../../common/bootstrap.min.css" rel="stylesheet">
@@ -27,67 +27,31 @@
 
 <body style="">
 
-<!-- Navigation -->
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="file:///C:/Users/orans/IdeaProjects/M.A-Git/magitHub/web/pages/friend/index.html">MagitHub</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="file:///C:/Users/orans/IdeaProjects/M.A-Git/magitHub/web/pages/friend/about.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="file:///C:/Users/orans/IdeaProjects/M.A-Git/magitHub/web/pages/friend/services.html">Notifications</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="file:///C:/Users/orans/IdeaProjects/M.A-Git/magitHub/web/pages/friend/logout">Logout</a>
-                </li>
-            </ul>
+    <!--importing html files in jQuery-->
+    <div id="navigation-import"></div>
+    <div id="usersSidebar-import"></div>
+    <div id="notificationsSidebar-import"></div>
+
+    <!-- Page Content -->
+    <header class="container-header open-pr-header">
+        <h1 class="my-4 header-title">Open Pull Requests</h1>
+    </header>
+
+    <div class="container main-container">
+        <h1 class="my-4"></h1>
+        <header class="container-header closed-pr-header">
+            <h1 class="my-4 header-title">Closed Pull Requests</h1>
+            </header></div>
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright © Your Website 2019</p>
         </div>
-    </div>
-</nav>
-
-<div data-component="sidebar">
-    <div class="sidebar">
-
-        <!-- start of users list -->
-        <ul class="list-group flex-column d-inline-block first-menu side-bar">
-            <li class="list-group-item pl-3 py-2 user-item"><a href="http://localhost:8080/magitHub/pages/friend/friend.html?username=oran#"><i class="fa fa-user-o" aria-hidden="true"><span class="ml-2 align-middle">oran</span></i></a></li>
-        </ul>
-        <!-- /.first-menu -->
-    </div>
-    <!-- /.sidebar -->
-</div>
-<!-- end of users list -->
-
-<!-- Page Content -->
-<header class="container-header open-pr-header">
-
-    <h1 class="my-4 header-title">Open Pull Requests</h1>
-    <!-- Repositories Icons Section -->
-    <!-- /.row -->
-
-    <!-- Call to Action Section -->
-</header>
-
-<div class="container main-container">
-    <h1 class="my-4"></h1>
-    <header class="container-header closed-pr-header">
-        <h1 class="my-4 header-title">Closed Pull Requests</h1>
-        </header></div>
-<footer class="py-5 bg-dark">
-    <div class="container">
-        <p class="m-0 text-center text-white">Copyright © Your Website 2019</p>
-    </div>
-</footer>
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    </footer>
+        <!-- Bootstrap core JavaScript -->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 
-</body>
+    </body>
 
 </html>

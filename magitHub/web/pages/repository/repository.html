@@ -18,100 +18,86 @@
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!--===============================================================================================-->
+    <!-- Custom styles for this template -->
+
+    <link rel="stylesheet" href="../../common/usersSidebar.css">
+    <link href="../../common/notifications.css" rel="stylesheet">
 
 
 </head>
 <body>
+    <!-- importing html files in jQuery -->
+    <div id="navigation-import"></div>
+    <div id="usersSidebar-import"></div>
+    <div id="notificationsSidebar-import"></div>
 
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="index.html">MagitHub</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="about.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="services.html">Notifications</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="logout">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="limiter">
-    <div class="container-table100">
-        <button class="button" id="backButton">Back</button>
-        <strong id="WCStatus"></strong>
-        <button class="button" type="button" id="commit">Commit</button>
-        <div class="operations">
-        </div>
-        <div class="wrap-table100">
-            <div class="table100Branch">
-                <em><b><i><strong>Branches</strong></i></b></em>
-                <button class ="button" id="createNewBranchButton" type="button">Create new branch</button>
-                <button class="button" id="checkoutButton" type="button">Checkout</button>
-                <button class="button" id="pullButton" type="button">Pull</button>
-                <button class="button" id="pushButton" type="button">Push</button>
-                <button class="button" id="pullRequestButton" type="button">Pull Request</button>
-                <table class ="branchTable">
-                    <thead>
-                    <tr class="table100Branch-head">
-                        <th class="branchNameColumn">Branch name</th>
-                        <th class="isRemoteColumn">Is Remote</th>
-                        <th class="isTrackingColumn">Is Tracking</th>
-                        <th class="pointedCommitColumn">Pointed commit SHA-1</th>
-                        <th class="commitMessageColumn">Commit message</th>
-                    </tr>
-                    </thead>
-                    <tbody class = "branchTableBody">
-                    </tbody>
-                </table>
+    <div class="limiter">
+        <div class="container-table100">
+            <button class="button" id="backButton">Back</button>
+            <strong id="WCStatus"></strong>
+            <button class="button" type="button" id="commit">Commit</button>
+            <div class="operations">
+            </div>
+            <div class="wrap-table100">
+                <div class="table100Branch">
+                    <em><b><i><strong>Branches</strong></i></b></em>
+                    <button class ="button" id="createNewBranchButton" type="button">Create new branch</button>
+                    <button class="button" id="checkoutButton" type="button">Checkout</button>
+                    <button class="button" id="pullButton" type="button">Pull</button>
+                    <button class="button" id="pushButton" type="button">Push</button>
+                    <button class="button" id="pullRequestButton" type="button">Pull Request</button>
+                    <table class ="branchTable">
+                        <thead>
+                        <tr class="table100Branch-head">
+                            <th class="branchNameColumn">Branch name</th>
+                            <th class="isRemoteColumn">Is Remote</th>
+                            <th class="isTrackingColumn">Is Tracking</th>
+                            <th class="pointedCommitColumn">Pointed commit SHA-1</th>
+                            <th class="commitMessageColumn">Commit message</th>
+                        </tr>
+                        </thead>
+                        <tbody class = "branchTableBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="limiter">
-    <div class="container-table100">
-        <div class="wrap-table100">
-            <div class="table100Commit">
-                <em><b><i><strong>Commits</strong></i></b></em>
-                <button class ="button" id="updateWC" type="button">Update WC</button>
-                <table class="commitTable">
-                    <thead>
-                    <tr class="table100Commit-head">
-                        <th class="commitMessageColumn">Message</th>
-                        <th class="commitAuthorColumn">Author</th>
-                        <th class="commitDateColumn">Date of creation</th>
-                        <th class="commitSHA1Column">SHA-1</th>
-                    </tr>
-                    </thead>
-                    <tbody class = "commitTableBody">
-                    </tbody>
-                </table>
+    <div class="limiter">
+        <div class="container-table100">
+            <div class="wrap-table100">
+                <div class="table100Commit">
+                    <em><b><i><strong>Commits</strong></i></b></em>
+                    <button class ="button" id="updateWC" type="button">Update WC</button>
+                    <table class="commitTable">
+                        <thead>
+                        <tr class="table100Commit-head">
+                            <th class="commitMessageColumn">Message</th>
+                            <th class="commitAuthorColumn">Author</th>
+                            <th class="commitDateColumn">Date of creation</th>
+                            <th class="commitSHA1Column">SHA-1</th>
+                        </tr>
+                        </thead>
+                        <tbody class = "commitTableBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script src="../../common/jquery-2.0.3.min.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/bootstrap/js/popper.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
-<script src="../../common/webUtils.js"></script>
+    <script src="../../common/jquery-2.0.3.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="vendor/bootstrap/js/popper.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="../../common/webUtils.js"></script>
 
-<script src="js/repository.js"></script>
+    <script src="js/repository.js"></script>
 
 </body>
 </html>

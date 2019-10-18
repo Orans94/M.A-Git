@@ -13,7 +13,7 @@
     <script src="../../common/webUtils.js"></script>
     <script src="main.js"></script>
 
-    <link rel="stylesheet" href="../../common/sidebar.css">
+    <link rel="stylesheet" href="../../common/usersSidebar.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -29,49 +29,11 @@
 
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">MagitHub</a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link home-link" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pr-link" href="#">Pull Requests</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link toggle notifications-link" style="cursor: pointer"; >Notifications</a>
-                    </li>
-					<li class="nav-item">
-                        <a class="nav-link logout-link" href="#">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <!--importing html files in jQuery-->
+    <div id="navigation-import"></div>
+    <div id="usersSidebar-import"></div>
+    <div id="notificationsSidebar-import"></div>
 
-    <div data-component="sidebar">
-        <div class="sidebar">
-
-            <!-- start of users list -->
-            <ul class="list-group flex-column d-inline-block first-menu side-bar">
-
-
-                <!--<li class="list-group-item pl-3 py-2">
-                    <a href="#"><i class="fa fa-user-o" aria-hidden="true"><span class="ml-2 align-middle">Reporting</span></i></a>
-                </li>-->
-
-            </ul>
-            <!-- /.first-menu -->
-        </div>
-        <!-- /.sidebar -->
-    </div>
-    <!-- end of users list -->
 
     <header>
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -134,12 +96,6 @@
 
     </div>
     <!-- /.container -->
-
-    <!-- notification sidebar -->
-    <div class="notification-sidebar">
-        <h2 class="notification-title"> Notifications</h2>
-    </div>
-    <!-- end of notification sidebar -->
 
     <!-- Footer -->
     <footer class="py-5 bg-dark">

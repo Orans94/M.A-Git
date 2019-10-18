@@ -86,7 +86,6 @@ public class RepositoryInfoServlet extends HttpServlet
         User user = userManager.getUsers().get(username);
         EngineManager engine = user.getEngine();
         Repository rep = engine.getRepositories().get(repositoryPath);
-
         rep.checkout(branchName);
     }
 

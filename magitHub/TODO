@@ -4,3 +4,5 @@
 // notification sidebar should be available on all the pages
 // sort commits before sending the data to the table(on the servlet before printing the data).
 // clicking upload file without choosing file - repository loaded successfully.
+// on checkout - if checking out to rb - ask if he wantto create RTB
+// on pr - check that the branch names that the user entered exists

@@ -1,6 +1,5 @@
 const USER_URL = buildUrlWithContextPath("user");
 
-
 $(function() { // onload function- load repositories cards
     console.log("check2");
 

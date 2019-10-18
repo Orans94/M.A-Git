@@ -1597,12 +1597,10 @@ public class Repository
 
     public void pushNotRTB() throws IOException, ParseException
     {
-        //String commitSHA1;
         String activeBranchName = m_Magit.getHead().getActiveBranch().getName();
         String RBname = createRBForActiveBranch(activeBranchName);
         setActiveBranchTrackingAfter(RBname);
         String activeBranchCommit = m_Magit.getHead().getActiveBranch().getCommitSHA1();
-       // commitSHA1 = getFirstCommitThatExistsInRR(m_Magit.getHead().getActiveBranch().getCommitSHA1());
         createRBInRR(activeBranchName, activeBranchCommit);
         pushCommitsObjectsRecursive(activeBranchCommit);
         checkoutRRWcIfNeeded();

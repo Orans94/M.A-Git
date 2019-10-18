@@ -1,6 +1,8 @@
 package magithub.servlets;
 
+import engine.managers.User;
 import engine.managers.UsersManager;
+import engine.notifications.NotificationManager;
 import magithub.utils.ServletUtils;
 import magithub.utils.SessionUtils;
 
@@ -18,18 +20,20 @@ public class LogoutServlet extends HttpServlet
 
         if (usernameFromSession != null) {
             System.out.println("Clearing session for " + usernameFromSession);
-            //usersManager.removeUser(usernameFromSession);
+            clearSeenUserNotification(request);
             SessionUtils.clearSession(request);
-
-            /*
-            when sending redirect, tomcat has a shitty logic how to calculate the URL given, weather its relative or not
-            you can read about it here:
-            https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/HttpServletResponse.html#sendRedirect(java.lang.String)
-            the best way (IMO) is to fetch the context path dynamically and build the redirection from it and on
-             */
-
             response.sendRedirect(request.getContextPath() + "/index.html");
         }
+    }
+
+    private void clearSeenUserNotification(HttpServletRequest request)
+    {
+        UsersManager usersManager;
+        User user;
+
+        usersManager = ServletUtils.getUsersManager(getServletContext());
+        user = usersManager.getUsers().get(SessionUtils.getUsername(request));
+        user.getNotificationsManager().removeSeenNotifications();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -29,7 +29,8 @@ function handlePR(event) {
             console.log("error was occurred while handling pr via user request");
         },
         success: function (data) {
-
+            alert("The pull request has been successfully " + event.data.userDecision + "d");
+            window.location.reload();
         }
     });
 
