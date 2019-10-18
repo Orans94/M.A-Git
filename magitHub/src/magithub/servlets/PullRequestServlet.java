@@ -88,19 +88,31 @@ public class PullRequestServlet extends HttpServlet
         User RRUser = userManager.getUsers().get(username);
         PullRequest pullRequest = RRUser.getPullRequests().get(Integer.parseInt(PRID));
         User LRUser= userManager.getUsers().get(pullRequest.getLRUsername());
-        switch(userDecision)
+        Repository repo = RRUser.getEngine().getRepositories().get(MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(pullRequest.getRRName()));
+        PrintWriter out = resp.getWriter();
+        if(repo.getFileSystemStatus().isFileSystemClean())
         {
-            case "approve":
-                pullRequest.setStatus(ePullRequestState.Approved);
-                LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("approved", username));
-                RRUser.getEngine().checkout(pullRequest.getBaseBranchName());
-                RRUser.getEngine().merge(pullRequest.getTargetBranchName());
-                //RRUser.getEngine().get
-                break;
-            case "decline":
-                pullRequest.setStatus(ePullRequestState.Denied);
-                LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("declined", username));
-                break;
+            switch (userDecision)
+            {
+                case "approve":
+                    pullRequest.setStatus(ePullRequestState.Approved);
+                    LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("approved", username));
+                    RRUser.getEngine().checkout(pullRequest.getBaseBranchName());
+                    repo.setActiveBranchPointedCommitByBranchName(pullRequest.getTargetBranchName());
+                    repo.checkout(pullRequest.getBaseBranchName());
+                    break;
+                case "decline":
+                    pullRequest.setStatus(ePullRequestState.Denied);
+                    LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("declined", username));
+                    break;
+            }
+        }
+        else
+        {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            out.print("Dirty");
+            out.flush();
+            out.close();
         }
     }
 

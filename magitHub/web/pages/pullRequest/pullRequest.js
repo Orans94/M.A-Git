@@ -27,6 +27,10 @@ function handlePR(event) {
         //timeout: 4000, TODO delete comment
         error: function (data) {
             console.log("error was occurred while handling pr via user request");
+            if(data.responseText.includes("Dirty"))
+            {
+                alert("WC status is dirty, the system did not approve the pull request");
+            }
         },
         success: function (data) {
             alert("The pull request has been successfully " + event.data.userDecision + "d");
