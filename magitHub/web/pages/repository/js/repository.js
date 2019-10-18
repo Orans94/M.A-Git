@@ -36,9 +36,8 @@ function sortCommitsByDate(commits) {
     var result = {};
 
     $.each(sortedCommits, function(index, entry){
-        result.entry.key = entry.value;
+        result[entry.key] = entry.value;
     });
-
 
     return result;
 }
@@ -236,7 +235,7 @@ $(function () { // onload function
 
 
             var branches = repository.m_Magit.m_Branches;
-            var commits = repository.m_Magit.m_Commits;
+            var commits = sortCommitsByDate(repository.m_Magit.m_Commits);
 
             $.each(branches, function (key, value) {
                 $(".branchTableBody").append('<tr>\n' +
