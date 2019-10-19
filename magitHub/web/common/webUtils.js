@@ -119,9 +119,12 @@ function updateRepositoriesCardsInHTML(repositoriesArray, username, chooseOrFork
 }
 
 function configureNavigationLinks() {
+    $(".logo-link").attr("href", "/magitHub/pages/main/main.html");
     $(".home-link").attr("href", "/magitHub/pages/main/main.html");
+    $(".chat-link").attr("href", "/magitHub/pages/chat/chat.html");
     $(".pr-link").attr("href", "/magitHub/pages/pullRequest/pullRequest.html");
     $(".logout-link").attr("href", "/magitHub/pages/main/logout");
+
 }
 
 
@@ -165,10 +168,12 @@ function appendToNotificationArea(newNotifications, toMarkAsNewNotifications) {
     $.each(newNotifications || [], function(index, entry){
         var entryElement = createNotificationElement(entry, toMarkAsNewNotifications);
         $(".notification-title").after(entryElement)
-        if (toMarkAsNewNotifications) {
-            $(".new-notification").css({'background-color': '#191970'});
-        }
     });
+
+    if (toMarkAsNewNotifications) {
+        $(".new-notification").css({'background-color': '#191970'});
+        blinkNotificationsButton()
+    }
 }
 
 

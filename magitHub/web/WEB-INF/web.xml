@@ -49,6 +49,10 @@
         <servlet-name>NotificationsServlet</servlet-name>
         <servlet-class>magithub.servlets.NotificationsServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ChatServlet</servlet-name>
+        <servlet-class>magithub.servlets.ChatServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>FileContentServlet</servlet-name>
@@ -104,6 +108,11 @@
         <servlet-name>NotificationsServlet</servlet-name>
         <url-pattern>/pages/friend/notifications</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+    <servlet-name>ChatServlet</servlet-name>
+    <url-pattern>/pages/chat/chatUtils</url-pattern>
+</servlet-mapping>
 
     <listener>
         <listener-class>

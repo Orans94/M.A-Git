@@ -78,9 +78,29 @@ function appendPRCardsByStatus(PRArray) {
     });
 }
 
+function removePRTitleIfEmpty(PRcategorize) {
+    var numberOfOpenPR = PRcategorize.openPR.length;
+    var numberOfClosedPR = PRcategorize.closedPR.length;
+
+    if (numberOfOpenPR === 0 && numberOfClosedPR === 0) {
+        // there is no open or closed pr
+        $(".open-pr-title").text('There are no pull requests at the moment');
+        $(".closed-pr-title").text('');
+    } else {
+        if (PRcategorize.openPR.length === 0) {
+            $(".open-pr-title").text('');
+        }
+        if (PRcategorize.closedPR.length === 0) {
+            // delete closed pr title
+            $(".closed-pr-title").text('');
+        }
+    }
+}
+
 function appendPullRequestsCards(pullRequests) {
     var categorizedPR = categorizePullRequests(pullRequests);
 
+    removePRTitleIfEmpty(categorizedPR);
     appendPRCardsByStatus(categorizedPR.openPR);
     appendPRCardsByStatus(categorizedPR.closedPR);
 }
