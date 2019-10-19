@@ -106,6 +106,12 @@ public class RepositoryInfoServlet extends HttpServlet
             case "commit":
                 commitRequest(request,response);
                 break;
+            case "RRName":
+                RRNameRequest(request, response);
+                break;
+            case "RRUsername":
+                RRUsernameRequest(request, response);
+                break;
             case "WCStatus":
                 WCStatusRequest(request,response);
                 break;
@@ -126,6 +132,36 @@ public class RepositoryInfoServlet extends HttpServlet
                 }
                 break;
         }
+    }
+
+    private void RRUsernameRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository repo = engine.getRepositories().get(repositoryPath);
+        PrintWriter out = response.getWriter();
+        out.print(repo.getRemoteRepositoryPath().getParent().getFileName());
+        out.flush();
+        out.close();
+    }
+
+    private void RRNameRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository repo = engine.getRepositories().get(repositoryPath);
+        PrintWriter out = response.getWriter();
+        out.print(repo.getRemoteRepositoryPath().getFileName());
+        out.flush();
+        out.close();
     }
 
     private void pushRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException

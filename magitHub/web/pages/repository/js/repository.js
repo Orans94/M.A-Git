@@ -55,6 +55,29 @@ $(function () { // onload function
         $("#pushButton").hide();
     }
 
+    $("#repoName").empty().append("Repository name: " + repositoryName);
+
+    $.ajax({
+        url: "/magitHub/repositoryInfo",
+        data: {"requestType": "RRName", "username": username, "repositoryName": repositoryName},
+        error: function () {
+            console.log("error on retrieving RR name");
+            },
+        success: function (data) {
+            $("#RRName").empty().append("Remote Repository name: " + data);
+        }
+    });
+
+    $.ajax({
+        url: "/magitHub/repositoryInfo",
+        data: {"requestType": "RRUsername", "username": username, "repositoryName": repositoryName},
+        error: function () {
+            console.log("error on retrieving RR Username");
+        },
+        success: function (data) {
+            $("#RRUsername").empty().append("RR Owner username: " + data);
+        }
+    });
 
     var wcStatus = $("#WCStatus");
     $.ajax({
