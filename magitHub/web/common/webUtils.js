@@ -148,22 +148,6 @@ function loadNotificationsAndInitNotifictionsVersion() {
 }
 
 
-// initializing users list version
-$(function(){
-    $.ajax({
-        method: 'GET',
-        data: {"requestType" : "numberOfUsersList"},
-        url: "/magitHub/pages/main/usersList",
-        //timeout: 4000, TODO delete comment
-        error: function (data) {
-            console.log("error was occurred while initializing number of users list");
-        },
-        success: function (data) {
-            usersListVersion = data.usersListVersion;
-        }
-    })
-});
-
 function appendToNotificationArea(newNotifications, toMarkAsNewNotifications) {
     $.each(newNotifications || [], function(index, entry){
         var entryElement = createNotificationElement(entry, toMarkAsNewNotifications);

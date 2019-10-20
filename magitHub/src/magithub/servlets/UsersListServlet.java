@@ -83,12 +83,12 @@ public class UsersListServlet extends HttpServlet
                 usersListRequest(request, response, Boolean.parseBoolean(request.getParameter("onlyActiveUsers")));
                 break;
             case "numberOfUsersList":
-                numberOfUsersListRequest(request, response);
+                numberOfActiveUsersListRequest(request, response);
                 break;
         }
     }
 
-    private void numberOfUsersListRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    private void numberOfActiveUsersListRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         response.setContentType("application/json");
 
@@ -96,7 +96,7 @@ public class UsersListServlet extends HttpServlet
         {
             JsonObject returnedJsonObj = new JsonObject();
             UsersManager usersManager = ServletUtils.getUsersManager(getServletContext());
-            returnedJsonObj.addProperty("usersListVersion", usersManager.getUsers().size());
+            returnedJsonObj.addProperty("usersListVersion", usersManager.getNumberOfActiveUsers());
             out.println(returnedJsonObj);
             out.flush();
         }

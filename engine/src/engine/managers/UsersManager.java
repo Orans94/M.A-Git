@@ -22,4 +22,8 @@ public class UsersManager
 
     public boolean isUserExists(String i_Username) { return m_UsersMap.containsKey(i_Username); }
 
+    public int getNumberOfActiveUsers(){
+        return (int)m_UsersMap.values().stream().filter(User::isActiveUser).count();
+    }
+
 }

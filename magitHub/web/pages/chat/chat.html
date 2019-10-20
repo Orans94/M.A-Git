@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <!--  This file has been downloaded from https://bootdey.com  -->
     <!--  All snippets are MIT license https://bootdey.com/license -->
-    <title>Bootdey.com</title>
+    <title>M.A-GitHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/chat.css">
@@ -13,7 +13,7 @@
     <link href="../../common/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="modern-business.css" rel="stylesheet">
+    <link href="css/modern-business.css" rel="stylesheet">
 
     <link href="../../common/notifications.css" rel="stylesheet">
     <link rel="stylesheet" href="../../common/usersSidebar.css">
@@ -43,16 +43,17 @@
                         <input type="text" id="userstring" name="userstring"/>
                         <input type="submit" value="Send"/>
                     </form>-->
-                    <form id="chatform" method="POST" action="sendChat">
-                        <input type="text" class="form-control" id="userstring" name="userstring" placeholder="write a message..."/>
-                    <!--<textarea class="form-control" placeholder="write a message..." rows="3"></textarea>-->
-                    <br>
-                    <!--<button type="button" class="btn btn-info pull-right">Post</button>-->
-                        <input type="submit" value="Send" class="btn btn-info pull-right"/>
-                    </form>
+
                     <div class="clearfix"></div>
                     <hr>
                     <ul class="media-list">
+                        <form id="chatform" method="POST" action="sendChat">
+                            <input type="text" class="form-control" id="userstring" name="userstring" placeholder="write a message..."/>
+                            <!--<textarea class="form-control" placeholder="write a message..." rows="3"></textarea>-->
+                            <br>
+                            <!--<button type="button" class="btn btn-info pull-right">Post</button>-->
+                            <input type="submit" value="Send" class="btn btn-info pull-right"/>
+                        </form>
                     </ul>
                 </div>
             </div>

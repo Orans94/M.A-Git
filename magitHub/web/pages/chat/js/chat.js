@@ -1,5 +1,5 @@
 var chatVersion = 0;
-var refreshRate = 2000; //milli seconds
+var refreshRate = 1500; //milli seconds
 
 //users = a list of usernames, essentially an array of javascript strings:
 // ["moshe","nachum","nachche"...]
@@ -12,19 +12,21 @@ function appendToChatArea(entries) {
     $.each(entries || [], appendChatEntry);
 
     // handle the scroller to auto scroll to the end of the chat area
-  /*  var scroller = $("#chatarea");
+    var scroller = $(".panel-body");
     var height = scroller[0].scrollHeight - $(scroller).height();
-    $(scroller).stop().animate({ scrollTop: height }, "slow");*/
+    $(scroller).stop().animate({ scrollTop: height }, "slow");
+
+    // scroll down page
+    $("html, body").animate({ scrollTop: $(document).height() }, 1000);
 }
 
 function appendChatEntry(index, entry){
     var entryElement = createChatEntry(entry);
-    $(".media-list").append(entryElement);
+    $("#chatform").before(entryElement);
 }
 
 function createChatEntry (entry){
-    var userMessage = entry.chatString.substring(11,entry.chatString.length);
-    return $('<li class="media"><a href="#" class="pull-left"><img src="https://bootdey.com/img/Content/user_3.jpg" alt="" class="img-circle"></a><div class="media-body"><span class="text-muted pull-right"><small class="text-muted"></small></span><strong class="text-success">' + entry.username + '</strong><p>' + userMessage + '</p></div></li>');
+    return $('<li class="media"><a href="#" class="pull-left"><img src="https://bootdey.com/img/Content/user_3.jpg" alt="" class="img-circle"></a><div class="media-body"><span class="text-muted pull-right"><small class="text-muted"></small></span><strong class="text-success">' + entry.username + '</strong><p>' + entry.chatString + '</p></div></li>');
 }
 
 
@@ -57,10 +59,15 @@ function ajaxChatContent() {
 $(function() { // onload...do
     //add a function to the submit event
     $("#chatform").submit(function() {
+        var formInput = {};
+        $.each($('#chatform').serializeArray(), function(i, field) {
+            formInput[field.name] = field.value;
+        });
+
         $.ajax({
             data: {
                 "requestType": "sendMessage",
-                "chatformElement": $(this).serialize()
+                "userstring": formInput.userstring
             },
             url: "/magitHub/pages/chat/chatUtils",
             timeout: 2000,
