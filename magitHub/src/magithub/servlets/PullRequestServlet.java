@@ -83,6 +83,7 @@ public class PullRequestServlet extends HttpServlet
     {
         String PRID = req.getParameter("PRID");
         String userDecision = req.getParameter("userDecision");
+        String message= req.getParameter("message");
         String username = SessionUtils.getUsername(req);
         UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
         User RRUser = userManager.getUsers().get(username);
@@ -96,14 +97,14 @@ public class PullRequestServlet extends HttpServlet
             {
                 case "approve":
                     pullRequest.setStatus(ePullRequestState.Approved);
-                    LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("approved", username));
+                    LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("approved", username, ""));
                     RRUser.getEngine().checkout(pullRequest.getBaseBranchName());
                     repo.setActiveBranchPointedCommitByBranchName(pullRequest.getTargetBranchName());
                     repo.checkout(pullRequest.getBaseBranchName());
                     break;
                 case "decline":
                     pullRequest.setStatus(ePullRequestState.Denied);
-                    LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("declined", username));
+                    LRUser.getNotificationsManager().addNotification(new PullRequestUpdateNotification("declined", username, message));
                     break;
             }
         }

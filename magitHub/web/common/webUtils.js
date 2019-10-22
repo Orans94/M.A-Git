@@ -33,8 +33,22 @@ $(function(){
     $("#usersSidebar-import").load("../../common/usersSidebar.html", function () {
         //The users list is refreshed automatically every refreshRate defined above
         // update users list and active timer for updating users list
-        ajaxUsersListContent()
+        ajaxUsersListContent();
 
+        $(".users-list-link").click(function () {
+            var sideBarElement = $(".side-bar");
+            sideBarElement.toggleClass('active');
+            var usersListElem = $(".side-bar.active");
+            if (usersListElem.length > 0) {
+                // hide users list
+                sideBarElement.css({'visibility': 'hidden'});
+                $(this).text("Show Users List")
+            } else {
+                // show users list
+                sideBarElement.css({'visibility': ''});
+                $(this).text("Hide Users List")
+            }
+        })
     });
 
 

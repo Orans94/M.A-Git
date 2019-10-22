@@ -16,12 +16,21 @@ function categorizePullRequests(pullRequests) {
 function handlePR(event) {
     //event.data.PRID
     //event.data.userDecision
+    var message = "nothing"
+    if(event.data.userDecision === "decline")
+    {
+        do {
+            message = prompt("Please enter the decline reason");
+        } while (message == null || message === "");
+    }
+
     $.ajax({
         method: 'POST',
         data: {
             "requestType": "handlePR"
             ,"PRID": event.data.PRID
             ,"userDecision" : event.data.userDecision
+            ,"message": message
             },
         url: "/magitHub/pullRequest",
         //timeout: 4000, TODO delete comment

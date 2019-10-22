@@ -58,7 +58,7 @@ function appendRRName() {
             console.log("error on retrieving RR name");
         },
         success: function (data) {
-            $("#RRName").empty().append("Remote Repository name: " + data);
+            $("#RRName").empty().append("Remote Repository name: " + data + "\n");
         }
     });
 }
@@ -424,6 +424,20 @@ function setDeleteBranchClick() {
    $("#deleteBranchButton").click(deleteBranchClick);
 }
 
+/*function getContainingBranches(key, value) {
+    $.ajax({
+        url: "../../repositoryInfo",
+        data: {"requestType": "containingBranches", "username": username, "repositoryName": repositoryName, "commitSHA1": key},
+        //timeout: 2000,
+        error: function () {
+            console.log("error on getting containing branches");
+        },
+        success: function (data) {
+            return data;
+        }
+    });
+}*/
+
 function setCommitAndBranchTables(wcStatus) {
     $.ajax({
         url: "/magitHub/pages/main/user",
@@ -475,12 +489,23 @@ function setCommitAndBranchTables(wcStatus) {
             });
 
             $.each(commits, function (key, value) {
-                $(".commitTableBody").append('<tr id="tableRow">\n' +
-                    '                        <td class="commitMessageColumn">' + value.m_Message + '</td>\n' +
-                    '                        <td class="commitAuthorColumn">' + value.m_CommitAuthor + '</td>\n' +
-                    '                        <td class="commitDateColumn">' + value.m_CommitDate + '</td>\n' +
-                    '                        <td class="commitSHA1Column">' + key + '</td>\n' +
-                    '                    </tr>');
+                $.ajax({
+                    url: "../../repositoryInfo",
+                    data: {"requestType": "containingBranches", "username": username, "repositoryName": repositoryName, "commitSHA1": key},
+                    //timeout: 2000,
+                    error: function () {
+                        console.log("error on getting containing branches");
+                    },
+                    success: function (data) {
+                        $(".commitTableBody").append('<tr id="tableRow">\n' +
+                            '                        <td class="commitMessageColumn">' + value.m_Message + '</td>\n' +
+                            '                        <td class="commitAuthorColumn">' + value.m_CommitAuthor + '</td>\n' +
+                            '                        <td class="commitDateColumn">' + value.m_CommitDate + '</td>\n' +
+                            '                        <td class="commitSHA1Column">' + key + '</td>\n' +
+                            '                        <td class="commitContainingBranchesColumn">' + data + '</td>\n' +
+                            '                    </tr>');
+                    }
+                });
             });
 
             onRowClick("commitTable", function (row) {
@@ -498,6 +523,22 @@ function setCommitAndBranchTables(wcStatus) {
         }
     });
 }
+$(function(){
+    $("#showStatusButton").on('click', function () {
+        $.ajax({
+            url: "/magitHub/repositoryInfo",
+            data: {"requestType": "showStatus", "username": username, "repositoryName": repositoryName},
+            error: function () {
+                console.log("error on showing WC status");
+            },
+            success: function (data) {
+                console.log(data);
+            }
+        });
+
+    })
+});
+
 
 $(function () { // onload function
     $('#backButton').on('click', function (e) {

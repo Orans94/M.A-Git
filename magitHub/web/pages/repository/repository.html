@@ -39,8 +39,10 @@
                 <strong id="WCStatus"></strong>
                 <button class="button" type="button" id="commit">Commit</button>
             </span>
-            <span id="RRDetails">
+            <br>
+            <span id="RRDetails" style="text-decoration-color: white">
                 <strong id="RRName"></strong>
+                <br>
                 <strong id="RRUsername"></strong>
             </span>
             <div class="operations">
@@ -54,6 +56,7 @@
                     <button class="button" id="pullButton" type="button">Pull</button>
                     <button class="button" id="pushButton" type="button">Push</button>
                     <button class="button" id="pullRequestButton" type="button">Pull Request</button>
+                    <button class="button" id="showStatusButton" type="button">Show Status</button>
                     <table class ="branchTable">
                         <thead>
                         <tr class="table100Branch-head">
@@ -85,6 +88,7 @@
                             <th class="commitAuthorColumn">Author</th>
                             <th class="commitDateColumn">Date of creation</th>
                             <th class="commitSHA1Column">SHA-1</th>
+                            <th class="commitContainingBranchesColumn">Containing branches</th>
                         </tr>
                         </thead>
                         <tbody class = "commitTableBody">

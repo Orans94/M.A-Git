@@ -2,6 +2,8 @@ package magithub.servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import engine.branches.Branch;
 import engine.core.Repository;
 import engine.managers.EngineManager;
@@ -19,6 +21,7 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 import static magithub.constants.Constants.MAGITEX3_DIRECTORY_PATH;
@@ -138,7 +141,58 @@ public class RepositoryInfoServlet extends HttpServlet
                     e.printStackTrace();
                 }
                 break;
+            case "showStatus":
+                showStatusRequest(request,response);
+                break;
+            case "containingBranches":
+                containingBranchesRequest(request, response);
+                break;
         }
+    }
+
+    private void containingBranchesRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String result = "";
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        String commitSHA1 = request.getParameter("commitSHA1");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        PrintWriter out = response.getWriter();
+        Repository repo = engine.getRepositories().get(repositoryPath);
+        List<Branch> containingBranches = repo.getContainedBranches(commitSHA1);
+        for(Branch branch : containingBranches)
+        {
+            result = result.concat(branch.getName() +", ");
+        }
+
+        result = result.substring(0, result.length() - 2);
+        out.print(result);
+        out.flush();
+        out.close();
+    }
+
+    private void showStatusRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository repo = engine.getRepositories().get(repositoryPath);
+
+        try (PrintWriter out = response.getWriter()) {
+            Gson gson = new Gson();
+            JsonObject jsonObj = new JsonObject();
+            String fileSystemStatusJson = gson.toJson(repo.getFileSystemStatus());
+            //jsonObj.addProperty('');
+            out.print(fileSystemStatusJson);
+            out.flush();
+        }
+
     }
 
     private void deleteRTBRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
