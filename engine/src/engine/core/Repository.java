@@ -1705,4 +1705,16 @@ public class Repository
             }
         };
     }
+
+    public void deleteRTB(String i_BranchName) throws IOException
+    {
+        Branch RTB = m_Magit.getBranches().get(i_BranchName);
+
+        //delete RB
+        String RBName = RTB.getTrackingAfter();
+        deleteBranch(RBName);
+
+        //delete RTB
+        deleteBranch(RTB.getName());
+    }
 }

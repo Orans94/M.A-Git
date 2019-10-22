@@ -19,6 +19,8 @@ $(function() { //onload function
         {
             var edit = function () {
                 $("#fileContent").removeAttr('readonly');
+                $("#messageToUser").empty().append("The file is now editable");
+                $("#messageToUser").css('color', 'red');
             };
             $("#editButton").click(edit);
 

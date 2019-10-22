@@ -7,6 +7,7 @@ import engine.core.Repository;
 import engine.managers.EngineManager;
 import engine.managers.User;
 import engine.managers.UsersManager;
+import engine.notifications.BranchDeletedNotification;
 import engine.objects.Commit;
 import engine.utils.FileUtilities;
 import magithub.utils.ServletUtils;
@@ -118,6 +119,12 @@ public class RepositoryInfoServlet extends HttpServlet
             case "isBranchExist":
                 isBranchExistsRequest(request,response);
                 break;
+            case "deleteBranch":
+                deleteBranchRequest(request, response);
+                break;
+            case"deleteBranchRTB":
+                deleteRTBRequest(request,response);
+                break;
             case "isPushRequired":
                 isPushRequiredRequest(request,response);
                 break;
@@ -132,6 +139,37 @@ public class RepositoryInfoServlet extends HttpServlet
                 }
                 break;
         }
+    }
+
+    private void deleteRTBRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        String branchName = request.getParameter("branchName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository repo = engine.getRepositories().get(repositoryPath);
+        repo.deleteRTB(branchName);
+        String RRUsername = repo.getRemoteRepositoryPath().getParent().getFileName().toString();
+        User RRUser = userManager.getUsers().get(RRUsername);
+        EngineManager RRUserEngine = RRUser.getEngine();
+        RRUserEngine.getRepositories().get(repo.getRemoteRepositoryPath()).deleteBranch(branchName);
+        RRUser.getNotificationsManager().addNotification(new BranchDeletedNotification(branchName, username));
+    }
+
+    private void deleteBranchRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String username = request.getParameter("username");
+        String repositoryName = request.getParameter("repositoryName");
+        String branchName = request.getParameter("branchName");
+        Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
+        UsersManager userManager = ServletUtils.getUsersManager(getServletContext());
+        User user = userManager.getUsers().get(username);
+        EngineManager engine = user.getEngine();
+        Repository repo = engine.getRepositories().get(repositoryPath);
+        repo.deleteBranch(branchName);
     }
 
     private void RRUsernameRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
@@ -212,7 +250,11 @@ public class RepositoryInfoServlet extends HttpServlet
         if(rep.getMagit().getBranches().containsKey(branchName))
         {
             Branch branch = rep.getMagit().getBranches().get(branchName);
-            if(branch.getIsRemote())
+            if(branch.getIsTracking())
+            {
+                out.print("RTB");
+            }
+            else if(branch.getIsRemote())
             {
                 out.print("RB");
             }
