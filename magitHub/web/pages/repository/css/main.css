@@ -290,8 +290,8 @@ tbody tr:hover {
   cursor:pointer;
   float:right;
   height:40px;
-  padding-left:24px;
-  padding-right:24px;
+  padding-left:15px;
+  padding-right:15px;
   font-family:Arial, Helvetica, sans-serif;
   font-weight:bold;
   font-size:20px;
@@ -318,7 +318,7 @@ tbody tr:hover {
 }
 
 #backButton{
-  float: right;
+  /*float: right;*/
 }
 #commit{
   float: left;

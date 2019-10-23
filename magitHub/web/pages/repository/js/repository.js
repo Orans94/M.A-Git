@@ -1,3 +1,18 @@
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+}
+
 var username = getUrlParameter("username");
 var repositoryName = getUrlParameter('repositoryName');
 var isRepositoryCloned = getUrlParameter('isRepositoryCloned');
@@ -424,19 +439,6 @@ function setDeleteBranchClick() {
    $("#deleteBranchButton").click(deleteBranchClick);
 }
 
-/*function getContainingBranches(key, value) {
-    $.ajax({
-        url: "../../repositoryInfo",
-        data: {"requestType": "containingBranches", "username": username, "repositoryName": repositoryName, "commitSHA1": key},
-        //timeout: 2000,
-        error: function () {
-            console.log("error on getting containing branches");
-        },
-        success: function (data) {
-            return data;
-        }
-    });
-}*/
 
 function setCommitAndBranchTables(wcStatus) {
     $.ajax({
@@ -504,15 +506,15 @@ function setCommitAndBranchTables(wcStatus) {
                             '                        <td class="commitSHA1Column">' + key + '</td>\n' +
                             '                        <td class="commitContainingBranchesColumn">' + data + '</td>\n' +
                             '                    </tr>');
+
+                        onRowClick("commitTable", function (row) {
+                            var commitSHA1 = row.getElementsByClassName("commitSHA1Column")[0].textContent;
+                            // redirect to filemanager page with parameters - username, repository, and commit sha1
+                            var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1 + "&requestType=" + "Commit" + "&isRepositoryCloned=" + isRepositoryCloned;
+                            window.location.href = url;
+                        });
                     }
                 });
-            });
-
-            onRowClick("commitTable", function (row) {
-                var commitSHA1 = row.getElementsByClassName("commitSHA1Column")[0].textContent;
-                // redirect to filemanager page with parameters - username, repository, and commit sha1
-                var url = "../filemanager/fileManager.html?username=" + username + "&repositoryName=" + repositoryName + "&commitSHA1=" + commitSHA1 + "&requestType=" + "Commit" + "&isRepositoryCloned=" + isRepositoryCloned;
-                window.location.href = url;
             });
 
             setCreateBranchClick();
@@ -523,18 +525,52 @@ function setCommitAndBranchTables(wcStatus) {
         }
     });
 }
+
+
 $(function(){
     $("#showStatusButton").on('click', function () {
         $.ajax({
             url: "/magitHub/repositoryInfo",
             data: {"requestType": "showStatus", "username": username, "repositoryName": repositoryName},
+            dataType: 'json',
             error: function () {
                 console.log("error on showing WC status");
             },
             success: function (data) {
-                console.log(data);
+                var openChangesString = "";
+                var newFiles = data.new;
+                var modifiedFiles = data.modified;
+                var deletedFiles = data.deleted;
+
+                if (newFiles.length > 0) {
+                    openChangesString = openChangesString.concat("new files \n");
+                }
+                newFiles.forEach(function(element) {
+                    openChangesString = openChangesString.concat(element).concat("\n");
+                });
+
+                if (modifiedFiles.length > 0) {
+                    openChangesString = openChangesString.concat("\nmodified files \n");
+                }
+                modifiedFiles.forEach(function(element) {
+                    openChangesString = openChangesString.concat(element).concat("\n");
+                });
+
+                if (deletedFiles.length > 0) {
+                    openChangesString = openChangesString.concat("\ndeleted files \n");
+                }
+                deletedFiles.forEach(function(element) {
+                    openChangesString = openChangesString.concat(element).concat("\n");
+                });
+
+                if (openChangesString === ''){
+                    openChangesString = "WC is clean";
+                }
+
+                alert(openChangesString)
             }
-        });
+                
+       });
 
     })
 });
@@ -550,9 +586,11 @@ $(function () { // onload function
 
     $("#repoName").empty().append("Repository name: " + repositoryName);
 
-    appendRRName();
+    if(isRepositoryCloned === "true") {
+        appendRRName();
 
-    appendRRUsername();
+        appendRRUsername();
+    }
 
     var wcStatus = $("#WCStatus");
     setWCStatus(wcStatus);

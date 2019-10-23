@@ -6,12 +6,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import engine.branches.Branch;
 import engine.core.Repository;
+import engine.dataobjects.OpenChanges;
 import engine.managers.EngineManager;
 import engine.managers.User;
 import engine.managers.UsersManager;
 import engine.notifications.BranchDeletedNotification;
 import engine.objects.Commit;
 import engine.utils.FileUtilities;
+import magithub.WindowsPathConverter;
 import magithub.utils.ServletUtils;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -168,7 +170,11 @@ public class RepositoryInfoServlet extends HttpServlet
             result = result.concat(branch.getName() +", ");
         }
 
-        result = result.substring(0, result.length() - 2);
+        if(!result.equals("") && result.length() > 2)
+        {
+            result = result.substring(0, result.length() - 2);
+        }
+
         out.print(result);
         out.flush();
         out.close();
@@ -176,6 +182,7 @@ public class RepositoryInfoServlet extends HttpServlet
 
     private void showStatusRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
+        response.setContentType("application/json");
         String username = request.getParameter("username");
         String repositoryName = request.getParameter("repositoryName");
         Path repositoryPath = MAGITEX3_DIRECTORY_PATH.resolve(username).resolve(repositoryName);
@@ -185,11 +192,17 @@ public class RepositoryInfoServlet extends HttpServlet
         Repository repo = engine.getRepositories().get(repositoryPath);
 
         try (PrintWriter out = response.getWriter()) {
-            Gson gson = new Gson();
+            GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(Path.class, new WindowsPathConverter());
+            //gsonBuilder.setPrettyPrinting();
+            Gson gson = gsonBuilder.create();
             JsonObject jsonObj = new JsonObject();
-            String fileSystemStatusJson = gson.toJson(repo.getFileSystemStatus());
-            //jsonObj.addProperty('');
-            out.print(fileSystemStatusJson);
+            OpenChanges openChanges = repo.getFileSystemStatus();
+
+            jsonObj.add("new",gson.toJsonTree(openChanges.getNewNodes()));
+            jsonObj.add("modified",gson.toJsonTree(openChanges.getModifiedNodes()));
+            jsonObj.add("deleted",gson.toJsonTree(openChanges.getDeletedNodes()));
+
+            out.println(jsonObj);
             out.flush();
         }
 
