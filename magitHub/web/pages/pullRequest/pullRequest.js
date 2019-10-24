@@ -33,7 +33,6 @@ function handlePR(event) {
             ,"message": message
             },
         url: "/magitHub/pullRequest",
-        //timeout: 4000, TODO delete comment
         error: function (data) {
             console.log("error was occurred while handling pr via user request");
             if(data.responseText.includes("Dirty"))
@@ -121,7 +120,6 @@ $(function(){
         data: {"isLoggedInUser" : "TRUE"
         },
         url: "/magitHub/pages/main/user",
-        //timeout: 4000, TODO delete comment
         error: function (data) {
             console.log("error was occurred while retrieving pull requests information");
         },

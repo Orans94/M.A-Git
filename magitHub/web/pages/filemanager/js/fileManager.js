@@ -121,7 +121,6 @@ $(function() { //onload function
             $.ajax({
                 url: "/magitHub/pages/filemanager/commit",
                 data: {"username": username, "repositoryName" : repositoryName, "commitSHA1" : commitSHA1, "requestType": "workingCopy"},
-                //timeout: 2000, TODO delete comment
                 error: function () {
                     console.log("no");
                 },
@@ -170,7 +169,6 @@ $(function() { //onload function
             $.ajax({
                 url: "/magitHub/pages/filemanager/commit",
                 data: {"username": username, "repositoryName" : repositoryName, "commitSHA1" : commitSHA1, "requestType": "Commit"},
-                //timeout: 2000, TODO delete comment
                 error: function () {
                     console.log("no");
                 },

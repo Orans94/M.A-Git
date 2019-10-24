@@ -6,7 +6,6 @@ $(function() { // onload function- load repositories cards
     $.ajax({
         url: "/magitHub/pages/main/user",
         data:{"isLoggedInUser" : "TRUE"},
-        //timeout: 2000, TODO delete comment
         error: function() {
             console.log("no");
         },
@@ -34,7 +33,6 @@ $(function() { // onload function- attach functionality to upload repository but
             url: this.action,
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-            //timeout: 4000, TODO delete comment
             error: function(xhr, status, error) {
                 alert("Repository upload failed: " + xhr.responseText);
             },

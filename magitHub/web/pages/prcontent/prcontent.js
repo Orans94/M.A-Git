@@ -9,7 +9,6 @@ $(function() { //onload function
     $.ajax({
         url: "/magitHub/pullRequest",
         data: {"requestType": "openChanges", "PRID": PRID},
-        //timeout: 2000, TODO delete comment
         error: function () {
             console.log("no");
         },

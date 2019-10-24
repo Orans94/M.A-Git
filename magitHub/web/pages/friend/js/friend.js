@@ -11,7 +11,6 @@ function notifyFriendAboutForkingItRepository(repositoryOwnerName, forkedReposit
             "forkingUsername": forkingUsername
         },
         url: "/magitHub/pages/friend/notifications",
-        //timeout: 4000, TODO delete comment
         error: function (data) {
             alert("error was occurred while notifying repository has forked");
         },
@@ -29,7 +28,6 @@ $(function() { // onload function- load friend repository
         url: "/magitHub/pages/main/user",
         data: {"isLoggedInUser" : "FALSE",
                 "username" : username},
-        //timeout: 4000, TODO delete comment
         error: function(e) {
             alert("Unable to load friend repositories")
         },
@@ -51,7 +49,6 @@ $(function() { // onload function- load friend repository
                             "repositoryNameToFork": userRepositoryNameInput
                         },
                         url: "/magitHub/pages/friend/fork",
-                        //timeout: 4000, TODO delete comment
                         error: function (data) {
                             alert("error was occurred while forking " + data.repositoryName + "from " + data.repositoryOwnerName);
                         },

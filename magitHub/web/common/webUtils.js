@@ -150,7 +150,6 @@ function loadNotificationsAndInitNotifictionsVersion() {
             , "notificationsVersion": "INITIALIZE"
         },
         url: "/magitHub/pages/friend/notifications",
-        //timeout: 4000, TODO delete comment
         error: function (data) {
             console.log("error was occurred while getting notifications version");
         },
@@ -224,7 +223,6 @@ function ajaxNotificationsContent() {
             ,"notificationsVersion" : notificationsVersion
         },
         url: "/magitHub/pages/friend/notifications",
-        //timeout: 4000, TODO delete comment
         error: function (data) {
             console.log("error was occurred in ajaxNotificationsContent");
             triggerAjaxNotificationsContent();
@@ -248,7 +246,6 @@ function ajaxUsersListContent(){
         url: "/magitHub/pages/main/usersList",
         data: {"requestType" : "usersList"
             ,"onlyActiveUsers" : "TRUE"},
-        //timeout: 4000, TODO delete comment
         error: function(e) {
             console.log("Unable to load users list in side bar");
             triggerUsersListContent();
@@ -302,7 +299,6 @@ function updateNotificationsLastVersionSeen() {
             "lastVersionSeen" : $(".notibox").length
         },
         url: "/magitHub/pages/friend/notifications",
-        //timeout: 4000, TODO delete comment
         error: function (data) {
             console.log("error");
 
