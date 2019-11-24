@@ -1,3 +1,0 @@
-TODO
-- add ServletContextListener- to delete magit-ex3 folder in the end of the server!
-- in the main page binding between upload repository button to choose file button
